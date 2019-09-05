@@ -1,0 +1,8 @@
+首先执行 cnpm i ，然后cnpm run dev运行之后缺什么装什么，不缺就会显示运行成功
+elementUI          cnpm i element-ui -S
+js-cookie           cnpm i js-cookie
+vuex                  cnpm install vuex --save
+axios                 cnpm install axios
+qs                  cnpm install --save axios vue-axios qs  
+screenfull         npm install --save lodash.debounce screenfull vue-router
+print-js            npm install print-js --save
