@@ -188,13 +188,13 @@
         <span>备注：</span>
         <el-input
           type="textarea"
-          maxlength="200"
+          maxlength="140"
           :autosize="{ minRows:3, maxRow:4}"
           resize="none"
           v-model="ctm_order.notes"
-          placeholder="请输入订单备注(200字以内，任何发货信息写在备注无效！)"
+          placeholder="请输入订单备注(140字符以内，任何发货信息写在备注无效！)"
         ></el-input>
-        <span style="color:#ccc">{{ctm_order.notes.length}}/200</span>
+        <span style="color:#ccc">{{ctm_order.notes | calLength}}/140</span>
         <br />
         <span>工程报备单号：</span>
         <el-input style="width:40%;" v-model="ctm_order.projectNo" placeholder="请输入工程报备单号"></el-input>
@@ -505,6 +505,19 @@ export default {
       } else if (value == "month") {
         return "月返券";
       } else return "其它券类";
+    },
+    calLength(str) {
+      var len = 0;
+      for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        //单字节加1
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+          len++;
+        } else {
+          len += 2;
+        }
+      }
+      return len;
     }
   },
   computed: {
@@ -1260,6 +1273,9 @@ export default {
               oldUrl: "order/checkOrder",
               newUrl: "order/myOrder"
             });
+          })
+          .catch(res => {
+            console.log(res.msg);
           });
       });
     },
@@ -1337,6 +1353,9 @@ export default {
               oldUrl: "order/checkOrder",
               newUrl: "order/myOrder"
             });
+          })
+          .catch(res => {
+            console.log(res.msg);
           });
       });
     },
@@ -1349,7 +1368,7 @@ export default {
         cid: Cookies.get("cid"),
         companyId: Cookies.get("companyId")
       };
-      
+
       //querycharge(url, data).then(res => {
       getCustomerInfo(data).then(res => {
         console.log(res);
