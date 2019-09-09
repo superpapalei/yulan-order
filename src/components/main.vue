@@ -464,14 +464,8 @@ export default {
     },
     //点击标签页触发的事件
     getTab(val) {
-      console.log(val.name);
       this.$store.commit("navTabs/setActiveUrlName", val.name);
       this.getTheTab = this.$store.state.navTabs.activeUrlName;
-      // if(val.name === 'shoppingCar/shopping'){
-      //     this.getTheTab = val.name +'?'+ this.$store.state.navTabs.activeParam;
-      // }
-      // else    this.getTheTab = val.name;
-      // console.log(val.name,val.paneName);
     },
     //退出登录
     logout() {
@@ -531,7 +525,6 @@ export default {
         return this.$store.state.navTabs.activeTabName;
       },
       set(value) {
-        console.log(value);
         this.$store.commit("navTabs/setActiveUrlName", value);
         this.$router.push({
           path: "/" + this.$store.state.navTabs.activeUrlName

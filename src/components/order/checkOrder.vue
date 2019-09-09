@@ -1275,7 +1275,11 @@ export default {
             });
           })
           .catch(res => {
-            console.log(res.msg);
+            this.$alert("提交失败:" + res.msg, "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            console.log(res);
           });
       });
     },
@@ -1348,14 +1352,17 @@ export default {
             }
           })
           .then(() => {
-            //DeleteShopRecord(deleteArray); //删除订单信息（提交一起删除了）
             this.closeToTab({
               oldUrl: "order/checkOrder",
               newUrl: "order/myOrder"
             });
           })
           .catch(res => {
-            console.log(res.msg);
+            this.$alert("提交失败:" + res.msg, "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            console.log(res);
           });
       });
     },
