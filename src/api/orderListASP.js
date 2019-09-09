@@ -182,3 +182,10 @@ export function getPackDetailInfo(data, config = {}) {
         return Promise.reject(err);
     })
 }
+export function RedirectMain(data, config = {}) {
+    return post('/Home/Main', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}

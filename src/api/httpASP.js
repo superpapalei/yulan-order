@@ -1,8 +1,9 @@
 import Axios from 'axios'
+import Cookies from "js-cookie";
 
-//var baseUrl = 'http://localhost:49438/';//本地
+var baseUrl = 'http://localhost:49438/';//本地
 //var baseUrl = 'http://47.107.56.156:666/';//测试
-var baseUrl = 'http://14.29.223.114:568/';//正式
+//var baseUrl = 'http://14.29.223.114:568/';//正式
 //var baseUrl = 'http://47.107.56.156:568/';//不用了
 
 /**
@@ -19,6 +20,20 @@ export function get(url, params = {}, config = {}) {
         }, config)
             .then(response => {
                 Axios.defaults.withCredentials = true;
+                if (response.data.code == -1) {
+                    vm.$router.push({
+                        path: '/login'
+                    });
+                    reject(response.data);
+                }
+                else {
+                    if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+                        vm.$router.push({
+                            path: '/login'
+                        });
+                        reject(response.data);
+                    }
+                }
                 resolve(response.data);
             })
             .catch(err => {
@@ -39,6 +54,20 @@ export function post(url, data = {}, config = {}) {
         Axios.post(baseUrl + url, data, config)
             .then(response => {
                 Axios.defaults.withCredentials = true;
+                if (response.data.code == -1) {
+                    vm.$router.push({
+                        path: '/login'
+                    });
+                    reject(response.data);
+                }
+                else {
+                    if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+                        vm.$router.push({
+                            path: '/login'
+                        });
+                        reject(response.data);
+                    }
+                }
                 resolve(response.data);
             })
             .catch(error => {
@@ -59,6 +88,20 @@ export function patch(url, data = {}, config = {}) {
         Axios.patch(baseUrl + url, data, config)
             .then(response => {
                 Axios.defaults.withCredentials = true;
+                if (response.data.code == -1) {
+                    vm.$router.push({
+                        path: '/login'
+                    });
+                    reject(response.data);
+                }
+                else {
+                    if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+                        vm.$router.push({
+                            path: '/login'
+                        });
+                        reject(response.data);
+                    }
+                }
                 resolve(response.data);
             })
             .catch(error => {
@@ -79,6 +122,20 @@ export function put(url, data = {}, config = {}) {
         Axios.put(baseUrl + url, data, config)
             .then(response => {
                 Axios.defaults.withCredentials = true;
+                if (response.data.code == -1) {
+                    vm.$router.push({
+                        path: '/login'
+                    });
+                    reject(response.data);
+                }
+                else {
+                    if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+                        vm.$router.push({
+                            path: '/login'
+                        });
+                        reject(response.data);
+                    }
+                }
                 resolve(response.data);
             }, err => {
                 Axios.defaults.withCredentials = true;

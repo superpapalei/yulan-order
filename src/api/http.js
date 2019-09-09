@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import Cookies from "js-cookie";
 
 const CODE_OK = 0;
 Axios.defaults.baseURL = 'http://14.29.223.114:10250/yulan-order';//正式
@@ -30,6 +31,12 @@ export function get(url, params = {}, config = {}) {
             params: params,
         }, config)
             .then(response => {
+                if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+                    vm.$router.push({
+                        path: '/login'
+                    });
+                    reject(response.data);
+                }
                 if (response.data.code === CODE_OK) {
                     resolve(response.data);
                 }
@@ -52,6 +59,12 @@ export function post(url, data = {}, config = {}) {
     return new Promise((resolve, reject) => {
         Axios.post(url, data, config)
             .then(response => {
+                if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+                    vm.$router.push({
+                        path: '/login'
+                    });
+                    reject(response.data);
+                }
                 if (response.data.code === CODE_OK) {
                     resolve(response.data);
                 }
@@ -77,6 +90,12 @@ export function patch(url, data = {}, config = {}) {
     return new Promise((resolve, reject) => {
         Axios.patch(url, data, config)
             .then(response => {
+                if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+                    vm.$router.push({
+                        path: '/login'
+                    });
+                    reject(response.data);
+                }
                 if (response.data.code === CODE_OK) {
                     resolve(response.data);
                 }
@@ -102,6 +121,12 @@ export function put(url, data = {}, config = {}) {
     return new Promise((resolve, reject) => {
         Axios.put(url, data, config)
             .then(response => {
+                if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+                    vm.$router.push({
+                        path: '/login'
+                    });
+                    reject(response.data);
+                }
                 if (response.data.code === CODE_OK) {
                     resolve(response.data);
                 }
