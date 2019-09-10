@@ -141,6 +141,12 @@
                 <span slot="title">市场信息</span>
               </el-menu-item>
             </router-link>
+             <router-link to="/supplierModule/supplyPort" tag="div">
+              <el-menu-item index="supplierModule/supplyPort">
+                <i class="el-icon-s-home"></i>
+                <span slot="title">供应商门户</span>
+              </el-menu-item>
+            </router-link>
             <router-link to="/downloadSpace" tag="div">
               <el-menu-item index="downloadSpace">
                 <i class="iconfont icon-color">&#xe614;</i>
@@ -310,6 +316,7 @@ export default {
         "design/imageShop",
         "design/lanJu",
         "marketInfo",
+        "supplierModule/supplyPort",
         "downloadSpace"
       ],
       asideStatus: false, //false:菜单栏处于展开状态； true：菜单栏处于收起状态

@@ -9,6 +9,7 @@ import BankProof from '@/components/bankProof'
 import painting from '@/components/painting'
 import yulanPainting from '@/components/yulanPainting'
 import DeputeBrush from '@/components/deputeBrush'
+import SupplyPort from '@/components/supplierModule/supplyPort'
 import DownloadSpace from '@/components/downloadSpace'
 import MarketInfo from '@/components/marketInfo'
 import RefundCompensation from '@/components/refundCompensation'
@@ -93,6 +94,11 @@ const router = new Router({
         path: '/deputeBrush',
         name: 'deputeBrush',
         component: DeputeBrush
+      },
+      {
+        path: '/supplierModule/supplyPort',
+        name: 'supplyPort',
+        component: SupplyPort
       },{
         path: '/downloadSpace',
         name: 'downloadSpace',
