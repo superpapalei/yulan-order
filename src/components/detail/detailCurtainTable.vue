@@ -669,6 +669,9 @@ export default {
                 var oldData_temp =[];
                 this.oldData.forEach(item => {
                     item.dosage = Number(item.dosage);
+                    if(item.curtainItemName === null){
+                        item.curtainItemName = this.getTypeName(item.itemType);
+                    }
                     if(item.note === null)  item.note = "";
                     if(item.suggestion === null)    item.suggestion = "";
                     oldData_temp.push(JSON.parse(JSON.stringify(item)));

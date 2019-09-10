@@ -27,16 +27,16 @@ Axios.interceptors.request.use(function (config) {
  */
 export function get(url, params = {}, config = {}) {
     return new Promise((resolve, reject) => {
+        if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+            vm.$router.push({
+                path: '/login'
+            });
+            reject('登录失效');
+        }
         Axios.get(url, {
             params: params,
         }, config)
             .then(response => {
-                if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
-                    vm.$router.push({
-                        path: '/login'
-                    });
-                    reject(response.data);
-                }
                 if (response.data.code === CODE_OK) {
                     resolve(response.data);
                 }
@@ -57,14 +57,14 @@ export function get(url, params = {}, config = {}) {
  */
 export function post(url, data = {}, config = {}) {
     return new Promise((resolve, reject) => {
+        if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+            vm.$router.push({
+                path: '/login'
+            });
+            reject('登录失效');
+        }
         Axios.post(url, data, config)
             .then(response => {
-                if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
-                    vm.$router.push({
-                        path: '/login'
-                    });
-                    reject(response.data);
-                }
                 if (response.data.code === CODE_OK) {
                     resolve(response.data);
                 }
@@ -88,14 +88,14 @@ export function post(url, data = {}, config = {}) {
  */
 export function patch(url, data = {}, config = {}) {
     return new Promise((resolve, reject) => {
+        if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+            vm.$router.push({
+                path: '/login'
+            });
+            reject('登录失效');
+        }
         Axios.patch(url, data, config)
             .then(response => {
-                if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
-                    vm.$router.push({
-                        path: '/login'
-                    });
-                    reject(response.data);
-                }
                 if (response.data.code === CODE_OK) {
                     resolve(response.data);
                 }
@@ -119,14 +119,14 @@ export function patch(url, data = {}, config = {}) {
  */
 export function put(url, data = {}, config = {}) {
     return new Promise((resolve, reject) => {
+        if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
+            vm.$router.push({
+                path: '/login'
+            });
+            reject('登录失效');
+        }
         Axios.put(url, data, config)
             .then(response => {
-                if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
-                    vm.$router.push({
-                        path: '/login'
-                    });
-                    reject(response.data);
-                }
                 if (response.data.code === CODE_OK) {
                     resolve(response.data);
                 }

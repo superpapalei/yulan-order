@@ -283,7 +283,7 @@ export default {
       m = m < 10 ? "0" + m : m;
       let s = date.getSeconds();
       s = s < 10 ? "0" + s : s;
-      return y + "-" + MM + "-" + d + " " + h + ':' + m + ':' + s;
+      return y + "-" + MM + "-" + d + " " + h + ":" + m + ":" + s;
     }
   },
   created: function() {
@@ -375,22 +375,30 @@ export default {
         deleteIds: this.deleteIds
       };
       //defeatChange(url,data).then(res =>{
-      updateCurtainOrder(data).then(res => {
-        console.log(res);
-        if (res.code == 0) {
-          this.$alert("操作成功,请提交结算再次审核", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.check_CURTAIN_STATUS_ID = "0";
-          this.getDetail();
-        } else {
-          this.$alert("操作失败，请稍后重试", "提示", {
+      updateCurtainOrder(data)
+        .then(res => {
+          console.log(res);
+          if (res.code == 0) {
+            this.$alert("操作成功,请提交结算再次审核", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.check_CURTAIN_STATUS_ID = "0";
+            this.getDetail();
+          } else {
+            this.$alert("操作失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+          }
+        })
+        .catch(res => {
+          this.$alert("操作失败:" + res.msg, "提示", {
             confirmButtonText: "确定",
             type: "warning"
           });
-        }
-      });
+          console.log(res);
+        });
     },
     //确认兰居修改，通过订单审核变为可提交状态
     _pass() {
@@ -404,28 +412,36 @@ export default {
         cancelButtonText: "否",
         type: "info"
       }).then(() => {
-        passExamine(url, data).then(res => {
-          console.log(res);
-          if (res.code == 0) {
-            var recordData = {
-              ORDER_NO: this.orderNum,
-              OPERATION_PERSON: Cookies.get("cid"),
-              OPERATION_NAME: "确认兰居修改"
-            };
-            InsertOperationRecord(recordData); //插入操作记录
-            this.$alert("操作成功,该订单已经确认可再次提交", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            }).then(() => {
-              this.check_CURTAIN_STATUS_ID = "4";
-            });
-          } else {
+        passExamine(url, data)
+          .then(res => {
+            console.log(res);
+            if (res.code == 0) {
+              var recordData = {
+                ORDER_NO: this.orderNum,
+                OPERATION_PERSON: Cookies.get("cid"),
+                OPERATION_NAME: "确认兰居修改"
+              };
+              InsertOperationRecord(recordData); //插入操作记录
+              this.$alert("操作成功,该订单已经确认可再次提交", "提示", {
+                confirmButtonText: "确定",
+                type: "success"
+              }).then(() => {
+                this.check_CURTAIN_STATUS_ID = "4";
+              });
+            } else {
+              this.$alert("操作失败，请稍后重试", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+              });
+            }
+          })
+          .catch(res => {
             this.$alert("操作失败，请稍后重试", "提示", {
               confirmButtonText: "确定",
               type: "warning"
             });
-          }
-        });
+            console.log(res);
+          });
       });
     },
     //退回兰居修改
@@ -440,31 +456,39 @@ export default {
         cancelButtonText: "否",
         type: "info"
       }).then(() => {
-        passExamine(url, data).then(res => {
-          console.log(res);
-          if (res.code == 0) {
-            var recordData = {
-              ORDER_NO: this.orderNum,
-              OPERATION_PERSON: Cookies.get("cid"),
-              OPERATION_NAME: "退回兰居修改"
-            };
-            InsertOperationRecord(recordData); //插入操作记录
-            this.$alert("操作成功,该订单已退回兰居修改", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            }).then(() => {
-              this.closeToTab({
-                oldUrl: "order/checkExamine",
-                newUrl: "order/myOrder"
+        passExamine(url, data)
+          .then(res => {
+            console.log(res);
+            if (res.code == 0) {
+              var recordData = {
+                ORDER_NO: this.orderNum,
+                OPERATION_PERSON: Cookies.get("cid"),
+                OPERATION_NAME: "退回兰居修改"
+              };
+              InsertOperationRecord(recordData); //插入操作记录
+              this.$alert("操作成功,该订单已退回兰居修改", "提示", {
+                confirmButtonText: "确定",
+                type: "success"
+              }).then(() => {
+                this.closeToTab({
+                  oldUrl: "order/checkExamine",
+                  newUrl: "order/myOrder"
+                });
               });
-            });
-          } else {
+            } else {
+              this.$alert("操作失败，请稍后重试", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+              });
+            }
+          })
+          .catch(res => {
             this.$alert("操作失败，请稍后重试", "提示", {
               confirmButtonText: "确定",
               type: "warning"
             });
-          }
-        });
+            console.log(res);
+          });
       });
     },
     openDialog(tab, index) {
@@ -595,21 +619,29 @@ export default {
             }
           );
         } else {
-          payAgain(url2, data2).then(res => {
-            var recordData = {
-              ORDER_NO: this.orderNum,
-              OPERATION_PERSON: Cookies.get("cid"),
-              OPERATION_NAME: "重新提交"
-            };
-            InsertOperationRecord(recordData); //插入操作记录
-            this.$alert("提交成功", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
+          payAgain(url2, data2)
+            .then(res => {
+              var recordData = {
+                ORDER_NO: this.orderNum,
+                OPERATION_PERSON: Cookies.get("cid"),
+                OPERATION_NAME: "重新提交"
+              };
+              InsertOperationRecord(recordData); //插入操作记录
+              this.$alert("提交成功", "提示", {
+                confirmButtonText: "确定",
+                type: "success"
+              });
+              this.$root.$emit("refreshMoneyEvent"); //触发主页面刷新余额
+              this.addTab("order/myOrder");
+              this.closeTab("order/orderDetail");
+            })
+            .catch(res => {
+              this.$alert("操作失败，请稍后重试", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+              });
+              console.log(res);
             });
-            this.$root.$emit("refreshMoneyEvent"); //触发主页面刷新余额
-            this.addTab("order/myOrder");
-            this.closeTab("order/orderDetail");
-          });
         }
       });
     },

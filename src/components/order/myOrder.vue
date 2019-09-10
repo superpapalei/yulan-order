@@ -630,15 +630,11 @@ export default {
           cancelOrderNew(data)
             .then(res => {
               if (pushOrderNum.slice(0, 1) == "X") {
-                this.$confirm(
-                  "作废成功，是否退回数据到购物车？",
-                  "提示",
-                  {
-                    confirmButtonText: "是",
-                    cancelButtonText: "否",
-                    type: "warning"
-                  }
-                )
+                this.$confirm("作废成功，是否退回数据到购物车？", "提示", {
+                  confirmButtonText: "是",
+                  cancelButtonText: "否",
+                  type: "warning"
+                })
                   .then(() => {
                     var data3 = {
                       orderNo: pushOrderNum
@@ -718,20 +714,28 @@ export default {
             }
           );
         } else {
-          payAgain(url2, data2).then(res => {
-            var recordData = {
-              ORDER_NO: item.ORDER_NO,
-              OPERATION_PERSON: Cookies.get("cid"),
-              OPERATION_NAME: "重新提交"
-            };
-            InsertOperationRecord(recordData); //插入操作记录
-            this.$alert("提交成功", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
+          payAgain(url2, data2)
+            .then(res => {
+              var recordData = {
+                ORDER_NO: item.ORDER_NO,
+                OPERATION_PERSON: Cookies.get("cid"),
+                OPERATION_NAME: "重新提交"
+              };
+              InsertOperationRecord(recordData); //插入操作记录
+              this.$alert("提交成功", "提示", {
+                confirmButtonText: "确定",
+                type: "success"
+              });
+              this.refresh();
+              this.$root.$emit("refreshMoneyEvent"); //触发主页面刷新余额
+            })
+            .catch(res => {
+              this.$alert("操作失败，请稍后重试", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+              });
+              console.log(res);
             });
-            this.refresh();
-            this.$root.$emit("refreshMoneyEvent"); //触发主页面刷新余额
-          });
         }
       });
     },
