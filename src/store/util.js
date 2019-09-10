@@ -1,6 +1,6 @@
 //根据传入的index对应修改其标签页名字
-export function tabsName(index){
-    switch(index){
+export function tabsName(index) {
+    switch (index) {
         case 'shops/wallPaper':
             return '墙纸';
         case 'shops/curtain':
@@ -63,6 +63,8 @@ export function tabsName(index){
             return '订单详情'
         case 'myZone/myCoupon':
             return '我的优惠券'
+        case 'notification/notificationMain':
+            return '公告'
         default:
             return 'xxx';
     }

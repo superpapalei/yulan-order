@@ -8,6 +8,7 @@
             <span>玉兰B2B</span>
           </div>
           <el-menu
+            style="margin-bottom:10px;"
             :default-openeds="['shops', 'design', 'shoppingCar']"
             :default-active="url"
             @select="addTab"
@@ -156,12 +157,15 @@
             <li :title="(asideStatus==true)?'菜单展开':'菜单收起'" @click="changeAside">
               <i id="asideControll" class="iconfont">&#xe61e;</i>
             </li>
-            <li title="主页" @click="dialogFormVisible = true">
+            <!-- <li title="主页" @click="dialogFormVisible = true">
               <i class="iconfont">&#xe65e;</i>
-            </li>
-            <li title="公告">
-              <i class="el-icon-bell"></i>
-            </li>
+            </li> -->
+            <router-link to="/notification/notificationMain" tag="li">
+              <li @click="addTab('notification/notificationMain')">
+                <i class="el-icon-bell"></i>
+                <span class="ml10 mr10">公告</span>
+              </li>
+            </router-link>
           </ul>
           <ul class="r">
             <li style="height:50px;">
@@ -209,7 +213,7 @@
                 <el-dropdown-menu slot="dropdown" style="min-width: 150px;">
                   <!-- <el-dropdown-item>历年经销设计书</el-dropdown-item>
                   <el-dropdown-item>修改登录密码</el-dropdown-item>
-                  <el-dropdown-item>修改对账密码</el-dropdown-item> -->
+                  <el-dropdown-item>修改对账密码</el-dropdown-item>-->
                   <!--v-if = "isContainAttr('myZone/myCoupon')"  -->
                   <router-link to="/myZone/myCoupon" tag="li">
                     <el-dropdown-item @click.native="addTab('myZone/myCoupon')">我的优惠券</el-dropdown-item>
@@ -224,11 +228,11 @@
           </ul>
           <span
             v-if="isManager !== '1'"
-            style="color:white;line-height:50px;font-size:12px;"
+            style="color:white;line-height:50px;font-size:12px;margin-left:10px;"
           >{{'账户：'+cid+' '+realName+' '+'操作员'}}</span>
           <span
             v-else
-            style="color:white;line-height:50px;font-size:12px;"
+            style="color:white;line-height:50px;font-size:12px;margin-left:10px;"
           >{{'账户：'+cid+' '+realName+' '+'管理员'}}</span>
         </el-header>
         <el-main style="margin:0;padding:0;background:#ECF5EF;">
@@ -244,8 +248,17 @@
                 class="el-icon-bell ml10 mr10 f16"
                 style="line-height:30px;color:gold;font-weight:bold;"
               ></i>
-              <span style="color:red;margin-right:5px;">最新公告：</span>
-              <span>{{adminText}}</span>
+              <span style="color:red;margin-right:5px;margin-top:5px;">最新公告：</span>
+              <span v-if="newsTextArr.length == 0">{{adminText}}</span>
+              <span v-else style="line-height:30px;">
+                <transition name="slide">
+                  <a
+                    style="cursor:pointer;text-decoration:underline"
+                    :key="newsTextArr[newsIndex].ID"
+                    @click="showDetail(newsTextArr[newsIndex])"
+                  >{{newsTextArr[newsIndex].TITLE}}</a>
+                </transition>
+              </span>
               <span class="r f14 mr10" style="line-height:30px;color:red;">
                 <strong>
                   <i>{{moneySituation}}</i>
@@ -258,6 +271,9 @@
                 ></i>
               </span>
             </div>
+            <el-dialog :show-close="true" :visible.sync="detailVisible" width="1000px" top="5vh">
+              <div v-html="detailData"></div>
+            </el-dialog>
             <el-tab-pane
               v-for="item in tabList"
               :key="item.name"
@@ -280,6 +296,7 @@
 import { getUserMoney } from "@/api/user";
 import { getAllRefund } from "@/api/refund";
 import { getIconNumber } from "@/api/painting";
+import { GetNewNotification } from "@/api/notificationASP";
 import screenfull from "screenfull";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -299,6 +316,8 @@ export default {
       customerType: Cookies.get("customerType"),
       realName: Cookies.get("realName"),
       identity: Cookies.get("identity"),
+      newsIndex: 0,
+      newsTextArr: [],
       asideUrl: [
         "shops/curtain",
         "shops/softSuit",
@@ -313,9 +332,11 @@ export default {
         "downloadSpace"
       ],
       asideStatus: false, //false:菜单栏处于展开状态； true：菜单栏处于收起状态
-      asideWidth: "200px",
+      asideWidth: "180px",
       defaultUrl: "",
       isFullscreen: false,
+      detailVisible: false,
+      detailData: [],
       adminText: "无新公告发布!",
       moneySituation: "",
       Initial_balance: 0,
@@ -326,7 +347,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("navTabs", ["addTab","setMenuTreeList"]),
+    ...mapMutations("navTabs", ["addTab", "setMenuTreeList"]),
     ...mapMutations("badge", ["changeBadge"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"]),
     /*
@@ -424,7 +445,7 @@ export default {
     changeAside() {
       this.asideStatus = !this.asideStatus;
       if (this.asideStatus == false) {
-        this.asideWidth = "200px";
+        this.asideWidth = "180px";
         document.getElementById("aside-logo").style.display = "block";
         document.getElementById("asideControll").innerHTML = "&#xe61e;";
       } else {
@@ -478,16 +499,37 @@ export default {
       });
     },
     //获得菜单数组并传入store
-    getMenuTree(){
-       this.setMenuTreeList();
+    getMenuTree() {
+      this.setMenuTreeList();
     },
-    isContainAttr(attr)
-    {
-        return this.menuTreeListFlatten.filter(item => item.MENU_LINK == attr).length > 0;
+    isContainAttr(attr) {
+      return (
+        this.menuTreeListFlatten.filter(item => item.MENU_LINK == attr).length >
+        0
+      );
+    },
+    startMove() {
+      this.newsTimer = setInterval(() => {
+        if (this.newsIndex === this.newsTextArr.length - 1) {
+          this.newsIndex = 0;
+        } else {
+          this.newsIndex += 1;
+        }
+      }, 3000);
+    },
+    getNews() {
+      GetNewNotification().then(res => {
+        this.newsTextArr = res.data;
+        if (this.newsTextArr.length > 0) this.startMove();
+      });
+    },
+    showDetail(item) {
+      this.detailData = item.CONTENT;
+      this.detailVisible = true;
     }
   },
   computed: {
-    ...mapState("navTabs", ["tabList", "menuTreeList","menuTreeListFlatten"]),
+    ...mapState("navTabs", ["tabList", "menuTreeList", "menuTreeListFlatten"]),
     getRefund() {
       return this.$store.getters["badge/getRefund"];
     },
@@ -586,10 +628,10 @@ export default {
     this.$root.$on("refreshMoneyEvent", () => {
       this.userMoney();
     });
-    // console.log(this.defaultUrl);
+    this.getNews();
   },
   beforeDestroy() {
-    clearInterval(this.moneyTimer);
+    clearInterval(this.newsTimer);
   },
   watch: {}
 };
@@ -706,6 +748,13 @@ export default {
   font-size: 20px;
   margin: 0 10px;
 }
+.el-header ul:nth-child(1) li span {
+  color: white;
+  line-height: 50px;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-left: -10px;
+}
 .el-header ul:nth-child(2) li span {
   color: white;
   line-height: 50px;
@@ -738,6 +787,18 @@ export default {
   top: 50%;
   color: #300112;
 }
+.slide-enter-active {
+  transition: all 0.5s linear;
+}
+.slide-leave-active {
+  opacity: 0;
+}
+.slide-enter {
+  opacity: 0;
+}
+.slide-leave-to {
+  opacity: 0;
+}
 </style>
 
 <style>
@@ -768,6 +829,9 @@ export default {
 }
 .el-table colgroup.gutter {
   display: table-cell !important;
+}
+.el-table .success-row {
+  background: #f0f9eb;
 }
 </style>
 

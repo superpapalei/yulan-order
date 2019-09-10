@@ -29,6 +29,7 @@ import ExamineDetail from '@/components/order/examineDetail'
 import checkExamine from '@/components/order/checkExamine'
 import myCoupon from '@/components/center/myCoupon'
 import DetailRefund from '@/components/detail/detailRefund'
+import notificationMain from '@/components/notification/notificationMain'
 
 Vue.use(Router)
 
@@ -238,6 +239,11 @@ const router = new Router({
           path: '/myZone/myCoupon',
           name: 'MyCoupon',
           component: myCoupon
+        },
+        {
+          path: '/notification/notificationMain',
+          name: 'notificationMain',
+          component: notificationMain
         }
       ]
     }
