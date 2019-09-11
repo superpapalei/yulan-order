@@ -188,13 +188,13 @@
         <span>备注：</span>
         <el-input
           type="textarea"
-          maxlength="200"
+          maxlength="140"
           :autosize="{ minRows:3, maxRow:4}"
           resize="none"
           v-model="ctm_order.notes"
-          placeholder="请输入订单备注(200字以内，任何发货信息写在备注无效！)"
+          placeholder="请输入订单备注(140字符以内，任何发货信息写在备注无效！)"
         ></el-input>
-        <span style="color:#ccc">{{ctm_order.notes.length}}/200</span>
+        <span style="color:#ccc">{{ctm_order.notes | calLength}}/140</span>
         <br />
         <span>工程报备单号：</span>
         <el-input style="width:40%;" v-model="ctm_order.projectNo" placeholder="请输入工程报备单号"></el-input>
@@ -377,9 +377,9 @@ export default {
       transferData: [],
       data: [
         {
-          wlContacts: "张三",
-          wlTel: "15515515515",
-          postAddress: "广东省汕头市潮阳区广东工业大学生活西区",
+          wlContacts: "",
+          wlTel: "",
+          postAddress: "",
           addressId: 1
         }
       ],
@@ -480,7 +480,6 @@ export default {
       if (realVal <= 0) {
         realVal = 0.0;
       }
-
       return realVal;
     },
     datatrans(value) {
@@ -505,6 +504,19 @@ export default {
       } else if (value == "month") {
         return "月返券";
       } else return "其它券类";
+    },
+    calLength(str) {
+      var len = 0;
+      for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        //单字节加1
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+          len++;
+        } else {
+          len += 2;
+        }
+      }
+      return len;
     }
   },
   computed: {
@@ -514,9 +526,6 @@ export default {
     }
   },
   methods: {
-    test(a) {
-      console.log(a);
-    },
     //清除表单验证规则
     clearRule(formName) {
       this.$refs[formName].resetFields();
@@ -538,9 +547,8 @@ export default {
           return 0;
         }
       };
-      console.log(this.transferData.sort(compare));
-      console.log(this.transferData.reverse());
-      //console.log(this.transferData.pop());
+      this.transferData.sort(compare);
+      this.transferData.reverse();
       var morendizhi = this.transferData.pop();
       this.transferData.unshift(morendizhi);
     },
@@ -566,8 +574,6 @@ export default {
       }, */
     //单选框使用优惠券
     changeCoupon(index, id, type) {
-      /* console.log(id);
-        console.log(typeof id); */
       if (type == "year" && index == true) {
         this.rebateY = id;
       } else if (type == "year" && index == false) {
@@ -588,7 +594,6 @@ export default {
         ctm_order: this.ctm_order
       };
       usetheCoupon(url, data).then(res => {
-        console.log(res);
         for (var i = 0; i < res.data.rebate.length; i++) {
           this.array2[i].nianfanli = res.data.rebate[i].rebateYear;
           this.array2[i].yuefanli = res.data.rebate[i].rebateMonth;
@@ -608,7 +613,6 @@ export default {
         typeId: this.product_group_tpye //"A",
       };
       searchTickets(url, data).then(res => {
-        console.log(res.data);
         this.couponData = res.data;
         for (let i = 0; i < this.couponData.length; i++) {
           if (
@@ -636,8 +640,6 @@ export default {
       };
       //CouponUseRecord(url, data)
       getUseRecord(data).then(res => {
-        console.log(res);
-        console.log(res.data);
         this.useTable = res.data;
         this.useTable.couponId = itemID;
         this.useTable.count = res.count;
@@ -650,7 +652,6 @@ export default {
         id: itemId
       };
       CouponbackRecord(url, data).then(res => {
-        console.log(res);
         this.backTable = res.data;
         this.backTable.couponId = itemId;
         this.dialogBack = true;
@@ -690,8 +691,6 @@ export default {
           this.form.telephone != undefined
         ) {
           editAddress(url, data).then(res => {
-            console.log(res);
-            console.log("修改地址成功");
             this.dialogFormVisible = false;
             this.innerVisible = false;
             this.allAddress();
@@ -712,7 +711,6 @@ export default {
     //编辑地址弹窗初始化
     editIt(row) {
       //输入框初始化
-      console.log(row);
       this.chageOrAdd = true;
       this.innerVisible = true;
       this.value = row.province;
@@ -730,16 +728,11 @@ export default {
       this.form.telephone = row.wlTel;
       this.form.addressId = row.addressId;
       //接口
-      console.log(row.provinceID);
-      console.log(row.province);
-      console.log(row.cityID);
-      console.log(row.city);
       Axios.post("/areaRegion/getCity.do", {
         regionId: row.provinceID,
         regionName: row.provinceID
       })
         .then(res => {
-          console.log(res);
           this.city = res.data.city;
         })
         .catch(error => {
@@ -750,7 +743,6 @@ export default {
         regionName: row.city
       })
         .then(res => {
-          console.log(res);
           this.country = res.data.country;
         })
         .catch(error => {
@@ -759,7 +751,6 @@ export default {
     },
     //删除地址
     deleteIt(row) {
-      console.log(row.addressId);
       this.$confirm("确定删除该地址吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -772,8 +763,6 @@ export default {
             addressId: row.addressId
           };
           deleteAddress(url, data).then(res => {
-            console.log(res);
-            console.log("删除成功!");
             this.dialogFormVisible = false;
             this.innerVisible = false;
             this.allAddress();
@@ -801,7 +790,6 @@ export default {
       this.value3 = "";
       this.form.thequ = "";
       this.country = [];
-      console.log(this.value2);
       var city = this.value2;
       this.form.theshi = this.city[city].regionName;
       this.form.shiID = this.city[city].regionId;
@@ -810,7 +798,6 @@ export default {
         regionName: this.city[city].regionName
       })
         .then(res => {
-          console.log(res);
           this.country = res.data.country;
         })
         .catch(error => {
@@ -825,7 +812,6 @@ export default {
 
       this.value2 = "";
       this.value3 = "";
-      //console.log(this.value)
       var shengfen = this.value;
       this.form.theSheng = this.province[shengfen].regionName;
       this.form.shengID = this.province[shengfen].regionId;
@@ -834,7 +820,6 @@ export default {
         regionName: this.province[shengfen].regionName
       })
         .then(res => {
-          console.log(res);
           this.city = res.data.city;
         })
         .catch(error => {
@@ -845,8 +830,6 @@ export default {
     getProvince() {
       Axios.post("/areaRegion/getProvince.do", {})
         .then(res => {
-          console.log(res);
-          //console.log(res.data.province[0]);
           this.province = res.data.province;
         })
         .catch(error => {
@@ -889,7 +872,6 @@ export default {
         cityID: this.form.shiID,
         countryID: this.form.quID
       };
-      console.log(this.form);
       this.$refs[formName].validate(valid => {
         if (
           valid &&
@@ -904,10 +886,7 @@ export default {
           this.form.telephone != "" &&
           this.form.telephone != undefined
         ) {
-          console.log(this.form.telephone);
           addAddress(url, data).then(res => {
-            console.log(res);
-            console.log("新增成功!!!");
             this.dialogFormVisible = false;
             this.innerVisible = false;
             this.allAddress();
@@ -931,11 +910,10 @@ export default {
         cid: Cookies.get("cid")
       })
         .then(res => {
-          console.log(res);
           this.transferData = res.data.data;
           this.sortAddress();
           this.data = [];
-          if (this.ctm_order.wlTel && this.ctm_order.wlContacts) {
+          if (this.ctm_order.wlTel && this.ctm_order.wlContacts) {//如果是窗帘重新提交进来有默认值
             var addIndex = 0;
             for (var i = 0; i < this.transferData.length; i++) {
               var addArr = {
@@ -972,7 +950,6 @@ export default {
             this.ctm_order.reciverArea2 = this.data[0].city;
             this.ctm_order.reciverArea3 = this.data[0].country;
             this.ctm_order.allAddress = this.data[0].postAddress;
-            console.log(this.ctm_order.allAddress);
           }
         })
         .catch(error => {
@@ -1013,8 +990,6 @@ export default {
         this.ctm_order.reciverArea2 = this.data[0].city;
         this.ctm_order.reciverArea3 = this.data[0].country;
         this.ctm_order.allAddress = `${this.ctm_order.reciverArea1}${this.ctm_order.reciverArea2}${this.ctm_order.reciverArea3}${this.ctm_order.postAddress}`;
-        console.log(this.ctm_order.allAddress);
-        //var abcd=this.data[0].addressId;
         if (this.data[0].addressId == 0) {
           this.ctm_order.postAddressModified = "0";
           console.log("默认地址");
@@ -1029,15 +1004,12 @@ export default {
     //预留算法 获取活动价
     huodongjia() {
       let getPush = JSON.parse(sessionStorage.getItem("shopping"));
-      console.log(getPush);
       this.product_group_tpye = getPush[0].item.groupType; //产品类别
       if (getPush[0].salPromotion != null) {
         this.arrearsFlag = getPush[0].salPromotion.arrearsFlag; //用于活动N/Y
       } else {
         this.arrearsFlag = null;
       }
-      console.log(this.arrearsFlag);
-      //console.log(this.product_group_tpye);
       for (var i = 0; i < getPush.length; i++) {
         this.array[i] = new Object();
         //判断有没有活动时候传参的不同
@@ -1061,13 +1033,10 @@ export default {
           this.array[i].prime_cost = getPush[i].quantity * getPush[i].price;
         }
       }
-      //console.log(this.array);
       var url = "/order/getPromotion.do";
       var data = this.array;
       var allcost = 0;
-      console.log(data);
       activityPrice(url, data).then(res => {
-        console.log(res);
         for (var j = 0; j < res.data.length; j++) {
           this.array[j].questPrice = res.data[j].promotion_cost;
           allcost += parseFloat(res.data[j].promotion_cost);
@@ -1075,18 +1044,13 @@ export default {
         /* allcost=allcost.toString(); */
         //将allspend赋值活动后总价
         this.ctm_order.allSpend = allcost;
-        console.log(this.ctm_order.allSpend);
         this.totalPrice = allcost;
-        console.log(this.array);
-        //console.log(typeof this.totalPrice);
         this.orderList();
       });
     },
     //预留算法 获取订单列表
     orderList() {
       var getPush2 = JSON.parse(sessionStorage.getItem("shopping"));
-      console.log(getPush2);
-
       for (var i = 0; i < getPush2.length; i++) {
         this.array2[i] = new Object();
         this.array2[i].curtainWidth = getPush2[i].width;
@@ -1104,7 +1068,6 @@ export default {
           this.array2[i].promotionType = getPush2[0].salPromotion.orderType;
           this.array2[i].flagFlType = getPush2[0].salPromotion.falgFl;
         }
-        console.log(this.array2[0].promotionType);
         //初始化
         this.array2[i].orderNo = getPush2[i].orderNumber;
         this.array2[i].yuefanli = 0;
@@ -1260,6 +1223,13 @@ export default {
               oldUrl: "order/checkOrder",
               newUrl: "order/myOrder"
             });
+          })
+          .catch(res => {
+            this.$alert("提交失败:" + res.msg, "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            console.log(res);
           });
       });
     },
@@ -1305,8 +1275,6 @@ export default {
         //submitOrder(url2, data2)
         normalOrderSettlement(data2)
           .then(res => {
-            console.log(res);
-            console.log("成功!!!");
             //活动类型"N"或者应付为0不需要判断余额
             if (
               this.allSpend == 0 ||
@@ -1332,11 +1300,17 @@ export default {
             }
           })
           .then(() => {
-            //DeleteShopRecord(deleteArray); //删除订单信息（提交一起删除了）
             this.closeToTab({
               oldUrl: "order/checkOrder",
               newUrl: "order/myOrder"
             });
+          })
+          .catch(res => {
+            this.$alert("提交失败:" + res.msg, "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            console.log(res);
           });
       });
     },
@@ -1349,10 +1323,9 @@ export default {
         cid: Cookies.get("cid"),
         companyId: Cookies.get("companyId")
       };
-      
+
       //querycharge(url, data).then(res => {
       getCustomerInfo(data).then(res => {
-        console.log(res);
         this.chargeData = res.data;
       });
     },
@@ -1373,7 +1346,7 @@ export default {
     getOrderHead() {
       var getPush = JSON.parse(sessionStorage.getItem("shopping"));
       var orderItem = JSON.parse(sessionStorage.getItem("shoppingHead"));
-      if (getPush[0].orderNumber) {
+      if (getPush[0].orderNumber) {//窗帘重新提交本身有表头数据，加载默认数据
         this.ctm_order.orderNo = orderItem.ORDER_NO;
         this.ctm_order.buyUser = orderItem.BUYUSER;
         this.ctm_order.buyUserPhone = orderItem.BUYUSERPHONE;
@@ -1396,7 +1369,6 @@ export default {
     }
   },
   created: function() {
-    console.log(Cookies.get("isManager"));
     this.getOrderHead();
     this.getProvince(); //三级联动
     this.allAddress(); //获取地址
@@ -1405,7 +1377,6 @@ export default {
     this.chargeQuery(); //经办人
     this.cid = Cookies.get("cid");
     this.realName = Cookies.get("realName");
-    console.log(Cookies.get("cur_status"));
     this.curtainStatus = Cookies.get("cur_status");
     if (Cookies.get("cur_status") == 1) {
       this.curtainOrOther = false;

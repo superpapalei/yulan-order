@@ -168,11 +168,12 @@
                 </el-table-column>
                 <el-table-column label="用量"
                     header-align="center"
+                    align="center"
                     width="80">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.itemType === 'lspb'"></span>
+                        <span v-if="scope.row.itemType === 'lspb'">--</span>
                         <span v-else-if="scope.row.modifyFlag === 'Y'">
-                            <el-input
+                            <el-input v-if ="scope.row.itemType != 'lt'"
                                 style="width: 75%;"
                                 size="mini"
                                 oninput="value=value.replace(/[^\d.]/g,'')
@@ -180,6 +181,16 @@
                                 .replace('.', '$#$').replace(/\./g, '')
                                 .replace('$#$', '.')
                                 .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 2)"
+                                v-model="scope.row.dosage">
+                            </el-input>
+                            <el-input v-else
+                                style="width: 75%;"
+                                size="mini"
+                                oninput="value=value.replace(/[^\d.]/g,'')
+                                .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                                .replace('.', '$#$').replace(/\./g, '')
+                                .replace('$#$', '.')
+                                .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
                                 v-model="scope.row.dosage">
                             </el-input>
                             {{(scope.row.dosage === '')?'':scope.row.unit}}

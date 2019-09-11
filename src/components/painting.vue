@@ -353,7 +353,7 @@ export default {
       getPaintingList(url, data).then(res => {
         console.log(res);
         this.paintingData = res.airbrushDesignerAssureList;
-        if (res.airbrushDesignerAssureList) {
+        if (res.airbrushDesignerAssureList.length > 0) {
           this.count = res.airbrushDesignerAssureList[0].total;
         }
       });
