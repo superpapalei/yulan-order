@@ -67,6 +67,8 @@ export function tabsName(index) {
             return '我的优惠券'
         case 'notification/notificationMain':
             return '公告'
+        case 'complaint':
+            return '投诉反馈'
         default:
             return 'xxx';
     }
