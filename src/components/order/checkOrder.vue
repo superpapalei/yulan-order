@@ -547,6 +547,8 @@ export default {
           return 0;
         }
       };
+      this.transferData.sort(compare);
+      this.transferData.reverse();
       var morendizhi = this.transferData.pop();
       this.transferData.unshift(morendizhi);
     },
@@ -911,7 +913,7 @@ export default {
           this.transferData = res.data.data;
           this.sortAddress();
           this.data = [];
-          if (this.ctm_order.wlTel && this.ctm_order.wlContacts) {
+          if (this.ctm_order.wlTel && this.ctm_order.wlContacts) {//如果是窗帘重新提交进来有默认值
             var addIndex = 0;
             for (var i = 0; i < this.transferData.length; i++) {
               var addArr = {
@@ -1344,7 +1346,7 @@ export default {
     getOrderHead() {
       var getPush = JSON.parse(sessionStorage.getItem("shopping"));
       var orderItem = JSON.parse(sessionStorage.getItem("shoppingHead"));
-      if (getPush[0].orderNumber) {
+      if (getPush[0].orderNumber) {//窗帘重新提交本身有表头数据，加载默认数据
         this.ctm_order.orderNo = orderItem.ORDER_NO;
         this.ctm_order.buyUser = orderItem.BUYUSER;
         this.ctm_order.buyUserPhone = orderItem.BUYUSERPHONE;

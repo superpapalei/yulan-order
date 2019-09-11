@@ -6,13 +6,14 @@
       </div>
       <el-dialog
         title="订单详情"
-        :close-on-click-modal="false"
+        :show-close="true"
         :visible.sync="dialogVisible"
         width="95%"
       >
         <dialogOrderDetail :ruleForm="ruleForm"></dialogOrderDetail>
       </el-dialog>
       <div class="block">
+        <span>选择月份：</span>
         <el-date-picker
           @change="searchByMonth"
           v-model="date"
@@ -22,7 +23,7 @@
         ></el-date-picker>
       </div>
       <div>
-        <p class="fstrong f16" style="margin-top:10px;">我的订单(已提交)信息汇总表:</p>
+        <p class="fstrong f16" style="margin-top:10px;">订单信息汇总表:</p>
       </div>
       <el-table
         :data="tableData"
@@ -33,7 +34,7 @@
         style="width: 100%; margin-top:10px"
       >
         <el-table-column>
-          <el-table-column prop="DATE_CRE" width="160" label="时间"></el-table-column>
+          <el-table-column prop="WEB_TJ_TIME" width="160" label="提交时间"></el-table-column>
         </el-table-column>
         <el-table-column :label="tableHead1">
           <el-table-column label="订单号">
@@ -76,6 +77,7 @@ import Axios from "axios";
 import Cookies from "js-cookie";
 import dialogOrderDetail from "../components/order/dialogOrderDetail";
 import { searchAssignments, orderDetail } from "@/api/orderList";
+import { GetTaskProgress } from "@/api/orderListASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 export default {
@@ -107,7 +109,6 @@ export default {
       this.order_no = val;
       console.log(this.cid, this.order_no);
       this.getDetail();
-      this.dialogVisible = true;
     },
     //获取当前月份
     initMonth() {
@@ -166,6 +167,7 @@ export default {
         console.log(res);
         console.log(res.data.data[0]);
         this.ruleForm = res.data.data[0];
+        this.dialogVisible = true;
       });
     },
     //按月搜索
@@ -183,9 +185,11 @@ export default {
         cid: Cookies.get("cid"),
         companyId: Cookies.get("companyId")
       };
-      searchAssignments(url, data).then(res => {
+      //searchAssignments(url, data)
+       GetTaskProgress(data)
+        .then(res => {
         console.log(res);
-        let zoom = res.data.orders;
+        let zoom = res.data[0].orders;
         let reduce = 0;
         for (let i = 0; i < zoom.length; i++) {
           zoom[i].sumMoney =
@@ -194,8 +198,8 @@ export default {
         }
         console.log(zoom);
         this.tableData = zoom;
-        this.assignments = res.data.assignments.assignments;
-        this.assignmentsTarget = res.data.assignments.assignmentsTarget;
+        this.assignments = res.data[0].assignments.ASSIGNMENTS;
+        this.assignmentsTarget = res.data[0].assignments.ASSIGNMENTS_TARGET;
         this.assignmentsReduce = (this.assignmentsTarget - reduce).toFixed(2);
         this.tHead();
       });

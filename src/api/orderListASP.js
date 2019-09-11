@@ -182,9 +182,23 @@ export function getPackDetailInfo(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//MainController
 export function RedirectMain(data, config = {}) {
     return post('/Home/Main', data, config).then((res) => {
         return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//任务查询获得当月订单
+export function GetTaskProgress(data, config = {}) {
+    return post('/CTM_ORDER/GetTaskProgress', data, config).then((res) => {
+        if (res.code === 0 || res.success) {//放到外面判断，有些返回不会返回是否成功，直接返回数据
+            return Promise.resolve(res);
+        }
+        else {
+            return Promise.reject(res);
+        }
     }).catch((err) => {
         return Promise.reject(err);
     })
