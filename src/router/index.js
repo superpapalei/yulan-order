@@ -31,6 +31,7 @@ import myCoupon from '@/components/center/myCoupon'
 import DetailRefund from '@/components/detail/detailRefund'
 import notificationMain from '@/components/notification/notificationMain'
 import SupplyPort from '@/components/supplierModule/supplyPort'
+import Complaint from '@/components/complaint'
 
 Vue.use(Router)
 
@@ -250,6 +251,10 @@ const router = new Router({
           path: '/supplierModule/supplyPort',
           name: 'supplyPort',
           component: SupplyPort
+        },{
+          path: '/complaint',
+          name: 'complaint',
+          component: Complaint,
         }
       ]
     }

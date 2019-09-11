@@ -118,6 +118,14 @@
                 />
               </el-menu-item>
             </router-link>
+            <router-link to="/complaint" tag="div">
+              <el-menu-item  v-if="identity === 'ECWEB'||identity === 'USER'" 
+              index="complaint">
+                <!-- <i class="iconfont icon-color">&#xe612;</i> -->
+                <i class="el-icon-s-custom"></i>
+                <span slot="title">投诉反馈</span>
+              </el-menu-item>
+            </router-link>
             <el-submenu index="design">
               <template slot="title">
                 <i class="iconfont icon-color">&#xe7fb;</i>

@@ -5,7 +5,7 @@
                 <span class="fstrong f16">软装</span>
             </div>
             <div id="shopsCon">
-                <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tabs v-model="activeName" @tab-click="handleClick" >
                     <div id="shopSearchBox" class="mt10">
                         <el-input clearable
                             v-model.trim="searchKey" 
@@ -228,7 +228,7 @@ export default {
             });
             return data
         },
-        //创建每个软装的数量
+        //创建软装的数量
         createNumberList(len){
             this.numberList = [];
             for(var i = 0; i < len; i++){
