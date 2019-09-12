@@ -69,6 +69,12 @@ export function tabsName(index) {
             return '公告'
         case 'complaint':
             return '投诉反馈'
+        case 'query/stockQuery':
+            return '库存查询'
+        case 'query/areaQuery':
+            return '区域订单查询'
+        case 'query/orderQuery':
+            return '订单查询'
         default:
             return 'xxx';
     }
