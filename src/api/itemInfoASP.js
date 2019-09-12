@@ -11,12 +11,7 @@ export function GetItemByProductType(data, config = {}) {
 //通过stockId查询物料
 export function GetStockByItemNo(data, config = {}) {
     return post('/ITEM/GetStockByItemNo', data, config).then((res) => {
-        if (res.code === 0 || res.success) {//放到外面判断，有些返回不会返回是否成功，直接返回数据
-            return Promise.resolve(res);
-        }
-        else {
-            return Promise.reject(res);
-        }
+        return Promise.resolve(res);
     }).catch((err) => {
         return Promise.reject(err);
     })
