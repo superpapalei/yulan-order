@@ -162,6 +162,29 @@
                 <span slot="title">下载专区</span>
               </el-menu-item>
             </router-link>
+            <el-submenu index="query" v-if="customerType !== '110'">
+              <template slot="title">
+                <i class="el-icon-search"></i>
+                <span>查询</span>
+              </template>
+              <el-menu-item-group>
+                <router-link to="/query/stockQuery" tag="div">
+                  <el-menu-item index="query/stockQuery">
+                    <span>库存查询</span>
+                  </el-menu-item>
+                </router-link>
+                <router-link to="/query/areaQuery" tag="div">
+                  <el-menu-item index="query/areaQuery">
+                    <span>区域订单查询</span>
+                  </el-menu-item>
+                </router-link>
+                 <router-link to="/query/orderQuery" tag="div">
+                  <el-menu-item index="query/orderQuery">
+                    <span>订单查询</span>
+                  </el-menu-item>
+                </router-link>
+              </el-menu-item-group>
+            </el-submenu>
           </el-menu>
         </el-scrollbar>
       </el-aside>
@@ -817,6 +840,10 @@ export default {
 </style>
 
 <style>
+.el-transfer-panel__list.is-filterable{
+    height:95px !important
+  
+}
 .el-card__header {
   padding: 13px 20px !important;
 }
