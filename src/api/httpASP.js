@@ -6,6 +6,12 @@ import Cookies from "js-cookie";
 var baseUrl = 'http://14.29.223.114:568/';//正式
 //var baseUrl = 'http://47.107.56.156:568/';//不用了
 
+const DECODE = {
+    CODE_INVALID: -1,//失效
+    CODE_OK: 0,//成功
+    CODE_FAIL: 1//失败
+}
+
 /**
  * 封装get方法
  * @param url 
@@ -26,16 +32,34 @@ export function get(url, params = {}, config = {}) {
         }, config)
             .then(response => {
                 Axios.defaults.withCredentials = true;
-                if (response.data.code == -1) {
-                    vm.$router.push({
-                        path: '/login'
-                    });
-                    reject(response.data);
+                var res = response.data;
+                if (res.code != undefined) {//vue返回code
+                    if (res.code == DECODE.CODE_INVALID) {//失效
+                        vm.$router.push({
+                            path: '/login'
+                        });
+                        console.log(res.msg);
+                        reject(res);
+                    } else if (res.code == DECODE.CODE_OK) {//成功
+                        resolve(res);
+                    } else {//其他返回失败
+                        console.log(res.msg);
+                        reject(res);
+                    }
+                } else if (res.success != undefined) {//ext返回success
+                    if (res.success)
+                        resolve(res);
+                    else {
+                        console.log(res.msg);
+                        reject(res);
+                    }
+                } else {//ext只返回数据的类型
+                    resolve(res);
                 }
-                resolve(response.data);
             })
             .catch(err => {
                 Axios.defaults.withCredentials = true;
+                console.log(err.msg);
                 reject(err)
             })
     })
@@ -58,17 +82,35 @@ export function post(url, data = {}, config = {}) {
         Axios.post(baseUrl + url, data, config)
             .then(response => {
                 Axios.defaults.withCredentials = true;
-                if (response.data.code == -1) {
-                    vm.$router.push({
-                        path: '/login'
-                    });
-                    reject(response.data);
+                var res = response.data;
+                if (res.code != undefined) {//vue返回code
+                    if (res.code == DECODE.CODE_INVALID) {//失效
+                        vm.$router.push({
+                            path: '/login'
+                        });
+                        console.log(res.msg);
+                        reject(res);
+                    } else if (res.code == DECODE.CODE_OK) {//成功
+                        resolve(res);
+                    } else {//其他返回失败
+                        console.log(res.msg);
+                        reject(res);
+                    }
+                } else if (res.success != undefined) {//ext返回success
+                    if (res.success)
+                        resolve(res);
+                    else {
+                        console.log(res.msg);
+                        reject(res);
+                    }
+                } else {//ext只返回数据的类型
+                    resolve(res);
                 }
-                resolve(response.data);
             })
-            .catch(error => {
+            .catch(err => {
                 Axios.defaults.withCredentials = true;
-                reject(error);
+                console.log(err.msg);
+                reject(err);
             })
     })
 }
@@ -90,17 +132,35 @@ export function patch(url, data = {}, config = {}) {
         Axios.patch(baseUrl + url, data, config)
             .then(response => {
                 Axios.defaults.withCredentials = true;
-                if (response.data.code == -1) {
-                    vm.$router.push({
-                        path: '/login'
-                    });
-                    reject(response.data);
+                var res = response.data;
+                if (res.code != undefined) {//vue返回code
+                    if (res.code == DECODE.CODE_INVALID) {//失效
+                        vm.$router.push({
+                            path: '/login'
+                        });
+                        console.log(res.msg);
+                        reject(res);
+                    } else if (res.code == DECODE.CODE_OK) {//成功
+                        resolve(res);
+                    } else {//其他返回失败
+                        console.log(res.msg);
+                        reject(res);
+                    }
+                } else if (res.success != undefined) {//ext返回success
+                    if (res.success)
+                        resolve(res);
+                    else {
+                        console.log(res.msg);
+                        reject(res);
+                    }
+                } else {//ext只返回数据的类型
+                    resolve(res);
                 }
-                resolve(response.data);
             })
-            .catch(error => {
+            .catch(err => {
                 Axios.defaults.withCredentials = true;
-                reject(error);
+                console.log(err.msg);
+                reject(err);
             })
     })
 }
@@ -122,15 +182,33 @@ export function put(url, data = {}, config = {}) {
         Axios.put(baseUrl + url, data, config)
             .then(response => {
                 Axios.defaults.withCredentials = true;
-                if (response.data.code == -1) {
-                    vm.$router.push({
-                        path: '/login'
-                    });
-                    reject(response.data);
+                var res = response.data;
+                if (res.code != undefined) {//vue返回code
+                    if (res.code == DECODE.CODE_INVALID) {//失效
+                        vm.$router.push({
+                            path: '/login'
+                        });
+                        console.log(res.msg);
+                        reject(res);
+                    } else if (res.code == DECODE.CODE_OK) {//成功
+                        resolve(res);
+                    } else {//其他返回失败
+                        console.log(res.msg);
+                        reject(res);
+                    }
+                } else if (res.success != undefined) {//ext返回success
+                    if (res.success)
+                        resolve(res);
+                    else {
+                        console.log(res.msg);
+                        reject(res);
+                    }
+                } else {//ext只返回数据的类型
+                    resolve(res);
                 }
-                resolve(response.data);
             }, err => {
                 Axios.defaults.withCredentials = true;
+                console.log(err);
                 reject(err)
             })
     })

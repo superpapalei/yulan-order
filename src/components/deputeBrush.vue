@@ -251,7 +251,7 @@ export default {
         this.assignmentsTarget = res.data[0].assignments.ASSIGNMENTS_TARGET;
         this.assignmentsReduce = (this.assignmentsTarget - reduce).toFixed(2);
         this.tHead();
-      });
+      })
     },
     //隔行变色
     tableRowClassName({ row, rowIndex }) {
