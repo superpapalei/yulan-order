@@ -9,7 +9,7 @@
           </div>
           <el-menu
             style="margin-bottom:10px;"
-            :default-openeds="['shops', 'design', 'shoppingCar']"
+            :default-openeds="['shops', 'design', 'shoppingCar', 'query']"
             :default-active="url"
             @select="addTab"
             :collapse="asideStatus"
@@ -89,7 +89,11 @@
               <el-menu-item v-if="customerType !== '110'" index="painting">
                 <i class="iconfont icon-color">&#xe7fb;</i>
                 <span slot="title">委托喷绘书</span>
-                <el-badge v-if="getPainting > 0" class="mark r" :value="getPainting" />
+                <el-badge
+                  v-if="getPainting > 0"
+                  class="mark r"
+                  :value="getPainting"
+                />
               </el-menu-item>
             </router-link>
             <router-link to="/yulanPainting" tag="div">
@@ -106,7 +110,7 @@
             </router-link>
             <router-link to="/refundCompensation" tag="div">
               <el-menu-item
-                v-if="identity === 'ECWEB'||identity === 'USER'"
+                v-if="identity === 'ECWEB' || identity === 'USER'"
                 index="refundCompensation"
               >
                 <i class="iconfont icon-color">&#xe6ee;</i>
@@ -119,8 +123,10 @@
               </el-menu-item>
             </router-link>
             <router-link to="/complaint" tag="div">
-              <el-menu-item  v-if="identity === 'ECWEB'||identity === 'USER'" 
-              index="complaint">
+              <el-menu-item
+                v-if="identity === 'ECWEB' || identity === 'USER'"
+                index="complaint"
+              >
                 <!-- <i class="iconfont icon-color">&#xe612;</i> -->
                 <i class="el-icon-s-custom"></i>
                 <span slot="title">投诉反馈</span>
@@ -150,7 +156,7 @@
                 <span slot="title">市场信息</span>
               </el-menu-item>
             </router-link>
-             <router-link to="/supplierModule/supplyPort" tag="div">
+            <router-link to="/supplierModule/supplyPort" tag="div">
               <el-menu-item index="supplierModule/supplyPort">
                 <i class="el-icon-s-home"></i>
                 <span slot="title">供应商门户</span>
@@ -178,7 +184,7 @@
                     <span>区域订单查询</span>
                   </el-menu-item>
                 </router-link>
-                 <router-link to="/query/orderQuery" tag="div">
+                <router-link to="/query/orderQuery" tag="div">
                   <el-menu-item index="query/orderQuery">
                     <span>订单查询</span>
                   </el-menu-item>
@@ -191,7 +197,10 @@
       <el-container style="width:85%; min-width:1050px;">
         <el-header height="50px">
           <ul class="l">
-            <li :title="(asideStatus==true)?'菜单展开':'菜单收起'" @click="changeAside">
+            <li
+              :title="asideStatus == true ? '菜单展开' : '菜单收起'"
+              @click="changeAside"
+            >
               <i id="asideControll" class="iconfont">&#xe61e;</i>
             </li>
             <!-- <li title="主页" @click="dialogFormVisible = true">
@@ -209,26 +218,34 @@
               <!-- v-if = "isContainAttr('shoppingCar')"  -->
               <el-dropdown trigger="hover" style="margin:0;">
                 <span class="el-dropdown-link mr10">
-                  <i class="iconfont ml10" style="margin-right:3px;">&#xf0179;</i>
+                  <i class="iconfont ml10" style="margin-right:3px;"
+                    >&#xf0179;</i
+                  >
                   购物车
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown" style="min-width: 120px;">
                   <!-- v-if = "isContainAttr('shoppingCar/shopping?wallPaper')"   -->
                   <router-link to="/shoppingCar/shopping?wallPaper" tag="li">
-                    <el-dropdown-item @click.native="addTab('shoppingCar/shopping?wallPaper')">
+                    <el-dropdown-item
+                      @click.native="addTab('shoppingCar/shopping?wallPaper')"
+                    >
                       <span>墙纸配套类</span>
                     </el-dropdown-item>
                   </router-link>
                   <!-- v-if = "isContainAttr('shoppingCar/shopping?curtain')"   -->
                   <router-link to="/shoppingCar/shopping?curtain" tag="li">
-                    <el-dropdown-item @click.native="addTab('shoppingCar/shopping?curtain')">
+                    <el-dropdown-item
+                      @click.native="addTab('shoppingCar/shopping?curtain')"
+                    >
                       <span>窗帘</span>
                     </el-dropdown-item>
                   </router-link>
                   <!--v-if = "isContainAttr('shoppingCar/shopping?softSuit')"   -->
                   <router-link to="/shoppingCar/shopping?softSuit" tag="li">
-                    <el-dropdown-item @click.native="addTab('shoppingCar/shopping?softSuit')">
+                    <el-dropdown-item
+                      @click.native="addTab('shoppingCar/shopping?softSuit')"
+                    >
                       <span>软装</span>
                     </el-dropdown-item>
                   </router-link>
@@ -253,9 +270,13 @@
                   <el-dropdown-item>修改对账密码</el-dropdown-item>-->
                   <!--v-if = "isContainAttr('myZone/myCoupon')"  -->
                   <router-link to="/myZone/myCoupon" tag="li">
-                    <el-dropdown-item @click.native="addTab('myZone/myCoupon')">我的优惠券</el-dropdown-item>
+                    <el-dropdown-item @click.native="addTab('myZone/myCoupon')"
+                      >我的优惠券</el-dropdown-item
+                    >
                   </router-link>
-                  <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+                  <el-dropdown-item divided @click.native="logout"
+                    >退出登录</el-dropdown-item
+                  >
                 </el-dropdown-menu>
               </el-dropdown>
             </li>
@@ -266,11 +287,13 @@
           <span
             v-if="isManager !== '1'"
             style="color:white;line-height:50px;font-size:12px;margin-left:10px;"
-          >{{'账户：'+cid+' '+realName+' '+'操作员'}}</span>
+            >{{ "账户：" + cid + " " + realName + " " + "操作员" }}</span
+          >
           <span
             v-else
             style="color:white;line-height:50px;font-size:12px;margin-left:10px;"
-          >{{'账户：'+cid+' '+realName+' '+'管理员'}}</span>
+            >{{ "账户：" + cid + " " + realName + " " + "管理员" }}</span
+          >
         </el-header>
         <el-main style="margin:0;padding:0;background:#ECF5EF;">
           <el-tabs
@@ -285,20 +308,23 @@
                 class="el-icon-bell ml10 mr10 f16"
                 style="line-height:30px;color:gold;font-weight:bold;"
               ></i>
-              <span style="color:red;margin-right:5px;margin-top:5px;">最新公告：</span>
-              <span v-if="newsTextArr.length == 0">{{adminText}}</span>
+              <span style="color:red;margin-right:5px;margin-top:5px;"
+                >最新公告：</span
+              >
+              <span v-if="newsTextArr.length == 0">{{ adminText }}</span>
               <span v-else style="line-height:30px;">
                 <transition name="slide">
                   <a
                     style="cursor:pointer;text-decoration:underline"
                     :key="newsTextArr[newsIndex].ID"
                     @click="showDetail(newsTextArr[newsIndex])"
-                  >{{newsTextArr[newsIndex].TITLE}}</a>
+                    >{{ newsTextArr[newsIndex].TITLE }}</a
+                  >
                 </transition>
               </span>
               <span class="r f14 mr10" style="line-height:30px;color:red;">
                 <strong>
-                  <i>{{moneySituation}}</i>
+                  <i>{{ moneySituation }}</i>
                 </strong>
                 <i
                   title="刷新余额"
@@ -308,7 +334,12 @@
                 ></i>
               </span>
             </div>
-            <el-dialog :show-close="true" :visible.sync="detailVisible" width="1000px" top="5vh">
+            <el-dialog
+              :show-close="true"
+              :visible.sync="detailVisible"
+              width="1000px"
+              top="5vh"
+            >
               <div v-html="detailData"></div>
             </el-dialog>
             <el-tab-pane
@@ -355,20 +386,6 @@ export default {
       identity: Cookies.get("identity"),
       newsIndex: 0,
       newsTextArr: [],
-      asideUrl: [
-        "shops/curtain",
-        "shops/softSuit",
-        "shops/wallPaper",
-        "statement",
-        "bankProof",
-        "deputeBrush",
-        "refundCompensation",
-        "design/imageShop",
-        "design/lanJu",
-        "marketInfo",
-        "supplierModule/supplyPort",
-        "downloadSpace"
-      ],
       asideStatus: false, //false:菜单栏处于展开状态； true：菜单栏处于收起状态
       asideWidth: "180px",
       defaultUrl: "",
@@ -840,9 +857,8 @@ export default {
 </style>
 
 <style>
-.el-transfer-panel__list.is-filterable{
-    height:95px !important
-  
+.el-transfer-panel__list.is-filterable {
+  height: 95px !important;
 }
 .el-card__header {
   padding: 13px 20px !important;
