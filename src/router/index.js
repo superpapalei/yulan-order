@@ -35,6 +35,7 @@ import Complaint from '@/components/complaint'
 import StockQuery from '@/components/query/stockQuery'
 import AreaQuery from '@/components/query/areaQuery'
 import OrderQuery from '@/components/query/orderQuery'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -263,11 +264,13 @@ const router = new Router({
           path:'/query/stockQuery',
           name:'stockQuery',
           component:StockQuery
-        },{
+        },
+        {
           path:'/query/areaQuery',
           name:'areaQuery',
           component:AreaQuery
-        },{
+        },
+        {
           path:'/query/orderQuery',
           name:'orderQuery',
           component:OrderQuery
@@ -285,7 +288,7 @@ Router.prototype.push = function push(location) {
 import Cookies from 'js-cookie'
 //路由守卫
 router.beforeEach((to, from, next) => {
-  console.log(to.meta.keepAlive ? true : false);
+  //console.log(to.meta.keepAlive ? true : false);
   if (!Cookies.get('cid') && !Cookies.get('customerType') && to.name != 'login') {//判断用户信息，不合法返回登陆界面
     next('/login')
   } else {

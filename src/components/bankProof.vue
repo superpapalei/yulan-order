@@ -12,7 +12,8 @@
           placeholder="日期区间"
           v-model="beginTime"
           style="width:14%;"
-        ></el-date-picker>--
+        ></el-date-picker
+        >--
         <el-date-picker
           type="date"
           format="yyyy-MM-dd"
@@ -29,42 +30,84 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-button size="medium" type="success" @click="searchBankList()">查询</el-button>
-        <el-button style="float:right" size="medium" @click="newOne" type="primary">新建</el-button>
+        <el-button size="medium" type="success" @click="searchBankList()"
+          >查询</el-button
+        >
+        <el-button
+          style="float:right"
+          size="medium"
+          @click="newOne"
+          type="primary"
+          >新建</el-button
+        >
       </div>
-      <el-table border :data="bankData" style="width: 100%" :row-class-name="tableRowClassName">
-        <el-table-column width="130" prop="id" label="凭证单号" align="center"></el-table-column>
+      <el-table
+        border
+        :data="bankData"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+      >
+        <el-table-column
+          width="130"
+          prop="id"
+          label="凭证单号"
+          align="center"
+        ></el-table-column>
         <el-table-column label="凭证时间" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.createTs | datatrans}}</span>
+            <span>{{ scope.row.createTs | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="yulanBank" width="160" label="收款银行" align="center"></el-table-column>
-        <el-table-column prop="payerName" label="付款(公司/人)" align="center"></el-table-column>
-        <el-table-column prop="payerAccount" width="160" label="付款账号" align="center"></el-table-column>
-        <el-table-column prop="payAmount" label="汇款金额" width="100" align="center"></el-table-column>
+        <el-table-column
+          prop="yulanBank"
+          width="160"
+          label="收款银行"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="payerName"
+          label="付款(公司/人)"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="payerAccount"
+          width="160"
+          label="付款账号"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="payAmount"
+          label="汇款金额"
+          width="100"
+          align="center"
+        ></el-table-column>
         <el-table-column label="汇款时间" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.payDate | datatrans}}</span>
+            <span>{{ scope.row.payDate | datatrans }}</span>
           </template>
         </el-table-column>
         <el-table-column width="80" label="状态" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.state | transStatus}}</span>
+            <span>{{ scope.row.state | transStatus }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" width="200" label="操作">
           <template slot-scope="scope">
-            <el-button @click="checkDetail(scope.row)" type="warning" icon="el-icon-search" circle></el-button>
             <el-button
-              v-if="scope.row.state =='SENDBACK'"
+              @click="checkDetail(scope.row)"
+              type="warning"
+              icon="el-icon-search"
+              circle
+            ></el-button>
+            <el-button
+              v-if="scope.row.state == 'SENDBACK'"
               @click="editIt(scope.row)"
               type="primary"
               icon="el-icon-edit"
               circle
             ></el-button>
             <el-button
-              v-if="scope.row.state =='SENDBACK'"
+              v-if="scope.row.state == 'SENDBACK'"
               @click="deleteDetail(scope.row)"
               type="danger"
               icon="el-icon-delete"
@@ -84,60 +127,88 @@
       </div>
     </el-card>
 
-    <el-dialog title="银行汇款凭证单" :visible.sync="bankDetail" :close-on-click-modal="false" width="75%">
+    <el-dialog
+      title="银行汇款凭证单"
+      :visible.sync="bankDetail"
+      :close-on-click-modal="false"
+      width="75%"
+    >
       <!-- 查看区 -->
       <div v-show="EDITorCHECK" class="table-c">
-        <h2 style="text-align:center;">银行汇款凭证单-[{{tableData.state | transStatus}}]</h2>
-        <h3>建立时间：{{tableData.createTs | datatrans}}&nbsp;&nbsp;&nbsp;&nbsp;提交时间：{{tableData.submitTs | datatrans}}</h3>
-        <h3
-          v-show="isBack"
-        >退回时间：{{tableData.sendbackTs | datatrans}}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{tableData.sendbackReason}}</h3>
-        <h3 v-show="isDelete">作废时间：{{tableData.cancelTs | datatrans}}</h3>
-        <h3
-          v-show="isChuli"
-        >处理人：{{tableData.erpProcessOp}}&nbsp;&nbsp;&nbsp;&nbsp;处理时间：{{tableData.erpProcessTs | datatrans}}</h3>
+        <h2 style="text-align:center;">
+          银行汇款凭证单-[{{ tableData.state | transStatus }}]
+        </h2>
+        <h3>
+          建立时间：{{
+            tableData.createTs | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;提交时间：{{
+            tableData.submitTs | datatrans
+          }}
+        </h3>
+        <h3 v-show="isBack">
+          退回时间：{{
+            tableData.sendbackTs | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{ tableData.sendbackReason }}
+        </h3>
+        <h3 v-show="isDelete">
+          作废时间：{{ tableData.cancelTs | datatrans }}
+        </h3>
+        <h3 v-show="isChuli">
+          处理人：{{
+            tableData.erpProcessOp
+          }}&nbsp;&nbsp;&nbsp;&nbsp;处理时间：{{
+            tableData.erpProcessTs | datatrans
+          }}
+        </h3>
 
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="grayTD">流水号</td>
-            <td>{{tableData.id}}</td>
+            <td>{{ tableData.id }}</td>
             <td class="grayTD">客户代码</td>
-            <td>{{tableData.cid}}</td>
+            <td>{{ tableData.cid }}</td>
             <td class="grayTD">客户名称</td>
-            <td>{{tableData.cname}}</td>
+            <td>{{ tableData.cname }}</td>
           </tr>
           <tr>
-            <td class="tableCol" style="font-size:20px;" colspan="6">付款信息</td>
+            <td class="tableCol" style="font-size:20px;" colspan="6">
+              付款信息
+            </td>
           </tr>
           <tr>
             <td class="grayTD" colspan="1">汇入银行</td>
-            <td colspan="2">{{tableData.yulanBank}}</td>
+            <td colspan="2">{{ tableData.yulanBank }}</td>
             <td class="grayTD" colspan="1" rowspan="6">付款凭证</td>
             <td colspan="2" rowspan="6">
-              <el-tooltip class="item" effect="dark" content="点击放大图片" placement="top">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="点击放大图片"
+                placement="top"
+              >
                 <img @click="BIG" class="ISimg" :src="tableData.imgUrl" />
               </el-tooltip>
             </td>
           </tr>
           <tr>
             <td class="grayTD" colspan="1">付款公司（人）</td>
-            <td colspan="2">{{tableData.payerName}}</td>
+            <td colspan="2">{{ tableData.payerName }}</td>
           </tr>
           <tr>
             <td class="grayTD" colspan="1">付款银行账号</td>
-            <td colspan="2">{{tableData.payerAccount}}</td>
+            <td colspan="2">{{ tableData.payerAccount }}</td>
           </tr>
           <tr>
             <td class="grayTD" colspan="1">付款金额</td>
-            <td colspan="2">{{tableData.payAmount}}</td>
+            <td colspan="2">{{ tableData.payAmount }}</td>
           </tr>
           <tr>
             <td class="grayTD" colspan="1">付款日期</td>
-            <td colspan="2">{{tableData.payDate | datatrans}}</td>
+            <td colspan="2">{{ tableData.payDate | datatrans }}</td>
           </tr>
           <tr style="height:130px;">
             <td class="grayTD" colspan="1">备注</td>
-            <td colspan="2">{{tableData.memo}}</td>
+            <td colspan="2">{{ tableData.memo }}</td>
           </tr>
         </table>
       </div>
@@ -149,20 +220,25 @@
           </tr>
           <tr>
             <td class="grayTD">流水号</td>
-            <td v-if="newORedit">{{sumbit.id}}</td>
+            <td v-if="newORedit">{{ sumbit.id }}</td>
             <td v-else>(提交后自动生成)</td>
             <td class="grayTD">客户代码</td>
-            <td>{{sumbit.cid}}</td>
+            <td>{{ sumbit.cid }}</td>
             <td class="grayTD">客户名称</td>
-            <td>{{sumbit.cname}}</td>
+            <td>{{ sumbit.cname }}</td>
           </tr>
           <tr>
-            <td class="tableCol" style="font-size:20px;" colspan="6">汇款信息</td>
+            <td class="tableCol" style="font-size:20px;" colspan="6">
+              汇款信息
+            </td>
           </tr>
           <tr>
             <td class="grayTD" colspan="1">汇入银行</td>
             <td colspan="2">
-              <el-select v-model="sumbit.yulanBank" placeholder="选择汇入玉兰账号所属银行">
+              <el-select
+                v-model="sumbit.yulanBank"
+                placeholder="选择汇入玉兰账号所属银行"
+              >
                 <el-option
                   v-for="item in bankArray"
                   :key="item.label"
@@ -201,9 +277,14 @@
             <td colspan="3">
               <span v-for="item of historyList" :key="item.index">
                 <el-button
-                  @click="writeHistory(item.PAYER_NAME,item.PAYER_ACCOUNT)"
+                  @click="writeHistory(item.PAYER_NAME, item.PAYER_ACCOUNT)"
                   type="text"
-                >付款公司（人）：{{item.PAYER_NAME}}&nbsp;&nbsp;&nbsp;&nbsp;付款银行账号：{{item.PAYER_ACCOUNT}}</el-button>
+                  >付款公司（人）：{{
+                    item.PAYER_NAME
+                  }}&nbsp;&nbsp;&nbsp;&nbsp;付款银行账号：{{
+                    item.PAYER_ACCOUNT
+                  }}</el-button
+                >
                 <br />
               </span>
             </td>
@@ -211,7 +292,11 @@
           <tr>
             <td class="grayTD" colspan="1">付款银行账号</td>
             <td colspan="2">
-              <el-input class="inputWidth" v-model="sumbit.payerAccount" placeholder="请输入付款银行账号"></el-input>
+              <el-input
+                class="inputWidth"
+                v-model="sumbit.payerAccount"
+                placeholder="请输入付款银行账号"
+              ></el-input>
             </td>
           </tr>
           <tr>
@@ -242,7 +327,7 @@
                 style="width:220px;margin:4px auto;"
                 type="textarea"
                 maxlength="200"
-                :autosize="{ minRows:8, maxRow:12}"
+                :autosize="{ minRows: 8, maxRow: 12 }"
                 resize="none"
                 v-model="sumbit.memo"
                 placeholder="请输入备注"
@@ -250,9 +335,12 @@
             </td>
           </tr>
         </table>
+
         <div style="margin:0 auto; width:75px;">
           <br />
-          <el-button v-if="newORedit" type="success" @click="submitEDIT">确 定</el-button>
+          <el-button v-if="newORedit" type="success" @click="submitEDIT"
+            >确 定</el-button
+          >
           <el-button v-else type="success" @click="sumbitNEW">提 交</el-button>
         </div>
       </div>
@@ -480,7 +568,6 @@ export default {
       }
       this.sumbit.imgUrl = this.sqlpath; //转换为相对地址
       sumbitForm(url, data).then(res => {
-        console.log(res);
         if (res.code == 0) {
           this.$alert("提交成功", "提示", {
             confirmButtonText: "确定",
@@ -530,7 +617,6 @@ export default {
       this.sumbit.cancelTs = null;
       this.sumbit.createTs = null;
       sumbitForm(url, data).then(res => {
-        console.log(res.data);
         if (res.code == 0) {
           this.$alert("修改成功", "提示", {
             confirmButtonText: "确定",
@@ -567,14 +653,11 @@ export default {
     },
     //编辑列表详情
     editIt(tab) {
-      console.log(tab.id);
       let url = Quest + "/PaymentBill/getPayBillContent.do";
       let data = {
         id: tab.id
       };
       getPayBillContent(url, data).then(res => {
-        console.log(res);
-        console.log(this.sumbit);
         this.sqlpath = res.data.imgUrl; //先保存一个
         res.data.imgUrl = Head + res.data.imgUrl;
         this.sumbit = res.data;
@@ -603,13 +686,11 @@ export default {
       } else {
         this.isBack = false;
       }
-      console.log(tab.id);
       let url = Quest + "/PaymentBill/getPayBillContent.do";
       let data = {
         id: tab.id
       };
       getPayBillContent(url, data).then(res => {
-        console.log(res.data);
         res.data.imgUrl = Head + res.data.imgUrl;
         this.tableData = res.data;
         this.EDITorCHECK = true;
@@ -618,7 +699,6 @@ export default {
     },
     //作废列表详情
     deleteDetail(tab) {
-      console.log(tab.id);
       let url = Quest + "/PaymentBill/updatePayBillState.do";
       let data = {
         id: tab.id,
@@ -631,7 +711,6 @@ export default {
       })
         .then(() => {
           changeStatus(url, data).then(res => {
-            console.log(res);
             this._getBankList();
             this.$alert("删除成功", "提示", {
               confirmButtonText: "确定",
@@ -666,9 +745,7 @@ export default {
         data.beginTime = this.beginTime + "00:00:00";
         data.finishTime = this.finishTime + "23:59:59";
       }
-      console.log(data);
       getBankList(url, data).then(res => {
-        console.log(res.data);
         this.count = res.count;
         this.bankData = res.data;
       });
@@ -687,7 +764,6 @@ export default {
         companyId: Cookies.get("companyId")
       };
       getHistory(url, data).then(res => {
-        console.log(res.data);
         this.historyList = res.data;
       });
     },
@@ -703,13 +779,11 @@ export default {
     },
     handleAvatarSuccess(res, file) {
       this.sumbit.imgUrl = URL.createObjectURL(file.raw);
-      console.log(res);
       if (res.code == 0) {
         this.sqlpath = res.sqlpath;
         this.sumbit.imgUrl = Head + res.sqlpath;
         this.sumbit.imgFileName = res.fileName;
       }
-      console.log(this.sumbit);
     },
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;

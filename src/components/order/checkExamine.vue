@@ -4,7 +4,7 @@
       title="窗帘详情"
       :show-close="true"
       :visible.sync="detailVisible"
-      width="92%"
+      width="95%"
       top="5vh"
     >
       <keep-alive>

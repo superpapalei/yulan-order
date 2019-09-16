@@ -339,8 +339,14 @@
               :visible.sync="detailVisible"
               width="1000px"
               top="5vh"
+              center
             >
               <div v-html="detailData"></div>
+              <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="detailVisible = false"
+                  >确 定</el-button
+                >
+              </span>
             </el-dialog>
             <el-tab-pane
               v-for="item in tabList"
@@ -364,7 +370,7 @@
 import { getUserMoney } from "@/api/user";
 import { getAllRefund } from "@/api/refund";
 import { getIconNumber } from "@/api/painting";
-import { GetNewNotification } from "@/api/notificationASP";
+import { GetNewNotification, InserFlag } from "@/api/notificationASP";
 import screenfull from "screenfull";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -385,7 +391,7 @@ export default {
       realName: Cookies.get("realName"),
       identity: Cookies.get("identity"),
       newsIndex: 0,
-      newsTextArr: [],
+      newsTextArr: [], //公告
       asideStatus: false, //false:菜单栏处于展开状态； true：菜单栏处于收起状态
       asideWidth: "180px",
       defaultUrl: "",
@@ -573,9 +579,21 @@ export default {
       }, 3000);
     },
     getNews() {
-      GetNewNotification().then(res => {
+      //获得最新的3条公告
+      GetNewNotification({ cid: this.cid }).then(res => {
         this.newsTextArr = res.data;
-        if (this.newsTextArr.length > 0) this.startMove();
+        if (this.newsTextArr.length > 0) {
+          this.startMove();
+          for (var i = 0; i < this.newsTextArr.length; i++) {
+            if (this.newsTextArr[i].showFlag == 1) {
+              //将所有需要显示的公告拼接
+              this.detailData += this.newsTextArr[i].CONTENT + "<br><br>";
+              this.detailVisible = true;
+              if (this.newsTextArr[i].POPUPTYPE == "FIRSTOFDAY")
+                InserFlag({ nid: this.newsTextArr[i].ID, cid: this.cid }); //标记为已显示
+            }
+          }
+        }
       });
     },
     showDetail(item) {
@@ -683,7 +701,8 @@ export default {
     this.$root.$on("refreshMoneyEvent", () => {
       this.userMoney();
     });
-    this.getNews();
+    //获得公告
+    if (this.customerType != "110") this.getNews();
   },
   beforeDestroy() {
     clearInterval(this.newsTimer);

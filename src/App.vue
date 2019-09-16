@@ -16,9 +16,9 @@ export default {
       history.go(1);//阻止页面后退
       console.log('禁止后退')
     };
-    window.oncontextmenu = (e)=> {
-        event.returnValue = false;//阻止右键菜单
-    };
+    // window.oncontextmenu = (e)=> {
+    //     event.returnValue = false;//阻止右键菜单
+    // };
   }
 };
 </script>

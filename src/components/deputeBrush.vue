@@ -15,7 +15,7 @@
       <div class="block">
         <span>选择月份：</span>
         <el-date-picker
-        :picker-options="pickerOptions1"
+          :picker-options="pickerOptions1"
           v-model="date1"
           type="month"
           placeholder="请选择月份"
@@ -126,7 +126,7 @@ export default {
       tableHead2: "",
       tableHead3: "",
       pickerOptions1: {
-        disabledDate: date1=> {
+        disabledDate: date1 => {
           if (this.date2) {
             return date1.getTime() >= new Date(this.date2).getTime();
           }
@@ -151,7 +151,6 @@ export default {
     openDialog(val, status) {
       this.cid = Cookies.get("cid");
       this.order_no = val;
-      console.log(this.cid, this.order_no);
       this.getDetail();
     },
     //获取当前月份
@@ -167,7 +166,6 @@ export default {
       this.searchByMonth();
     },
     toOrderDetail(val, status) {
-      console.log(val, status);
       Cookies.set("ORDER_NO", val);
       Cookies.set("status_ID", status);
       this.addTab("order/orderDetail");
@@ -208,8 +206,6 @@ export default {
         order_no: this.order_no
       };
       orderDetail(url, data).then(res => {
-        console.log(res);
-        console.log(res.data.data[0]);
         this.ruleForm = res.data.data[0];
         this.dialogVisible = true;
       });
@@ -217,16 +213,14 @@ export default {
     //按月搜索
     searchByMonth() {
       this.tableData = [];
-      if(!this.date1 && !this.date2) return;
-      else{
-        if(!this.date1) this.date1 = this.date2;
-        if(!this.date2) this.date2 = this.date1;
+      if (!this.date1 && !this.date2) return;
+      else {
+        if (!this.date1) this.date1 = this.date2;
+        if (!this.date2) this.date2 = this.date1;
       }
       let year = this.date1.slice(0, 4);
       let month = this.date1.slice(5, 7);
       let endMonth = this.date2.slice(5, 7);
-      console.log(year);
-      console.log(month);
       let url = "/assignments/getAssignments.do";
       let data = {
         year: year,
@@ -237,7 +231,6 @@ export default {
       };
       //searchAssignments(url, data)
       GetTaskProgress(data).then(res => {
-        console.log(res);
         let zoom = res.data[0].orders;
         let reduce = 0;
         for (let i = 0; i < zoom.length; i++) {
@@ -245,13 +238,16 @@ export default {
             zoom[i].ALL_SPEND + zoom[i].ALLBACK_Y + zoom[i].ALLBACK_M;
           reduce += zoom[i].ALL_SPEND;
         }
-        console.log(zoom);
         this.tableData = zoom;
-        this.assignments = res.data[0].assignments.ASSIGNMENTS;
-        this.assignmentsTarget = res.data[0].assignments.ASSIGNMENTS_TARGET;
-        this.assignmentsReduce = (this.assignmentsTarget - reduce).toFixed(2);
-        this.tHead();
-      })
+        if (res.data[0].assignments) {
+          this.assignments = res.data[0].assignments.ASSIGNMENTS;
+          this.assignmentsTarget = res.data[0].assignments.ASSIGNMENTS_TARGET;
+          this.assignmentsReduce = (this.assignmentsTarget - reduce).toFixed(2);
+          this.tHead();
+        } else {
+          this.tableHead1 = "本月无任务";
+        }
+      });
     },
     //隔行变色
     tableRowClassName({ row, rowIndex }) {

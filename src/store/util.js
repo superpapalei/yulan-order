@@ -58,23 +58,23 @@ export function tabsName(index) {
         case 'detail/detailSoftSuit':
             return '软装详情';
         case 'order/examine':
-            return '审核订单'
+            return '审核订单';
         case 'order/examineDetail':
-            return '审核详情'
+            return '审核详情';
         case 'order/checkExamine':
-            return '订单详情'
+            return '订单详情';
         case 'myZone/myCoupon':
-            return '我的优惠券'
+            return '我的优惠券';
         case 'notification/notificationMain':
-            return '公告'
+            return '公告';
         case 'complaint':
-            return '投诉反馈'
+            return '投诉反馈';
         case 'query/stockQuery':
-            return '库存查询'
+            return '库存查询';
         case 'query/areaQuery':
-            return '区域订单查询'
+            return '区域订单查询';
         case 'query/orderQuery':
-            return '订单查询'
+            return '订单查询';
         default:
             return 'xxx';
     }

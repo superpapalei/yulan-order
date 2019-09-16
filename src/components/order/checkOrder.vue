@@ -1079,7 +1079,7 @@ export default {
             this.ctm_order.reciverArea1 = this.data[0].province;
             this.ctm_order.reciverArea2 = this.data[0].city;
             this.ctm_order.reciverArea3 = this.data[0].country;
-            this.ctm_order.allAddress = this.data[0].postAddress;
+            this.ctm_order.allAddress = `${this.ctm_order.reciverArea1?this.ctm_order.reciverArea1:''}${this.ctm_order.reciverArea2?this.ctm_order.reciverArea2:''}${this.ctm_order.reciverArea3?this.ctm_order.reciverArea3:''}${this.ctm_order.postAddress}`;
           }
         })
         .catch(error => {
@@ -1119,7 +1119,7 @@ export default {
         this.ctm_order.reciverArea1 = this.data[0].province;
         this.ctm_order.reciverArea2 = this.data[0].city;
         this.ctm_order.reciverArea3 = this.data[0].country;
-        this.ctm_order.allAddress = `${this.ctm_order.reciverArea1}${this.ctm_order.reciverArea2}${this.ctm_order.reciverArea3}${this.ctm_order.postAddress}`;
+        this.ctm_order.allAddress = `${this.ctm_order.reciverArea1?this.ctm_order.reciverArea1:''}${this.ctm_order.reciverArea2?this.ctm_order.reciverArea2:''}${this.ctm_order.reciverArea3?this.ctm_order.reciverArea3:''}${this.ctm_order.postAddress}`;
         if (this.data[0].addressId == 0) {
           this.ctm_order.postAddressModified = "0";
           console.log("默认地址");

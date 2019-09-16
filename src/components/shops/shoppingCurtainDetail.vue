@@ -469,10 +469,8 @@ export default {
         // this.curtainData.width = this.message.width;
         // this.curtainData.height = this.message.height;
         // this.curtainData.wrinkle = this.message.foldMultiple;
-        // console.log(this.message);
         if(Cookies.get('curtainMsg') !== undefined && Cookies.get('curtainMsg') !== null){
             this.message = JSON.parse(Cookies.get('curtainMsg'));
-            console.log(this.message);
             this.getPJB();
             this.getDetail();
         }
@@ -589,7 +587,6 @@ export default {
                 this.allData = res;
                 this.getCurtainMsg(res);
                 this.getSpanArr(res);
-                console.log(res);
             }).catch(err =>{
                 console.log(err);
             })
@@ -636,7 +633,6 @@ export default {
                 this.curtainData.push(obj);
                 this.getDosage(obj,i);
             }
-            console.log(this.curtainData);
         },
         //点击更换编码名称
         getNewItemNo(data,index){
@@ -665,7 +661,6 @@ export default {
             this.dialogTitle = `【${this.getProductName(data.productType)}】类产品列表`;
             this.chooseIndex = index;
             this.chooseType = data.productType;
-            console.log(this.chooseType)
             if(data.productType !== 'GY'){
                 this.getAllItemNoData(1);
             }

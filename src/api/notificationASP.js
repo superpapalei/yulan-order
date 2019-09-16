@@ -16,3 +16,11 @@ export function GetNewNotification(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//插入已读公告记录
+export function InserFlag(data, config = {}) {
+    return post('/NOTIFICATION_READ_FLAG/InserFlag', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
