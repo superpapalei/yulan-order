@@ -28,7 +28,7 @@ export function tabsName(index) {
         case 'design/lanJu':
             return '兰居设计';
         case 'marketInfo':
-            return '市场信息';
+            return '调查表';
         case 'supplierModule/supplyPort':
             return '供应商门户';
         case 'downloadSpace':

@@ -152,7 +152,7 @@
             <router-link to="/marketInfo" tag="div">
               <el-menu-item index="marketInfo">
                 <i class="iconfont icon-color">&#xe627;</i>
-                <span slot="title">市场信息</span>
+                <span slot="title">调查表</span>
               </el-menu-item>
             </router-link>
             <router-link to="/supplierModule/supplyPort" tag="div">
