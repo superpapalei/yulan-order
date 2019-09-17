@@ -127,7 +127,6 @@
                 v-if="identity === 'ECWEB' || identity === 'USER'"
                 index="complaint"
               >
-                <!-- <i class="iconfont icon-color">&#xe612;</i> -->
                 <i class="el-icon-s-custom"></i>
                 <span slot="title">投诉反馈</span>
               </el-menu-item>

@@ -769,7 +769,7 @@ export default {
                     let _data = this.curtainData[this.chooseIndex];
                     //绣花边只需要修改自身，无需修改面料
                     if(_data.productType === 'XHB'){
-                        let keys = Object.values(res)[0];
+                        let keys = Object.values(res)[1];
                         if(isNaN(Number(keys))){
                             this.$alert('用量获取失败', '提示', {
                                 confirmButtonText: '好的',
