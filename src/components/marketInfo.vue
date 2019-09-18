@@ -20,7 +20,7 @@
           <template slot-scope="scope">
             <el-button
               :disabled="scope.row.completeStatus == 2"
-              @click="editStudy()"
+              @click="editStudy(scope.row)"
               type="primary"
               icon="el-icon-edit"
               circle
@@ -32,82 +32,163 @@
         :show-close="true"
         :close-on-click-modal="false"
         :visible.sync="detailVisible"
-        width="1200px"
+        width="900px"
         top="5vh"
         center
       >
         <header>
-          <h2 class="studyTitle">标题</h2>
+          <h2 class="studyTitle">{{ selectData.TITLE }}</h2>
+        </header>
+        <header>
+          <h2 class="studySubTitle">
+            {{ selectData.DESCP }}
+          </h2>
         </header>
         <div class="studyContent">
-          <el-card v-if="studyContextData.length >1" shadow="hover">
-            <div slot="header">
-              <span class="fstrong f16">第一组</span>
+          <!-- 循环组 -->
+          <el-card
+            shadow="hover"
+            v-for="group in studyContextData"
+            :key="group.ORDERINDEX"
+          >
+            <div v-if="studyContextData.length > 1" slot="header">
+              <span class="fstrong f16"
+                >{{ group.TITLE }} [{{ group.QUESTIONCOUNT }}]</span
+              >
             </div>
-            <div class="questionItem">
-              <h2 class="questionTitle">Q1 问题1<span> *</span></h2>
-              <div class="optionClass">
-                <el-radio-group v-model="radio" @change="radioChange">
-                  <el-radio class="optionSingle" label="1">非常满意</el-radio>
-                  <el-radio class="optionSingle" label="2">满意</el-radio>
-                  <el-radio class="optionSingle" label="3">基本满意</el-radio>
-                  <el-radio class="optionSingle" label="4">不满意</el-radio>
-                  <el-radio class="optionSingle" label="5">极不满意</el-radio>
-                </el-radio-group>
-              </div>
-            </div>
-            <div class="questionItem">
-              <h2 class="questionTitle">Q2 问题2<span> *</span></h2>
-              <div class="optionClass">
-                <el-radio-group v-model="radio2" @change="radioChange">
-                  <el-radio class="optionSingle" label="1">非常满意</el-radio>
-                  <br />
-                  <el-radio class="optionSingle" label="2">满意</el-radio>
-                  <br />
-                  <el-radio class="optionSingle" label="3">基本满意</el-radio>
-                  <br />
-                  <el-radio class="optionSingle" label="4">不满意</el-radio>
-                  <br />
-                  <el-radio class="optionSingle" label="5">极不满意</el-radio>
-                </el-radio-group>
+            <!-- 循环问题 -->
+            <div
+              class="controllerItem"
+              v-for="context in group.contextList"
+              :key="context.SID"
+            >
+              <div class="questionItem">
+                <h2 class="questionTitle">
+                  {{ context.ORDERINDEX }}.{{ context.TITLE }}
+                </h2>
+                <!-- 分类加载答案 -->
+                <div
+                  class="optionClass"
+                  v-if="context.TYPE == 'STAND_5_SINGLE'"
+                >
+                  <el-radio-group v-model="context.optionResultValue">
+                    <el-radio
+                      class="optionSingle"
+                      :label="index + 1"
+                      v-for="(option, index) in context.optionList"
+                      :key="index"
+                      >{{ option.OPTIONTEXT }}</el-radio
+                    >
+                  </el-radio-group>
+                </div>
+                <div
+                  class="optionClass"
+                  v-else-if="context.TYPE == 'STAND_6_SINGLE'"
+                >
+                  <span style="display:inline-block;margin-right:10px;"
+                    >极差</span
+                  >
+                  <span style="display:inline-block;"
+                    ><el-rate
+                      class="optionSingle"
+                      v-model="context.optionResultValue"
+                      :colors="colors"
+                    >
+                    </el-rate
+                  ></span>
+                  <span style="display:inline-block;">极好</span>
+                </div>
+                <div
+                  class="optionClass"
+                  v-else-if="context.TYPE == 'CUSTM_SINGLE'"
+                >
+                  <el-radio-group v-model="context.optionResultValue">
+                    <div
+                      :style="{
+                        display:
+                          context.DIPLAYTYPE == 'VERTICAL'
+                            ? 'block'
+                            : 'inline-block'
+                      }"
+                      v-for="(option, index) in context.optionList"
+                      :key="index"
+                    >
+                      <el-radio class="optionSingle" :label="index + 1">
+                        <template
+                          v-if="
+                            context.LASTOPTIONEEDINPUT == 1 &&
+                              index == context.optionList.length - 1
+                          "
+                        >
+                          <el-input
+                            v-model="context.optionExtraValue"
+                          ></el-input>
+                        </template>
+                        <span v-else>{{ option.OPTIONTEXT }}</span></el-radio
+                      >
+                    </div>
+                  </el-radio-group>
+                </div>
+                <div
+                  class="optionClass"
+                  v-else-if="context.TYPE == 'CUSTM_MULTIP'"
+                >
+                  <el-checkbox-group v-model="context.optionResultValue">
+                    <div
+                      :style="{
+                        display:
+                          context.DIPLAYTYPE == 'VERTICAL'
+                            ? 'block'
+                            : 'inline-block'
+                      }"
+                      v-for="(option, index) in context.optionList"
+                      :key="index"
+                    >
+                      <el-checkbox class="optionSingle" :label="index + 1">
+                        <template
+                          v-if="
+                            context.LASTOPTIONEEDINPUT == 1 &&
+                              index == context.optionList.length - 1
+                          "
+                        >
+                          <el-input
+                            v-model="context.optionExtraValue"
+                          ></el-input>
+                        </template>
+                        <span v-else>{{ option.OPTIONTEXT }}</span></el-checkbox
+                      >
+                    </div>
+                  </el-checkbox-group>
+                </div>
+                <div
+                  class="optionClass"
+                  v-else-if="context.TYPE == 'SHORT_INPUT'"
+                >
+                  <el-input
+                    class="optionSingle"
+                    style="width:15%;"
+                    v-model="context.optionResultValue"
+                  ></el-input>
+                </div>
+                <div
+                  class="optionClass"
+                  v-else-if="context.TYPE == 'LONG_INPUT'"
+                >
+                  <el-input
+                    class="optionSingle"
+                    type="textarea"
+                    style="width:50%;"
+                    :autosize="{ minRows: 3, maxRow: 4 }"
+                    resize="none"
+                    v-model="context.optionResultValue"
+                  ></el-input>
+                </div>
               </div>
             </div>
           </el-card>
-          <div v-else>
-            <div class="questionItem">
-              <h2 class="questionTitle">Q1 问题1</h2>
-              <div class="optionClass">
-                <el-radio-group v-model="radio" @change="radioChange">
-                  <el-radio class="optionSingle" label="1">非常满意</el-radio>
-                  <el-radio class="optionSingle" label="2">满意</el-radio>
-                  <el-radio class="optionSingle" label="3">基本满意</el-radio>
-                  <el-radio class="optionSingle" label="4">不满意</el-radio>
-                  <el-radio class="optionSingle" label="5">极不满意</el-radio>
-                </el-radio-group>
-              </div>
-            </div>
-            <div class="questionItem">
-              <h2 class="questionTitle">Q2 问题2</h2>
-              <div class="optionClass">
-                <el-radio-group v-model="radio2" @change="radioChange">
-                  <el-radio class="optionSingle" label="1">非常满意</el-radio>
-                  <br />
-                  <el-radio class="optionSingle" label="2">满意</el-radio>
-                  <br />
-                  <el-radio class="optionSingle" label="3">基本满意</el-radio>
-                  <br />
-                  <el-radio class="optionSingle" label="4">不满意</el-radio>
-                  <br />
-                  <el-radio class="optionSingle" label="5">极不满意</el-radio>
-                </el-radio-group>
-              </div>
-            </div>
-            </div>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="detailVisible = false"
-            >提交调查表</el-button
-          >
+          <el-button type="primary" @click="submitStudy">提交调查表</el-button>
         </span>
       </el-dialog>
     </el-card>
@@ -115,7 +196,7 @@
 </template>
 
 <script>
-import { GetCustomerStudy } from "@/api/studyASP";
+import { GetCustomerStudy, GetGroupContextOption } from "@/api/studyASP";
 import Cookies from "js-cookie";
 
 export default {
@@ -125,8 +206,8 @@ export default {
       studyData: [],
       detailVisible: false,
       studyContextData: [],
-      radio: "",
-      radio2: ""
+      selectData: [],
+      colors: ["#99A9BF", "#F7BA2A", "#FF9900"]
     };
   },
   filters: {
@@ -150,13 +231,32 @@ export default {
         this.studyData = res.data;
       });
     },
-    editStudy() {
+    editStudy(studyItem) {
+      this.selectData = studyItem;
       this.studyContextData = [];
-
-      this.detailVisible = true;
+      GetGroupContextOption({ sfid: studyItem.SID }).then(res => {
+        this.studyContextData = res.data;
+        for (var i = 0; i < this.studyContextData.length; i++) {
+          for (var j = 0; j < this.studyContextData[i].contextList.length; j++) {
+            if (
+              this.studyContextData[i].contextList[j].TYPE == "STAND_6_SINGLE"
+            )
+              this.studyContextData[i].contextList[j].optionResultValue = 0;
+            else if (
+              this.studyContextData[i].contextList[j].TYPE == "CUSTM_MULTIP"
+            )
+              this.studyContextData[i].contextList[j].optionResultValue = [];
+          }
+        }
+        this.detailVisible = true;
+      });
     },
     radioChange(val) {
       console.log(val);
+    },
+    submitStudy() {
+      console.log(this.studyContextData);
+      this.detailVisible = false;
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {
@@ -179,8 +279,16 @@ export default {
   font-size: 3rem;
   color: #555;
 }
+.studySubTitle {
+  margin-bottom: 2rem;
+  margin-left: 3rem;
+  margin-right: 3rem;
+  text-indent: 2em;
+  font-size: 1.6rem;
+  color: #555;
+}
 .studyContent {
-  padding: 1rem;
+  padding: 1rem 0;
   border-top: 0.2rem solid #ccc;
   border-bottom: 0.2rem solid #ccc;
 }
@@ -199,6 +307,9 @@ export default {
 }
 .questionItem {
   padding: 0;
+}
+.controllerItem :hover {
+  background-color: #fafafa;
 }
 </style>
 <style>

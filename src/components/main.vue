@@ -122,6 +122,12 @@
                 />
               </el-menu-item>
             </router-link>
+            <router-link to="/marketInfo" tag="div">
+              <el-menu-item index="marketInfo">
+                <i class="iconfont icon-color">&#xe627;</i>
+                <span slot="title">调查表</span>
+              </el-menu-item>
+            </router-link>
             <router-link to="/complaint" tag="div">
               <el-menu-item
                 v-if="identity === 'ECWEB' || identity === 'USER'"
@@ -149,12 +155,6 @@
                 </router-link>
               </el-menu-item-group>
             </el-submenu>
-            <router-link to="/marketInfo" tag="div">
-              <el-menu-item index="marketInfo">
-                <i class="iconfont icon-color">&#xe627;</i>
-                <span slot="title">调查表</span>
-              </el-menu-item>
-            </router-link>
             <router-link to="/supplierModule/supplyPort" tag="div">
               <el-menu-item index="supplierModule/supplyPort">
                 <i class="el-icon-s-home"></i>
@@ -213,9 +213,9 @@
             </router-link>
           </ul>
           <ul class="r">
-            <li style="height:50px;">
+            <!-- <li style="height:50px;"> -->
               <!-- v-if = "isContainAttr('shoppingCar')"  -->
-              <el-dropdown trigger="hover" style="margin:0;">
+              <!-- <el-dropdown trigger="hover" style="margin:0;">
                 <span class="el-dropdown-link mr10">
                   <i class="iconfont ml10" style="margin-right:3px;"
                     >&#xf0179;</i
@@ -223,25 +223,25 @@
                   购物车
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
-                <el-dropdown-menu slot="dropdown" style="min-width: 120px;">
+                <el-dropdown-menu slot="dropdown" style="min-width: 120px;"> -->
                   <!-- v-if = "isContainAttr('shoppingCar/shopping?wallPaper')"   -->
-                  <router-link to="/shoppingCar/shopping?wallPaper" tag="li">
+                  <!-- <router-link to="/shoppingCar/shopping?wallPaper" tag="li">
                     <el-dropdown-item
                       @click.native="addTab('shoppingCar/shopping?wallPaper')"
                     >
                       <span>墙纸配套类</span>
                     </el-dropdown-item>
-                  </router-link>
+                  </router-link> -->
                   <!-- v-if = "isContainAttr('shoppingCar/shopping?curtain')"   -->
-                  <router-link to="/shoppingCar/shopping?curtain" tag="li">
+                  <!-- <router-link to="/shoppingCar/shopping?curtain" tag="li">
                     <el-dropdown-item
                       @click.native="addTab('shoppingCar/shopping?curtain')"
                     >
                       <span>窗帘</span>
                     </el-dropdown-item>
-                  </router-link>
+                  </router-link> -->
                   <!--v-if = "isContainAttr('shoppingCar/shopping?softSuit')"   -->
-                  <router-link to="/shoppingCar/shopping?softSuit" tag="li">
+                  <!-- <router-link to="/shoppingCar/shopping?softSuit" tag="li">
                     <el-dropdown-item
                       @click.native="addTab('shoppingCar/shopping?softSuit')"
                     >
@@ -250,13 +250,13 @@
                   </router-link>
                 </el-dropdown-menu>
               </el-dropdown>
-            </li>
+            </li> -->
             <!--v-if = "isContainAttr('order/myOrder')"  -->
-            <router-link to="/order/myOrder" tag="li">
+            <!-- <router-link to="/order/myOrder" tag="li">
               <li @click="addTab('order/myOrder')">
                 <span class="ml10 mr10">我的订单</span>
               </li>
-            </router-link>
+            </router-link> -->
             <li>
               <el-dropdown trigger="hover">
                 <span class="el-dropdown-link">
@@ -279,7 +279,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </li>
-            <li @click="screenfull">
+            <li style="margin-right:20px;" @click="screenfull">
               <i class="iconfont ml10 mr10">&#xe663;</i>
             </li>
           </ul>
