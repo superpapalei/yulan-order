@@ -9,10 +9,10 @@
                         <el-input clearable
                             v-model.trim="searchKey" 
                             @clear="_getTabDownloadFiles(0)"
-                            @keyup.enter.native="searchFileInTab(0)"
+                            @keyup.enter.native="_GetFileByGroupID()"
                             placeholder="输入关键字"
                             size="mini">
-                            <div id="searchBtn" slot="append" style="cursor:pointer;" class="fstrong f12" @click="searchFileInTab(0)" >搜索</div>
+                            <div id="searchBtn" slot="append" style="cursor:pointer;" class="fstrong f12" @click="_GetFileByGroupID(searchKey)" >搜索</div>
                         </el-input>
                     </div>
             </el-col>
@@ -20,75 +20,114 @@
       </div>
       <div>
             <el-tabs :tab-position="tabPosition"  v-model="activeName" @tab-click="handleClick" >
-                    <el-tab-pane label="所有">
+                    <el-tab-pane label="所有"  @click="_GetFileByGroupID()">
                             <div>
                                  <el-table
-                                 :data="tableDataAll"
-                                 stripe
-                                 style="width: 100%">
+                                 :data="tableData"
+                                 stripe>
                                  <el-table-column
-                                 prop="FileName"
+                                 prop="FILE_NAME"
                                  label="所有"
                                  width="777">
                                  </el-table-column>
                                  <el-table-column
-                                 prop="Date"
+                                 width="100px"
+                                 prop="UPLOAD_DATE"
                                  label=" " >
+                                 </el-table-column>
+                                 <!-- 下载的超链接是模仿shoptab里的查看库存 -->
+                                 <el-table-column
+                                 width="100px">
+                                 <template >
+                                 <a class="mr10">
+                                 下载
+                                 </a>
+                                 </template>
+                                </el-table-column>
+                                 </el-table>
+                            </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="政策导向" @click="_GetFileByGroupID('G001')">
+                            <div>
+                                 <el-table
+                                 :data="tableData"
+                                 stripe
+                                 style="width: 100%">
+                                 <el-table-column
+                                 prop="FILE_NAME"
+                                 label="政策导向"
+                                 width="777">
+                                 </el-table-column>
+                                 <el-table-column
+                                 width="100px"
+                                 prop="UPLOAD_DATE"
+                                 label=" " >
+                                 </el-table-column>
+                                 <!-- 下载的超链接是模仿shoptab里的查看库存 -->
+                                 <el-table-column
+                                 width="70px">
+                                 <template >
+                                 <a class="mr10">
+                                 下载
+                                 </a>
+                                 </template>
+                                </el-table-column>
+                                 </el-table>
+                            </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="行业报告" @click="_GetGroupIDByChooseTab('G002')" >
+                            <div>
+                                 <el-table
+                                 :data="tableData"
+                                 stripe
+                                 style="width: 100%">
+                                 <el-table-column
+                                 prop="FILE_NAME"
+                                 label="行业报告"
+                                 width="777">
+                                 </el-table-column>
+                                 <el-table-column
+                                 prop="UPLOAD_DATE"
+                                 label=" " 
+                                 width="100">
+                                 </el-table-column>
+                                 <!-- 下载的超链接是模仿shoptab里的查看库存 -->
+                                 <el-table-column
+                                 width="70px">
+                                 <template >
+                                 <a class="mr10">
+                                 下载
+                                 </a>
+                                 </template>
                                  </el-table-column>
                                  </el-table>
                             </div>
                     </el-tab-pane>
-                    <el-tab-pane label="分类标签1">
+                    <el-tab-pane label="集团通告" @click="_GetGroupIDByChooseTab('G003')">
                             <div>
                                  <el-table
-                                 :data="tableData1"
+                                 :data="tableData"
                                  stripe
                                  style="width: 100%">
                                  <el-table-column
-                                 prop="FileName"
-                                 label="分类标签1"
+                                 prop="FILE_NAME"
+                                 label="集团通告"
                                  width="777">
                                  </el-table-column>
                                  <el-table-column
-                                 prop="Date"
-                                 label=" " >
+                                 prop="UPLOAD_DATE" 
+                                 label=" " 
+                                 width="100">
                                  </el-table-column>
-                                 </el-table>
-                            </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="分类标签2">
-                            <div>
-                                 <el-table
-                                 :data="tableData2"
-                                 stripe
-                                 style="width: 100%">
+                                 <!-- 下载的超链接是模仿shoptab里的查看库存 -->
                                  <el-table-column
-                                prop="FileName"
-                                 label="分类标签2"
-                                 width="777">
-                                 </el-table-column>
-                                 <el-table-column
-                                 prop="Date"
-                                 label=" " >
-                                 </el-table-column>
-                                 </el-table>
-                            </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="分类标签3">
-                            <div>
-                                 <el-table
-                                 :data="tableData3"
-                                 stripe
-                                 style="width: 100%">
-                                 <el-table-column
-                                 prop="FileName"
-                                 label="分类标签3"
-                                 width="777">
-                                 </el-table-column>
-                                 <el-table-column
-                                 prop="Date" 
-                                 label=" " >
-                                 </el-table-column>
+                                 width="70px">
+                                 <template >
+                                 <a class="mr10">
+                                 下载
+                                 </a>
+                                 </template>
+                                </el-table-column>
                                  </el-table>
                             </div>
                     </el-tab-pane>
@@ -109,10 +148,9 @@
 
 <script>
 import Cookies from 'js-cookie'
-import { 
-    getAllDownloadFiles,
-    getSingleDownloadFile
-} from '@/api/downloadSearch'
+import {
+    GetFileByGroupID
+} from "@/api/DownloadInfoASP";
 
 
 export default {
@@ -123,99 +161,50 @@ export default {
             searchKey: '',  //搜索的关键词
             chooseTab: '',  //当前的选择
             numberList: [],
-            tableDataAll: [
-                {
-                    FileType: '1', //型号
-                    FileName:'条目1',
-                    Date:'2019-09-09',
-                    number: '',     //计量
-                    anotherNumber: '',  //辅助计量
-                    status: '0',    //状态
-                },
-                {
-                    FileName:'条目2',
-                    Date:'2019-09-09',
-                },
-                {
-                    FileName:'条目3',
-                    Date:'2019-09-06',
-                },
-                {
-                    FileName:'条目4',
-                    Date:'2019-09-06',
-                },
-                {
-                    FileName:'条目5',
-                    Date:'2019-09-06',
-                },
-                {
-                    FileName:'条目6',
-                    Date:'2019-09-03',
-                },
-                {
-                    FileName:'条目7',
-                    Date:'2019-09-03',
-                },
-                                {
-                    FileName:'条目8',
-                    Date:'2019-09-01',
-                },
-                {
-                    FileName:'条目9',
-                    Date:'2019-08-26',
-                },
-                {
-                    FileName:'条目10',
-                    Date:'2019-08-26',
-                },
-                {
-                    FileName:'条目11',
-                    Date:'2019-08-19',
-                },],
-            tableData1: [
-                {
-                    FileName: 'xxx表', 
-                    Date:'2019-09-09',
-                },
-                {
-                    FileName: 'xxx表', 
-                    Date:'2019-09-06',
-                }],
-            tableData2: [
-                {
-                    FileName: 'xxxx表', //文件名
-                    Date:'2019-09-09',
-                }],
-            tableData3: [
-                {
-                    FileName: 'xxxx表', //文件名
-                    Date:'2019-09-09',
-                }],
+            tableData: {
+             FILE_NO: "", //文件编号
+             FILE_NAME: "", //文件名
+             GROUP_ID: "", //类别编号
+             UPLOAD_DATE: "", //上传日期
+             },
             currentPage: 1,     //当前的页数
             pageSize: 10,       //每页的个数
-            totalNumber: 0,   //总条数
+            totalNumber: 15,   //总条数
             //创建一个总的data，这样只需加载一次请求
             allData: [
                 [],[],[],[],[],[],[]
             ],
         }
     },
-    props:[ 'tableData',],
+    props:[ 'tableData'],
     methods: {
-
-        //获取每页的条数
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
+        //数组去重
+        unique(arr) {
+            var i,j;
+            var len = arr.length; 
+            for(i = 0; i < len; i++){
+                for(j = i + 1; j < len; j++){
+                    if(arr[i].itemNo == arr[j].itemNo){
+                        arr.splice(j,1);
+                        len--;
+                        j--;
+                    }
+                }
+            }
+            return arr;
         },
-        //获取当前页
+        //获取条数
+        handleSizeChange(val) {
+                  this.pageSize = val;
+                  this.currentPage = 1;
+                  this.refresh();
+        },
+        //翻页获取该页信息
         handleCurrentChange(val) {
             this.currentPage = val;
-            if(this.searchKey.length === 0)  this._getTabDownloadFiles(1);
-            else{
-                this.searchFileInTab(1);
-            }    
-            console.log(`当前页: ${val}`);
-            console.log(this.searchKey.length);
+            this.totalNumber=chooseTab.data.length;
+            this.currentPage = val;
+            this.refresh();
         },
         //创建每类文件的的数量
         createNumberList(len){
@@ -340,7 +329,7 @@ export default {
                 this.totalNumber = 0;
             });
         },
-       //切换标签页时的触发事件
+        //切换标签页时的触发事件
         handleClick(tab, event) {
             if(tab.name == this.chooseTab)  return ;
             this.chooseTab = tab.name;
@@ -351,34 +340,33 @@ export default {
             this._getTabDownloadFiles(0);
             console.log(Cookies.get('activeNameDownload'));
         },
-    },
-    computed:{
-        msg(){
-            return this.tableData;
+
+        //获取下载信息(参照我的订单-myOrder)
+        refresh() {
+        pageSize=this.pageSize,
+        currentPage=chooseTab.data.length;
         },
-        //获取当前的标签页选项
-        activeName: {
-            get(){
-                if(Cookies.get('activeNameDownload') === undefined){
-                    Cookies.set('activeNameDownload','所有');
-                    this.chooseTab = Cookies.get('activeNameDownload');
-                    this._getTabDownloadFiles(0);
-                }
-                else    this.chooseTab = Cookies.get('activeNameDownload');
-                return Cookies.get('activeNameDownload');
-            },
-            set(value){
-                Cookies.set('activeNameDownload',value);                
-            }
+
+        //选中相应页签后给GROUP_ID赋值
+         _GetGroupIDByChooseTab(){
+              GROUP_ID: this.GROUP_ID;//类别编号
+        },
+
+        //通过GROUP_ID查找到相应类别的文件
+        _GetFileByGroupID(GroupID){
+        this.tableData = [];
+        var val = {
+             GROUP_ID: GroupID, //类别编号
+        };
+        GetFileByGroupID(val).then(res => {
+              this.tableData = res.data
+        }).catch((res)=>{
+                   
+        })
         }
     },
     created(){
-          
-            if(Cookies.get('activeNameDownload') !== undefined)
-            {
-                 this.chooseTab = Cookies.get('activeNameDownload');
-                 this._getTabDownloadFiles(0);
-            }
+            this._GetFileByGroupID();
     },
     }
 </script>
