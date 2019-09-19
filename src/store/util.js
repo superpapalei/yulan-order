@@ -75,6 +75,8 @@ export function tabsName(index) {
             return '区域订单查询';
         case 'query/orderQuery':
             return '订单查询';
+            case 'main':
+            return '主页';
         default:
             return 'xxx';
     }
