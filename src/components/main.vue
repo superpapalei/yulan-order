@@ -591,6 +591,7 @@ export default {
       this.$router.push({
         path: "/login"
       });
+      this.$router.go(0);
     },
     //获得菜单数组并传入store ,await并不会阻塞主线程，这里并不起作用
     async getMenuTree() {
@@ -838,7 +839,7 @@ export default {
   color: #303133;
 }
 .el-menu-item-group span {
-  margin-left: 45px;
+  margin-left: 25px;
 }
 .el-icon-goods {
   color: #303133;

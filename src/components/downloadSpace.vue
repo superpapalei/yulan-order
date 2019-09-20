@@ -1,395 +1,259 @@
 <template>
-    <div>
-     <el-card shadow="hover">
-      <div slot="header">
-        <el-row type="flex" class="row-bg" justify="space-between">
-            <el-col :span="6"  class="fstrong f16"><div>下载中心</div></el-col>
-            <el-col :span="6">                    
-                <div id="DownloadSearchBox">
-                        <el-input clearable
-                            v-model.trim="searchKey" 
-                            @clear="_getTabDownloadFiles(0)"
-                            @keyup.enter.native="searchFileInTab(0)"
-                            placeholder="输入关键字"
-                            size="mini">
-                            <div id="searchBtn" slot="append" style="cursor:pointer;" class="fstrong f12" @click="searchFileInTab(0)" >搜索</div>
-                        </el-input>
-                    </div>
-            </el-col>
-        </el-row>
-      </div>
-      <div>
-            <el-tabs :tab-position="tabPosition"  v-model="activeName" @tab-click="handleClick" >
-                    <el-tab-pane label="所有">
-                            <div>
-                                 <el-table
-                                 :data="tableDataAll"
-                                 stripe
-                                 style="width: 100%">
-                                 <el-table-column
-                                 prop="FileName"
-                                 label="所有"
-                                 width="777">
-                                 </el-table-column>
-                                 <el-table-column
-                                 prop="Date"
-                                 label=" " >
-                                 </el-table-column>
-                                 </el-table>
-                            </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="分类标签1">
-                            <div>
-                                 <el-table
-                                 :data="tableData1"
-                                 stripe
-                                 style="width: 100%">
-                                 <el-table-column
-                                 prop="FileName"
-                                 label="分类标签1"
-                                 width="777">
-                                 </el-table-column>
-                                 <el-table-column
-                                 prop="Date"
-                                 label=" " >
-                                 </el-table-column>
-                                 </el-table>
-                            </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="分类标签2">
-                            <div>
-                                 <el-table
-                                 :data="tableData2"
-                                 stripe
-                                 style="width: 100%">
-                                 <el-table-column
-                                prop="FileName"
-                                 label="分类标签2"
-                                 width="777">
-                                 </el-table-column>
-                                 <el-table-column
-                                 prop="Date"
-                                 label=" " >
-                                 </el-table-column>
-                                 </el-table>
-                            </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="分类标签3">
-                            <div>
-                                 <el-table
-                                 :data="tableData3"
-                                 stripe
-                                 style="width: 100%">
-                                 <el-table-column
-                                 prop="FileName"
-                                 label="分类标签3"
-                                 width="777">
-                                 </el-table-column>
-                                 <el-table-column
-                                 prop="Date" 
-                                 label=" " >
-                                 </el-table-column>
-                                 </el-table>
-                            </div>
-                    </el-tab-pane>
-                    <el-pagination
-                        class="tc"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page.sync="currentPage"
-                        :page-size="pageSize"
-                        layout="prev, pager, next, jumper"
-                        :total="totalNumber">
-                    </el-pagination>
-            </el-tabs>
-      </div>
-    </el-card>
+  <div>
+    <div class="buttonClass">
+      <el-button
+        :disabled="multipleSelection.length==0"
+        icon="el-icon-download"
+        type="primary"
+        plain
+      >下载</el-button>
     </div>
+    <div style="margin:5px;">
+      <a
+        style="font-size:13px;"
+        v-for="(item,index) in navigationList"
+        :key="index"
+        :class="[index == navigationList.length -1 ? 'nolink':'islink']"
+        @click="gotoUp(index)"
+      >{{item}}></a>
+    </div>
+    <el-table :data="fileData" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="35"></el-table-column>
+      <el-table-column label="文件名">
+        <template slot-scope="scope">
+          <span>
+            <div class="format" :class="formatClass(scope.row.fileName)"></div>
+            <div style="display:inline-block;">
+              <a
+                class="link"
+                style="margin-left:5px;"
+                @click="gotoNext(scope.row)"
+              >{{scope.row.fileName}}</a>
+            </div>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="150">
+        <template>
+          <el-button type="primary" size="mini" icon="el-icon-download" circle plain></el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="文件大小" prop="fileSize" width="150"></el-table-column>
+      <el-table-column label="上传时间" prop="fileTime" width="250"></el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
-import Cookies from 'js-cookie'
-import { 
-    getAllDownloadFiles,
-    getSingleDownloadFile
-} from '@/api/downloadSearch'
-
-
 export default {
-    name: 'DownloadSpace',
-    data(){
-        return{
-            tabPosition: 'left',
-            searchKey: '',  //搜索的关键词
-            chooseTab: '',  //当前的选择
-            numberList: [],
-            tableDataAll: [
-                {
-                    FileType: '1', //型号
-                    FileName:'条目1',
-                    Date:'2019-09-09',
-                    number: '',     //计量
-                    anotherNumber: '',  //辅助计量
-                    status: '0',    //状态
-                },
-                {
-                    FileName:'条目2',
-                    Date:'2019-09-09',
-                },
-                {
-                    FileName:'条目3',
-                    Date:'2019-09-06',
-                },
-                {
-                    FileName:'条目4',
-                    Date:'2019-09-06',
-                },
-                {
-                    FileName:'条目5',
-                    Date:'2019-09-06',
-                },
-                {
-                    FileName:'条目6',
-                    Date:'2019-09-03',
-                },
-                {
-                    FileName:'条目7',
-                    Date:'2019-09-03',
-                },
-                                {
-                    FileName:'条目8',
-                    Date:'2019-09-01',
-                },
-                {
-                    FileName:'条目9',
-                    Date:'2019-08-26',
-                },
-                {
-                    FileName:'条目10',
-                    Date:'2019-08-26',
-                },
-                {
-                    FileName:'条目11',
-                    Date:'2019-08-19',
-                },],
-            tableData1: [
-                {
-                    FileName: 'xxx表', 
-                    Date:'2019-09-09',
-                },
-                {
-                    FileName: 'xxx表', 
-                    Date:'2019-09-06',
-                }],
-            tableData2: [
-                {
-                    FileName: 'xxxx表', //文件名
-                    Date:'2019-09-09',
-                }],
-            tableData3: [
-                {
-                    FileName: 'xxxx表', //文件名
-                    Date:'2019-09-09',
-                }],
-            currentPage: 1,     //当前的页数
-            pageSize: 10,       //每页的个数
-            totalNumber: 0,   //总条数
-            //创建一个总的data，这样只需加载一次请求
-            allData: [
-                [],[],[],[],[],[],[]
-            ],
-        }
-    },
-    props:[ 'tableData',],
-    methods: {
-
-        //获取每页的条数
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-        },
-        //获取当前页
-        handleCurrentChange(val) {
-            this.currentPage = val;
-            if(this.searchKey.length === 0)  this._getTabDownloadFiles(1);
-            else{
-                this.searchFileInTab(1);
-            }    
-            console.log(`当前页: ${val}`);
-            console.log(this.searchKey.length);
-        },
-        //创建每类文件的的数量
-        createNumberList(len){
-            this.numberList = [];
-            for(var i = 0; i < len; i++){
-                this.numberList.push({
-                    value: '',  //主计量
-                    value1: ''  //辅助计量
-                });
-            }
-        },
-        //获取对应标签下的文件信息
-        _getTabDownloadFiles(flag){
-            this.tableData = [];
-            var status = 0;
-            if(flag !== 1){
-                switch(this.chooseTab){
-                    case '分类标签1':
-                        if(this.allData[0].length !== 0){
-                            this.tableData = this.allData[0];
-                            this.totalNumber = this.tableData[0].total;
-                            this.createNumberList(this.allData[0].length);
-                            status = 0; 
-                            return;
-                        } 
-                        break;
-                    case '分类标签2':
-                        if(this.allData[1].length !== 0){
-                            this.tableData = this.allData[1];
-                            this.totalNumber = this.tableData[1].total;
-                            this.createNumberList(this.allData[1].length);
-                            return;
-                        }
-                        status = 1;
-                        break;
-                    case '分类标签3':
-                        if(this.allData[2].length !== 0){
-                            this.tableData = this.allData[2];
-                            this.totalNumber = this.tableData[2].total;
-                            this.createNumberList(this.allData[2].length);
-                            return;
-                        }
-                        status = 2;
-                        break;
-                    case '分类标签4':
-                        if(this.allData[3].length !== 0){
-                            this.tableData = this.allData[3];
-                            this.totalNumber = this.tableData[3].total;
-                            this.createNumberList(this.allData[3].length);
-                            return;
-                        }
-                        status = 3;
-                        break;
-                }
-                getAllDownloadFiles({
-                    FileType: this.chooseTab,
-                    FileName: this.searchKey.toUpperCase(),
-                    limit: this.pageSize,
-                    page: this.currentPage
-                }).then(res =>{
-                    console.log(res.data);
-                    res.data = this.unique(res.data);
-                    res.data = this.changeUnit(res.data);
-                    this.allData[status] = res.data;
-                    this.allNumber[status] = res.data[0].total;
-                    this.totalNumber = this.allNumber[status];
-                    this.tableData = this.allData[status];
-                    this.createNumberList(this.tableData.length);
-                }).catch( err =>{
-                    console.log('暂无数据');
-                })
-            }
-            else{
-                switch(this.chooseTab){
-                    case '分类标签1':
-                        status = 0;    
-                        break;
-                    case '分类标签2':
-                        status = 1;
-                        break;
-                    case '分类标签3':
-                        status = 2;
-                        break;
-                    case '分类标签4':
-                        status = 3;
-                        break;
-                }
-                getAllDownloadFiles({
-                    itemType: this.chooseTab,
-                    cid: this.cid,
-                    limit: this.pageSize,
-                    page: this.currentPage
-                }).then(res =>{
-                    console.log(res.data);
-                    res.data = this.unique(res.data);
-                    res.data = this.changeUnit(res.data);
-                    this.tableData = res.data;
-                    this.totalNumber = this.allNumber[status];
-                    this.createNumberList(this.tableData.length);
-                }).catch( err =>{
-                    console.log('暂无数据');
-                })
-            }
-        }, 
-        //某类文件的的模糊搜索
-        searchFileInTab(flag){
-            if(flag === 0)
-                this.currentPage = 1;
-            getSingleDownloadFile({
-                FileType: this.chooseTab,
-                FileName: this.searchKey.toUpperCase(),
-                limit: this.pageSize,
-                page: this.currentPage
-            }).then(res =>{
-                console.log(res);
-                this.tableData = this.unique(res.data);
-                this.tableData = this.changeUnit(this.tableData);
-                this.totalNumber = this.tableData[0].total;
-                this.createNumberList(this.tableData.length);
-            }).catch(err =>{
-                this.tableData = [];
-                this.totalNumber = 0;
-            });
-        },
-       //切换标签页时的触发事件
-        handleClick(tab, event) {
-            if(tab.name == this.chooseTab)  return ;
-            this.chooseTab = tab.name;
-            this.searchKey = '';
-            this.currentPage = 1;
-            console.log(this.chooseTab);
-            Cookies.set('activeNameDownload', tab.name);
-            this._getTabDownloadFiles(0);
-            console.log(Cookies.get('activeNameDownload'));
-        },
-    },
-    computed:{
-        msg(){
-            return this.tableData;
-        },
-        //获取当前的标签页选项
-        activeName: {
-            get(){
-                if(Cookies.get('activeNameDownload') === undefined){
-                    Cookies.set('activeNameDownload','所有');
-                    this.chooseTab = Cookies.get('activeNameDownload');
-                    this._getTabDownloadFiles(0);
-                }
-                else    this.chooseTab = Cookies.get('activeNameDownload');
-                return Cookies.get('activeNameDownload');
-            },
-            set(value){
-                Cookies.set('activeNameDownload',value);                
-            }
-        }
-    },
-    created(){
-          
-            if(Cookies.get('activeNameDownload') !== undefined)
+  name: "DownloadSpace",
+  data() {
+    return {
+      fileData: [],
+      multipleSelection: [],
+      navigationList: ["全部文件"],
+      allData: [
+        {
+          fileName: "文件夹1",
+          fileSize: "-",
+          fileTime: "2019-09-20 17:00:01",
+          children: [
             {
-                 this.chooseTab = Cookies.get('activeNameDownload');
-                 this._getTabDownloadFiles(0);
+              fileName: "文件1.xls",
+              fileSize: "156k",
+              fileTime: "2019-09-20 17:00:01"
+            },
+            {
+              fileName: "文件2.exe",
+              fileSize: "56M",
+              fileTime: "2019-09-20 17:00:01"
+            },
+            {
+              fileName: "文件3.sss",
+              fileSize: "23M",
+              fileTime: "2019-09-20 17:00:01"
             }
+          ]
+        },
+        {
+          fileName: "文件夹2",
+          fileSize: "-",
+          fileTime: "2019-09-20 17:00:01",
+          children: [
+            {
+              fileName: "文件4.pdf",
+              fileSize: "3.2M",
+              fileTime: "2019-09-20 17:00:01"
+            },
+            {
+              fileName: "文件5.jpg",
+              fileSize: "2M",
+              fileTime: "2019-09-20 17:00:01"
+            },
+            {
+              fileName: "文件6.txt",
+              fileSize: "15k",
+              fileTime: "2019-09-20 17:00:01"
+            }
+          ]
+        },
+        {
+          fileName: "文件7.mp4",
+          fileSize: "1.1GB",
+          fileTime: "2019-09-20 17:00:01"
+        },
+        {
+          fileName: "文件8.html",
+          fileSize: "210B",
+          fileTime: "2019-09-20 17:00:01"
+        },
+        {
+          fileName: "文件9.doc",
+          fileSize: "200k",
+          fileTime: "2019-09-20 17:00:01"
+        },
+        {
+          fileName: "文件10.zip",
+          fileSize: "23M",
+          fileTime: "2019-09-20 17:00:01"
+        },
+        {
+          fileName: "文件10.ppt",
+          fileSize: "23M",
+          fileTime: "2019-09-20 17:00:01"
+        }
+      ]
+    };
+  },
+  methods: {
+    formatClass(fileName) {
+      if (fileName) {
+        var startIndex = fileName.lastIndexOf(".");
+        if (startIndex != -1) {
+          var format = fileName
+            .substring(startIndex + 1, fileName.length)
+            .toLowerCase();
+          switch (format) {
+            case "apk":
+              return "android-mini";
+            case "xls":
+            case "xlsx":
+              return "excel-mini";
+            case "exe":
+              return "exe-mini";
+            case "pdf":
+              return "pdf-mini";
+            case "jpg":
+            case "png":
+              return "picture-mini";
+            case "ppt":
+              return "ppt-mini";
+            case "txt":
+              return "text-mini";
+            case "mp4":
+            case "rmvb":
+            case "avi":
+              return "video-mini";
+            case "html":
+              return "web-mini";
+            case "doc":
+            case "docx":
+              return "word-mini";
+            case "zip":
+            case "rar":
+              return "zip-mini";
+            default:
+              return "unknow-mini";
+          }
+        } else return "folder-mini";
+      } else {
+        return "unknow-mini";
+      }
     },
+    gotoNext(folder) {
+      if (folder.children && folder.children.length > 0) {
+        this.fileData = folder.children;
+        this.navigationList.push(folder.fileName);
+      }
+    },
+    gotoUp(index) {
+      this.navigationList = this.navigationList.slice(0, index + 1);
+      this.fileData = this.allData;
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
     }
+  },
+  created() {
+    this.fileData = this.allData;
+  }
+};
 </script>
 
 
 <style scoped>
-#DownloadSearchBox div:hover{
-    cursor: pointer;
+.nolink {
+  cursor: default;
+  color: #000;
 }
-#searchBtn{
-    color: #101010;
-    cursor: pointer;
+.islink {
+  cursor: pointer;
+  color: #09aaff;
+}
+.islink :hover {
+  text-decoration: underline;
+}
+.link {
+  cursor: pointer;
+  color: #666;
+}
+.link:hover {
+  color: #09aaff;
+}
+.format {
+  width: 25px;
+  height: 25px;
+  margin-bottom: -5px;
+  display: inline-block;
+  background-size: cover;
+}
+.android-mini {
+  background: url("../assets/img//format/Android.png") no-repeat;
+}
+.excel-mini {
+  background: url("../assets/img//format/Excel.png") no-repeat;
+}
+.exe-mini {
+  background: url("../assets/img//format/EXE.png") no-repeat;
+}
+.folder-mini {
+  background: url("../assets/img//format/Folder.png") no-repeat;
+}
+.pdf-mini {
+  background: url("../assets/img//format/PDF.png") no-repeat;
+}
+.picture-mini {
+  background: url("../assets/img//format/Picture.png") no-repeat;
+}
+.ppt-mini {
+  background: url("../assets/img//format/PPT.png") no-repeat;
+}
+.text-mini {
+  background: url("../assets/img//format/TEXT.png") no-repeat;
+}
+.unknow-mini {
+  background: url("../assets/img//format/UnKnow.png") no-repeat;
+}
+.video-mini {
+  background: url("../assets/img//format/Video.png") no-repeat;
+}
+.web-mini {
+  background: url("../assets/img//format/Web.png") no-repeat;
+}
+.word-mini {
+  background: url("../assets/img//format/Word.png") no-repeat;
+}
+.zip-mini {
+  background: url("../assets/img//format/ZIP.png") no-repeat;
 }
 </style>
