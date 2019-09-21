@@ -91,7 +91,7 @@
       </div>
     </el-card>
 
-    <el-dialog title="形象店建设申请表" :visible.sync="bankDetail" :close-on-click-modal="false" width="40%">
+    <el-dialog title="形象店建设申请表" :visible.sync="bankDetail" :close-on-click-modal="false" width="50%">
       <!-- 查看区 -->
       <div v-show="EDITorCHECK" class="table-c">
         

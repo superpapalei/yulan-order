@@ -264,11 +264,6 @@
 
 <script>
 import {
-  getBankList,
-  getPayBillContent,
-  changeStatus,
-  sumbitForm,
-  getHistory
 } from "@/api/bank";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
@@ -277,23 +272,7 @@ export default {
   name: "Complaint",
   data() {
     return {
-      ROWSPAN: 6,
       BigPic: false,
-      showtheHistory: false,
-      historyList: [
-        {
-          PAYER_NAME: "测试", //汇款人名
-          PAYER_ACCOUNT: "45544521112565445" //汇款账号
-        },
-        {
-          PAYER_NAME: "测试3",
-          PAYER_ACCOUNT: "121212121"
-        },
-        {
-          PAYER_NAME: "测试4",
-          PAYER_ACCOUNT: "1212121"
-        }
-      ],
       sqlpath: "", //保存图片相对路径
       newORedit: false, //决定显示新建或者编辑
       EDITorCHECK: false, //决定显示编辑或者查看
@@ -392,8 +371,6 @@ export default {
     };
   },
   created: function() {
-    this._getBankList();
-    this._getHistory();
   },
   filters: {
     transStatus(value) {
@@ -432,124 +409,8 @@ export default {
       return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
     }
   },
-  watch: {
-    showtheHistory(val) {
-      if (val) {
-        this.ROWSPAN = 7;
-      } else {
-        this.ROWSPAN = 6;
-      }
-    }
-  },
   methods: {
-    //焦点显示历史记录
-    showHistory() {
-      this.showtheHistory = true;
-    },
-    //填充历史记录
-    writeHistory(payerName, payerAccount) {
-      this.sumbit.payerName = payerName;
-      this.sumbit.payerAccount = payerAccount;
-      this.showtheHistory = false;
-    },
-    //确定新建
-    sumbitNEW() {
-      let url = Quest + "/PaymentBill/insertPaymentBill.do";
-      let data = this.sumbit;
-      this.sumbit.cid = Cookies.get("companyId");
-      //判断是否填完所有信息
-      if (
-        this.sumbit.yulanBank == "" ||
-        this.sumbit.payerName == "" ||
-        this.sumbit.payAmount == "" ||
-        this.sumbit.payerAccount == "" ||
-        this.sumbit.payDate == "" ||
-        this.sumbit.payDate == null
-      ) {
-        this.$alert("请完善信息", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      //判断是否上传图片
-      if (this.sumbit.imgFileName == "") {
-        this.$alert("请上传凭证", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      this.sumbit.imgUrl = this.sqlpath; //转换为相对地址
-      sumbitForm(url, data).then(res => {
-        console.log(res);
-        if (res.code == 0) {
-          this.$alert("提交成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.currentPage = 1;
-          this._getBankList();
-          this.bankDetail = false;
-        } else {
-          this.$alert("提交失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-        }
-      });
-    },
-    //编辑修改
-    submitEDIT() {
-      let url = Quest + "/PaymentBill/updatePayBill.do"; //创建
-      let data = this.sumbit;
-      this.sumbit.cid = Cookies.get("companyId");
-      //判断是否填完所有信息
-      if (
-        this.sumbit.yulanBank == "" ||
-        this.sumbit.payerName == "" ||
-        this.sumbit.payAmount == "" ||
-        this.sumbit.payerAccount == "" ||
-        this.sumbit.payDate == "" ||
-        this.sumbit.payDate == null
-      ) {
-        this.$alert("请完善信息", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      //判断是否上传图片
-      if (this.sumbit.imgFileName == "") {
-        this.$alert("请上传凭证", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      this.sumbit.imgUrl = this.sqlpath;
-      this.sumbit.submitTs = null;
-      this.sumbit.cancelTs = null;
-      this.sumbit.createTs = null;
-      sumbitForm(url, data).then(res => {
-        console.log(res.data);
-        if (res.code == 0) {
-          this.$alert("修改成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.currentPage = 1;
-          this._getBankList();
-          this.bankDetail = false;
-        } else {
-          this.$alert("修改失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-        }
-      });
-    },
-    //新建
+     //新建
     newOne() {
       this.EDITorCHECK = false;
       this.bankDetail = true;
@@ -567,160 +428,6 @@ export default {
         imgUrl: "" //相对路径
       };
     },
-    //编辑列表详情
-    editIt(tab) {
-      console.log(tab.id);
-      let url = Quest + "/PaymentBill/getPayBillContent.do";
-      let data = {
-        id: tab.id
-      };
-      getPayBillContent(url, data).then(res => {
-        console.log(res);
-        console.log(this.sumbit);
-        this.sqlpath = res.data.imgUrl; //先保存一个
-        res.data.imgUrl = Head + res.data.imgUrl;
-        this.sumbit = res.data;
-        this.EDITorCHECK = false;
-        this.newORedit = true; //显示流水号 等编辑一类
-        this.bankDetail = true;
-      });
-    },
-    //查看列表详情
-    checkDetail(tab) {
-      //判断是否为作废
-      if (tab.state == "CANCELED") {
-        this.isDelete = true;
-      } else {
-        this.isDelete = false;
-      }
-
-      if (tab.state == "PROCESED") {
-        this.isChuli = true;
-      } else {
-        this.isChuli = false;
-      }
-
-      if (tab.state == "SENDBACK") {
-        this.isBack = true;
-      } else {
-        this.isBack = false;
-      }
-      console.log(tab.id);
-      let url = Quest + "/PaymentBill/getPayBillContent.do";
-      let data = {
-        id: tab.id
-      };
-      getPayBillContent(url, data).then(res => {
-        console.log(res.data);
-        res.data.imgUrl = Head + res.data.imgUrl;
-        this.tableData = res.data;
-        this.EDITorCHECK = true;
-        this.bankDetail = true;
-      });
-    },
-    //作废列表详情
-    deleteDetail(tab) {
-      console.log(tab.id);
-      let url = Quest + "/PaymentBill/updatePayBillState.do";
-      let data = {
-        id: tab.id,
-        state: "CANCELED"
-      };
-      this.$confirm("确定作废该汇款凭证?", "提示", {
-        confirmButtonText: "是",
-        cancelButtonText: "否",
-        type: "warning"
-      })
-        .then(() => {
-          changeStatus(url, data).then(res => {
-            console.log(res);
-            this._getBankList();
-            this.$alert("删除成功", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            });
-          });
-        })
-        .catch(() => {
-          console.log("还没删");
-        });
-    },
-    //搜索
-    searchBankList() {
-      this.currentPage = 1;
-      this.bankData = [];
-      this._getBankList();
-    },
-    //获取银行列表
-    _getBankList() {
-      let url = Quest + "/PaymentBill/getPayBills.do";
-      if (this.beginTime == null) this.beginTime = "";
-      if (this.finishTime == null) this.finishTime = "";
-      let data = {
-        cid: Cookies.get("companyId"), //公司id
-        state: this.status, //状态状态(SUBMITED（已提交）,PROCESED（已处理）,SENDBACK（退回）,CANCELED（作废）)
-        beginTime: this.beginTime, //起始时间
-        finishTime: this.finishTime, //结束时间
-        limit: this.limit, //限制数
-        page: this.currentPage //页数
-      };
-      if (this.beginTime != "" || this.finishTime != "") {
-        data.beginTime = this.beginTime + "00:00:00";
-        data.finishTime = this.finishTime + "23:59:59";
-      }
-      console.log(data);
-      getBankList(url, data).then(res => {
-        console.log(res.data);
-        this.count = res.count;
-        this.bankData = res.data;
-      });
-    },
-    //隔行变色
-    tableRowClassName({ row, rowIndex }) {
-      if (rowIndex % 2 == 0) {
-        return "success-row";
-      }
-      return "";
-    },
-    //获取历史记录
-    _getHistory() {
-      let url = Quest + "/PaymentBill/getPayNameAndAccount.do";
-      let data = {
-        companyId: Cookies.get("companyId")
-      };
-      getHistory(url, data).then(res => {
-        console.log(res.data);
-        this.historyList = res.data;
-      });
-    },
-    //放大图片
-    BIG() {
-      this.BigPic = true;
-    },
-    //翻页获取订单
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      this.bankData = [];
-      this._getBankList();
-    },
-    handleAvatarSuccess(res, file) {
-      this.sumbit.imgUrl = URL.createObjectURL(file.raw);
-      console.log(res);
-      if (res.code == 0) {
-        this.sqlpath = res.sqlpath;
-        this.sumbit.imgUrl = Head + res.sqlpath;
-        this.sumbit.imgFileName = res.fileName;
-      }
-      console.log(this.sumbit);
-    },
-    beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isLt2M) {
-        this.$message.error("上传图片大小不能超过 2MB!");
-      }
-      return isLt2M;
-    }
   }
 };
 </script>
