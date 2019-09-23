@@ -11,10 +11,9 @@
        <el-table
             height="500"
             :data="tableDetail"
-            :summary-method="getSummaries"
+           
             show-summary
             border
-            :row-class-name="tableRowClassName"
             style="width: 100%; margin:10px auto"
           >
             <el-table-column width="130" label="日期">
@@ -149,6 +148,8 @@
             <hr />
         <div  v-if="query_1">
         <el-table
+         :summary-method="getSummaries"
+         show-summary
           :data="tableData"
           border
           highlight-current-row
@@ -220,6 +221,9 @@ export default {
   name: "AreaQuery",
   data() {
     return {
+      detailVisible: false,
+      check_CURTAIN_STATUS_ID: "",
+      isManager: Cookies.get("isManager"),
       innercount:100,
       startDate:"",
       endDate:"",
@@ -771,6 +775,8 @@ export default {
   //生命周期
   created() {
     this._getAreaCode();
+    this.check_CURTAIN_STATUS_ID = Cookies.get("CURTAIN_STATUS_ID");
+    this.check_STATUS_ID = Cookies.get("status_ID");
   },
    datatrans(value) {
       //时间戳转化大法
@@ -898,37 +904,34 @@ var data = {
       // this.$router.push("/QYTable");
     },
     //计算表格末行
-    getSummaries({ columns, data }) {
-      var sums = [];
-      columns.forEach((column, index) => {
-        if (index == 0) {
-          sums[index] = "总计";
-          return;
-        } else if (index == 5 || index == 6 || index == 7 || index == 8) {
-          var values = data.map(item => Number(item[column.property]));
-          var cancelIndex = data.map(item => Number(item["STATUS_ID"])); //取得状态判断是否是作废的
-          if (!values.every(value => isNaN(value))) {
-            sums[index] = values.reduce((prev, curr, index) => {
+    getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '总价';
+            return;
+          }else if(index == 9){
+            var values = data.map(item => Number(item[column.property])); 
+            if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr);
-              if (!isNaN(value) && cancelIndex[index] != "3") {
-                //作废的不统计
+              if (!isNaN(value)) {
                 return prev + curr;
               } else {
                 return prev;
               }
             }, 0);
-            sums[index] = sums[index].toFixed(2);
-            if (this.isManager == "0" && this.check_CURTAIN_STATUS_ID != -1)
-              sums[index] = "***";
-          } else {
-            sums[index] = "";
+            sums[index] += ' 元';
+          } 
           }
-        } else {
-          sums[index] = "";
-        }
-      });
-      return sums;
-    },
+         else {
+            sums[index] = '';
+          }
+        });
+        return sums;
+      },
+
     //翻页获取订单
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -940,10 +943,10 @@ var data = {
       this.customerData=[]
       this.beginTime_1=""
       this.finishTime_1=""
-      this.value_4=""
-      this.tableData=""
-      this.AREA_DISTRICT=""
-      this.CUSTOMER_TYPE=""
+      this.value_4=[]
+      this.tableData=[]
+      this.AREA_DISTRICT=[]
+      this.CUSTOMER_TYPE=[]
       this._getAreaCode();
     },
     //打开弹窗渲染详情数据
@@ -991,13 +994,6 @@ var data = {
 
 
 <style scoped>
-.el-transfer-panel__list.is-filterable{
-    height:200px;
-
-}
-.el-transfer-panel{
-    height: 200px;
-}
 
 .gx {
   background: #8bc34a;

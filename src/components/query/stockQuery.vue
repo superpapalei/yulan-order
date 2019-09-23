@@ -75,8 +75,9 @@
               </el-table>
             </div>
             <!-- 分页 -->
-            <div style="margin:0 25%;" class="block">
+            <div style="margin:0 25% 0 0;" class="block">
               <el-pagination
+              :page-count="page_count"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
                 :page-size="limit"
@@ -138,13 +139,13 @@
                 </div>
               </el-card>
 
-              <el-card class="DETAIL_2">
+              <el-card class="DETAIL_2" style="min-height:300px">
                 <div slot="header" class="clearfix">
                   <span class="CARD">产品信息：</span>
                 </div>
                 <div style="height:200px;">
                   <h1 v-show="stockInfo">
-                    <table width="100%" border="1" cellspacing="0">
+                    <table width="100%" class="table_1" border="1" style="border-collapse:collapse;">
                       <tr>
                         <td class="CPXXBJYS">型号</td>
                         <td style="width:100px">{{ dormitory.ITEM_NO }}</td>
@@ -236,8 +237,6 @@ const Head = "http://14.29.223.114:10250/upload";
 const Quest = "http://14.29.223.114:10250/yulan-capital";
 export default {
   name: "StockQuery",
-  // name:ItemKey,
-  // text1:'',
   data() {
     return {
       //产品类型
@@ -307,7 +306,7 @@ export default {
           label: "广告产品"
         }
       ],
-
+      page_count:3,
       stockInfo_1: [], //库存信息
       stockIds: "",
       productType: "", //产品类型查询初始值
@@ -319,7 +318,6 @@ export default {
       limit: 15,
       count: 0,
       currentPage: 1,
-      aletMsg: "未获取库存权限",
       displayStsates: "none"
     };
   },
@@ -382,15 +380,7 @@ export default {
         }
         console.log(this.stockIds);
       });
-      //判断库存权限
-      if (this.stockIds === "") {
-        this.displayStsates = "block";
-        this.aletMsg = msg;
-        window.setTimeout(() => {
-          this.displayStsates = "none";
-        }, 2000);
-        this.alertDia(aletMsg);
-      }
+
     },
 
     //查询
@@ -403,8 +393,16 @@ export default {
         stockIds: this.stockIds, //仓库号
         find: this.search
       };
+      if(data.stockIds == ""){
+ <el-alert
+    title="未获取到仓库权限，请重试！"
+    type="error"
+    center
+    show-icon>
+  </el-alert>
 
-      GetItemByProductType(data)
+      }else{
+        GetItemByProductType(data)
         .then(res => {
           this.count = res.count;
           this.tables = res.data;
@@ -414,18 +412,21 @@ export default {
         .catch(res => {
           console.log(res);
         });
+        }
+      
       // this.tables = this.dormitory.filter(tables => {
       //   return tables.XH.match(this.search);
       // });
     },
     //清空
     clear() {
-      this.value = "0";
+      this.value = "";
       this.search = "";
       this.tables = [];
       this.dormitory = [];
       this.stockInfo = false; //库存信息显示
       this.empty = true; //库存信息为空
+      this._GetStockByUser();
     },
     //点击行的事件
     KC_CP_SC(val) {
@@ -480,8 +481,13 @@ export default {
 </script>
 
 <style scoped>
+.table_1{
+  border-collapse:collapse;
+  border: 1px solid black;
+}
 .CPXXBJYS {
   background: #d5ecb8;
+  width: 65px
 }
 .BK_1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
