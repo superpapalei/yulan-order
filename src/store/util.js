@@ -1,6 +1,8 @@
 //根据传入的index对应修改其标签页名字
 export function tabsName(index) {
   switch (index) {
+    case 'main':
+      return '主页';
     case "shops/wallPaper":
       return "墙纸";
     case "shops/curtain":
