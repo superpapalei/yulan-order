@@ -85,9 +85,9 @@
                   class="optionClass"
                   v-else-if="context.TYPE == 'STAND_6_SINGLE'"
                 >
-                  <span style="display:inline-block;margin-right:10px;">{{
-                    context.OPTIONTEXT1
-                  }}</span>
+                  <span style="display:inline-block;margin-right:10px;"
+                    >极差</span
+                  >
                   <span style="display:inline-block;"
                     ><el-rate
                       class="optionSingle"
@@ -96,9 +96,7 @@
                     >
                     </el-rate
                   ></span>
-                  <span style="display:inline-block;">{{
-                    context.OPTIONTEXT6
-                  }}</span>
+                  <span style="display:inline-block;">极好</span>
                 </div>
                 <div
                   class="optionClass"
@@ -115,11 +113,7 @@
                       v-for="(option, index) in context.optionList"
                       :key="index"
                     >
-                      <el-radio
-                        class="optionSingle"
-                        :label="index + 1"
-                        @change="radioChange(context)"
-                      >
+                      <el-radio class="optionSingle" :label="index + 1">
                         <template
                           v-if="
                             context.LASTOPTIONEEDINPUT == 1 &&
@@ -127,7 +121,6 @@
                           "
                         >
                           <el-input
-                            :disabled="context.optionResultValue != index + 1"
                             v-model="context.optionExtraValue"
                           ></el-input>
                         </template>
@@ -151,11 +144,7 @@
                       v-for="(option, index) in context.optionList"
                       :key="index"
                     >
-                      <el-checkbox
-                        class="optionSingle"
-                        :label="index + 1"
-                        @change="radioChange2(context)"
-                      >
+                      <el-checkbox class="optionSingle" :label="index + 1">
                         <template
                           v-if="
                             context.LASTOPTIONEEDINPUT == 1 &&
@@ -163,9 +152,6 @@
                           "
                         >
                           <el-input
-                            :disabled="
-                              context.optionResultValue.indexOf(index + 1) == -1
-                            "
                             v-model="context.optionExtraValue"
                           ></el-input>
                         </template>
@@ -210,12 +196,7 @@
 </template>
 
 <script>
-import {
-  GetCustomerStudy,
-  GetGroupContextOption,
-  BeginEditStudy,
-  SubmitStudy
-} from "@/api/studyASP";
+import { GetCustomerStudy, GetGroupContextOption } from "@/api/studyASP";
 import Cookies from "js-cookie";
 
 export default {
@@ -250,36 +231,13 @@ export default {
         this.studyData = res.data;
       });
     },
-    radioChange(context) {
-      if (
-        context.LASTOPTIONEEDINPUT == 1 &&
-        context.optionResultValue != context.OPTIONNUM &&
-        context.optionExtraValue
-      ) {
-        context.optionExtraValue = "";
-      }
-    },
-    radioChange2(context) {
-      if (
-        context.LASTOPTIONEEDINPUT == 1 &&
-        context.optionResultValue.indexOf(context.OPTIONNUM) == -1 &&
-        context.optionExtraValue
-      ) {
-        context.optionExtraValue = "";
-      }
-    },
     editStudy(studyItem) {
       this.selectData = studyItem;
       this.studyContextData = [];
-      BeginEditStudy({ cid: Cookies.get("cid"), sfid: studyItem.SID });
       GetGroupContextOption({ sfid: studyItem.SID }).then(res => {
         this.studyContextData = res.data;
         for (var i = 0; i < this.studyContextData.length; i++) {
-          for (
-            var j = 0;
-            j < this.studyContextData[i].contextList.length;
-            j++
-          ) {
+          for (var j = 0; j < this.studyContextData[i].contextList.length; j++) {
             if (
               this.studyContextData[i].contextList[j].TYPE == "STAND_6_SINGLE"
             )
@@ -293,85 +251,12 @@ export default {
         this.detailVisible = true;
       });
     },
+    radioChange(val) {
+      console.log(val);
+    },
     submitStudy() {
-      var finalResult = [];
-      for (var i = 0; i < this.studyContextData.length; i++) {
-        for (var j = 0; j < this.studyContextData[i].contextList.length; j++) {
-          var context = this.studyContextData[i].contextList[j];
-          if (
-            !context.optionResultValue ||
-            context.optionResultValue.length == 0
-          ) {
-            if (this.studyContextData.length == 1) {
-              this.$alert("第" + (j + 1) + "题没有填写", "提示", {
-                type: "warning",
-                confirmButtonText: "好的"
-              });
-            } else {
-              this.$alert(
-                "第" + (i + 1) + "组第" + (j + 1) + "题没有填写",
-                "提示",
-                {
-                  type: "warning",
-                  confirmButtonText: "好的"
-                }
-              );
-            }
-            return;
-          } else {
-            if (
-              context.LASTOPTIONEEDINPUT == 1 &&
-              (context.optionResultValue == context.OPTIONNUM ||
-                (context.TYPE === "CUSTM_MULTIP" &&
-                  context.optionResultValue.indexOf(context.OPTIONNUM) > -1)) &&
-              !context.optionExtraValue
-            ) {
-              if (this.studyContextData.length == 1) {
-                this.$alert("第" + (j + 1) + "题没有填写完整", "提示", {
-                  type: "warning",
-                  confirmButtonText: "好的"
-                });
-              } else {
-                this.$alert(
-                  "第" + (i + 1) + "组第" + (j + 1) + "题没有填写完整",
-                  "提示",
-                  {
-                    type: "warning",
-                    confirmButtonText: "好的"
-                  }
-                );
-              }
-              return;
-            }
-          }
-          var option = "";
-          if (context.TYPE === "CUSTM_MULTIP") {
-            option =
-              context.optionResultValue.join(",") +
-              (context.optionExtraValue
-                ? "_;_" + context.optionExtraValue
-                : "");
-          } else {
-            option =
-              context.optionResultValue +
-              (context.optionExtraValue
-                ? "_;_" + context.optionExtraValue
-                : "");
-          }
-          finalResult.push({
-            sid: context.SID,
-            option: option
-          });
-        }
-      }
-      SubmitStudy({
-        resultValue: finalResult,
-        cid: Cookies.get("cid"),
-        sfid: this.selectData.SID
-      }).then(res => {
-        this.detailVisible = false;
-        this.getDetail();
-      });
+      console.log(this.studyContextData);
+      this.detailVisible = false;
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {

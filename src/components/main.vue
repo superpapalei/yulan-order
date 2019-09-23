@@ -14,37 +14,8 @@
             @select="addTab"
             :collapse="asideStatus"
           >
-            <menuTree
-              v-for="item in menuTreeList"
-              :key="item.SystemMenuID"
-              :menuTreeItem="item"
-            />
-            <router-link to="/painting" tag="div">
-              <el-menu-item v-if="isContainAttr('painting')" index="painting">
-                <i class="iconfont icon-color">&#xe7fb;</i>
-                <span slot="title">委托喷绘书</span>
-                <el-badge
-                  v-if="getPainting > 0"
-                  class="mark r"
-                  :value="getPainting"
-                />
-              </el-menu-item>
-            </router-link>
-            <router-link to="/refundCompensation" tag="div">
-              <el-menu-item
-                v-if="isContainAttr('refundCompensation')"
-                index="refundCompensation"
-              >
-                <i class="iconfont icon-color">&#xe6ee;</i>
-                <span slot="title">退货赔偿</span>
-                <el-badge
-                  v-if="getRefund > 0 && identity === 'ECWEB'"
-                  class="mark r"
-                  :value="getRefund"
-                />
-              </el-menu-item>
-            </router-link>
-            <!-- <el-submenu index="shops">
+            <!-- <menuTree v-for="item in menuTreeList" :key="item.SystemMenuID" :menuTreeItem="item"/> -->
+            <el-submenu index="shops">
               <template slot="title">
                 <i class="iconfont icon-color">&#xe624;</i>
                 <span>产品</span>
@@ -218,7 +189,7 @@
                   </el-menu-item>
                 </router-link>
               </el-menu-item-group>
-            </el-submenu> -->
+            </el-submenu>
           </el-menu>
         </el-scrollbar>
       </el-aside>
@@ -243,8 +214,8 @@
           </ul>
           <ul class="r">
             <!-- <li style="height:50px;"> -->
-            <!-- v-if = "isContainAttr('shoppingCar')"  -->
-            <!-- <el-dropdown trigger="hover" style="margin:0;">
+              <!-- v-if = "isContainAttr('shoppingCar')"  -->
+              <!-- <el-dropdown trigger="hover" style="margin:0;">
                 <span class="el-dropdown-link mr10">
                   <i class="iconfont ml10" style="margin-right:3px;"
                     >&#xf0179;</i
@@ -253,24 +224,24 @@
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown" style="min-width: 120px;"> -->
-            <!-- v-if = "isContainAttr('shoppingCar/shopping?wallPaper')"   -->
-            <!-- <router-link to="/shoppingCar/shopping?wallPaper" tag="li">
+                  <!-- v-if = "isContainAttr('shoppingCar/shopping?wallPaper')"   -->
+                  <!-- <router-link to="/shoppingCar/shopping?wallPaper" tag="li">
                     <el-dropdown-item
                       @click.native="addTab('shoppingCar/shopping?wallPaper')"
                     >
                       <span>墙纸配套类</span>
                     </el-dropdown-item>
                   </router-link> -->
-            <!-- v-if = "isContainAttr('shoppingCar/shopping?curtain')"   -->
-            <!-- <router-link to="/shoppingCar/shopping?curtain" tag="li">
+                  <!-- v-if = "isContainAttr('shoppingCar/shopping?curtain')"   -->
+                  <!-- <router-link to="/shoppingCar/shopping?curtain" tag="li">
                     <el-dropdown-item
                       @click.native="addTab('shoppingCar/shopping?curtain')"
                     >
                       <span>窗帘</span>
                     </el-dropdown-item>
                   </router-link> -->
-            <!--v-if = "isContainAttr('shoppingCar/shopping?softSuit')"   -->
-            <!-- <router-link to="/shoppingCar/shopping?softSuit" tag="li">
+                  <!--v-if = "isContainAttr('shoppingCar/shopping?softSuit')"   -->
+                  <!-- <router-link to="/shoppingCar/shopping?softSuit" tag="li">
                     <el-dropdown-item
                       @click.native="addTab('shoppingCar/shopping?softSuit')"
                     >
@@ -297,11 +268,7 @@
                   <el-dropdown-item>修改登录密码</el-dropdown-item>
                   <el-dropdown-item>修改对账密码</el-dropdown-item>-->
                   <!--v-if = "isContainAttr('myZone/myCoupon')"  -->
-                  <router-link
-                    v-if="isContainAttr('myZone/myCoupon')"
-                    to="/myZone/myCoupon"
-                    tag="li"
-                  >
+                  <router-link to="/myZone/myCoupon" tag="li">
                     <el-dropdown-item @click.native="addTab('myZone/myCoupon')"
                       >我的优惠券</el-dropdown-item
                     >
@@ -403,7 +370,6 @@ import { getUserMoney } from "@/api/user";
 import { getAllRefund } from "@/api/refund";
 import { getIconNumber } from "@/api/painting";
 import { GetNewNotification, InserFlag } from "@/api/notificationASP";
-import { QueryWebMenuByUserId } from "@/api/webMenuASP";
 import screenfull from "screenfull";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -591,23 +557,10 @@ export default {
       this.$router.push({
         path: "/login"
       });
-      this.$router.go(0);
     },
-    //获得菜单数组并传入store ,await并不会阻塞主线程，这里并不起作用
-    async getMenuTree() {
-      this.$store.commit("navTabs/emptyMenuTreeList");
-      await QueryWebMenuByUserId({
-        userid: JSON.parse(Cookies.get("userInfo")).userId
-      }).then(res => {
-        if (res.data.children.length > 0) {
-          this.setMenuTreeList(res.data.children);
-        } else {
-          this.$alert("没有菜单权限，请联系管理员配置", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-        }
-      });
+    //获得菜单数组并传入store
+    getMenuTree() {
+      this.setMenuTreeList();
     },
     isContainAttr(attr) {
       return (
@@ -728,16 +681,16 @@ export default {
     }
   },
   created() {
-    this.getMenuTree();
     this.userMoney();
     this.getPath();
-    this.addTab("main");
+    this.getMenuTree();
     this.addTab(this.defaultUrl);
     this.addBadgeIcon();
     this.PaintingIcon();
     document.onkeydown = function(event) {
       var key = window.event.keyCode;
       if (key == 27) {
+        // alert(1);
         if (this.fullscreen == true) {
           this.handleFullScreen();
         }
@@ -839,7 +792,7 @@ export default {
   color: #303133;
 }
 .el-menu-item-group span {
-  margin-left: 25px;
+  margin-left: 45px;
 }
 .el-icon-goods {
   color: #303133;
