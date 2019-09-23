@@ -30,11 +30,12 @@ import checkExamine from '@/components/order/checkExamine'
 import myCoupon from '@/components/center/myCoupon'
 import DetailRefund from '@/components/detail/detailRefund'
 import notificationMain from '@/components/notification/notificationMain'
-import SupplyPort from '@/components/supplierModule/supplyPort'
 import Complaint from '@/components/complaint'
 import StockQuery from '@/components/query/stockQuery'
 import AreaQuery from '@/components/query/areaQuery'
 import OrderQuery from '@/components/query/orderQuery'
+import SupplyPort from '@/components/supplierModule/supplyPort'
+import Trans from '@/components/supplierModule/trans'
 
 Vue.use(Router)
 
@@ -250,11 +251,7 @@ const router = new Router({
           name: 'notificationMain',
           component: notificationMain
         },
-        {
-          path: '/supplierModule/supplyPort',
-          name: 'supplyPort',
-          component: SupplyPort
-        },{
+       {
           path: '/complaint',
           name: 'complaint',
           component: Complaint,
@@ -274,7 +271,17 @@ const router = new Router({
           path:'/query/orderQuery',
           name:'orderQuery',
           component:OrderQuery
-        }
+        },
+        {
+          path: '/supplierModule/trans',
+          name: 'trans',
+          component: Trans
+        },
+        {
+          path: '/supplierModule/supplyPort',
+          name: 'supplyPort',
+          component: SupplyPort
+        },
       ]
     }
   ]
