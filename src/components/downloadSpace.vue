@@ -144,15 +144,25 @@ export default {
             case "pdf":
               return "pdf-mini";
             case "jpg":
+            case "jpeg":
             case "png":
+            case "bmp":
+            case "gif":
+            case "svg":
+            case "ico":
               return "picture-mini";
             case "ppt":
+            case "pptx":
               return "ppt-mini";
             case "txt":
               return "text-mini";
+            case "mp3":  
             case "mp4":
             case "rmvb":
             case "avi":
+            case "mkv":
+            case "flv":
+            case "mov":
               return "video-mini";
             case "html":
               return "web-mini";
