@@ -922,8 +922,13 @@ export default {
 </style>
 
 <style>
+.el-transfer-panel {
+  width: 300px !important;
+  height: 240px !important;
+}
 .el-transfer-panel__list.is-filterable {
-  height: 95px !important;
+  height: 136px !important;
+  width: 300px !important;
 }
 .el-card__header {
   padding: 13px 20px !important;
