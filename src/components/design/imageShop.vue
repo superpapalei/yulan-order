@@ -1,9 +1,6 @@
 <template>
   <div>
     <el-card shadow="hover">
-      <div slot="header">
-        <span class="fstrong f16">形象店设计</span>
-      </div>
       <div id="tbar" class="tbarStyle">
         <el-date-picker
           type="date"
@@ -12,7 +9,8 @@
           placeholder="查询开始日期"
           v-model="beginTime"
           style="width:14%;"
-        ></el-date-picker> -- 
+        ></el-date-picker>
+        --
         <el-date-picker
           type="date"
           format="yyyy-MM-dd"
@@ -21,7 +19,11 @@
           v-model="finishTime"
           style="width:14%;"
         ></el-date-picker>
-        <el-select v-model="status" style="margin-left: 10px" placeholder="全部状态">
+        <el-select
+          v-model="status"
+          style="margin-left: 10px"
+          placeholder="全部状态"
+        >
           <el-option
             v-for="item in options"
             :key="item.label"
@@ -29,49 +31,93 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-button size="medium" type="success" style="margin-left: 10px"  >查询</el-button>
-        <el-button style="float:right" size="medium" @click="newOne" type="primary">新增申请单</el-button>
+        <el-button size="medium" type="success" style="margin-left: 10px"
+          >查询</el-button
+        >
+        <el-button
+          style="float:right"
+          size="medium"
+          @click="newOne"
+          type="primary"
+          >新增申请单</el-button
+        >
       </div>
-      <el-table border :data="bankData" style="width: 100%" :row-class-name="tableRowClassName">
-        <el-table-column width="130" prop="id" label="业务单号" align="center"></el-table-column>
-        <el-table-column prop="payerName" label="申请人" align="center" width="100"></el-table-column>
-        <el-table-column  label="申请时间" align="center">
+      <el-table
+        border
+        :data="bankData"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+      >
+        <el-table-column
+          width="130"
+          prop="id"
+          label="业务单号"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="payerName"
+          label="申请人"
+          align="center"
+          width="100"
+        ></el-table-column>
+        <el-table-column label="申请时间" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.createTs | datatrans}}</span>
+            <span>{{ scope.row.createTs | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="payerName" label="联系人" align="center" width="100"></el-table-column>
-        <el-table-column prop="payAmount" label="联系方式" align="center"></el-table-column>
-        <el-table-column prop="yulanBank" width="120" label="店面形式" align="center"></el-table-column>
-        <el-table-column  label="计划动工时间" align="center">
+        <el-table-column
+          prop="payerName"
+          label="联系人"
+          align="center"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          prop="payAmount"
+          label="联系方式"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="yulanBank"
+          width="120"
+          label="店面形式"
+          align="center"
+        ></el-table-column>
+        <el-table-column label="计划动工时间" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.payDate | datatrans}}</span>
+            <span>{{ scope.row.payDate | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="yulanBank" width="100" label="实施形式" align="center"></el-table-column>
+        <el-table-column
+          prop="yulanBank"
+          width="100"
+          label="实施形式"
+          align="center"
+        ></el-table-column>
         <el-table-column width="100" label="状态" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.state | transStatus}}</span>
+            <span>{{ scope.row.state | transStatus }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" width="100" label="操作">
           <template slot-scope="scope">
             <el-button
-              v-if="scope.row.state =='SUBMITED'"
+              v-if="scope.row.state == 'SUBMITED'"
               @click="checkDetail(scope.row)"
               type="warning"
               icon="el-icon-search"
               circle
             ></el-button>
-             <el-button
-              v-if="scope.row.state =='SENDBACK'||scope.row.state=='PROCESED'"
+            <el-button
+              v-if="
+                scope.row.state == 'SENDBACK' || scope.row.state == 'PROCESED'
+              "
               @click="editIt(scope.row)"
               type="primary"
               icon="el-icon-edit"
               circle
             ></el-button>
             <el-button
-              v-if="scope.row.state =='CANCELED'"
+              v-if="scope.row.state == 'CANCELED'"
               @click="deleteDetail(scope.row)"
               type="danger"
               icon="el-icon-delete"
@@ -91,51 +137,107 @@
       </div>
     </el-card>
 
-    <el-dialog title="形象店建设申请表" :visible.sync="bankDetail" :close-on-click-modal="false" width="50%">
+    <el-dialog
+      title="形象店建设申请表"
+      :visible.sync="bankDetail"
+      :close-on-click-modal="false"
+      width="55%"
+    >
       <!-- 查看区 -->
       <div v-show="EDITorCHECK" class="table-c">
-        
-        <h2 style="text-align:center;">形象店建设申请表-[{{tableData.state | transStatus}}]</h2>
-        <h3>建立时间：{{tableData.createTs | datatrans}}&nbsp;&nbsp;&nbsp;&nbsp;提交时间：{{tableData.submitTs | datatrans}}</h3>
-        <h3 v-show="isBack">退回时间：{{tableData.sendbackTs | datatrans}}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{tableData.sendbackReason}}</h3>
-        <h3 v-show="isDelete">作废时间：{{tableData.cancelTs | datatrans}}</h3>
-        <h3 v-show="isChuli">处理人：{{tableData.erpProcessOp}}&nbsp;&nbsp;&nbsp;&nbsp;处理时间：{{tableData.erpProcessTs | datatrans}}</h3>
+        <h2 style="text-align:center;">
+          形象店建设申请表-[{{ tableData.state | transStatus }}]
+        </h2>
+        <h3>
+          建立时间：{{
+            tableData.createTs | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;提交时间：{{
+            tableData.submitTs | datatrans
+          }}
+        </h3>
+        <h3 v-show="isBack">
+          退回时间：{{
+            tableData.sendbackTs | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{ tableData.sendbackReason }}
+        </h3>
+        <h3 v-show="isDelete">
+          作废时间：{{ tableData.cancelTs | datatrans }}
+        </h3>
+        <h3 v-show="isChuli">
+          处理人：{{
+            tableData.erpProcessOp
+          }}&nbsp;&nbsp;&nbsp;&nbsp;处理时间：{{
+            tableData.erpProcessTs | datatrans
+          }}
+        </h3>
 
-        <table  border="0px" cellspacing="0px" cellpadding="0">
-          <tr >
-            <td class="grayTD" colspan="1" rowspan="3" border="0px" style=" height:12px;">基本信息</td>
+        <table border="0px" cellspacing="0px" cellpadding="0">
+          <tr>
+            <td
+              class="grayTD"
+              colspan="1"
+              rowspan="3"
+              border="0px"
+              style=" height:12px;"
+            >
+              基本信息
+            </td>
             <td class="grayTD" colspan="1" style=" height:12px;">客户名称</td>
-            <td colspan="1" style=" height:12px;">{{tableData.cname}}</td>
+            <td colspan="1" style=" height:12px;">{{ tableData.cname }}</td>
             <td class="grayTD" colspan="1" style=" height:12px;">年销售任务</td>
             <td colspan="1" style=" height:12px;">年销售额300万人名币</td>
           </tr>
-          <tr >
+          <tr>
             <td class="grayTD" colspan="1" style=" height:12px;">店面地址</td>
-            <td colspan="3" style=" height:12px;">广东省佛山市南海区海一路商会大厦B座66号</td>
+            <td colspan="3" style=" height:12px;">
+              广东省佛山市南海区海一路商会大厦B座66号
+            </td>
           </tr>
-          <tr >
-            <td class="grayTD" colspan="1" style="width:17%;height:12px;">联系人</td>
+          <tr>
+            <td class="grayTD" colspan="1" style="width:17%;height:12px;">
+              联系人
+            </td>
             <td colspan="1" style="width:27%;height:12px;">陈建祥</td>
-            <td class="grayTD" colspan="1" style="width:17%;height:12px;">联系电话</td>
+            <td class="grayTD" colspan="1" style="width:17%;height:12px;">
+              联系电话
+            </td>
             <td colspan="1" style="width:27%;height:12px;">13579263841</td>
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1" rowspan="2" border="0px" style=" height:12px;">店面信息</td>
+            <td
+              class="grayTD"
+              colspan="1"
+              rowspan="2"
+              border="0px"
+              style=" height:12px;"
+            >
+              店面信息
+            </td>
             <td class="grayTD" colspan="1" style=" height:12px;">店面形式</td>
             <td colspan="3" style=" height:12px;">商城店</td>
           </tr>
 
           <tr>
             <td class="grayTD" colspan="1" style=" height:12px;">店面面积</td>
-            <td colspan="1" style=" height:12px;"> 86平方米 </td>
+            <td colspan="1" style=" height:12px;">86平方米</td>
             <td class="grayTD" colspan="1" style=" height:12px;">层数</td>
             <td colspan="1" style=" height:12px;">1</td>
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1" rowspan="5" border="0px" style=" height:12px;" >设计需求</td>
-            <td class="grayTD" colspan="1" style=" height:12px;">计划动工时间</td>
+            <td
+              class="grayTD"
+              colspan="1"
+              rowspan="5"
+              border="0px"
+              style=" height:12px;"
+            >
+              设计需求
+            </td>
+            <td class="grayTD" colspan="1" style=" height:12px;">
+              计划动工时间
+            </td>
             <td colspan="3" rowspan="1" style=" height:12px;">2019/09/17</td>
           </tr>
 
@@ -145,159 +247,205 @@
           </tr>
 
           <tr style="height:30px">
-            <td class="grayTD" colspan="1" >是否需要上门测量</td>
-            <td colspan="1" >否</td>
-            <td colspan="2"  style="font-size:10px;color:gray" >(仅100%按公司设计方案落地客户可预约上门测量，并需承担上门人员食宿费用，
-              如后期未100%按效果图实施，需承担上门人员交通费用。)</td>
-          </tr>
-
-          <tr >
-            <td class="grayTD" colspan="1" style="height:50px">其他需求说明</td>
-            <td colspan="3" style="height:50px">希望能够保存形象店设计开工的各式文件</td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" style="height:20px;">附件</td>
-
-            <td colspan="1" style="height:20px;">
-                <el-tooltip class="item" effect="dark" content="点击放大图片" placement="top">
-                <img @click="BIG" class="ISimg" :src="tableData.imgUrl" />
-              </el-tooltip>
-            </td>
-
-            <td colspan="2" style="font-size:10px;color:gray;height:20px;" >(上传jpg、dwg、pdf等格式平面图，
-              平面图尺寸要表达清晰，消防位等有阻碍设计的地方要标注清楚)</td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" border="0px" style="height:12px;">付款信息</td>
-            <td class="grayTD" colspan="1" style="height:12px;">付款凭证</td>
-            <td colspan="3" style="height:12px;">工行转账流水号：62232150123226486931</td>
-          </tr>
-
-          <tr>
-            <td colspan="3"  border="0px"  style="height:12px;">责任人签字：马健博</td>
-            <td colspan="2" style="height:12px;">日期：2019/09/04</td>
-          </tr>
-
-        </table>
-      </div>
-
-      <!-- 编辑区 -->
-      <div v-show="!EDITorCHECK" class="table-c">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-
-          <tr>
-            <td class="grayTD" colspan="5" rowspan="1" border="0px"  style="height:30px;text-align:center;">形象店建设申请表</td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" rowspan="3" border="0px"  style="height:12px;">基本信息</td>
-            <td class="grayTD" colspan="1"  style="height:12px;">客户名称</td>
-            <td v-if="newORedit"  style="height:12px;">{{sumbit.cname}</td>
-            <td v-else  style="height:12px;">(系统带出)</td>
-            <td class="grayTD" colspan="1"  style="height:12px;">年销售任务</td>
-            <td  style="height:12px;">
-            <input
-                  placeholder="（客户填写）"
-                  clearable
-                  class="inputStyle">
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1"  style="height:12px;">店面地址</td>
-            <td v-if="newORedit" colspan="3"  style="height:12px;">{{sumbit.id}}</td>
-            <td v-else colspan="3"  style="height:12px;">
-               <input
-                  placeholder="（客户必填）"
-                  clearable
-                  class="inputStyle">
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" style="width:17%;height:12px;" >联系人</td>
-            <td v-if="newORedit" style="width:27%;height:12px;">{{sumbit.id}}</td>
-            <td v-else style="width:27%;height:12px;">(系统带出)</td>
-            <td class="grayTD" colspan="1" style="width:17%;height:12px;">联系电话</td>
-            <td v-if="newORedit" style="width:27%;height:12px;">{{sumbit.id}}</td>
-            <td v-else style="width:27%;height:12px;">(系统带出)</td>
-          </tr>
-
-           <tr>
-            <td class="grayTD" colspan="1" rowspan="2" border="0px" style="height:12px;">店面信息</td>
-            <td class="grayTD" colspan="1" style="height:12px;">店面形式</td>
-            <td colspan="3" style="height:12px;"> 
-              <input
-                  placeholder="（街边店/商城店）"
-                  clearable
-                  class="inputStyle">
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" style="height:12px;">店面面积</td>
-            <td colspan="1" style="height:12px;"> 
-              <input
-                  placeholder="（客户必填）"
-                  clearable
-                  class="inputStyle">
-            </td>
-            <td class="grayTD" colspan="1" style="height:12px;">层数</td>
-            <td colspan="1" style="height:12px;">
-              <input
-                  placeholder="（客户必填）"
-                  clearable
-                  class="inputStyle">
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" rowspan="5" border="0px" style="height:12px;">设计需求</td>
-            <td class="grayTD" colspan="1" style="height:12px;">计划动工时间</td>
-            <td colspan="3" rowspan="1" style="height:12px;">
-                <input
-                  placeholder="（客户必填）"
-                  clearable
-                  class="inputStyle">
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" style="height:30px;">实施形式</td>
-            <td colspan="3" style="height:30px;">             
-               <input
-                  placeholder="①100%按公司设计方案落地，软装物料由公司配置，享受公司建店支持  ②自行落地"
-                  clearable
-                  style="border:0; height:100%;width:100%;font-size:13px;"></td>
-          </tr>
-
-          <tr >
-            <td class="grayTD" colspan="1" style="height:35px">是否需要上门测量</td>
-            <td colspan="1" style="height:35px">
-              <input
-                  placeholder="（是/否）"
-                  clearable
-                  class="inputStyle">
-            </td>
-            <td colspan="2"  style="font-size:10px;color:gray;height:35px">
+            <td class="grayTD" colspan="1">是否需要上门测量</td>
+            <td colspan="1">否</td>
+            <td colspan="2" style="font-size:11px;color:gray">
               (仅100%按公司设计方案落地客户可预约上门测量，并需承担上门人员食宿费用，
               如后期未100%按效果图实施，需承担上门人员交通费用。)
             </td>
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1"  style="height:50px">其他需求说明</td>
+            <td class="grayTD" colspan="1" style="height:50px">其他需求说明</td>
             <td colspan="3" style="height:50px">
-               <input
-                  clearable
-                  style="border:0; height:100%;width:100%;font-size:16px;"
-               >
+              希望能够保存形象店设计开工的各式文件
             </td>
           </tr>
 
-           <tr>
+          <tr>
+            <td class="grayTD" colspan="1" style="height:20px;">附件</td>
+
+            <td colspan="1" style="height:20px;">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="点击放大图片"
+                placement="top"
+              >
+                <img @click="BIG" class="ISimg" :src="tableData.imgUrl" />
+              </el-tooltip>
+            </td>
+
+            <td colspan="2" style="font-size:11px;color:gray;height:20px;">
+              (上传jpg、dwg、pdf等格式平面图，
+              平面图尺寸要表达清晰，消防位等有阻碍设计的地方要标注清楚)
+            </td>
+          </tr>
+
+          <tr>
+            <td class="grayTD" colspan="1" border="0px" style="height:12px;">
+              付款信息
+            </td>
+            <td class="grayTD" colspan="1" style="height:12px;">付款凭证</td>
+            <td colspan="3" style="height:12px;">
+              工行转账流水号：62232150123226486931
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="3" border="0px" style="height:12px;">
+              责任人签字：马健博
+            </td>
+            <td colspan="2" style="height:12px;">日期：2019/09/04</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 编辑区 -->
+      <div v-show="!EDITorCHECK" class="table-c">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td
+              class="grayTD"
+              colspan="5"
+              rowspan="1"
+              border="0px"
+              style="height:30px;text-align:center;"
+            >
+              形象店建设申请表
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              class="grayTD"
+              colspan="1"
+              rowspan="3"
+              border="0px"
+              style="height:12px;"
+            >
+              基本信息
+            </td>
+            <td class="grayTD" colspan="1" style="height:12px;">客户名称</td>
+            <td v-if="newORedit" style="height:12px;">{{ sumbit.cname }}</td>
+            <td v-else style="height:12px;">(系统带出)</td>
+            <td class="grayTD" colspan="1" style="height:12px;">年销售任务</td>
+            <td style="height:12px;">
+              <input placeholder="（客户填写）" clearable class="inputStyle" />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="grayTD" colspan="1" style="height:12px;">店面地址</td>
+            <td v-if="newORedit" colspan="3" style="height:12px;">
+              {{ sumbit.id }}
+            </td>
+            <td v-else colspan="3" style="height:12px;">
+              <input placeholder="（客户必填）" clearable class="inputStyle" />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="grayTD" colspan="1" style="width:17%;height:12px;">
+              联系人
+            </td>
+            <td v-if="newORedit" style="width:27%;height:12px;">
+              {{ sumbit.id }}
+            </td>
+            <td v-else style="width:27%;height:12px;">(系统带出)</td>
+            <td class="grayTD" colspan="1" style="width:17%;height:12px;">
+              联系电话
+            </td>
+            <td v-if="newORedit" style="width:27%;height:12px;">
+              {{ sumbit.id }}
+            </td>
+            <td v-else style="width:27%;height:12px;">(系统带出)</td>
+          </tr>
+
+          <tr>
+            <td
+              class="grayTD"
+              colspan="1"
+              rowspan="2"
+              border="0px"
+              style="height:12px;"
+            >
+              店面信息
+            </td>
+            <td class="grayTD" colspan="1" style="height:12px;">店面形式</td>
+            <td colspan="3" style="height:12px;">
+              <input
+                placeholder="（街边店/商城店）"
+                clearable
+                class="inputStyle"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="grayTD" colspan="1" style="height:12px;">店面面积</td>
+            <td colspan="1" style="height:12px;">
+              <input placeholder="（客户必填）" clearable class="inputStyle" />
+            </td>
+            <td class="grayTD" colspan="1" style="height:12px;">层数</td>
+            <td colspan="1" style="height:12px;">
+              <input placeholder="（客户必填）" clearable class="inputStyle" />
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              class="grayTD"
+              colspan="1"
+              rowspan="5"
+              border="0px"
+              style="height:12px;"
+            >
+              设计需求
+            </td>
+            <td class="grayTD" colspan="1" style="height:12px;">
+              计划动工时间
+            </td>
+            <td colspan="3" rowspan="1" style="height:12px;">
+              <input placeholder="（客户必填）" clearable class="inputStyle" />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="grayTD" colspan="1" style="height:30px;">实施形式</td>
+            <td colspan="3" style="height:30px;">
+              <input
+                placeholder="①100%按公司设计方案落地，软装物料由公司配置，享受公司建店支持  ②自行落地"
+                clearable
+                style="border:0; height:100%;width:100%;font-size:13px;"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="grayTD" colspan="1" style="height:35px">
+              是否需要上门测量
+            </td>
+            <td colspan="1" style="height:35px">
+              <input placeholder="（是/否）" clearable class="inputStyle" />
+            </td>
+            <td colspan="2" style="font-size:11px;color:gray;height:35px">
+              (仅100%按公司设计方案落地客户可预约上门测量，并需承担上门人员食宿费用，
+              如后期未100%按效果图实施，需承担上门人员交通费用。)
+            </td>
+          </tr>
+
+          <tr>
+            <td class="grayTD" colspan="1" style="height:50px">其他需求说明</td>
+            <td colspan="3" style="height:50px">
+              <input
+                clearable
+                style="border:0; height:100%;width:100%;font-size:16px;"
+              />
+            </td>
+          </tr>
+
+          <tr>
             <td class="grayTD" colspan="1" style="height:14px;">附件</td>
 
             <td colspan="1" style="height:14px;">
@@ -314,43 +462,49 @@
               </el-upload>
             </td>
 
-            <td colspan="2" style="font-size:10px;color:gray" >(上传jpg、dwg、pdf等格式平面图，
-              平面图尺寸要表达清晰，消防位等有阻碍设计的地方要标注清楚)</td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" border="0px" style="height:12px;">付款信息</td>
-            <td class="grayTD" colspan="1" style="height:12px;">付款凭证</td>
-            <td colspan="3" style="height:12px;" >
-                <input
-                  placeholder="（是/否）"
-                  clearable
-                  class="inputStyle">
+            <td colspan="2" style="font-size:11px;color:gray">
+              (上传jpg、dwg、pdf等格式平面图，
+              平面图尺寸要表达清晰，消防位等有阻碍设计的地方要标注清楚)
             </td>
           </tr>
 
           <tr>
-            <td colspan="3"  border="0px" style="height:12px;">责任人签字：</td>
+            <td class="grayTD" colspan="1" border="0px" style="height:12px;">
+              付款信息
+            </td>
+            <td class="grayTD" colspan="1" style="height:12px;">付款凭证</td>
+            <td colspan="3" style="height:12px;">
+              <input placeholder="（是/否）" clearable class="inputStyle" />
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="3" border="0px" style="height:12px;">责任人签字：</td>
             <td colspan="2" style="height:12px;">日期：</td>
           </tr>
 
           <tr style="height:60px">
-            <td colspan="5"  border="0px" style="font-size:10px;color:gray;text-align:left">
-              1.请提前15个工作日提交设计需求申请。<br/>
-              2.请附上店面平面图（清晰标注尺寸以及消防位等障碍位置）。<br/>
-              3.硬装部分有客户自行落地。<br/>
-              4.公司物料配置包含标识、展具、上样、情景四大模块，根据成本清单提供40%建店支持（不包含硬装）。以实用面积为100平店面测算出软装包成本约2700元/m²，店面面积越大，每平方价格相应降低。<br/>
-              5.申请2.0形象店设计需交10000元设计落地保证金，落地后抵扣软装包款项，如未100%按设计落地，保证金不予返还。<br/>
+            <td
+              colspan="5"
+              border="0px"
+              style="font-size:11px;color:gray;text-align:left"
+            >
+              1.请提前15个工作日提交设计需求申请。<br />
+              2.请附上店面平面图（清晰标注尺寸以及消防位等障碍位置）。<br />
+              3.硬装部分有客户自行落地。<br />
+              4.公司物料配置包含标识、展具、上样、情景四大模块，根据成本清单提供40%建店支持（不包含硬装）。以实用面积为100平店面测算出软装包成本约2700元/m²，店面面积越大，每平方价格相应降低。<br />
+              5.申请2.0形象店设计需交10000元设计落地保证金，落地后抵扣软装包款项，如未100%按设计落地，保证金不予返还。<br />
             </td>
           </tr>
         </table>
 
         <div style="margin:0 auto; width:75px;">
           <br />
-          <el-button v-if="newORedit" type="success" @click="submitEDIT">确 定</el-button>
+          <el-button v-if="newORedit" type="success" @click="submitEDIT"
+            >确 定</el-button
+          >
           <el-button v-else type="success" @click="sumbitNEW">提 交</el-button>
         </div>
-
       </div>
     </el-dialog>
 
@@ -438,7 +592,7 @@ export default {
       limit: 8,
       count: 88,
       currentPage: 1,
-      beginTime: "",    //div中（html中绑定的）
+      beginTime: "", //div中（html中绑定的）
       finishTime: "",
       status: "",
       options: [
@@ -487,7 +641,7 @@ export default {
         {
           label: "其他",
           value: "其他"
-        },
+        }
       ],
       bankData: []
     };
@@ -844,33 +998,33 @@ export default {
 .grayTD {
   background: rgb(241, 242, 243);
 }
-.inputStyle{
-     border:0;
-     height:100%;
-     width:100%;
-     font-size:16px;
-     text-align:center;
+.inputStyle {
+  border: 0;
+  height: 100%;
+  width: 100%;
+  font-size: 16px;
+  text-align: center;
 }
-.lowHeightRow{
-     height:10px;
+.lowHeightRow {
+  height: 10px;
 }
 .ISimg {
   width: 30px;
-  height:30px;
+  height: 30px;
   cursor: pointer;
 }
 .BIGimg {
   width: 450px;
-  height:450px;
+  height: 450px;
 }
 .inputWidth {
   width: 220px;
 }
-.tbarStyle{
+.tbarStyle {
   margin-bottom: 13px;
 }
-.statusCombobox{
- margin-left: 10px;
+.statusCombobox {
+  margin-left: 10px;
 }
 </style>
 

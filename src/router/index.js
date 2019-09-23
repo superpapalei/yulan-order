@@ -252,26 +252,26 @@ const router = new Router({
           name: 'notificationMain',
           component: notificationMain
         },
-       {
+        {
           path: '/complaint',
           name: 'complaint',
           component: Complaint,
         },
         // 查询
         {
-          path:'/query/stockQuery',
-          name:'stockQuery',
-          component:StockQuery
+          path: '/query/stockQuery',
+          name: 'stockQuery',
+          component: StockQuery
         },
         {
-          path:'/query/areaQuery',
-          name:'areaQuery',
-          component:AreaQuery
+          path: '/query/areaQuery',
+          name: 'areaQuery',
+          component: AreaQuery
         },
         {
-          path:'/query/orderQuery',
-          name:'orderQuery',
-          component:OrderQuery
+          path: '/query/orderQuery',
+          name: 'orderQuery',
+          component: OrderQuery
         },
         {
           path: '/supplierModule/trans',
