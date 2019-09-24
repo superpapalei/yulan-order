@@ -101,35 +101,41 @@
                           :data="stockInfo_1"
                           max-height="200"
                         >
+                        <el-table-column
+                            prop="NOTE"
+                            label="仓库名称"
+                            align="center"
+                            width="300"
+                          ></el-table-column>
                           <el-table-column
                             prop="BATCH_NO"
                             label="批号"
                             align="center"
-                            width="300"
+                            width="200"
                           ></el-table-column>
                           <el-table-column
                             prop="AREA"
                             label="区"
                             align="center"
-                            width="100"
+                            width="50"
                           ></el-table-column>
                           <el-table-column
                             prop="SEAT"
                             label="位"
                             align="center"
-                            width="100"
+                            width="50"
                           ></el-table-column>
                           <el-table-column
                             prop="BOX"
                             label="箱"
                             align="center"
-                            width="100"
+                            width="50"
                           ></el-table-column>
                           <el-table-column
                             prop="QTY"
                             label="可分配量"
                             align="center"
-                            width="150"
+                            width="100"
                           ></el-table-column>
                         </el-table>
                       </td>
@@ -143,7 +149,7 @@
                 <div slot="header" class="clearfix">
                   <span class="CARD">产品信息：</span>
                 </div>
-                <div style="height:200px;">
+                <div style="max-height:300px;">
                   <h1 v-show="stockInfo">
                     <table width="100%" class="table_1" border="1" style="border-collapse:collapse;">
                       <tr>
@@ -166,16 +172,16 @@
                       <tr>
                         <td class="CPXXBJYS">产品类别</td>
                         <td width="50px">
-                          {{ dormitory.PRODUCT_TYPE | transType }}
+                          {{ dormitory.ITEM_TYPE_1}}
                         </td>
                         <td class="CPXXBJYS">墙纸功能</td>
                         <td width="50px">{{ dormitory.MARK_TYPE }}</td>
                         <td class="CPXXBJYS">拼花</td>
-                        <td width="50px">{{ dormitory.DUIPIN }}</td>
+                        <td width="50px">{{ dormitory.DUIPIN_NOTE_1 }}</td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">品牌</td>
-                        <td width="50px">{{ dormitory.PRODUCT_BRAND }}</td>
+                        <td width="50px">{{ dormitory.BRAND_NAME }}</td>
                         <td class="CPXXBJYS">长度（mm）</td>
                         <td width="50px">{{ dormitory.LENGTH }}</td>
                         <td class="CPXXBJYS">拼花尺寸</td>
@@ -189,7 +195,7 @@
                         <td class="CPXXBJYS">宽度（mm）</td>
                         <td width="50px">{{ dormitory.WIDTH }}</td>
                         <td class="CPXXBJYS">图案</td>
-                        <td width="50px">{{ dormitory.PATTERN }}</td>
+                        <td width="50px">{{ dormitory.PATTERN|transPattern }}</td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">自产代理</td>
@@ -197,15 +203,15 @@
                         <td class="CPXXBJYS">规格</td>
                         <td width="50px">{{ dormitory.GRADE }}</td>
                         <td class="CPXXBJYS">颜色</td>
-                        <td width="50px">{{ dormitory.COLOUR }}</td>
+                        <td width="50px">{{ dormitory.COLOUR|transColour }}</td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">计量单位</td>
-                        <td width="50px">{{ dormitory.UNIT }}</td>
+                        <td width="50px">{{ dormitory.UNIT_NOTE_1 }}</td>
                         <td class="CPXXBJYS">纸箱规格</td>
                         <td width="50px">{{ dormitory.BOX_TYPE }}</td>
                         <td class="CPXXBJYS">风格</td>
-                        <td width="50px">{{ dormitory.STYLE }}</td>
+                        <td width="50px">{{ dormitory.STYLE|transStyle }}</td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">备注</td>
@@ -364,7 +370,78 @@ export default {
           return "广告商品";
           break;
       }
-    }
+    },
+    transPattern(value){
+        switch(value){
+          case "01":
+            return "大马士革";
+          case "02":
+            return "花草";
+          case "03":
+            return "条纹几何";
+          case "04":
+            return "抽象";
+          case "05":
+            return "迪士尼";
+          case "06":
+            return "另类";
+          case "07":
+            return "欧式卷草纹";
+            break;  
+        }
+    },
+    transColour(value){
+        switch(value){
+          case "01":
+            return "灰白";
+          case "02":
+            return "青色";
+          case "03":
+            return "棕色";
+          case "04":
+            return "金色";
+          case "05":
+            return "银色";
+          case "06":
+            return "红色";
+          case "07":
+            return "粉色";
+          case "08":
+            return "黄色";
+          case "09":
+            return "绿色";
+          case "10":
+            return "蓝色";
+          case "11":
+            return "紫色"; 
+          case "12":
+            return "橙色"; 
+            break;    
+        }
+    },
+    transStyle(value){
+        switch(value){
+          case "01":
+            return "欧式风格";
+          case "02":
+            return "田园风格";
+          case "03":
+            return "迪士尼";
+          case "04":
+            return "现代简约";
+          case "05":
+            return "另类风格";
+          case "06":
+            return "新东方风格";
+          case "07":
+            return "新古典风格";
+          case "08":
+            return "青少年风格";
+          case "09":
+            return "美式风格";
+            break;  
+        }
+    },
   },
   methods: {
     //用户权限
@@ -385,6 +462,7 @@ export default {
 
     //查询
     StockQuery() {
+      this.tables = []
       var data = {
         productType: this.productType, //产品类型
         //itemNo:this.search.toUpperCase(),//产品型号
@@ -450,23 +528,24 @@ export default {
         ITEM_NO: val.ITEM_NO, //型号
         OLD_ITEM_NO: val.OLD_ITEM_NO, //样本型号
         PRODUCTVERSION_NAME: val.PRODUCTVERSION_NAME, //版本号
-        PRODUCT_TYPE: val.PRODUCT_TYPE, //产品类别
+        ITEM_TYPE_1: val.ITEM_TYPE_1, //产品类别
         BOX_TYPE: val.BOX_TYPE, //纸箱规格
         GRADE: val.GRADE, //规格
         DUIPIN_SIZE: val.DUIPIN_SIZE, //拼花尺寸
         LENGTH: val.LENGTH, //长度
         WIDTH: val.WIDTH, //宽度
         GROSS: val.GROSS, //毛重
-        PRODUCT_BRAND: val.PRODUCT_BRAND, //品牌
+        BRAND_NAME: val.BRAND_NAME, //品牌
         PRODUCT_PAPER_ID: val.PRODUCT_PAPER_ID, //墙纸规格
         TONGMO_TYPE: val.TONGMO_TYPE, //墙纸基材
         NET_WEIGHT: val.NET_WEIGHT, //净重
         MARK_TYPE: val.MARK_TYPE, //墙纸功能
-        DUIPIN: val.DUIPIN, //拼花类型
+        DUIPIN_NOTE_1: val.DUIPIN_NOTE_1, //拼花类型
         PATTERN: val.PATTERN, //图案
         COLOUR: val.COLOUR, //颜色
         UNIT: val.UNIT, //单位
-        STYLE: val.STYLE //风格
+        STYLE: val.STYLE, //风格
+        UNIT_NOTE_1:val.UNIT_NOTE_1,//计量单位
       };
       this.dormitory = data; //数据集合
     },

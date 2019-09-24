@@ -10,7 +10,8 @@
         
       >
       <div style="margin:0,auto">
-       <TABLE border="0px">
+ <el-card>
+       <TABLE class="table_2">
         <tr>
           <td>客户名称:</td>
           <td>{{customerInfo.CUSTOMER_NAME}}</td>
@@ -36,17 +37,17 @@
           <td>{{moneySituation}}</td>
         </tr>
        </TABLE>
+       </el-card>
 </div>
       </el-dialog>
        <el-dialog
-        title="订单详情"
+        
         :show-close="true"
         :visible.sync="dialogVisible_1"
-        width="95%"
+        width="65%"
       >
-        <dialogOrderDetail :ruleForm="ruleForm"></dialogOrderDetail>
+        <checkExamine :isShowButton='false'></checkExamine>
       </el-dialog>
-
       <div class="ff"> 
         <el-tabs class="tabs_1"  v-model="activeName" style="width:1340px">
           <el-tab-pane label="区域订单查询" name="first_1">
@@ -151,7 +152,6 @@
             <hr />
         <div  v-if="query_1">
         <el-table
-        :summary-method="getSummaries"
           :data="tableData"
           border
           highlight-current-row
@@ -159,7 +159,7 @@
           class="table_1"
         >
           <el-table-column prop="num" label width="80" align="center">
-            <template scope="scope"><span>{{scope.$index+(currentPage - 1) * limit + 1}} </span></template>
+            <template slot-scope="scope"><span>{{scope.$index+(currentPage - 1) * limit + 1}} </span></template>
           </el-table-column>
           <el-table-column label="订单号" align="center">
             <template slot-scope="scope1">
@@ -188,6 +188,7 @@
           <el-table-column prop="LINKPERSON" label="联系人" align="center"></el-table-column>
           <el-table-column prop="TELEPHONE" label="联系电话" align="center"></el-table-column>
         </el-table>
+     
         <!-- 分页 -->
       <div style="margin:0 40%;" class="block">
         <el-pagination
@@ -210,7 +211,7 @@
 </template>
 
 <script>
-import dialogOrderDetail from "../order/dialogOrderDetail";
+import checkExamine from "../order/checkExamine";
 import { searchAssignments, orderDetail,manageCoupon } from "@/api/orderList";
 // import { manageCoupon } from "@/api/orderList";
 import { getUserMoney } from "@/api/user";
@@ -232,6 +233,7 @@ export default {
   name: "OrderQuery",
   data() {  
     return {
+      button_1:false,
       ruleForm: {},
       cid:"",
       order_no:"",
@@ -293,11 +295,9 @@ export default {
   //生命周期
   created() {
     this._getAreaCode();
-    this.userMoney()
-      this.allTickets(); 
   },
   components: {
-    dialogOrderDetail
+    checkExamine
   },
   filters: {
     transType(value) {
@@ -361,18 +361,6 @@ export default {
       orderDetail(url, data).then(res => {
         this.ruleForm = res.data.data[0];
         this.dialogVisible_1 = true;
-      });
-    },
-    //优惠劵余额
-     allTickets() {
-      var url = "/order/findRebate.do";
-      var data = {
-        cid: Cookies.get("cid"),
-        companyId: this.customerInfo.COMPANY_ID
-      };
-      manageCoupon(url, data).then(res => {
-        console.log(res.data);
-        this.couponData = res.data;
       });
     },
     //点击客户
@@ -511,32 +499,7 @@ export default {
       this.bankData = [];
       this.queryQuYu_1();
     },  
-    //获取用户余额情况
-    async userMoney() {
-      this.moneySituation = "";
-      await getUserMoney(
-        {
-          cid: this.cid,
-          companyId: this.customerInfo.COMPANY_ID
-        },
-        { loading: false } //传入参数控制页面是否loading
-      )
-        .then(res => {
-          if (this.isManager != "1") {
-            if (res.data < 0) {
-              this.moneySituation = "当前余额不足，请尽快打款";
-            } else {
-              this.moneySituation = "当前余额充足，请继续保持";
-            }
-          } else {
-            this.moneySituation = "当前余额 " + res.data + "元";
-          }
-          
-        })
-        .catch(err => {
-          //console.log(err);
-        });
-    },
+    
     //重置
     reset(){
       this.customerData=[]
@@ -547,8 +510,7 @@ export default {
       this.AREA_DISTRICT=[]
       this.CUSTOMER_TYPE=[]
        this._getAreaCode();
-    this.userMoney()
-      this.allTickets(); 
+
     }
   }
 };
@@ -557,14 +519,10 @@ export default {
 
 
 <style scoped>
-.el-transfer-panel__list.is-filterable{
-    height:200px;
-
+.table_2{
+  font-size: 20px
+  
 }
-.el-transfer-panel{
-    height: 200px;
-}
-
 .gx {
   background: #8bc34a;
   color: rgb(255, 255, 255);

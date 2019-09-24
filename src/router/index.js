@@ -261,17 +261,26 @@ const router = new Router({
         {
           path: '/query/stockQuery',
           name: 'stockQuery',
-          component: StockQuery
+          component: StockQuery,
+          meta: {
+            keepAlive: true
+          }
         },
         {
           path: '/query/areaQuery',
           name: 'areaQuery',
-          component: AreaQuery
+          component: AreaQuery,
+          meta: {
+            keepAlive: true
+          }
         },
         {
           path: '/query/orderQuery',
           name: 'orderQuery',
-          component: OrderQuery
+          component: OrderQuery,
+          meta: {
+            keepAlive: true
+          }
         },
         {
           path: '/supplierModule/trans',
