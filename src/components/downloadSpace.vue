@@ -1,138 +1,146 @@
 <template>
   <div>
-    <div class="buttonClass">
+    <div style="height:40px;" class="buttonClass">
       <el-button
-        :disabled="multipleSelection.length==0"
+        v-show="false"
+        :disabled="multipleSelection.length == 0"
         icon="el-icon-download"
         type="primary"
         plain
-      >下载</el-button>
+        >下载</el-button
+      >
+      <el-input
+        @keyup.enter.native="search()"
+        placeholder="搜索文件"
+        v-model="find"
+        style="width:350px;float:right;margin-right:50px;"
+      >
+        <el-button @click="search()" slot="append" icon="el-icon-search"
+          >搜索</el-button
+        >
+      </el-input>
     </div>
     <div style="margin:5px;">
       <a
-        style="font-size:13px;"
-        v-for="(item,index) in navigationList"
+        style="font-size:14px;"
+        v-if="navigationList.length > 1"
+        class="islink"
+        @click="gotoUp()"
+        >返回上一级</a
+      >
+      <span v-if="navigationList.length > 1">|</span>
+      <i
+        title="刷新"
+        :class="refreshClass"
+        style="color:black;cursor:pointer;"
+        @click="refresh"
+      ></i>
+      <a
+        style="font-size:14px;"
+        v-for="(item, index) in navigationList"
         :key="index"
-        :class="[index == navigationList.length -1 ? 'nolink':'islink']"
-        @click="gotoUp(index)"
-      >{{item}}></a>
+        :class="[index == navigationList.length - 1 ? 'nolink' : 'islink']"
+        @click="gotoIndex(item, index)"
+        >&nbsp;{{ item.FILE_NAME }}>&nbsp;</a
+      >
     </div>
     <el-table :data="fileData" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="35"></el-table-column>
       <el-table-column label="文件名">
         <template slot-scope="scope">
           <span>
-            <div class="format" :class="formatClass(scope.row.fileName)"></div>
+            <div class="format" :class="formatClass(scope.row.FILE_NAME)"></div>
             <div style="display:inline-block;">
               <a
-                class="link"
+                :class="[scope.row.FILE_TYPE == 0 ? 'nolink' : 'link']"
                 style="margin-left:5px;"
                 @click="gotoNext(scope.row)"
-              >{{scope.row.fileName}}</a>
+                >{{ scope.row.FILE_NAME }}</a
+              >
             </div>
           </span>
         </template>
       </el-table-column>
       <el-table-column align="center" width="150">
-        <template>
-          <el-button type="primary" size="mini" icon="el-icon-download" circle plain></el-button>
+        <template slot-scope="scope">
+          <el-button
+            v-if="scope.row.FILE_TYPE != 1"
+            @click="downLoad(scope.row.FILE_ID)"
+            type="primary"
+            size="mini"
+            icon="el-icon-download"
+            circle
+            plain
+          ></el-button>
         </template>
       </el-table-column>
-      <el-table-column label="文件大小" prop="fileSize" width="150"></el-table-column>
-      <el-table-column label="上传时间" prop="fileTime" width="250"></el-table-column>
+      <el-table-column label="文件大小" width="150"
+        ><template slot-scope="scope">
+          <span v-if="scope.row.FILE_TYPE == 1">-</span>
+          <span v-else>{{ scope.row.FILE_SIZE | fileSizeFilter }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="上传时间"
+        prop="UPLOAD_TIME"
+        width="200"
+      ></el-table-column>
+      <el-table-column v-if="dirShow" label="所在目录" width="200"
+        ><template slot-scope="scope">
+          <a
+            style="text-decoration: underline;cursor:pointer;"
+            @click="gotoTarget(scope.row.FILE_PID)"
+            >{{ filterDir(scope.row.FILE_PID) }}</a
+          >
+        </template></el-table-column
+      >
     </el-table>
   </div>
 </template>
 
 <script>
+import { GetAllFile, DownLoad } from "@/api/fileCenterASP";
+import { downLoadFile } from "@/common/js/downLoadFile";
+
 export default {
   name: "DownloadSpace",
   data() {
     return {
+      refreshClass: "el-icon-refresh-left",
+      downLoadUrl: "http://47.107.56.156:1001/",//测试
+      //downLoadUrl: "http://14.29.223.114:1001/",//正式
+      find: "",
+      dirShow: false,
       fileData: [],
       multipleSelection: [],
-      navigationList: ["全部文件"],
-      allData: [
+      navigationList: [
         {
-          fileName: "文件夹1",
-          fileSize: "-",
-          fileTime: "2019-09-20 17:00:01",
-          children: [
-            {
-              fileName: "文件1.xls",
-              fileSize: "156k",
-              fileTime: "2019-09-20 17:00:01"
-            },
-            {
-              fileName: "文件2.exe",
-              fileSize: "56M",
-              fileTime: "2019-09-20 17:00:01"
-            },
-            {
-              fileName: "文件3.sss",
-              fileSize: "23M",
-              fileTime: "2019-09-20 17:00:01"
-            }
-          ]
-        },
-        {
-          fileName: "文件夹2",
-          fileSize: "-",
-          fileTime: "2019-09-20 17:00:01",
-          children: [
-            {
-              fileName: "文件4.pdf",
-              fileSize: "3.2M",
-              fileTime: "2019-09-20 17:00:01"
-            },
-            {
-              fileName: "文件5.jpg",
-              fileSize: "2M",
-              fileTime: "2019-09-20 17:00:01"
-            },
-            {
-              fileName: "文件6.txt",
-              fileSize: "15k",
-              fileTime: "2019-09-20 17:00:01"
-            }
-          ]
-        },
-        {
-          fileName: "文件7.mp4",
-          fileSize: "1.1GB",
-          fileTime: "2019-09-20 17:00:01"
-        },
-        {
-          fileName: "文件8.html",
-          fileSize: "210B",
-          fileTime: "2019-09-20 17:00:01"
-        },
-        {
-          fileName: "文件9.doc",
-          fileSize: "200k",
-          fileTime: "2019-09-20 17:00:01"
-        },
-        {
-          fileName: "文件10.zip",
-          fileSize: "23M",
-          fileTime: "2019-09-20 17:00:01"
-        },
-        {
-          fileName: "文件10.ppt",
-          fileSize: "23M",
-          fileTime: "2019-09-20 17:00:01"
+          FILE_ID: 0,
+          FILE_NAME: "全部文件"
         }
-      ]
+      ],
+      allData: []
     };
   },
+  filters:{
+    fileSizeFilter(size){
+       var unit;
+       var units = ['B', 'KB', 'MB', 'GB', 'TB'];
+       while ( (unit = units.shift()) && size > 1024 ) {
+         size = size / 1024;
+       }
+       return (unit === 'B' ? size : size.toFixed(1)) +' ' + unit;
+    }
+  },
   methods: {
-    formatClass(fileName) {
-      if (fileName) {
-        var startIndex = fileName.lastIndexOf(".");
+    formatClass(FILE_NAME) {
+      if (FILE_NAME) {
+        var startIndex = FILE_NAME.lastIndexOf(".");
         if (startIndex != -1) {
-          var format = fileName
-            .substring(startIndex + 1, fileName.length)
-            .toLowerCase();
+          var format = FILE_NAME.substring(
+            startIndex + 1,
+            FILE_NAME.length
+          ).toLowerCase();
           switch (format) {
             case "apk":
               return "android-mini";
@@ -156,13 +164,14 @@ export default {
               return "ppt-mini";
             case "txt":
               return "text-mini";
-            case "mp3":  
+            case "mp3":
             case "mp4":
             case "rmvb":
             case "avi":
             case "mkv":
             case "flv":
             case "mov":
+            case "wav":
               return "video-mini";
             case "html":
               return "web-mini";
@@ -180,22 +189,117 @@ export default {
         return "unknow-mini";
       }
     },
-    gotoNext(folder) {
-      if (folder.children && folder.children.length > 0) {
-        this.fileData = folder.children;
-        this.navigationList.push(folder.fileName);
+    getFile() {
+      GetAllFile({ condition: "" }).then(res => {
+        this.allData = res.data;
+        this.fileData = this.filterFile(0);
+      });
+    },
+    refresh() {
+      this.refreshClass = "el-icon-loading";
+      GetAllFile({ condition: "" }).then(res => {
+        this.allData = res.data;
+        if (this.dirShow) {
+          if (this.find) {
+            var reg = new RegExp(this.find, "i");
+            this.fileData = this.allData.filter(
+              item =>
+                item.FILE_TYPE == 0 &&
+                reg.test(
+                  item.FILE_NAME.substring(0, item.FILE_NAME.lastIndexOf("."))
+                )
+            );
+          } else {
+            this.navigationList = this.navigationList.slice(0, 1);
+            this.fileData = this.filterFile(
+              this.navigationList[this.navigationList.length - 1].FILE_ID
+            );
+            this.dirShow = false;
+          }
+        } else {
+          this.fileData = this.filterFile(
+            this.navigationList[this.navigationList.length - 1].FILE_ID
+          );
+        }
+        this.refreshClass = "el-icon-refresh-left";
+      });
+    },
+    search() {
+      if (this.find) {
+        this.navigationList = this.navigationList.slice(0, 1);
+        var reg = new RegExp(this.find, "i");
+        this.fileData = this.allData.filter(
+          item =>
+            item.FILE_TYPE == 0 &&
+            reg.test(
+              item.FILE_NAME.substring(0, item.FILE_NAME.lastIndexOf("."))
+            )
+        );
+        this.navigationList.push({
+          FILE_ID: -1,
+          FILE_NAME: '搜索:"' + this.find + '"'
+        });
+        this.dirShow = true;
       }
     },
-    gotoUp(index) {
+    filterFile(id) {
+      return this.allData.filter(item => item.FILE_PID == id);
+    },
+    gotoNext(folder) {
+      if (folder.FILE_TYPE == 1) {
+        this.fileData = this.filterFile(folder.FILE_ID);
+        this.navigationList.push(folder);
+        this.dirShow = false;
+      }
+    },
+    gotoUp() {
+      this.gotoIndex(
+        this.navigationList[this.navigationList.length - 2],
+        this.navigationList.length - 2
+      );
+    },
+    gotoIndex(item, index) {
+      this.fileData = this.filterFile(item.FILE_ID);
       this.navigationList = this.navigationList.slice(0, index + 1);
-      this.fileData = this.allData;
+      this.dirShow = false;
+    },
+    filterDir(id) {
+      if (id == 0) {
+        return "全部文件";
+      } else {
+        var dirItem = this.allData.filter(item => item.FILE_ID == id);
+        if (dirItem.length > 0) {
+          return dirItem[0].FILE_NAME;
+        } else {
+          return "-";
+        }
+      }
+    },
+    gotoTarget(id) {
+      this.fileData = this.filterFile(id);
+      this.navigationList = this.navigationList.slice(0, 1);
+      this.navigationList = this.addListToTarget(id, this.navigationList);
+      this.dirShow = false;
+    },
+    addListToTarget(id, result) {
+      var item = this.allData.filter(item => item.FILE_ID == id);
+      if (item.length > 0) {
+        result.splice(1, 0, item[0]);
+        if (item[0].FILE_PID != 0) {
+          this.addListToTarget(item[0].FILE_PID, result);
+        }
+      }
+      return result;
+    },
+    downLoad(id) {
+      downLoadFile(this.downLoadUrl + `FILE_CENTERAPI/DownloadFile?FILE_ID=${id}`);
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     }
   },
   created() {
-    this.fileData = this.allData;
+    this.getFile();
   }
 };
 </script>

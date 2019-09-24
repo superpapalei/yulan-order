@@ -31,7 +31,7 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-button size="medium" type="success" style="margin-left: 10px"
+        <el-button size="medium" type="success" style="margin-left: 10px"  @click="searchBankList()"
           >查询</el-button
         >
         <el-button
@@ -532,7 +532,6 @@ export default {
   name: "ImageShop",
   data() {
     return {
-      ROWSPAN: 6,
       BigPic: false,
       showtheHistory: false,
       historyList: [
@@ -687,26 +686,7 @@ export default {
       return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
     }
   },
-  watch: {
-    showtheHistory(val) {
-      if (val) {
-        this.ROWSPAN = 7;
-      } else {
-        this.ROWSPAN = 6;
-      }
-    }
-  },
   methods: {
-    //焦点显示历史记录
-    showHistory() {
-      this.showtheHistory = true;
-    },
-    //填充历史记录
-    writeHistory(payerName, payerAccount) {
-      this.sumbit.payerName = payerName;
-      this.sumbit.payerAccount = payerAccount;
-      this.showtheHistory = false;
-    },
     //确定新建
     sumbitNEW() {
       let url = Quest + "/PaymentBill/insertPaymentBill.do";
