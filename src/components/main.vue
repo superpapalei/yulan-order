@@ -625,7 +625,7 @@ export default {
       }, 3000);
     },
     getNews() {
-      //获得最新的3条公告
+      //获得最新的生效公告
       GetNewNotification({ cid: this.cid }).then(res => {
         this.newsTextArr = res.data;
         if (this.newsTextArr.length > 0) {
@@ -633,7 +633,9 @@ export default {
           for (var i = 0; i < this.newsTextArr.length; i++) {
             if (this.newsTextArr[i].showFlag == 1) {
               //将所有需要显示的公告拼接
-              this.detailData += this.newsTextArr[i].CONTENT + "<br><br>";
+              this.detailData += this.newsTextArr[i].CONTENT + "<br /><br />";
+              if(i != this.newsTextArr.length-1)
+                   this.detailData += "<div style='border-bottom:0.2rem solid #ccc;'></div><br />";
               this.detailVisible = true;
               if (this.newsTextArr[i].POPUPTYPE == "FIRSTOFDAY")
                 InserFlag({ nid: this.newsTextArr[i].ID, cid: this.cid }); //标记为已显示
