@@ -338,7 +338,7 @@ export default {
     },
     datatrans(value) {
       //时间戳转化大法
-      if (value == null) {
+      if (value == null || value == "9999/12/31 00:00:00") {
         return "";
       }
       let date = new Date(value);
