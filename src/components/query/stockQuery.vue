@@ -537,6 +537,9 @@ export default {
     //查询
     StockQuery() {
       this.tables = [];
+      this.dormitory = [];
+      this.stockInfo_1 = [];
+      this.stockInfo = false; //库存信息显示
       var data = {
         productType: this.productType, //产品类型
         //itemNo:this.search.toUpperCase(),//产品型号

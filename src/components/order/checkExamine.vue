@@ -393,7 +393,15 @@ export default {
     }
   },
   activated(){
-    
+    if(this.isShowButton != undefined )
+    {
+       this.orderNum = Cookies.get("ORDER_NO");
+    this.isX = this.orderNum.slice(0, 1) == "X";
+    console.log(Cookies.get("CURTAIN_STATUS_ID"));
+    this.check_CURTAIN_STATUS_ID = Cookies.get("CURTAIN_STATUS_ID");
+    this.check_STATUS_ID = Cookies.get("status_ID");
+    this.getDetail();
+    }
   },
   methods: {
     formatRole: function(row, column) {
