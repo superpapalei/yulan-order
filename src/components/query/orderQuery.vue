@@ -10,7 +10,7 @@
         
       >
       <div style="margin:0,auto">
- <el-card>
+      <el-card>
        <TABLE class="table_2">
         <tr>
           <td>客户名称:</td>
@@ -38,7 +38,7 @@
         </tr>
        </TABLE>
        </el-card>
-</div>
+      </div>
       </el-dialog>
        <el-dialog
         
@@ -178,7 +178,6 @@
           <el-table-column prop="DATE_CRE" label="创建时间" align="center"></el-table-column>
           <el-table-column  label="客户" align="center">
              <template slot-scope="scope3">
-  
               <el-button
                @click="customer_info(scope3.row)"
                 type="text"
