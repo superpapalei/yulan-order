@@ -67,7 +67,7 @@
               prop="QTY_PLANNED"
               label="计划数"
             ></el-table-column>
-            <el-table-column prop="TRANS_PRICE" label="单价"> </el-table-column>
+            <!-- <el-table-column prop="TRANS_PRICE" label="单价"> </el-table-column> -->
             <el-table-column prop="MONEY" label="金额"></el-table-column>
           </el-table>
         </div>
