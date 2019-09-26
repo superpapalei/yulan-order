@@ -5,7 +5,7 @@
        <el-dialog
         title="客户详情"
         :visible.sync="dialogVisible"
-        width="30%"
+        width="40%"
         style="height:70%"
         
       >
@@ -29,7 +29,7 @@
           <td>{{customerInfo.POST_ADDRESS}}</td>
         </tr>
          <tr>
-          <td>优惠券余额：</td>
+          <td style="width:150px">优惠券余额：</td>
           <td v-for="item of couponData" :key="item.index">当前余额 {{item.rebateMoneyOver}}元</td>
         </tr>
          <tr>
@@ -40,14 +40,21 @@
        </el-card>
       </div>
       </el-dialog>
+
        <el-dialog
-        
         :show-close="true"
         :visible.sync="dialogVisible_1"
         width="65%"
       >
-        <checkExamine :isShowButton='false'></checkExamine>
+       <keep-alive>
+        <checkExamine 
+        v-if="dialogVisible_1"
+        :isShowButton='false' 
+        :ruleForm="ruleForm">
+        </checkExamine>
+        </keep-alive>
       </el-dialog>
+
       <div class="ff"> 
         <el-tabs class="tabs_1"  v-model="activeName" style="width:1340px">
           <el-tab-pane label="区域订单查询" name="first_1">
@@ -161,22 +168,26 @@
           <el-table-column prop="num" label width="80" align="center">
             <template slot-scope="scope"><span>{{scope.$index+(currentPage - 1) * limit + 1}} </span></template>
           </el-table-column>
-          <el-table-column label="订单号" align="center">
+          <el-table-column label="订单号" align="center" width="200px">
             <template slot-scope="scope1">
               <el-button
-                @click="openDialog(scope1.row.ORDER_NO, scope1.row.STATUS_ID)"
+                @click="openDialog(scope1.row.ORDER_NO)"
                 type="text"
                 >{{ scope1.row.ORDER_NO }}</el-button
               >
             </template>
           </el-table-column>
-          <el-table-column label="状态" width="100" align="center">
+          <el-table-column label="状态" width="150px" align="center" >
             <template slot-scope="scope2">
               {{scope2.row.STATUS_ID|transType}}
             </template>
           </el-table-column>
-          <el-table-column prop="DATE_CRE" label="创建时间" align="center"></el-table-column>
-          <el-table-column  label="客户" align="center">
+          <el-table-column prop="DATE_CRE" label="创建时间" align="center" width="150px">
+            <template slot-scope="scope4">
+              {{scope4.row.DATE_CRE|datatrans}}
+            </template>
+          </el-table-column>
+          <el-table-column  label="客户" align="center" width="350px">
              <template slot-scope="scope3">
               <el-button
                @click="customer_info(scope3.row)"
@@ -184,7 +195,7 @@
               >{{scope3.row.CUSTOMER_NAME}}</el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="LINKPERSON" label="联系人" align="center"></el-table-column>
+          <el-table-column prop="LINKPERSON" label="联系人" align="center" width="150px"></el-table-column>
           <el-table-column prop="TELEPHONE" label="联系电话" align="center"></el-table-column>
         </el-table>
      
@@ -210,6 +221,7 @@
 </template>
 
 <script>
+
 import checkExamine from "../order/checkExamine";
 import { searchAssignments, orderDetail,manageCoupon } from "@/api/orderList";
 // import { manageCoupon } from "@/api/orderList";
@@ -323,6 +335,25 @@ export default {
           return "已接收";
           break;
       }
+    },
+    datatrans(value) {
+      //时间戳转化大法
+      if (value == null) {
+        return "";
+      }
+      let date = new Date(value);
+      let y = date.getFullYear();
+      let MM = date.getMonth() + 1;
+      MM = MM < 10 ? "0" + MM : MM;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      let h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      let m = date.getMinutes();
+      m = m < 10 ? "0" + m : m;
+      let s = date.getSeconds();
+      s = s < 10 ? "0" + s : s;
+      return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
     }
   },
    datatrans(value) {
@@ -346,9 +377,10 @@ export default {
     },
   
   methods: {
-    openDialog(val, status) {
+    openDialog(val) {
       this.cid = Cookies.get("cid");
       this.order_no = val;
+      Cookies.set("ORDER_NO",0)
       this.getDetail();
     },
       getDetail() {
@@ -359,6 +391,7 @@ export default {
       };
       orderDetail(url, data).then(res => {
         this.ruleForm = res.data.data[0];
+         Cookies.set("ORDER_NO", this.ruleForm.ORDER_NO);
         this.dialogVisible_1 = true;
       });
     },
@@ -508,6 +541,7 @@ export default {
       this.tableData=[]
       this.AREA_DISTRICT=[]
       this.CUSTOMER_TYPE=[]
+      Cookies.set("ORDER_NO",0)
        this._getAreaCode();
 
     }
