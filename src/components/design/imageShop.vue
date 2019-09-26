@@ -31,93 +31,104 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-button size="medium" type="success" style="margin-left: 10px"  @click="searchBankList()"
+        <el-button
+          size="medium"
+          type="success"
+          style="margin-left: 10px"
+          @click="search()"
           >查询</el-button
         >
         <el-button
           style="float:right"
           size="medium"
-          @click="newOne"
+          @click="newOne()"
           type="primary"
           >新增申请单</el-button
         >
       </div>
       <el-table
         border
-        :data="bankData"
+        :data="imageStoreData"
         style="width: 100%"
         :row-class-name="tableRowClassName"
       >
         <el-table-column
           width="130"
-          prop="id"
-          label="业务单号"
+          prop="ID"
+          label="申请单号"
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="payerName"
+          prop="CREATER"
           label="申请人"
           align="center"
           width="100"
         ></el-table-column>
-        <el-table-column label="申请时间" align="center">
+        <el-table-column width="100" label="申请时间" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.createTs | datatrans }}</span>
+            <span>{{ scope.row.DATE_CRE | datatrans }}</span>
           </template>
         </el-table-column>
+        <el-table-column width="100" label="店面形式" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.STORE_FORM | formTrans }}</span>
+          </template></el-table-column
+        >
         <el-table-column
-          prop="payerName"
-          label="联系人"
+          prop="STORE_AREA"
+          label="店面面积(m2)"
           align="center"
-          width="100"
-        ></el-table-column>
-        <el-table-column
-          prop="payAmount"
-          label="联系方式"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          prop="yulanBank"
           width="120"
-          label="店面形式"
-          align="center"
         ></el-table-column>
-        <el-table-column label="计划动工时间" align="center">
+        <el-table-column
+          prop="STORE_PLIE"
+          label="层数"
+          align="center"
+          width="80"
+        ></el-table-column>
+        <el-table-column width="120" label="计划动工时间" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.payDate | datatrans }}</span>
+            <span>{{ scope.row.PLAN_DATE | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="yulanBank"
-          width="100"
-          label="实施形式"
-          align="center"
-        ></el-table-column>
+        <el-table-column width="100" label="实施形式" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.IMPLEMENTTATION_FORM | formTrans2 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column width="100" label="上门测量" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.MEASURE == 1">是</span>
+            <span v-else>否</span>
+          </template>
+        </el-table-column>
         <el-table-column width="100" label="状态" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.state | transStatus }}</span>
+            <span>{{ scope.row.STATUS | transStatus }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" width="100" label="操作">
+        <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button
-              v-if="scope.row.state == 'SUBMITED'"
+              v-if="
+                scope.row.STATUS == 1 ||
+                  scope.row.STATUS == 2 ||
+                  scope.row.STATUS == 3
+              "
               @click="checkDetail(scope.row)"
               type="warning"
               icon="el-icon-search"
               circle
             ></el-button>
             <el-button
-              v-if="
-                scope.row.state == 'SENDBACK' || scope.row.state == 'PROCESED'
-              "
+              v-if="scope.row.STATUS == 4 || scope.row.STATUS == 5"
               @click="editIt(scope.row)"
               type="primary"
               icon="el-icon-edit"
               circle
             ></el-button>
             <el-button
-              v-if="scope.row.state == 'CANCELED'"
+              v-if="scope.row.STATUS == 4 || scope.row.STATUS == 5"
               @click="deleteDetail(scope.row)"
               type="danger"
               icon="el-icon-delete"
@@ -128,238 +139,85 @@
       </el-table>
       <div style="margin:0 25%;" class="block">
         <el-pagination
+          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
+          :page-sizes="[5, 10, 15, 20]"
           :page-size="limit"
-          layout="prev, pager, next, jumper"
+          layout="total,sizes,prev, pager, next, jumper"
           :total="count"
         ></el-pagination>
       </div>
     </el-card>
 
     <el-dialog
-      title="形象店建设申请表"
-      :visible.sync="bankDetail"
+      :visible.sync="imageStoreDetail"
       :close-on-click-modal="false"
-      width="55%"
+      width="58%"
+      top="5vh"
     >
-      <!-- 查看区 -->
-      <div v-show="EDITorCHECK" class="table-c">
-        <h2 style="text-align:center;">
-          形象店建设申请表-[{{ tableData.state | transStatus }}]
-        </h2>
-        <h3>
-          建立时间：{{
-            tableData.createTs | datatrans
-          }}&nbsp;&nbsp;&nbsp;&nbsp;提交时间：{{
-            tableData.submitTs | datatrans
-          }}
-        </h3>
-        <h3 v-show="isBack">
-          退回时间：{{
-            tableData.sendbackTs | datatrans
-          }}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{ tableData.sendbackReason }}
-        </h3>
-        <h3 v-show="isDelete">
-          作废时间：{{ tableData.cancelTs | datatrans }}
-        </h3>
-        <h3 v-show="isChuli">
-          处理人：{{
-            tableData.erpProcessOp
-          }}&nbsp;&nbsp;&nbsp;&nbsp;处理时间：{{
-            tableData.erpProcessTs | datatrans
-          }}
-        </h3>
-
-        <table border="0px" cellspacing="0px" cellpadding="0">
-          <tr>
-            <td
-              class="grayTD"
-              colspan="1"
-              rowspan="3"
-              border="0px"
-              style=" height:12px;"
-            >
-              基本信息
-            </td>
-            <td class="grayTD" colspan="1" style=" height:12px;">客户名称</td>
-            <td colspan="1" style=" height:12px;">{{ tableData.cname }}</td>
-            <td class="grayTD" colspan="1" style=" height:12px;">年销售任务</td>
-            <td colspan="1" style=" height:12px;">年销售额300万人名币</td>
-          </tr>
-          <tr>
-            <td class="grayTD" colspan="1" style=" height:12px;">店面地址</td>
-            <td colspan="3" style=" height:12px;">
-              广东省佛山市南海区海一路商会大厦B座66号
-            </td>
-          </tr>
-          <tr>
-            <td class="grayTD" colspan="1" style="width:17%;height:12px;">
-              联系人
-            </td>
-            <td colspan="1" style="width:27%;height:12px;">陈建祥</td>
-            <td class="grayTD" colspan="1" style="width:17%;height:12px;">
-              联系电话
-            </td>
-            <td colspan="1" style="width:27%;height:12px;">13579263841</td>
-          </tr>
-
-          <tr>
-            <td
-              class="grayTD"
-              colspan="1"
-              rowspan="2"
-              border="0px"
-              style=" height:12px;"
-            >
-              店面信息
-            </td>
-            <td class="grayTD" colspan="1" style=" height:12px;">店面形式</td>
-            <td colspan="3" style=" height:12px;">商城店</td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" style=" height:12px;">店面面积</td>
-            <td colspan="1" style=" height:12px;">86平方米</td>
-            <td class="grayTD" colspan="1" style=" height:12px;">层数</td>
-            <td colspan="1" style=" height:12px;">1</td>
-          </tr>
-
-          <tr>
-            <td
-              class="grayTD"
-              colspan="1"
-              rowspan="5"
-              border="0px"
-              style=" height:12px;"
-            >
-              设计需求
-            </td>
-            <td class="grayTD" colspan="1" style=" height:12px;">
-              计划动工时间
-            </td>
-            <td colspan="3" rowspan="1" style=" height:12px;">2019/09/17</td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" style="height:10px;">实施形式</td>
-            <td colspan="3" style=" height:12px;">100%按公司设计方案落地</td>
-          </tr>
-
-          <tr style="height:30px">
-            <td class="grayTD" colspan="1">是否需要上门测量</td>
-            <td colspan="1">否</td>
-            <td colspan="2" style="font-size:11px;color:gray">
-              (仅100%按公司设计方案落地客户可预约上门测量，并需承担上门人员食宿费用，
-              如后期未100%按效果图实施，需承担上门人员交通费用。)
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" style="height:50px">其他需求说明</td>
-            <td colspan="3" style="height:50px">
-              希望能够保存形象店设计开工的各式文件
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" style="height:20px;">附件</td>
-
-            <td colspan="1" style="height:20px;">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="点击放大图片"
-                placement="top"
-              >
-                <img @click="BIG" class="ISimg" :src="tableData.imgUrl" />
-              </el-tooltip>
-            </td>
-
-            <td colspan="2" style="font-size:11px;color:gray;height:20px;">
-              (上传jpg、dwg、pdf等格式平面图，
-              平面图尺寸要表达清晰，消防位等有阻碍设计的地方要标注清楚)
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" border="0px" style="height:12px;">
-              付款信息
-            </td>
-            <td class="grayTD" colspan="1" style="height:12px;">付款凭证</td>
-            <td colspan="3" style="height:12px;">
-              工行转账流水号：62232150123226486931
-            </td>
-          </tr>
-
-          <tr>
-            <td colspan="3" border="0px" style="height:12px;">
-              责任人签字：马健博
-            </td>
-            <td colspan="2" style="height:12px;">日期：2019/09/04</td>
-          </tr>
-        </table>
-      </div>
-
       <!-- 编辑区 -->
-      <div v-show="!EDITorCHECK" class="table-c">
+      <div class="table-c">
+        <h2 style="text-align:center;margin-bottom:10px;">
+          形象店建设申请表
+        </h2>
+        <h3 v-if="EDITorCHECK">
+          提交时间：{{ tableData.DATE_CRE | datatrans }}
+        </h3>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td
-              class="grayTD"
-              colspan="5"
-              rowspan="1"
-              border="0px"
-              style="height:30px;text-align:center;"
-            >
-              形象店建设申请表
-            </td>
-          </tr>
-
-          <tr>
-            <td
-              class="grayTD"
-              colspan="1"
-              rowspan="3"
-              border="0px"
-              style="height:12px;"
-            >
+            <td width="10%" class="grayTD" colspan="1" rowspan="3" border="0px">
               基本信息
             </td>
-            <td class="grayTD" colspan="1" style="height:12px;">客户名称</td>
-            <td v-if="newORedit" style="height:12px;">{{ sumbit.cname }}</td>
-            <td v-else style="height:12px;">(系统带出)</td>
-            <td class="grayTD" colspan="1" style="height:12px;">年销售任务</td>
-            <td style="height:12px;">
-              <input placeholder="（客户填写）" clearable class="inputStyle" />
+
+            <td width="15%" class="grayTD" colspan="1" style="height:28px;">
+              客户名称
+            </td>
+            <td style="height:28px;">{{ tableData.CUSTOMER_NAME }}</td>
+
+            <td class="grayTD" colspan="1" style="height:28px;">年销售任务</td>
+            <td style="height:28px;">
+              <el-input
+                :disabled="EDITorCHECK"
+                placeholder="（客户填写）"
+                clearable
+                class="inputStyle"
+                size="mini"
+                v-model="tableData.SALE_TARGET"
+              ></el-input>
             </td>
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1" style="height:12px;">店面地址</td>
-            <td v-if="newORedit" colspan="3" style="height:12px;">
-              {{ sumbit.id }}
+            <td class="grayTD" colspan="1" style="height:28px;">
+              店面地址<span style="color:red;">*</span>
             </td>
-            <td v-else colspan="3" style="height:12px;">
-              <input placeholder="（客户必填）" clearable class="inputStyle" />
+            <td colspan="3" style="height:28px;">
+              <el-input
+                :disabled="EDITorCHECK"
+                placeholder="（客户必填）"
+                clearable
+                class="inputStyle"
+                size="mini"
+                v-model="tableData.STORE_ADDRESS"
+              ></el-input>
             </td>
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1" style="width:17%;height:12px;">
+            <td class="grayTD" colspan="1" style="width:17%;height:28px;">
               联系人
             </td>
-            <td v-if="newORedit" style="width:27%;height:12px;">
-              {{ sumbit.id }}
+            <td style="width:27%;height:28px;">
+              {{ tableData.CUSTOMER_AGENT }}
             </td>
-            <td v-else style="width:27%;height:12px;">(系统带出)</td>
-            <td class="grayTD" colspan="1" style="width:17%;height:12px;">
+
+            <td class="grayTD" colspan="1" style="width:17%;height:28px;">
               联系电话
             </td>
-            <td v-if="newORedit" style="width:27%;height:12px;">
-              {{ sumbit.id }}
+            <td style="width:27%;height:28px;">
+              {{ tableData.OFFICE_TEL }}
             </td>
-            <td v-else style="width:27%;height:12px;">(系统带出)</td>
           </tr>
 
           <tr>
@@ -368,28 +226,64 @@
               colspan="1"
               rowspan="2"
               border="0px"
-              style="height:12px;"
+              style="height:28px;"
             >
               店面信息
             </td>
-            <td class="grayTD" colspan="1" style="height:12px;">店面形式</td>
-            <td colspan="3" style="height:12px;">
-              <input
-                placeholder="（街边店/商城店）"
-                clearable
-                class="inputStyle"
-              />
+            <td class="grayTD" colspan="1" style="height:28px;">
+              店面形式<span style="color:red;">*</span>
+            </td>
+            <td colspan="3" style="text-align:left;height:28px;">
+              <el-radio-group
+                :disabled="EDITorCHECK"
+                style="margin-left:50px;"
+                v-model="tableData.STORE_FORM"
+              >
+                <el-radio label="street">街边店</el-radio>
+                <el-radio label="market">商城店</el-radio>
+              </el-radio-group>
             </td>
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1" style="height:12px;">店面面积</td>
-            <td colspan="1" style="height:12px;">
-              <input placeholder="（客户必填）" clearable class="inputStyle" />
+            <td class="grayTD" colspan="1" style="height:28px;">
+              店面面积<span style="color:red;">*</span>
             </td>
-            <td class="grayTD" colspan="1" style="height:12px;">层数</td>
-            <td colspan="1" style="height:12px;">
-              <input placeholder="（客户必填）" clearable class="inputStyle" />
+            <td colspan="1" style="height:28px;">
+              <el-input
+                :disabled="EDITorCHECK"
+                style="width:65%"
+                placeholder="（客户必填）"
+                clearable
+                class="inputStyle"
+                size="mini"
+                oninput="value=value.replace(/[^\d.]/g,'')
+                                .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                                .replace('.', '$#$').replace(/\./g, '')
+                                .replace('$#$', '.')
+                                .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
+                v-model="tableData.STORE_AREA"
+              ></el-input>
+              <span>平方米</span>
+            </td>
+
+            <td class="grayTD" colspan="1" style="height:28px;">
+              层数<span style="color:red;">*</span>
+            </td>
+            <td colspan="1" style="height:28px;">
+              <el-input
+                :disabled="EDITorCHECK"
+                placeholder="（客户必填）"
+                clearable
+                class="inputStyle"
+                size="mini"
+                oninput="value=value.replace(/[^\d.]/g,'')
+                                .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                                .replace('.', '$#$').replace(/\./g, '')
+                                .replace('$#$', '.')
+                                .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
+                v-model="tableData.STORE_PLIE"
+              ></el-input>
             </td>
           </tr>
 
@@ -399,26 +293,43 @@
               colspan="1"
               rowspan="5"
               border="0px"
-              style="height:12px;"
+              style="height:28px;"
             >
               设计需求
             </td>
-            <td class="grayTD" colspan="1" style="height:12px;">
-              计划动工时间
+            <td class="grayTD" colspan="1" style="height:28px;">
+              计划动工时间<span style="color:red;">*</span>
             </td>
-            <td colspan="3" rowspan="1" style="height:12px;">
-              <input placeholder="（客户必填）" clearable class="inputStyle" />
+            <td colspan="3" rowspan="1" style="text-align:left;height:28px;">
+              <el-date-picker
+                :disabled="EDITorCHECK"
+                type="date"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                placeholder="选择计划动工时间"
+                v-model="tableData.PLAN_DATE"
+                style="width:35%;margin-left:10px;"
+              ></el-date-picker>
             </td>
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1" style="height:30px;">实施形式</td>
-            <td colspan="3" style="height:30px;">
-              <input
-                placeholder="①100%按公司设计方案落地，软装物料由公司配置，享受公司建店支持  ②自行落地"
-                clearable
-                style="border:0; height:100%;width:100%;font-size:13px;"
-              />
+            <td class="grayTD" colspan="1" style="height:30px;">
+              实施形式<span style="color:red;">*</span>
+            </td>
+            <td colspan="3" style="text-align:left;height:45px;">
+              <el-radio-group
+                :disabled="EDITorCHECK"
+                style="margin-left:10px;"
+                v-model="tableData.IMPLEMENTTATION_FORM"
+                @change="implentmentChange"
+              >
+                <el-radio style="margin-bottom:5px;" :label="1"
+                  >①100%按公司设计方案落地，软装物料由公司配置，享受公司建店支持</el-radio
+                >
+                <br />
+                <el-radio :label="2">②自行落地</el-radio>
+              </el-radio-group>
             </td>
           </tr>
 
@@ -427,21 +338,30 @@
               是否需要上门测量
             </td>
             <td colspan="1" style="height:35px">
-              <input placeholder="（是/否）" clearable class="inputStyle" />
+              <el-radio-group
+                :disabled="tableData.IMPLEMENTTATION_FORM != '1' && EDITorCHECK"
+                v-model="tableData.MEASURE"
+              >
+                <el-radio label="1">是</el-radio>
+                <el-radio label="0">否</el-radio>
+              </el-radio-group>
             </td>
-            <td colspan="2" style="font-size:11px;color:gray;height:35px">
-              (仅100%按公司设计方案落地客户可预约上门测量，并需承担上门人员食宿费用，
-              如后期未100%按效果图实施，需承担上门人员交通费用。)
+            <td colspan="2" style="font-size:12px;color:gray;height:35px">
+              *仅100%按公司设计方案落地客户可预约上门测量，并需承担上门人员食宿费用，
+              如后期未100%按效果图实施，需承担上门人员交通费用。
             </td>
           </tr>
 
           <tr>
             <td class="grayTD" colspan="1" style="height:50px">其他需求说明</td>
             <td colspan="3" style="height:50px">
-              <input
-                clearable
-                style="border:0; height:100%;width:100%;font-size:16px;"
-              />
+              <el-input
+                class="inputStyle"
+                type="textarea"
+                :autosize="{ minRows: 2, maxRow: 4 }"
+                resize="none"
+                v-model="tableData.NOTE"
+              ></el-input>
             </td>
           </tr>
 
@@ -449,7 +369,7 @@
             <td class="grayTD" colspan="1" style="height:14px;">附件</td>
 
             <td colspan="1" style="height:14px;">
-              <el-upload
+              <!-- <el-upload
                 class="avatar-uploader"
                 accept="image/png, image/jpg, image/jpeg"
                 action="http://14.29.223.114:10250/yulan-capital/upload/uploadPaymentBillImg.do"
@@ -459,35 +379,45 @@
               >
                 <img v-if="sumbit.imgUrl" :src="sumbit.imgUrl" class="avatar" />
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
+              </el-upload> -->
             </td>
 
-            <td colspan="2" style="font-size:11px;color:gray">
-              (上传jpg、dwg、pdf等格式平面图，
-              平面图尺寸要表达清晰，消防位等有阻碍设计的地方要标注清楚)
+            <td colspan="2" style="font-size:12px;color:gray">
+              上传jpg、dwg、pdf等格式平面图，平面图尺寸要表达清晰，消防位等有阻碍设计的地方要标注清楚
             </td>
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1" border="0px" style="height:12px;">
+            <td class="grayTD" colspan="1" border="0px" style="height:28px;">
               付款信息
             </td>
-            <td class="grayTD" colspan="1" style="height:12px;">付款凭证</td>
-            <td colspan="3" style="height:12px;">
+            <td class="grayTD" colspan="1" style="height:28px;">付款凭证</td>
+            <td colspan="1" style="height:28px;">
               <input placeholder="（是/否）" clearable class="inputStyle" />
+            </td>
+            <td colspan="2" style="font-size:12px;color:gray">
+              选择付款凭证
             </td>
           </tr>
 
           <tr>
-            <td colspan="3" border="0px" style="height:12px;">责任人签字：</td>
-            <td colspan="2" style="height:12px;">日期：</td>
+            <td colspan="3" border="0px" style="text-align:left;height:28px;">
+              <span style="margin-left:10px;"
+                >责任人签字<span style="color:red;">*</span>：</span
+              >
+            </td>
+            <td colspan="2" style="text-align:left;height:28px;">
+              <span style="margin-left:10px;"
+                >日期：{{ new Date() | datatrans }}</span
+              >
+            </td>
           </tr>
 
           <tr style="height:60px">
             <td
               colspan="5"
               border="0px"
-              style="font-size:11px;color:gray;text-align:left"
+              style="font-size:13px;color:gray;text-align:left"
             >
               1.请提前15个工作日提交设计需求申请。<br />
               2.请附上店面平面图（清晰标注尺寸以及消防位等障碍位置）。<br />
@@ -501,9 +431,11 @@
         <div style="margin:0 auto; width:75px;">
           <br />
           <el-button v-if="newORedit" type="success" @click="submitEDIT"
-            >确 定</el-button
+            >确定</el-button
           >
-          <el-button v-else type="success" @click="sumbitNEW">提 交</el-button>
+          <el-button v-else-if="!EDITorCHECK" type="success" @click="sumbitNEW"
+            >提交</el-button
+          >
         </div>
       </div>
     </el-dialog>
@@ -518,80 +450,29 @@
 
 
 <script>
-import {
-  getBankList,
-  getPayBillContent,
-  changeStatus,
-  sumbitForm,
-  getHistory
-} from "@/api/bank";
+import { GetImageCustomer, InsertImageStore } from "@/api/imageStoreASP";
+import { getCustomerInfo } from "@/api/orderListASP";
 import Cookies from "js-cookie";
-const Head = "http://14.29.223.114:10250/upload";
-const Quest = "http://14.29.223.114:10250/yulan-capital";
+
 export default {
   name: "ImageShop",
   data() {
     return {
+      chargeData: [],
       BigPic: false,
-      showtheHistory: false,
-      historyList: [
-        {
-          PAYER_NAME: "测试", //汇款人名
-          PAYER_ACCOUNT: "45544521112565445" //汇款账号
-        },
-        {
-          PAYER_NAME: "测试3",
-          PAYER_ACCOUNT: "121212121"
-        },
-        {
-          PAYER_NAME: "测试4",
-          PAYER_ACCOUNT: "1212121"
-        }
-      ],
       sqlpath: "", //保存图片相对路径
       newORedit: false, //决定显示新建或者编辑
       EDITorCHECK: false, //决定显示编辑或者查看
-      tableData: {
-        id: "PZ19071100003", //流水号
-        cid: "C01613", //公司id
-        cname: "测试—客户A", //客户名
-        createTs: 1562816972000, //创建时间
-        yulanBank: "工商银行", //汇款银行
-        payerName: "测试客户", //汇款人名
-        payAmount: 100, //汇款金额
-        payDate: 1562816972000, //汇款日期
-        imgFileName: "PZ19071100003-C01613.jpeg", //图片名
-        submitTs: 1562816911000, //提交时间
-        memo: "test", //备注
-        cancelTs: null, //作废日期
-        sendbackTs: null, //退回日期
-        sendbackReason: null, //退回理由
-        erpProcessTs: null, //处理日期
-        erpProcessOp: null, //处理人状态(SUBMITED（已提交）,PROCESED（已处理）,SENDBACK（退回）,CANCELED（作废）)
-        payerAccount: "45544521112565445", //汇款人银行账号
-        imgUrl:
-          "http://106.14.159.244:8080/upload/paymentBill-image/PZ19071100004-C01613.jpeg" //图片相对路径
-      },
-      sumbit: {
-        cid: "", //公司号
-        cname: "", //客户名
-        yulanBank: "", //汇款银行
-        payerName: "", //汇款人名
-        payAmount: "", //汇款金额
-        imgFileName: "", //文件名
-        memo: "", //备注
-        payerAccount: "", //账号
-        payDate: "", //汇款时间,
-        imgUrl: "" //相对路径
-      },
+      imageStoreData: [],
+      tableData: [],
       isDelete: false,
       isChuli: false,
       isBack: false,
-      bankDetail: false,
-      limit: 8,
-      count: 88,
+      imageStoreDetail: false,
+      limit: 10,
+      count: 0,
       currentPage: 1,
-      beginTime: "", //div中（html中绑定的）
+      beginTime: "",
       finishTime: "",
       status: "",
       options: [
@@ -601,68 +482,51 @@ export default {
         },
         {
           label: "已提交",
-          value: "SUBMITED"
+          value: "1"
         },
         {
-          label: "已处理",
-          value: "PROCESED"
+          label: "市场部确认",
+          value: "2"
         },
         {
-          label: "退回",
-          value: "SENDBACK"
+          label: "广美确认",
+          value: "3"
         },
         {
-          label: "作废",
-          value: "CANCELED"
+          label: "市场部退回",
+          value: "4"
+        },
+        {
+          label: "广美退回",
+          value: "5"
         }
-      ],
-      bankArray: [
-        {
-          label: "产品质量",
-          value: "产品质量"
-        },
-        {
-          label: "产品描述",
-          value: "产品描述"
-        },
-        {
-          label: "服务态度",
-          value: "服务态度"
-        },
-        {
-          label: "售前售后",
-          value: "售前售后"
-        },
-        {
-          label: "物流",
-          value: "物流"
-        },
-        {
-          label: "其他",
-          value: "其他"
-        }
-      ],
-      bankData: []
+      ]
     };
   },
   created: function() {
-    this._getBankList();
-    this._getHistory();
+    this.chargeQuery();
+    this.getDetail();
   },
   filters: {
     transStatus(value) {
       switch (value) {
-        case "SUBMITED":
+        case 0:
+          return "待提交";
+          break;
+        case 1:
           return "已提交";
           break;
-        case "PROCESED":
-          return "已处理";
+        case 2:
+          return "市场部确认";
           break;
-        case "SENDBACK":
-          return "退回";
+        case 3:
+          return "广美确认";
           break;
-        case "CANCELED":
-          return "作废";
+        case 4:
+          return "市场部退回";
+          break;
+        case 5:
+          return "广美退回";
           break;
       }
     },
@@ -684,22 +548,53 @@ export default {
       let s = date.getSeconds();
       s = s < 10 ? "0" + s : s;
       return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
+    },
+    formTrans(value) {
+      switch (value) {
+        case "street":
+          return "街边店";
+          break;
+        case "market":
+          return "商城店";
+          break;
+      }
+    },
+    formTrans2(value) {
+      switch (value) {
+        case 1:
+          return "公司方案";
+          break;
+        case 2:
+          return "自行落地";
+          break;
+      }
     }
   },
   methods: {
+    //查询经办人
+    chargeQuery() {
+      var data = {
+        cid: Cookies.get("cid"),
+        companyId: Cookies.get("companyId")
+      };
+      getCustomerInfo(data).then(res => {
+        this.chargeData = res.data;
+      });
+    },
+    implentmentChange() {
+      if (this.tableData.IMPLEMENTTATION_FORM != "1")
+        this.tableData.MEASURE = "";
+    },
     //确定新建
     sumbitNEW() {
-      let url = Quest + "/PaymentBill/insertPaymentBill.do";
-      let data = this.sumbit;
-      this.sumbit.cid = Cookies.get("companyId");
       //判断是否填完所有信息
       if (
-        this.sumbit.yulanBank == "" ||
-        this.sumbit.payerName == "" ||
-        this.sumbit.payAmount == "" ||
-        this.sumbit.payerAccount == "" ||
-        this.sumbit.payDate == "" ||
-        this.sumbit.payDate == null
+        !this.tableData.STORE_ADDRESS ||
+        !this.tableData.STORE_FORM ||
+        !this.tableData.STORE_AREA ||
+        !this.tableData.STORE_PLIE ||
+        !this.tableData.PLAN_DATE ||
+        !this.tableData.IMPLEMENTTATION_FORM
       ) {
         this.$alert("请完善信息", "提示", {
           confirmButtonText: "确定",
@@ -707,16 +602,16 @@ export default {
         });
         return;
       }
-      //判断是否上传图片
-      if (this.sumbit.imgFileName == "") {
-        this.$alert("请上传凭证", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      this.sumbit.imgUrl = this.sqlpath; //转换为相对地址
-      sumbitForm(url, data).then(res => {
+      // //判断是否上传图片
+      // if (this.sumbit.imgFileName == "") {
+      //   this.$alert("请上传凭证", "提示", {
+      //     confirmButtonText: "确定",
+      //     type: "warning"
+      //   });
+      //   return;
+      // }
+      //this.sumbit.imgUrl = this.sqlpath; //转换为相对地址
+      InsertImageStore(this.tableData).then(res => {
         console.log(res);
         if (res.code == 0) {
           this.$alert("提交成功", "提示", {
@@ -724,60 +619,10 @@ export default {
             type: "success"
           });
           this.currentPage = 1;
-          this._getBankList();
-          this.bankDetail = false;
+          this.getDetail();
+          this.imageStoreDetail = false;
         } else {
           this.$alert("提交失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-        }
-      });
-    },
-    //编辑修改
-    submitEDIT() {
-      let url = Quest + "/PaymentBill/updatePayBill.do"; //创建
-      let data = this.sumbit;
-      this.sumbit.cid = Cookies.get("companyId");
-      //判断是否填完所有信息
-      if (
-        this.sumbit.yulanBank == "" ||
-        this.sumbit.payerName == "" ||
-        this.sumbit.payAmount == "" ||
-        this.sumbit.payerAccount == "" ||
-        this.sumbit.payDate == "" ||
-        this.sumbit.payDate == null
-      ) {
-        this.$alert("请完善信息", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      //判断是否上传图片
-      if (this.sumbit.imgFileName == "") {
-        this.$alert("请上传凭证", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      this.sumbit.imgUrl = this.sqlpath;
-      this.sumbit.submitTs = null;
-      this.sumbit.cancelTs = null;
-      this.sumbit.createTs = null;
-      sumbitForm(url, data).then(res => {
-        console.log(res.data);
-        if (res.code == 0) {
-          this.$alert("修改成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.currentPage = 1;
-          this._getBankList();
-          this.bankDetail = false;
-        } else {
-          this.$alert("修改失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
             type: "warning"
           });
@@ -787,19 +632,15 @@ export default {
     //新建
     newOne() {
       this.EDITorCHECK = false;
-      this.bankDetail = true;
+      this.imageStoreDetail = true;
       this.newORedit = false;
-      this.sumbit = {
-        cid: Cookies.get("companyId"), //公司号
-        cname: Cookies.get("realName"), //客户名
-        yulanBank: "", //汇款银行
-        payerName: "", //汇款人名
-        payAmount: "", //汇款金额
-        imgFileName: "", //文件名
-        memo: "", //备注
-        payerAccount: "", //账号
-        payDate: "", //汇款时间,
-        imgUrl: "" //相对路径
+      this.tableData = {
+        CUSTOMER_CODE: Cookies.get("companyId"),
+        CUSTOMER_NAME: Cookies.get("realName"),
+        CUSTOMER_AGENT: this.chargeData.CUSTOMER_AGENT,
+        OFFICE_TEL: this.chargeData.OFFICE_TEL,
+        CREATER: Cookies.get("cid"),
+        STATUS: 0
       };
     },
     //编辑列表详情
@@ -817,97 +658,41 @@ export default {
         this.sumbit = res.data;
         this.EDITorCHECK = false;
         this.newORedit = true; //显示流水号 等编辑一类
-        this.bankDetail = true;
+        this.imageStoreDetail = true;
       });
     },
     //查看列表详情
     checkDetail(tab) {
-      //判断是否为作废
-      if (tab.state == "CANCELED") {
-        this.isDelete = true;
-      } else {
-        this.isDelete = false;
-      }
-
-      if (tab.state == "PROCESED") {
-        this.isChuli = true;
-      } else {
-        this.isChuli = false;
-      }
-
-      if (tab.state == "SENDBACK") {
-        this.isBack = true;
-      } else {
-        this.isBack = false;
-      }
-      console.log(tab.id);
-      let url = Quest + "/PaymentBill/getPayBillContent.do";
-      let data = {
-        id: tab.id
-      };
-      getPayBillContent(url, data).then(res => {
-        console.log(res.data);
-        res.data.imgUrl = Head + res.data.imgUrl;
-        this.tableData = res.data;
-        this.EDITorCHECK = true;
-        this.bankDetail = true;
-      });
-    },
-    //作废列表详情
-    deleteDetail(tab) {
-      console.log(tab.id);
-      let url = Quest + "/PaymentBill/updatePayBillState.do";
-      let data = {
-        id: tab.id,
-        state: "CANCELED"
-      };
-      this.$confirm("确定作废该汇款凭证?", "提示", {
-        confirmButtonText: "是",
-        cancelButtonText: "否",
-        type: "warning"
-      })
-        .then(() => {
-          changeStatus(url, data).then(res => {
-            console.log(res);
-            this._getBankList();
-            this.$alert("删除成功", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            });
-          });
-        })
-        .catch(() => {
-          console.log("还没删");
-        });
+      this.tableData = JSON.parse(JSON.stringify(tab));
+      this.EDITorCHECK = true;
+      this.imageStoreDetail = true;
     },
     //搜索
-    searchBankList() {
+    search() {
       this.currentPage = 1;
-      this.bankData = [];
-      this._getBankList();
+      this.imageStoreData = [];
+      this.getDetail();
     },
-    //获取银行列表
-    _getBankList() {
-      let url = Quest + "/PaymentBill/getPayBills.do";
-      if (this.beginTime == null) this.beginTime = "";
-      if (this.finishTime == null) this.finishTime = "";
+    getDetail() {
       let data = {
-        cid: Cookies.get("companyId"), //公司id
-        state: this.status, //状态状态(SUBMITED（已提交）,PROCESED（已处理）,SENDBACK（退回）,CANCELED（作废）)
+        companyId: Cookies.get("companyId"), //公司id
+        status: this.status, //状态状态(SUBMITED（已提交）,PROCESED（已处理）,SENDBACK（退回）,CANCELED（作废）)
         beginTime: this.beginTime, //起始时间
         finishTime: this.finishTime, //结束时间
         limit: this.limit, //限制数
         page: this.currentPage //页数
       };
-      if (this.beginTime != "" || this.finishTime != "") {
-        data.beginTime = this.beginTime + "00:00:00";
-        data.finishTime = this.finishTime + "23:59:59";
+      if (!data.beginTime) {
+        data.beginTime = "0001/1/1";
       }
-      console.log(data);
-      getBankList(url, data).then(res => {
-        console.log(res.data);
+      if (!data.finishTime) {
+        data.finishTime = "9999/12/31";
+      } else {
+        data.finishTime = data.finishTime + " 23:59:59";
+      }
+      GetImageCustomer(data).then(res => {
         this.count = res.count;
-        this.bankData = res.data;
+        this.imageStoreData = res.data;
       });
     },
     //隔行变色
@@ -917,17 +702,6 @@ export default {
       }
       return "";
     },
-    //获取历史记录
-    _getHistory() {
-      let url = Quest + "/PaymentBill/getPayNameAndAccount.do";
-      let data = {
-        companyId: Cookies.get("companyId")
-      };
-      getHistory(url, data).then(res => {
-        console.log(res.data);
-        this.historyList = res.data;
-      });
-    },
     //放大图片
     BIG() {
       this.BigPic = true;
@@ -935,8 +709,13 @@ export default {
     //翻页获取订单
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.bankData = [];
-      this._getBankList();
+      this.imageStoreData = [];
+      this.getDetail();
+    },
+    handleSizeChange(val) {
+      this.limit = val;
+      this.currentPage = 1;
+      this.getDetail();
     },
     handleAvatarSuccess(res, file) {
       this.sumbit.imgUrl = URL.createObjectURL(file.raw);
@@ -1012,7 +791,12 @@ export default {
 .el-table .success-row {
   background: #f0f9eb;
 }
-
+.inputStyle .el-input__inner {
+  border-radius: 0;
+}
+.inputStyle .el-textarea__inner {
+  border-radius: 0;
+}
 .avatar-uploader .el-upload {
   border: 1px dashed black;
   border-radius: 6px;

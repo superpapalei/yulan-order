@@ -316,10 +316,10 @@ import Cookies from "js-cookie";
 import DetailCurtainTable from "../detail/detailCurtainTable";
 export default {
   name: "examineDatail",
-  props:['isShowButton'],
+  props: ["isShowButton"],
   data() {
     return {
-      button_1:true,
+      button_1: true,
       deleteIds: [],
       defeatButton: false,
       exButton: true,
@@ -387,20 +387,18 @@ export default {
     this.check_CURTAIN_STATUS_ID = Cookies.get("CURTAIN_STATUS_ID");
     this.check_STATUS_ID = Cookies.get("status_ID");
     this.getDetail();
-    if(this.isShowButton != undefined )
-    {
-      this.button_1 = this.isShowButton
+    if (this.isShowButton != undefined) {
+      this.button_1 = this.isShowButton;
     }
   },
-  activated(){
-    if(this.isShowButton != undefined )
-    {
-       this.orderNum = Cookies.get("ORDER_NO");
-    this.isX = this.orderNum.slice(0, 1) == "X";
-    console.log(Cookies.get("CURTAIN_STATUS_ID"));
-    this.check_CURTAIN_STATUS_ID = Cookies.get("CURTAIN_STATUS_ID");
-    this.check_STATUS_ID = Cookies.get("status_ID");
-    this.getDetail();
+  activated() {
+    if (this.isShowButton != undefined) {
+      this.orderNum = Cookies.get("ORDER_NO");
+      this.isX = this.orderNum.slice(0, 1) == "X";
+      console.log(Cookies.get("CURTAIN_STATUS_ID"));
+      this.check_CURTAIN_STATUS_ID = Cookies.get("CURTAIN_STATUS_ID");
+      this.check_STATUS_ID = Cookies.get("status_ID");
+      this.getDetail();
     }
   },
   methods: {
