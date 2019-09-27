@@ -6,6 +6,7 @@
         :visible.sync="detailVisible"
         :close-on-click-modal="false"
         width="60%"
+        style="heitht:100%"
       >
         <div style="width:90% ;margin:0 auto;">
           <table style="width:100%;height:180px" class="table_2" border="1">
@@ -41,10 +42,10 @@
             </tr>
           </table>
        <el-table
-            max-height="500"
+       max-height="500"
             :data="tableDetail"
             border
-            style="width: 100%; margin:10px auto"
+            style="width: 100%; margin:10px auto;heitht:400px"
           >
             <el-table-column width="100" label="状态" >
               <template slot-scope="scope1">
@@ -53,17 +54,17 @@
             </el-table-column>
             <el-table-column prop="ITEM_NO" label="型号" width="110">
             </el-table-column>
-            <el-table-column prop="BATCH_NO" label="批次" width="180">
+            <el-table-column prop="BATCH_NO" label="批次" width="150">
 
             </el-table-column>
             <el-table-column prop="PRODUCTVERSION_NAME" label="版本" width="150"></el-table-column>
-            <el-table-column prop="NOTE" label="仓库"></el-table-column>
+            <el-table-column prop="NOTE" label="仓库" ></el-table-column>
             <el-table-column prop="AREA" label="区位" width="100"></el-table-column>
-            <el-table-column prop="QTY_DELIVER" label="计划数" width="100"></el-table-column>
-            <el-table-column prop="TRANS_PRICE" label="物流单价" width="100"></el-table-column>
-            <el-table-column prop="SALE_PRICE" label="单价" width="100">
+            <el-table-column prop="QTY_DELIVER" label="计划数" width="80"></el-table-column>
+            <el-table-column prop="TRANS_PRICE" label="物流单价" width="80"></el-table-column>
+            <el-table-column prop="SALE_PRICE" label="单价" width="80">
             </el-table-column>
-            <el-table-column prop="MONEY" label="金额" width="100"></el-table-column>
+            <el-table-column prop="MONEY" label="金额" width="80"></el-table-column>
           </el-table>
            </div>
       </el-dialog>
