@@ -327,7 +327,7 @@ export default {
       ],
       page_count: 3,
       stockInfo_1: [], //库存信息
-      stockIds: "",
+      stockIds: [],
       productType: "", //产品类型查询初始值
       dormitory: [], //查询到的数据
       search: "", //搜索产品型号
@@ -528,10 +528,16 @@ export default {
         userid: userInfo.userId
       };
       GetStockByUser(data).then(res => {
+        if(res.data.length != 0){
         for (var i = 0; i < res.data.length; i++) {
           this.stockIds.push(res.data[i].STOCK_NO);
         }
-        console.log(this.stockIds);
+        }else{
+            this.$alert("没有仓库权限，请联系管理员配置", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+        }
       });
     },
     //查询
@@ -548,15 +554,7 @@ export default {
         stockIds: this.stockIds, //仓库号
         find: this.search
       };
-      if (data.stockIds == "") {
-        <el-alert
-          title="未获取到仓库权限，请重试！"
-          type="error"
-          center
-          show-icon
-        ></el-alert>;
-      } else {
-        GetItemByProductType(data)
+    GetItemByProductType(data)
           .then(res => {
             this.count = res.count;
             this.tables = res.data;
@@ -566,7 +564,7 @@ export default {
           .catch(res => {
             console.log(res);
           });
-      }
+ 
     },
     //清空
     clear() {
@@ -577,6 +575,7 @@ export default {
       this.stockInfo_1 = [];
       this.stockInfo = false; //库存信息显示
       this.empty = true; //库存信息为空
+      this.count = 0
       this._GetStockByUser();
     },
     //点击行的事件

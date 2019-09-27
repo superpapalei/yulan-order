@@ -358,25 +358,7 @@ export default {
       return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
     }
   },
-   datatrans(value) {
-      //时间戳转化大法
-      if (value == null) {
-        return "";
-      }
-      let date = new Date(value);
-      let y = date.getFullYear();
-      let MM = date.getMonth() + 1;
-      MM = MM < 10 ? "0" + MM : MM;
-      let d = date.getDate();
-      d = d < 10 ? "0" + d : d;
-      let h = date.getHours();
-      h = h < 10 ? "0" + h : h;
-      let m = date.getMinutes();
-      m = m < 10 ? "0" + m : m;
-      let s = date.getSeconds();
-      s = s < 10 ? "0" + s : s;
-      return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
-    },
+
   
   methods: {
     openDialog(val) {
@@ -543,6 +525,7 @@ export default {
       this.tableData=[]
       this.AREA_DISTRICT=[]
       this.CUSTOMER_TYPE=[]
+      this.count = 0
       Cookies.set("ORDER_NO",0)
        this._getAreaCode();
 
