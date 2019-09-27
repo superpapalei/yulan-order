@@ -485,6 +485,7 @@ var data = {
       this.AREA_DISTRICT=[]
       this.CUSTOMER_TYPE=[]
       this.tableDetail = []
+      this.count = 0
       this._getAreaCode();
     },
 

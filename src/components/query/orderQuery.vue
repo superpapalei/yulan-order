@@ -525,6 +525,7 @@ export default {
       this.tableData=[]
       this.AREA_DISTRICT=[]
       this.CUSTOMER_TYPE=[]
+      this.count = 0
       Cookies.set("ORDER_NO",0)
        this._getAreaCode();
 

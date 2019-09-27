@@ -528,10 +528,16 @@ export default {
         userid: userInfo.userId
       };
       GetStockByUser(data).then(res => {
+        if(res.data.length != 0){
         for (var i = 0; i < res.data.length; i++) {
           this.stockIds.push(res.data[i].STOCK_NO);
         }
-        console.log(this.stockIds);
+        }else{
+            this.$alert("没有仓库权限，请联系管理员配置", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+        }
       });
     },
     //查询
@@ -569,6 +575,7 @@ export default {
       this.stockInfo_1 = [];
       this.stockInfo = false; //库存信息显示
       this.empty = true; //库存信息为空
+      this.count = 0
       this._GetStockByUser();
     },
     //点击行的事件
