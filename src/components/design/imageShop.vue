@@ -356,6 +356,7 @@
             <td class="grayTD" colspan="1" style="height:50px">其他需求说明</td>
             <td colspan="3" style="height:50px">
               <el-input
+                :disabled="EDITorCHECK"
                 class="inputStyle"
                 type="textarea"
                 :autosize="{ minRows: 2, maxRow: 4 }"

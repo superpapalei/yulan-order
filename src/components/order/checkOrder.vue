@@ -1134,7 +1134,6 @@ export default {
           this.ctm_order.allAddress = this.data[0].postAddress;
         } else {
           this.ctm_order.postAddressModified = "1";
-          console.log("这不是默认地址");
         }
       }
     },

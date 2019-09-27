@@ -106,6 +106,7 @@
                 >
                   <el-radio-group v-model="context.optionResultValue">
                     <div
+                      class="optionSingle"
                       :style="{
                         display:
                           context.DIPLAYTYPE == 'VERTICAL'
@@ -116,7 +117,6 @@
                       :key="index"
                     >
                       <el-radio
-                        class="optionSingle"
                         :label="index + 1"
                         @change="radioChange(context)"
                       >
@@ -125,8 +125,9 @@
                             context.LASTOPTIONEEDINPUT == 1 &&
                               index == context.optionList.length - 1
                           "
-                        >
+                          >{{ option.OPTIONTEXT }}
                           <el-input
+                            style="margin-left:5px;"
                             :disabled="context.optionResultValue != index + 1"
                             v-model="context.optionExtraValue"
                           ></el-input>
@@ -142,6 +143,7 @@
                 >
                   <el-checkbox-group v-model="context.optionResultValue">
                     <div
+                      class="optionSingle"
                       :style="{
                         display:
                           context.DIPLAYTYPE == 'VERTICAL'
@@ -152,7 +154,6 @@
                       :key="index"
                     >
                       <el-checkbox
-                        class="optionSingle"
                         :label="index + 1"
                         @change="radioChange2(context)"
                       >
@@ -161,8 +162,9 @@
                             context.LASTOPTIONEEDINPUT == 1 &&
                               index == context.optionList.length - 1
                           "
-                        >
+                          >{{ option.OPTIONTEXT }}
                           <el-input
+                            style="margin-left:5px;"
                             :disabled="
                               context.optionResultValue.indexOf(index + 1) == -1
                             "
