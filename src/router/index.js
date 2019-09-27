@@ -32,11 +32,13 @@ import myCoupon from '@/components/center/myCoupon'
 import DetailRefund from '@/components/detail/detailRefund'
 import notificationMain from '@/components/notification/notificationMain'
 import Complaint from '@/components/complaint'
+import ComplaintReply from '@/components/complaintReply'
 import StockQuery from '@/components/query/stockQuery'
 import AreaQuery from '@/components/query/areaQuery'
 import OrderQuery from '@/components/query/orderQuery'
 import SupplyPort from '@/components/supplierModule/supplyPort'
 import Trans from '@/components/supplierModule/trans'
+
 
 Vue.use(Router)
 
@@ -257,6 +259,14 @@ const router = new Router({
           name: 'complaint',
           component: Complaint,
         },
+        {
+          path: '/complaintReply',
+          name: 'complaintReply',
+          component: ComplaintReply,
+          meta: {
+            keepAlive: true
+          }
+        },
         // 查询
         {
           path: '/query/stockQuery',
@@ -292,6 +302,7 @@ const router = new Router({
           name: 'supplyPort',
           component: SupplyPort
         },
+
       ]
     }
   ]

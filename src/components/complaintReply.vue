@@ -4,7 +4,7 @@
     <el-card shadow="hover">
 
       <div slot="header">
-        <span class="fstrong f16">物流投诉</span>
+        <span class="fstrong f16">投诉反馈</span>
       </div>
 
       <div id="tbar" class="tbarStyle">
@@ -44,12 +44,6 @@
       </el-input>
       <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
 
-      <el-button
-        style="float:right"
-        size="medium"
-        type="primary"
-        @click="_addRecord()">新增投诉单
-      </el-button>
       </div>
 
       <el-table border :data="complaintData" style="width: 100%" >
@@ -75,14 +69,14 @@
         <el-table-column align="center"  label="操作">
           <template slot-scope="scope">
             <el-button
-              v-if="scope.row.STATUS !=2"
+              v-if="scope.row.STATUS !=1"
               @click="_CheckDetail(scope.row.SID)"
               type="warning"
               icon="el-icon-search"
               circle
             ></el-button>
              <el-button
-              v-if="scope.row.STATUS ==2"
+              v-if="scope.row.STATUS ==1"
               @click="_EditDetail(scope.row.SID)"
               type="primary"
               icon="el-icon-edit"
@@ -161,7 +155,7 @@
             <td v-if="tableData.STATUS!=2&&tableData.STATUS!=3" colspan="3"  rowspan="1"  style="height:35px" >暂无处理结果</td>
           </tr>
 
-           <tr v-show="isCheck &&tableData.WLTS_THINK!=''">
+           <tr v-show="isCheck">
             <td class="grayTD" colspan="1" rowspan="2" border="0px" style="height:35px" >服务评价</td>
             <td v-if="tableData.STATUS==3" colspan="3"  rowspan="1"  style="height:35px">{{tableData.WLTS_THINK|rateTrans}}</td>
             <td v-if="tableData.STATUS!=3" colspan="3"  rowspan="1"  style="height:35px">暂无评价回复</td>
@@ -170,7 +164,7 @@
       </div>
 
       <!-- 编辑区 -->
-      <div v-show="isAdd||isEdit" class="table-c">
+      <div v-show="isEdit" class="table-c">
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr class="grayTD">
             <td style="font-size:20px;height:30px;" colspan="4">投诉登记表</td>
@@ -254,27 +248,25 @@
           </tr>
 
 
-          <tr v-if="submit.STATUS==2||submit.STATUS==3" >
+          <tr>
             <td class="grayTD" colspan="1"  rowspan="1" border="0px" style="height:35px" >处理结果</td>
-            <td colspan="3"  rowspan="1"  style="height:35px" class="grayTD" >{{submit.PROCESSDESC}}</td>
-          </tr>
-
-
-           <tr v-show="isEdit && submit.STATUS==2">
-            <td class="grayTD" colspan="1" rowspan="2" border="0px" style="height:35px" >服务评价</td>
             <td colspan="3"  rowspan="1"  style="height:35px" >
-                <el-rate
-                   v-model="submit.WLTS_THINK"
-                   show-text=[极差,失望,一般,满意,惊喜]>
-                </el-rate>
-            </td>
+               <el-input
+                  v-model="submit.PROCESSDESC"
+                  type="textarea"
+                  maxlength="200"
+                  placeholder="（请输入处理结果）"
+                  clearable
+                  class="inputStyle">
+                  </el-input>
+              </td>
           </tr>
+
         </table>
 
         <div style="margin:0 auto; width:75px;">
           <br />      
           <el-button type="success" v-show="isEdit" @click="_editSubmit()">确 定</el-button>                     <!-- 编辑时的按钮 -->
-          <el-button type="success" v-show="isAdd" @click="_addSubmit()">提 交</el-button>                       <!-- 新增时的按钮 -->
         </div>
 
       </div>
@@ -293,7 +285,7 @@ import {
 } from "@/api/complaint";
 import Cookies from "js-cookie";
 export default {
-  name: "Complaint",
+  name: "ComplaintReply",
   data() {
     return {
       tableData:[],
@@ -307,7 +299,6 @@ export default {
       SELECT_STATUS:1,       //存储下拉框的值
       isProcessed: false,     //已处理
       isFeedback: false,      //已评价
-      isAdd:false,            //新增记录
       isEdit:false,           //编辑记录
       isCheck:false,          //查看记录
       complaintDetail:false,
@@ -456,76 +447,6 @@ export default {
         this.complaintData = res.data;
       });
     },
-    //新建记录
-    _addRecord() {
-      this.isAdd=true,
-      this.isEdit=false;
-      this.isCheck=false;
-      this.complaintDetail=true,
-      this.CNAME=Cookies.get("realName"), //客户名
-      this.submit = {
-        SID: "", //投诉单id
-        SALE_NO:"",//销售单号
-        CUSTOMER_CODE: "", //客户编码
-        SUBMITTS: "", //提交时间
-        TYPE: "", //投诉类型
-        MEMO: "", //备注——投诉内容
-        OPERATOR: "", //处理人
-        PROCESSTS: "", //处理时间
-        PROCESSDESC:"",//处理结果——回复
-        WLTS_THINK:"",//服务评价
-        FEEDBACKTS:"",//评价时间
-        STATUS: 1,
-        TELEPHONE:"",
-        IMGURL:"",
-        LOSED_QUANTITY:0, //货物丢失数量
-        DAMAGED_QUANTITY:0,//货物损坏数量
-        C_TRANSBILL:"",//物流单号
-      },
-      this.submit.CUSTOMER_CODE = Cookies.get("companyId");
-    },
-    //新增记录提交
-    _addSubmit() {
-      let data = this.submit;
-      //判断是否填完所有信息
-      if (
-        this.submit.SALE_NO == "" ||
-        this.submit.C_TRANSBILL == "" ||
-        this.submit.TYPE == "" ||
-        this.submit.MEMO == ""
-      )
-      {
-        this.$alert("请完善信息", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      if(this.submit.DAMAGED_QUANTITY==""||this.submit.DAMAGED_QUANTITY == null)
-      {
-        this.submit.DAMAGED_QUANTITY = 0;
-      }
-      if(this.submit.LOSED_QUANTITY==""||this.submit.LOSED_QUANTITY == null)
-      {
-        this.submit.LOSED_QUANTITY = 0;
-      }
-      addSubmit(data).then(res => {
-        if (res.code == 0) {
-          this.$alert("提交成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.currentPage = 1;
-          this.refresh();
-        } else {
-          this.$alert("提交失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-        }
-      });
-      this.complaintDetail=false;
-    },
     //查看列表详情
     _CheckDetail(val) {
       this.tableData=[];
@@ -538,16 +459,15 @@ export default {
         {
         this.tableData = res.data[0];
         }
-        this.isAdd=false,
         this.isEdit=false;
         this.isCheck=true;
         this.complaintDetail=true;
       })
     },
     //编辑列表详情
-    _EditDetail(val) {
+    _EditDetail(val) {         
       let data = {
-        SID: val
+        SID: val,
       };
       this.CNAME=Cookies.get("realName"),
       CheckDetailByID(data).then(res => {
@@ -555,7 +475,6 @@ export default {
         {
         this.submit = res.data[0];
         }
-        this.isAdd=false,
         this.isEdit=true;
         this.isCheck=false;
         this.complaintDetail=true;
@@ -563,13 +482,13 @@ export default {
     },
     //编辑列表详情修改
     _editSubmit() {
+      this.submit.OPERATOR=Cookies.get("companyId");
       //判断是否填完所有信息
       if (
         this.submit.SALE_NO == "" ||
         this.submit.C_TRANSBILL == "" ||
         this.submit.TYPE == "" ||
-        this.submit.PROCESSDESC == "" ||
-        this.submit.WLTS_THINK == ""
+        this.submit.PROCESSDESC == "" 
       )
       {
         this.$alert("请完善信息", "提示", {

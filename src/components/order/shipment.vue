@@ -55,7 +55,7 @@
         </el-table-column>
         <el-table-column align="center" label="">
           <template slot-scope="scope">
-              <el-button :disabled="scope.row.TRANS_ID===''" type="primary" size="small" @click="addRecord()" >新增投诉单</el-button>
+              <el-button :disabled="scope.row.TRANS_ID===''" type="primary" size="small" @click="addRecord(scope.row)" >新增投诉单</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -80,21 +80,9 @@
 
           <tr>
             <td class="grayTD" style="height:15px">提货单号</td>
-            <td style="height:15px">
-            <input
-                  v-model="submit.SALE_NO"
-                  placeholder="（必填）"
-                  clearable
-                  class="inputStyle">
-            </td>
+            <td class="grayTD" style="height:15px">{{submit.SALE_NO}}</td>
             <td class="grayTD" style="height:15px">物流单号</td>
-            <td style="height:15px">
-            <input
-                  v-model="submit.C_TRANSBILL"
-                  placeholder="（必填）"
-                  clearable
-                  class="inputStyle">
-            </td>
+            <td class="grayTD" style="height:15px">{{submit.C_TRANSBILL}}</td>
           </tr>
 
           <tr>
@@ -134,14 +122,14 @@
           <tr>
             <td class="grayTD"  colspan="1" rowspan="1" style="height:50px;" >投诉内容</td>
             <td colspan="3" rowspan="1" style="height:50px;">
-                  <input
+                  <el-input
                   v-model="submit.MEMO"
                   type="textarea"
-                  maxlength="80"
-                  :autosize="{ minRows: 2, maxRow: 6 }"
+                  maxlength="200"
                   placeholder="（请输入投诉内容和要求）"
                   clearable
                   class="inputStyle">
+                  </el-input>
             </td>
           </tr>
 
@@ -272,7 +260,7 @@ export default {
       return "";
     },
     //新建一条记录
-    addRecord() {
+    addRecord(data) {
       this.isAdd=true,
       this.complaintDetail=true,
       this.CNAME=Cookies.get("realName"), //客户名
@@ -288,7 +276,7 @@ export default {
         PROCESSDESC:"",//处理结果——回复
         WLTS_THINK:"",//服务评价
         FEEDBACKTS:"",//评价时间
-        STATUS: "",
+        STATUS: 1,
         TELEPHONE:"",
         IMGURL:"",
         LOSED_QUANTITY:"", //货物丢失数量
@@ -296,6 +284,8 @@ export default {
         C_TRANSBILL:"",//物流单号
       },
       this.submit.CUSTOMER_CODE = Cookies.get("companyId");
+      this.submit.SALE_NO = data.SALE_NO;
+      this.submit.C_TRANSBILL = data.TRANS_ID;
     },
     //新增记录提交
     addSubmit() {
