@@ -171,6 +171,7 @@
           <el-table-column label="订单号" align="center" width="200px">
             <template slot-scope="scope1">
               <el-button
+              size="mini"
                 @click="openDialog(scope1.row.ORDER_NO)"
                 type="text"
                 >{{ scope1.row.ORDER_NO }}</el-button
@@ -190,6 +191,7 @@
           <el-table-column  label="客户" align="center" width="350px">
              <template slot-scope="scope3">
               <el-button
+              size="mini"
                @click="customer_info(scope3.row)"
                 type="text"
               >{{scope3.row.CUSTOMER_NAME}}</el-button>
@@ -548,9 +550,11 @@ export default {
   }
 };
 </script>
-
-
-
+<style>
+.table_1 .el-table__row {
+   height: 5px;
+}
+</style>
 <style scoped>
 .table_2{
   font-size: 20px
