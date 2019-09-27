@@ -93,6 +93,7 @@
                       class="optionSingle"
                       v-model="context.optionResultValue"
                       :colors="colors"
+                      :max = 6
                     >
                     </el-rate
                   ></span>
