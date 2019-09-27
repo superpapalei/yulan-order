@@ -118,6 +118,7 @@
               @click="checkDetail(scope.row)"
               type="warning"
               icon="el-icon-search"
+              size="medium"
               circle
             ></el-button>
             <el-button
@@ -125,6 +126,7 @@
               @click="editIt(scope.row)"
               type="primary"
               icon="el-icon-edit"
+              size="medium"
               circle
             ></el-button>
             <el-button
@@ -132,6 +134,7 @@
               @click="deleteDetail(scope.row)"
               type="danger"
               icon="el-icon-delete"
+              size="medium"
               circle
             ></el-button>
           </template>
@@ -339,7 +342,7 @@
             </td>
             <td colspan="1" style="height:35px">
               <el-radio-group
-                :disabled="tableData.IMPLEMENTTATION_FORM != '1' && EDITorCHECK"
+                :disabled="tableData.IMPLEMENTTATION_FORM != 1 || EDITorCHECK"
                 v-model="tableData.MEASURE"
               >
                 <el-radio label="1">是</el-radio>
@@ -356,6 +359,7 @@
             <td class="grayTD" colspan="1" style="height:50px">其他需求说明</td>
             <td colspan="3" style="height:50px">
               <el-input
+                :disabled="EDITorCHECK"
                 class="inputStyle"
                 type="textarea"
                 :autosize="{ minRows: 2, maxRow: 4 }"

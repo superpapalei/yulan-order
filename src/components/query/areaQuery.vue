@@ -17,7 +17,7 @@
               <td class="td_1">状态</td>   
               <td class="td_1">{{tableDetail_1.STATUS_ID|transStatus}}</td>
               <td class="td_1">业务员</td>
-              <td class="td_1" style="width:100px">{{tableDetail_1.NAME}}</td>
+              <td class="td_1" style="width:100px">{{tableDetail_1.SALE_NAME}}</td>
             </tr>
             <tr>
               <td class="td_1">合同号</td>
@@ -186,6 +186,7 @@
           <el-table-column label="提货单号" width="120" align="center">
             <template slot-scope="scope1">
               <el-button
+              size="mini"
                @click="openDia(scope1.row)"
                 type="text"
                 >{{ scope1.row.SALE_NO }}</el-button
@@ -495,7 +496,7 @@ var data = {
         SALE_NO:val.SALE_NO,//提货单
         BILL_DATE:val.BILL_DATE,//日期
         STATUS_ID:val.STATUS_ID,//状态
-        NAME:val.NAME,//业务员
+        SALE_NAME:val.SALE_NAME,//业务员
         HTBM:val.HTBM,//合同号
         MONEY_SUM:val.MONEY_SUM,//金额
         DATE_OUT_STOCK:val.DATE_OUT_STOCK,//提货日期
@@ -520,7 +521,11 @@ var data = {
   }
 };
 </script>
-
+<style>
+.table_1 .el-table__row {
+   height: 5px;
+}
+</style>
 <style scoped>
  .td_1{
    text-align: center

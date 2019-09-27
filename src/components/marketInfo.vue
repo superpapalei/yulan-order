@@ -93,6 +93,7 @@
                       class="optionSingle"
                       v-model="context.optionResultValue"
                       :colors="colors"
+                      :max = 6
                     >
                     </el-rate
                   ></span>
@@ -106,6 +107,7 @@
                 >
                   <el-radio-group v-model="context.optionResultValue">
                     <div
+                      class="optionSingle"
                       :style="{
                         display:
                           context.DIPLAYTYPE == 'VERTICAL'
@@ -116,7 +118,6 @@
                       :key="index"
                     >
                       <el-radio
-                        class="optionSingle"
                         :label="index + 1"
                         @change="radioChange(context)"
                       >
@@ -125,8 +126,9 @@
                             context.LASTOPTIONEEDINPUT == 1 &&
                               index == context.optionList.length - 1
                           "
-                        >
+                          >{{ option.OPTIONTEXT }}
                           <el-input
+                            style="margin-left:5px;"
                             :disabled="context.optionResultValue != index + 1"
                             v-model="context.optionExtraValue"
                           ></el-input>
@@ -142,6 +144,7 @@
                 >
                   <el-checkbox-group v-model="context.optionResultValue">
                     <div
+                      class="optionSingle"
                       :style="{
                         display:
                           context.DIPLAYTYPE == 'VERTICAL'
@@ -152,7 +155,6 @@
                       :key="index"
                     >
                       <el-checkbox
-                        class="optionSingle"
                         :label="index + 1"
                         @change="radioChange2(context)"
                       >
@@ -161,8 +163,9 @@
                             context.LASTOPTIONEEDINPUT == 1 &&
                               index == context.optionList.length - 1
                           "
-                        >
+                          >{{ option.OPTIONTEXT }}
                           <el-input
+                            style="margin-left:5px;"
                             :disabled="
                               context.optionResultValue.indexOf(index + 1) == -1
                             "
@@ -389,39 +392,42 @@ export default {
 
 <style scoped>
 .studyTitle {
-  margin-bottom: 2rem;
+  margin-bottom: 20px;
   text-align: center;
-  font-size: 3rem;
+  font-size: 30px;
   color: #555;
 }
 .studySubTitle {
-  margin-bottom: 2rem;
-  margin-left: 3rem;
-  margin-right: 3rem;
-  text-indent: 2em;
-  font-size: 1.6rem;
+  margin-bottom: 20px;
+  margin-left: 30px;
+  margin-right: 30px;
+  text-indent: 32px;
+  font-size: 16px;
   color: #555;
 }
 .studyContent {
-  padding: 1rem 0;
-  border-top: 0.2rem solid #ccc;
-  border-bottom: 0.2rem solid #ccc;
+  padding: 10px 0;
+  border-top: 2px solid #ccc;
+  border-bottom: 2px solid #ccc;
 }
 .questionTitle {
-  padding: 1.5rem 2rem;
-  font-size: 2rem;
+  padding: 15px 20px;
+  font-size: 20px;
   color: #555;
 }
 .optionClass {
-  margin-left: 4rem;
+  margin-left: 40px;
 }
 .optionSingle {
   margin-bottom: 10px;
   margin-right: 10px;
-  font-size: 1.5rem;
+  font-size: 15px;
 }
 .questionItem {
   padding: 0;
+}
+.controllerItem{
+  border-bottom: 1px dashed #ccc;
 }
 .controllerItem :hover {
   background-color: #fafafa;
