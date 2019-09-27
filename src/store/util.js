@@ -68,6 +68,8 @@ export function tabsName(index) {
     case "notification/notificationMain":
       return "公告";
     case "complaint":
+      return "物流投诉";
+    case "complaintReply":
       return "投诉反馈";
     case "query/stockQuery":
       return "库存查询";
