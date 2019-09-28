@@ -2,25 +2,35 @@
   <div>
     <el-card class="centerCard">
       <el-dialog
-        title="采购单详情"
         :show-close="true"
         :visible.sync="detailVisible"
         disabled="true"
         width="80%"
         top="28vh"
       >
+        <div style="margin-bottom:10px">
+          <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
+          <span style="float:right">{{
+            pur_headForm.DATE_PUR | datatrans
+          }}</span>
+        </div>
         <div>
-          <el-form
+          <h1>收货人：</h1>
+        </div>
+        <div style="margin-bottom:10px">
+          <h1>备注信息：</h1>
+        </div>
+        <hr />
+        <div style="width:100%">
+          <!-- <el-form
           label-position="left"
          label-width="70px"
             :inline="true"
             :model="pur_headForm"
-     
             class="demo-form-inline"
           >
             <el-form-item label="采购单号" >
               <el-input
-          
               readonly="true"
                 v-model="pur_headForm.PUR_NO"
                 placeholder="采购单号"
@@ -32,12 +42,12 @@
                 v-model="pur_headForm.linkMan"
                 
               >
-              </el-input>
-              <!-- <el-select v-model="pur_headForm.linkMan" placeholder="活动区域">
+              </el-input> -->
+          <!-- <el-select v-model="pur_headForm.linkMan" placeholder="活动区域">
       <el-option label="区域一" value="shanghai"></el-option>
       <el-option label="区域二" value="beijing"></el-option>
     </el-select> -->
-            </el-form-item>
+          <!-- </el-form-item>
             <el-form-item label="下单时间">
               <el-input
               readonly="true"
@@ -67,73 +77,142 @@
               <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
             </template></el-input>
             </el-form-item>
-          </el-form>
-        </div>
-        <el-table :data="gridData">
-          <el-table-column
-            property="ITEM_NO"
-            label="物料号"
-            width="110"
-          ></el-table-column>
-          <el-table-column
-            property="MGUIGE"
-            label="物料型号"
-            width="110"
-          ></el-table-column>
-          <el-table-column
-            property="MNAME"
-            label="名称"
-            width="100"
-          ></el-table-column>
-          <el-table-column
-            property="GRADE"
-            label="规格"
-            width="100"
-          ></el-table-column>
-          <el-table-column
-            property="QTY_PUR"
-            label="数量"
-            width="60"
-          ></el-table-column>
-          <el-table-column
+          </el-form> -->
+
+          <el-table :data="gridData" style="width:100%" max-height="400px">
+            <el-table-column
+              property="ITEM_NO"
+              label="物料号"
+              width="150"
+            ></el-table-column>
+            <el-table-column
+              property="MGUIGE"
+              label="物料型号"
+              width="150"
+            ></el-table-column>
+            <el-table-column
+              property="MNAME"
+              label="名称"
+              width="150"
+            ></el-table-column>
+            <el-table-column
+              property="GRADE"
+              label="规格"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              property="QTY_PUR"
+              label="数量"
+              width="60"
+            ></el-table-column>
+            <el-table-column label="含税单价" width="80">
+              <template slot-scope="scope">
+                <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
+              </template></el-table-column
+            >
+            <el-table-column
+              property="UNIT1"
+              label="单位"
+              width="60"
+            ></el-table-column>
+            <el-table-column
+              property="TOTAL_MONEY"
+              label="金额"
+              width="60"
+            ></el-table-column>
+            <el-table-column
+              property="NOTE"
+              label="备注"
+              width="300"
+            ></el-table-column>
+            <el-table-column property="DATE_PUR" label="约定日期" width="100">
+              <template slot-scope="scope">
+                <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              property="DATE_DELIVER"
+              label="送货日期"
+              width="100"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              property="SUPPLY_CHECK_NOTES"
+              label="说明"
+            ></el-table-column>
+          </el-table>
+          <hr />
+          <div style="margin-top:10px">
+          
+               
+            <div
+              style="margin-bottom:10px;width:100%"
+              class="data_1"
+            >
+                <el-card class="DETAIL_2" style="min-height:100px">
+                <div slot="header" class="clearfix">
+                  <span class="CARD">送货日期：</span>
+                </div>
+              <div>
+                <div>
+                  <el-button style="width:10%" class="button_clolur"
+                    >统一设置送货期</el-button
+                  >
+                  <el-date-picker
+                    type="date"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd"
+                    placeholder="统一设置送货期"
+                    v-model="beginTime_1"
+                    style="width:10%"
+                  ></el-date-picker>
+                </div>
+                <div>
+                  <el-button
+                    style="width:10%;margin-top:10px"
+                    class="button_clolur"
+                    >全部设为约定日期</el-button
+                  >
+                </div>
+              </div>
+                </el-card>
+              </div>
+              <div
+                style="margin-bottom:10px;width:100%;margin-top:10px"
+                class="data_1"
+              >
+               <el-card class="DETAIL_2" style="min-height:100px">
+                <div slot="header" class="clearfix">
+                  <span class="CARD">说明</span>
+                </div>
+              <div>
+                <el-input
+                  v-model="input"
+                  placeholder="说明:"
+                  style="width:30%;height:20px"
+                  type="textarea"
+                ></el-input>
+              </div>
+              <div style="margin-top:40px">
+                <el-button style="width:10%;" class="button_clolur"
+                  >保存说明</el-button
+                >
+              </div>
+               </el-card>
+              </div>
             
-            label="含税单价"
-            width="80"
-          >
-          <template slot-scope="scope">
-              <span>{{ scope.row.PRICE_TAXIN|numFilter }}</span>
-            </template></el-table-column>
-          <el-table-column
-            property="UNIT1"
-            label="单位"
-            width="60"
-          ></el-table-column>
-          <el-table-column
-            property="TOTAL_MONEY"
-            label="金额"
-            width="60"
-          ></el-table-column>
-          <el-table-column
-            property="NOTE"
-            label="备注"
-            width="150"
-          ></el-table-column>
-          <el-table-column property="DATE_PUR" label="约定日期" width="100">
-            <template slot-scope="scope">
-              <span>{{ scope.row.DATE_PUR | datatrans }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column property="DATE_DELIVER" label="送货日期" width="100">
-            <template slot-scope="scope">
-              <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            property="SUPPLY_CHECK_NOTES"
-            label="说明"
-            width="150"
-          ></el-table-column>
-        </el-table>
+          </div>
+          <div>
+            <el-button
+              style="width:10%;margin-left:48%;margin-top:10px"
+              class="button_clolur"
+              >确认采购单</el-button
+            >
+          </div>
+        </div>
         <keep-alive> </keep-alive>
       </el-dialog>
 
@@ -166,7 +245,6 @@
               </el-table-column>
               <el-table-column
                 prop="NOTES"
-                width="400"
                 label="备注"
                 align="center"
               ></el-table-column>
@@ -215,7 +293,6 @@
               </el-table-column>
               <el-table-column
                 prop="NOTES"
-                width="400"
                 label="备注"
                 align="center"
               ></el-table-column>
@@ -259,6 +336,8 @@ export default {
   name: "SupplyPort",
   data() {
     return {
+      input:"",
+      beginTime_1:"",
       current_id: Cookies.get("cid"),
       // companyId: Cookies.get("companyId"),
       gridData: [],
@@ -287,14 +366,11 @@ export default {
     openDialog(PUR_NO) {
       this.detailVisible = true;
       this.autoSearchDetail(PUR_NO);
-      
-    
 
       //将表头内容填充到明细
     },
     //标签页切换
     handleClick(tab) {
-
       var tabName = tab.name;
       this.currentPage = 1;
       switch (tabName) {
@@ -344,12 +420,12 @@ export default {
       };
       GetPoDetail(data).then(res => {
         this.gridData = res.data;
-       this.pur_headForm.PUR_NO = this.gridData[0].PUR_NO;
-       this.pur_headForm.linkMan = this.gridData[0].linkMan;
-       this.pur_headForm.DATE_PUR = this.gridData[0].DATE_PUR;
-       this.pur_headForm.DATE_DELIVER = this.gridData[0].DATE_DELIVER;
-       this.pur_headForm.NOTES = this.gridData[0].NOTES;
-       this.pur_headForm.SUPPLY_CHECK_NOTES = this.gridData[0].SUPPLY_CHECK_NOTES;
+        this.pur_headForm.PUR_NO = this.gridData[0].PUR_NO;
+        this.pur_headForm.linkMan = this.gridData[0].linkMan;
+        this.pur_headForm.DATE_PUR = this.gridData[0].DATE_PUR;
+        this.pur_headForm.DATE_DELIVER = this.gridData[0].DATE_DELIVER;
+        this.pur_headForm.NOTES = this.gridData[0].NOTES;
+        this.pur_headForm.SUPPLY_CHECK_NOTES = this.gridData[0].SUPPLY_CHECK_NOTES;
       });
     }
   },
@@ -370,11 +446,11 @@ export default {
           break;
       }
     },
-      numFilter (value) {
-    // 截取当前数据到小数点后两位
-    let realVal = parseFloat(value).toFixed(2)
-    return realVal
-  },
+    numFilter(value) {
+      // 截取当前数据到小数点后两位
+      let realVal = parseFloat(value).toFixed(2);
+      return realVal;
+    },
 
     datatrans(value) {
       //时间戳转化大法
@@ -399,8 +475,6 @@ export default {
       return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
     }
   },
-  
-
 
   created() {
     this.po_type = "efficient";
@@ -410,4 +484,15 @@ export default {
 </script>
 
 <style scoped>
+.button_clolur {
+  background: #8bc34a;
+  color: rgb(255, 255, 255);
+}
+.data_1 {
+
+  font-size: 1.5em;
+}
+td {
+  text-align: center;
+}
 </style>

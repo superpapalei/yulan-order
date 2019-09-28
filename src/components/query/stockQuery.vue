@@ -557,6 +557,9 @@ export default {
     GetItemByProductType(data)
           .then(res => {
             this.count = res.count;
+            if(this.count == 1){
+              this.KC_CP_SC(res.data[0])
+            }
             this.tables = res.data;
             // this.tables.itemNo = res.data.itemNo;
             // this.tables.OLD_ITEM_NO = res.data.OLD_ITEM_NO;

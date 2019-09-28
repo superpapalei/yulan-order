@@ -3,6 +3,7 @@
     <el-card shadow="hover">
       <div id="trans">
         <div class="block">
+          <div class="first_1">
           <span class="demonstration"></span>
           <el-date-picker
              v-model="date1"
@@ -13,15 +14,15 @@
           </el-date-picker>
           <span class="demonstration">至</span>
           <el-date-picker
-            v-model="date1"
+            v-model="date2"
             align="right"
             type="date"
             placeholder="选择日期"
           ></el-date-picker>
-          <el-button :id="'test111'" @click="autoSearch()"  type="primary"
-                    size="small" icon="el-icon-search">搜索</el-button>
-          <el-button :id="'test111'"   type="primary"
-                    size="small">导出Excel</el-button>
+          <el-button :id="'test111'" @click="autoSearch()"  icon="el-icon-search" style="margin-left:8px" class="button_1">搜索</el-button>
+          <el-button :id="'test111'" class="button_1" >导出Excel</el-button>
+            </div>
+            <hr>
           <el-table
             :data="tableData"
             
@@ -30,37 +31,37 @@
             <el-table-column
               prop="TRANS_NO"
               label="单据号"
-              width="120"
+              
               align="center"
             ></el-table-column>
             <el-table-column
               prop="BILL_NO"
               label="原始单号"
-              width="180"
+             
               align="center"
             ></el-table-column>
             <el-table-column
               prop="ITEM_NO"
               label="型号"
-              width="120"
+              
               align="center"
             ></el-table-column>
             <el-table-column
               prop="BATCH_NO"
               label="批号"
-              width="120"
+              
               align="center"
             ></el-table-column>
             <el-table-column
               prop="QTY_TRANS"
               label="实际数量"
-              width="120"
+              
               align="center"
             ></el-table-column>
             <el-table-column
               prop="UNIT_PRICE"
               label="含税单价"
-              width="120"
+              
               align="center"
             >
            <template slot-scope="scope">
@@ -70,13 +71,13 @@
             <el-table-column
               prop="SUM_PRICE_TAX"
               label="含税总价"
-              width="120"
+              
               align="center"
             ></el-table-column>
             <el-table-column
               
               label="开单日期"
-              width="120"
+              
               align="center"
             >
              <template slot-scope="scope">
@@ -126,7 +127,7 @@ export default {
   },
 
   created() {
-    this.autoSearch();
+    //this.autoSearch();
     // this.mergeColumnIndex();
   },
   methods: {
@@ -287,4 +288,14 @@ export default {
 </script>
 
 <style scoped>
+.first_1{
+  margin-bottom: 5px;
+}
+.button_1{
+  width: 100px;
+  background: #8bc34a;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  text-align: center
+}
 </style>
