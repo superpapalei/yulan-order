@@ -375,12 +375,16 @@
             <td colspan="2" style="height:14px;">
               <el-upload
                 class="upload-de"
-                action="#"
+                action="http://localhost:49438//IMAGE_STORE/UploadFiles"
+                :on-success="handleAvatarSuccess"
                 drag
                 multiple
+                :on-change="handleChange"
                 :on-remove="handleRemove"
-                :http-request="upLoadFile"
                 ref="upload"
+                :auto-upload="false"
+                :file-list="fileList"
+                :data="{ cid: cid, dateStamp: dateStamp }"
               >
                 <i
                   class="el-icon-upload"
@@ -463,7 +467,11 @@
 
 
 <script>
-import { GetImageCustomer, InsertImageStore,UploadFiles } from "@/api/imageStoreASP";
+import {
+  GetImageCustomer,
+  InsertImageStore,
+  UploadFiles
+} from "@/api/imageStoreASP";
 import { getCustomerInfo } from "@/api/orderListASP";
 import Cookies from "js-cookie";
 
@@ -472,6 +480,9 @@ export default {
   data() {
     return {
       chargeData: [],
+      cid: Cookies.get("cid"),
+      dateStamp: "",
+      fileList: [],
       BigPic: false,
       sqlpath: "", //保存图片相对路径
       newORedit: false, //决定显示新建或者编辑
@@ -599,6 +610,8 @@ export default {
     },
     //确定新建
     sumbitNEW() {
+      //this.$refs.upload.submit();
+      console.log(this.fileList);
       //判断是否填完所有信息
       if (
         !this.tableData.STORE_ADDRESS ||
@@ -614,15 +627,26 @@ export default {
         });
         return;
       }
-      // //判断是否上传图片
-      // if (this.sumbit.imgFileName == "") {
-      //   this.$alert("请上传凭证", "提示", {
-      //     confirmButtonText: "确定",
-      //     type: "warning"
-      //   });
-      //   return;
-      // }
-      //this.sumbit.imgUrl = this.sqlpath; //转换为相对地址
+      //判断是否上传图片
+      if (this.fileList.length == 0) {
+        this.$alert("请上传附件", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      //附件拼接
+      var saveUrl = "";
+      for (var i = 0; i < this.fileList.length; i++) {
+        this.tableData.ATTACHMENT_FILE +=
+          "/Files/IMAGE_STORE/" +
+          this.cid +
+          "/" +
+          this.dateStamp +
+          "/" +
+          this.fileList[i].name +
+          ";";
+      }
       InsertImageStore(this.tableData).then(res => {
         console.log(res);
         if (res.code == 0) {
@@ -655,6 +679,7 @@ export default {
         STATUS: 0,
         MEASURE: 0
       };
+      this.dateStamp = new Date().getTime();
     },
     //编辑列表详情
     editIt(tab) {
@@ -708,11 +733,7 @@ export default {
         this.imageStoreData = res.data;
       });
     },
-    upLoadFile(files) {
-      console.log(files);
-      UploadFiles(files.file);
-    },
-    handleRemove(file,fileList){
+    handleRemove(file, fileList) {
       console.log(file, fileList);
     },
     //隔行变色
@@ -737,16 +758,10 @@ export default {
       this.currentPage = 1;
       this.getDetail();
     },
-    handleAvatarSuccess(res, file) {
-      this.sumbit.imgUrl = URL.createObjectURL(file.raw);
-      console.log(res);
-      if (res.code == 0) {
-        this.sqlpath = res.sqlpath;
-        this.sumbit.imgUrl = Head + res.sqlpath;
-        this.sumbit.imgFileName = res.fileName;
-      }
-      console.log(this.sumbit);
+    handleChange(file, fileList) {
+      this.fileList = fileList.slice(-3);
     },
+    handleAvatarSuccess(res, file) {},
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
 
@@ -840,7 +855,7 @@ export default {
   height: 14px;
   display: block;
 }
-.upload-de .el-upload-dragger{
+.upload-de .el-upload-dragger {
   height: 100px;
 }
 </style>
