@@ -93,7 +93,7 @@
                       class="optionSingle"
                       v-model="context.optionResultValue"
                       :colors="colors"
-                      :max = 6
+                      :max="6"
                     >
                     </el-rate
                   ></span>
@@ -373,6 +373,10 @@ export default {
         sfid: this.selectData.SID
       }).then(res => {
         this.detailVisible = false;
+        this.$alert("提交成功", "提示", {
+          confirmButtonText: "确定",
+          type: "success"
+        });
         this.getDetail();
       });
     },
@@ -426,7 +430,7 @@ export default {
 .questionItem {
   padding: 0;
 }
-.controllerItem{
+.controllerItem {
   border-bottom: 1px dashed #ccc;
 }
 .controllerItem :hover {

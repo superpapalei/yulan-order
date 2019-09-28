@@ -345,8 +345,8 @@
                 :disabled="tableData.IMPLEMENTTATION_FORM != 1 || EDITorCHECK"
                 v-model="tableData.MEASURE"
               >
-                <el-radio label="1">是</el-radio>
-                <el-radio label="0">否</el-radio>
+                <el-radio :label="1">是</el-radio>
+                <el-radio :label="0">否</el-radio>
               </el-radio-group>
             </td>
             <td colspan="2" style="font-size:12px;color:gray;height:35px">
@@ -372,21 +372,30 @@
           <tr>
             <td class="grayTD" colspan="1" style="height:14px;">附件</td>
 
-            <td colspan="1" style="height:14px;">
-              <!-- <el-upload
-                class="avatar-uploader"
-                accept="image/png, image/jpg, image/jpeg"
-                action="http://14.29.223.114:10250/yulan-capital/upload/uploadPaymentBillImg.do"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
+            <td colspan="2" style="height:14px;">
+              <el-upload
+                class="upload-de"
+                action="#"
+                drag
+                multiple
+                :on-remove="handleRemove"
+                :http-request="upLoadFile"
+                ref="upload"
               >
-                <img v-if="sumbit.imgUrl" :src="sumbit.imgUrl" class="avatar" />
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload> -->
+                <i
+                  class="el-icon-upload"
+                  style="width:300px;height:30px;margin-top:10px;"
+                ></i>
+                <div class="el-upload__text">
+                  将文件拖到此处，或<em>点击上传</em>
+                </div>
+                <div class="el-upload__tip" slot="tip">
+                  可上传jpg、dwg、pdf等格式
+                </div>
+              </el-upload>
             </td>
 
-            <td colspan="2" style="font-size:12px;color:gray">
+            <td colspan="1" style="font-size:12px;color:gray">
               上传jpg、dwg、pdf等格式平面图，平面图尺寸要表达清晰，消防位等有阻碍设计的地方要标注清楚
             </td>
           </tr>
@@ -454,7 +463,7 @@
 
 
 <script>
-import { GetImageCustomer, InsertImageStore } from "@/api/imageStoreASP";
+import { GetImageCustomer, InsertImageStore,UploadFiles } from "@/api/imageStoreASP";
 import { getCustomerInfo } from "@/api/orderListASP";
 import Cookies from "js-cookie";
 
@@ -586,8 +595,7 @@ export default {
       });
     },
     implentmentChange() {
-      if (this.tableData.IMPLEMENTTATION_FORM != "1")
-        this.tableData.MEASURE = "";
+      if (this.tableData.IMPLEMENTTATION_FORM != 1) this.tableData.MEASURE = 0;
     },
     //确定新建
     sumbitNEW() {
@@ -644,7 +652,8 @@ export default {
         CUSTOMER_AGENT: this.chargeData.CUSTOMER_AGENT,
         OFFICE_TEL: this.chargeData.OFFICE_TEL,
         CREATER: Cookies.get("cid"),
-        STATUS: 0
+        STATUS: 0,
+        MEASURE: 0
       };
     },
     //编辑列表详情
@@ -698,6 +707,13 @@ export default {
         this.count = res.count;
         this.imageStoreData = res.data;
       });
+    },
+    upLoadFile(files) {
+      console.log(files);
+      UploadFiles(files.file);
+    },
+    handleRemove(file,fileList){
+      console.log(file, fileList);
     },
     //隔行变色
     tableRowClassName({ row, rowIndex }) {
@@ -823,5 +839,8 @@ export default {
   width: 14px;
   height: 14px;
   display: block;
+}
+.upload-de .el-upload-dragger{
+  height: 100px;
 }
 </style>
