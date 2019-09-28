@@ -263,9 +263,6 @@ const router = new Router({
           path: '/complaintReply',
           name: 'complaintReply',
           component: ComplaintReply,
-          meta: {
-            keepAlive: true
-          }
         },
         // 查询
         {

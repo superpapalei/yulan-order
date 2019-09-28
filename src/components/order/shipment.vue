@@ -55,7 +55,7 @@
         </el-table-column>
         <el-table-column align="center" label="">
           <template slot-scope="scope">
-              <el-button :disabled="scope.row.TRANS_ID===''" type="primary" size="small" @click="addRecord(scope.row)" >新增投诉单</el-button>
+              <el-button :disabled="scope.row.TRANS_ID===''" type="primary" size="small" @click="addRecord(scope.row)" >投诉</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -80,9 +80,15 @@
 
           <tr>
             <td class="grayTD" style="height:15px">提货单号</td>
-            <td class="grayTD" style="height:15px">{{submit.SALE_NO}}</td>
+            <td class="grayTD" style="height:15px"> {{submit.SALE_NO}}</td>
             <td class="grayTD" style="height:15px">物流单号</td>
             <td class="grayTD" style="height:15px">{{submit.C_TRANSBILL}}</td>
+          </tr>
+          <tr>
+            <td class="grayTD" style="height:15px">订单号</td>
+            <td class="grayTD" style="height:15px">{{submit.DINGDANHAO}}</td>
+            <td class="grayTD" style="height:15px">产品型号</td>
+            <td class="grayTD" style="height:15px">{{submit.SALENO}}</td>
           </tr>
 
           <tr>
@@ -163,7 +169,7 @@ export default {
       submit:[],
       complaintDetail:false,
       isAdd:false,
-      saleNo: "",
+      saleNo: "",//产品型号
       dingdanhao: "",
       lineNo: "",
       zongshuliang: "",
@@ -282,7 +288,11 @@ export default {
         LOSED_QUANTITY:"", //货物丢失数量
         DAMAGED_QUANTITY:"",//货物损坏数量
         C_TRANSBILL:"",//物流单号
+        DINGDANHAO:"",
+        SALENO:"",
       },
+      this.submit.DINGDANHAO=this.dingdanhao;
+      this.submit.SALENO=this.saleNo;
       this.submit.CUSTOMER_CODE = Cookies.get("companyId");
       this.submit.SALE_NO = data.SALE_NO;
       this.submit.C_TRANSBILL = data.TRANS_ID;
@@ -316,6 +326,26 @@ export default {
       {
           this.submit.LOSED_QUANTITY = 0;
           this.submit.DAMAGED_QUANTITY = 0;
+      }
+      if (
+        this.submit.DAMAGED_QUANTITY > this.zongshuliang || this.submit.LOSED_QUANTITY > this.zongshuliang
+      )
+      {
+        this.$alert("填写数量必须小于下单数量", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (
+        this.submit.DAMAGED_QUANTITY < 0 || this.submit.LOSED_QUANTITY < 0
+      )
+      {
+        this.$alert("填写数量必须为非负数", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
       }
       addSubmit(data).then(res => {
         if (res.code == 0) {
