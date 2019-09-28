@@ -44,40 +44,38 @@
       </el-input>
       <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
 
-      <el-button
+      <!-- <el-button
         style="float:right"
         size="medium"
         type="primary"
         @click="_addRecord()">新增投诉单
-      </el-button>
+      </el-button> -->
       </div>
-
-      <el-table border :data="complaintData" style="width: 100%" >
-        <el-table-column prop="SALE_NO" label="提货单号" align="center"></el-table-column>
-        <el-table-column prop="TYPE" label="投诉类型" align="center"></el-table-column>
-        <el-table-column prop="CUSTOMER_CODE" label="投诉人" align="center"></el-table-column>
-        <el-table-column prop="SUBMITTS" label="投诉时间" align="center">
+      
+      <div style="margin-top:10px">
+        
+      <el-table border :data="complaintData" :default-sort ="{prop:'date',order:'descending'}" style="width: 100%" class="table_1">
+        <el-table-column prop="SALE_NO" label="提货单号" align="center" ></el-table-column>
+        <el-table-column prop="C_TRANSBILL" label="物流单号" align="center" ></el-table-column>
+        <el-table-column prop="TYPE" label="投诉类型" align="center" ></el-table-column>
+        <el-table-column prop="SUBMITTS" label="投诉时间" align="center" >
           <template slot-scope="scope">
             <span>{{scope.row.SUBMITTS | datatrans}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="OPERATOR" label="处理人"  align="center"></el-table-column>
-        <el-table-column prop="PROCESSTS" label="处理时间" align="center">
-          <template slot-scope="scope">
-            <span>{{scope.row.PROCESSTS | datatrans}}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="MEMO" label="投诉内容"  align="center"></el-table-column>
         <el-table-column  label="状态" align="center">
           <template slot-scope="scope">
             <span>{{scope.row.STATUS | transStatus}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center"  label="操作">
+        <el-table-column align="center"  label="操作" >
           <template slot-scope="scope">
             <el-button
               v-if="scope.row.STATUS !=2"
               @click="_CheckDetail(scope.row.SID)"
               type="warning"
+              size="mini"
               icon="el-icon-search"
               circle
             ></el-button>
@@ -85,6 +83,7 @@
               v-if="scope.row.STATUS ==2"
               @click="_EditDetail(scope.row.SID)"
               type="primary"
+              size="mini"
               icon="el-icon-edit"
               circle
             ></el-button>
@@ -92,6 +91,7 @@
         </el-table-column>
       </el-table>
 
+      </div>
       <div style="margin:0 25%;" class="block">
         <el-pagination
           @size-change="handleSizeChange"
@@ -108,16 +108,6 @@
     <el-dialog title="投诉登记表" :visible.sync="complaintDetail" :close-on-click-modal="false" width="40%">
       <!-- 查看区 -->
       <div v-show="isCheck" class="table-c">
-        <h4>
-          提交时间：<span style="display:inline-block;width:100px;font-weight:bold;">{{tableData.SUBMITTS| datatrans}}</span>
-          处理人：<span style="display:inline-block;width:100px;font-weight:bold;" v-show="tableData.STATUS==2||tableData.STATUS==3">{{tableData.OPERATOR}}</span>
-        </h4>  
- 
-        <h4>
-          处理时间：<span style="display:inline-block;width:100px;font-weight:bold;" v-show="tableData.STATUS==2||tableData.STATUS==3">{{tableData.PROCESSTS| datatrans}}</span>
-          评价时间：<span style="display:inline-block;width:100px;font-weight:bold;" v-show="tableData.STATUS==3">{{tableData.FEEDBACKTS| datatrans}}</span>
-        </h4>
-
         <table width="100%" border="0px" cellspacing="0px" cellpadding="0">
           <tr class="grayTD">
             <td style="font-size:20px;height:30px;" colspan="4">投诉登记表</td>
@@ -130,11 +120,17 @@
           </tr>
 
           <tr>
-            <td class="grayTD" style="height:15px">投诉单号</td>
+            <td class="grayTD" style="height:15px">提货单号</td>
             <td style="height:15px">{{tableData.SALE_NO}}</td>
-
             <td class="grayTD" style="height:15px">物流单号</td>
             <td style="height:15px">{{tableData.C_TRANSBILL}}</td>
+          </tr>
+
+         <tr>
+            <td class="grayTD" style="height:15px">订单号</td>
+            <td style="height:15px">{{tableData.DINGDANHAO}}</td>
+            <td class="grayTD" style="height:15px">产品型号</td>
+            <td style="height:15px">{{tableData.SALENO}}</td>
           </tr>
 
           <tr>
@@ -170,7 +166,8 @@
       </div>
 
       <!-- 编辑区 -->
-      <div v-show="isAdd||isEdit" class="table-c">
+      <div v-show="isAdd||isEdit" class="table-c" >
+        <div>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr class="grayTD">
             <td style="font-size:20px;height:30px;" colspan="4">投诉登记表</td>
@@ -185,23 +182,18 @@
             <td v-else style="width:34%;height:15px" class="grayTD">(提交后自动生成)</td>
           </tr>
 
-          <tr>
+           <tr>
             <td class="grayTD" style="height:15px">提货单号</td>
-            <td style="height:15px">
-            <input
-                  v-model="submit.SALE_NO"
-                  placeholder="（必填）"
-                  clearable
-                  class="inputStyle">
-            </td>
+            <td class="grayTD" style="height:15px">{{submit.SALE_NO}}</td>
+
             <td class="grayTD" style="height:15px">物流单号</td>
-            <td style="height:15px">
-            <input
-                  v-model="submit.C_TRANSBILL"
-                  placeholder="（必填）"
-                  clearable
-                  class="inputStyle">
-            </td>
+            <td class="grayTD" style="height:15px">{{submit.C_TRANSBILL}}</td>
+          </tr>          
+           <tr>
+            <td class="grayTD" style="height:15px">订单号</td>
+            <td class="grayTD" style="height:15px">{{submit.DINGDANHAO}}</td>
+            <td class="grayTD" style="height:15px">产品型号</td>
+            <td class="grayTD" style="height:15px">{{submit.SALENO}}</td>
           </tr>
 
           <tr>
@@ -210,47 +202,18 @@
 
           <tr>
             <td class="grayTD" colspan="1" style="height:20px">投诉类型</td>
-            <td colspan="1" style="height:20px">
-              <select v-model="submit.TYPE" placeholder="选择相应类型" style="float:center;height:100%;width:100%">
-                <option
-                  v-for="item in typeArray"
-                  :key="item.label"
-                  :label="item.label"
-                  :value="item.value"
-                ></option>
-              </select>
-            </td>
+            <td class="grayTD" colspan="1" style="height:20px">{{submit.TYPE}}</td>
+            
             <td class="grayTD" colspan="1" style="height:20px">数量</td>
-            <td v-if="submit.TYPE=='丢失'"  class="grayTD" colspan="1" style="height:20px">
-                <input
-                  v-model="submit.LOSED_QUANTITY"
-                  placeholder="（丢失的货物数量）"
-                  clearable
-                  class="inputStyle">
-            </td>
-             <td v-if="submit.TYPE=='破损'"  class="grayTD" colspan="1" style="height:20px">
-                <input
-                  v-model="submit.DAMAGED_QUANTITY"
-                  placeholder="（破损的货物数量）"
-                  clearable
-                  class="inputStyle">
-            </td>
-             <td v-else  class="grayTD" colspan="1" style="height:20px"> </td>
+            <td v-if="submit.TYPE=='丢失'"  class="grayTD" colspan="1" style="height:20px">{{submit.LOSED_QUANTITY}}</td>
+  
+            <td v-if="submit.TYPE=='破损'"  class="grayTD" colspan="1" style="height:20px">{{submit.DAMAGED_QUANTITY}}</td>
+            <td v-else  class="grayTD" colspan="1" style="height:20px"> </td>
           </tr>
 
           <tr>
             <td class="grayTD"  colspan="1" rowspan="1" style="height:50px;" >投诉内容</td>
-            <td  v-if="submit.SUBMITTS==''" colspan="3" rowspan="1" style="height:50px;">
-                  <el-input
-                  v-model="submit.MEMO"
-                  type="textarea"
-                  maxlength="200"
-                  placeholder="（请输入投诉内容和要求）"
-                  clearable
-                  class="inputStyle">
-                  </el-input>
-            </td>
-            <td v-if="submit.SUBMITTS!=''" colspan="3"  rowspan="1"  style="height:60px" class="grayTD" >{{submit.MEMO}}</td>
+            <td colspan="3"  rowspan="1"  style="height:60px" class="grayTD" >{{submit.MEMO}}</td>
           </tr>
 
 
@@ -265,11 +228,13 @@
             <td colspan="3"  rowspan="1"  style="height:35px" >
                 <el-rate
                    v-model="submit.WLTS_THINK"
-                   show-text=[极差,失望,一般,满意,惊喜]>
+                   show-text
+                   :texts="rateArray">
                 </el-rate>
             </td>
           </tr>
         </table>
+        </div>
 
         <div style="margin:0 auto; width:75px;">
           <br />      
@@ -278,6 +243,29 @@
         </div>
 
       </div>
+
+
+      <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
+        <table width="90%" border="0px" cellspacing="0px" cellpadding="0">
+          <tr >
+             <td style="width:10%"><h4>提交时间：</h4></td>
+             <td style="width:20%;margin-left:-30px;"><h4>{{ tableData.SUBMITTS| datatransDetail }}</h4></td>
+              <td style="width:10%"><h4>处理人：</h4></td>
+             <td style="width:20%"><h4>{{ tableData.OPERATOR }}</h4></td>
+          </tr>
+
+          <tr >
+             <td><h4>处理时间：</h4></td>
+             <td><h4>{{tableData.PROCESSTS| datatransDetail}}</h4></td>
+            <td><h4>评价时间：</h4></td>
+             <td><h4>{{ tableData.FEEDBACKTS| datatransDetail}}</h4></td>
+          </tr>
+
+        </table>   
+
+    </div>
+
+
     </el-dialog>
   </div>
 </template>
@@ -314,6 +302,7 @@ export default {
       limit: 10,
       count: 0,
       currentPage: 1,
+      rateArray:["极差","失望","一般","满意","惊喜"],
       statusArray: [
         {
           label: "未处理",
@@ -388,6 +377,25 @@ export default {
       let s = date.getSeconds();
       s = s < 10 ? "0" + s : s;
       return y + "-" + MM + "-" + d + " "; 
+    },
+     datatransDetail(value) {
+      //时间戳转化大法
+      if (value == null || value == "9999/12/31 00:00:00") {
+        return "";
+      }
+      let date = new Date(value);
+      let y = date.getFullYear();
+      let MM = date.getMonth() + 1;
+      MM = MM < 10 ? "0" + MM : MM;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      let h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      let m = date.getMinutes();
+      m = m < 10 ? "0" + m : m;
+      let s = date.getSeconds();
+      s = s < 10 ? "0" + s : s;
+      return y + "-" + MM + "-" + d + " " + h + ":" + m ;
     },
     rateTrans(value){
            switch (value)
@@ -464,7 +472,7 @@ export default {
       this.complaintDetail=true,
       this.CNAME=Cookies.get("realName"), //客户名
       this.submit = {
-        SID: "", //投诉单id
+        SID: 0, //投诉单id
         SALE_NO:"",//销售单号
         CUSTOMER_CODE: "", //客户编码
         SUBMITTS: "", //提交时间
@@ -608,7 +616,11 @@ export default {
   },
 };
 </script>
-
+<style>
+.table_1 .el-table__row{
+  height: 6px;
+}
+</style>
 <style scoped>
 .table-c table {
   border-right: 1px solid black;
@@ -631,6 +643,18 @@ export default {
   display:inline-block;
   width:100px;
   font-weight:bold;
+}
+.timeRight {
+  font-size: 14px;
+  line-height: 30px;
+  display: inline-block;
+  margin-right: 20px;
+  font-weight: bold;
+}
+.timeLeft {
+  font-size: 14px;
+  line-height: 30px;
+  display: inline-block;
 }
 .ISimg {
   width: 100px;
