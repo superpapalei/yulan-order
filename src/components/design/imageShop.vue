@@ -115,12 +115,13 @@
         ></el-table-column>
         <el-table-column width="60" label="附件" align="center">
           <template slot-scope="scope">
-            <a
+            <a v-if="scope.row.ATTACHMENT_FILE!=''"
               title="点击下载压缩包"
               class="attachLink"
-              @click="downLoad(scope.row)"
+              @click="downLoadCompress(scope.row.ATTACHMENT_FILE_FOLDER)"
               >{{ scope.row.ATTACHMENT_FILE.split(";").length - 1 }}个</a
             >
+            <span v-else>0个</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
@@ -134,7 +135,7 @@
               @click="checkDetail(scope.row)"
               type="warning"
               icon="el-icon-search"
-              size="medium"
+              size="small"
               circle
             ></el-button>
             <el-button
@@ -142,7 +143,7 @@
               @click="editIt(scope.row)"
               type="primary"
               icon="el-icon-edit"
-              size="medium"
+              size="small"
               circle
             ></el-button>
             <el-button
@@ -150,7 +151,7 @@
               @click="deleteDetail(scope.row)"
               type="danger"
               icon="el-icon-delete"
-              size="medium"
+              size="small"
               circle
             ></el-button>
           </template>
@@ -427,7 +428,7 @@
                   <label
                     style="display:block;position:absolute;top:1px;right:20px;"
                   >
-                    <a style="cursor:pointer;">下载附件</a>
+                    <a style="cursor:pointer;" @click="downLoad(fileList.url)">下载附件</a>
                   </label>
                 </li>
               </ul>
@@ -833,8 +834,11 @@ export default {
         console.log(this.bankData);
       });
     },
-    downLoad(row) {
-      if (row.ATTACHMENT_FILE.split(";").length - 1 == 0) return;
+    downLoad(path){
+        downLoadFile(this.Global.uploadUrl + `DownLoadAPI/DownloadFile?path=${path}&`);
+    },
+    downLoadCompress(path) {
+      downLoadFile(this.Global.uploadUrl + `DownLoadAPI/DownloadFileCompress?path=${path}&`);
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
