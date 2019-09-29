@@ -79,7 +79,7 @@
             align="center"
             width="100px"
           ></el-table-column>
-          <el-table-column prop="SUBMITTS" label="投诉时间" align="center" width="120px">
+          <el-table-column prop="SUBMITTS" label="投诉时间" align="center" width="100px">
             <template slot-scope="scope">
               <span>{{ scope.row.SUBMITTS | datatrans }}</span>
             </template>
@@ -117,7 +117,7 @@
         </el-table>
       </div>
 
-      <div style="margin:0 25%;margin-top:10px" class="block">
+      <div style="margin:0 25%;" class="block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -402,7 +402,7 @@
 
 <script>
 import {
-  GetAllUserComplaint,
+  GetAllComplaintInfo,
   GetAllComplaint,
   addSubmit,
   editSubmit,
@@ -540,6 +540,15 @@ export default {
     }
   },
   methods: {
+    //获取所有的投诉信息
+    _GetAllComplaintInfo() {
+      this.complaintData = [];
+      GetAllComplaintInfo()
+        .then(res => {
+          this.complaintData = res.data;
+        })
+        .catch(res => {});
+    },
     //模糊搜索
     search() {
       this.currentPage = 1;
@@ -559,8 +568,10 @@ export default {
     //查询满足条件的该用户的投诉信息
     refresh() {
       var data = {
+        companyId: Cookies.get("companyId"),
         limit: this.limit,
         page: this.currentPage,
+        CID: Cookies.get("cid"),
         beginTime: this.beginTime,
         finishTime: this.finishTime,
         STATUS: this.SELECT_STATUS,
@@ -574,7 +585,7 @@ export default {
       } else {
         data.finishTime = data.finishTime + " 23:59:59";
       }
-      GetAllUserComplaint(data).then(res => {
+      GetAllComplaint(data).then(res => {
         this.count = res.count;
         this.complaintData = res.data;
       });

@@ -18,16 +18,6 @@ export function GetAllComplaint(data, config = {}) {
     })
 }
 
-//查询满足相应条件的所有用户的投诉信息
-export function GetAllUserComplaint(data, config = {}) {
-    return post('/Complaint/GetAllUserComplaint', data, config).then((res) => {
-        return Promise.resolve(res);
-    }).catch((err) => {
-        return Promise.reject(err);
-    })
-}
-
-
 //提交或者修改投诉单
 export function addSubmit(data, config = {}) {
     return post('/Complaint/AddRecord', data, config).then((res) => {

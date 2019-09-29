@@ -144,7 +144,7 @@
 
         <div style="margin:0 auto; width:75px;">
           <br />
-          <el-button type="success"  @click="_addSubmit()">提 交</el-button>                       <!-- 新增时的按钮 -->
+          <el-button type="success"  @click="addSubmit">提 交</el-button>                       <!-- 新增时的按钮 -->
         </div>
 
       </div>
@@ -298,7 +298,7 @@ export default {
       this.submit.C_TRANSBILL = data.TRANS_ID;
     },
     //新增记录提交
-    _addSubmit() {
+    addSubmit() {
       let data = this.submit;
       //判断是否填完所有信息
       if (
