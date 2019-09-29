@@ -43,56 +43,72 @@
       >
       </el-input>
       <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
-
-      <!-- <el-button
-        style="float:right"
-        size="medium"
-        type="primary"
-        @click="_addRecord()">新增投诉单
-      </el-button> -->
       </div>
       
       <div style="margin-top:10px">
-        
-      <el-table border :data="complaintData" :default-sort ="{prop:'date',order:'descending'}" style="width: 100%" class="table_1">
-        <el-table-column prop="SALE_NO" label="提货单号" align="center" ></el-table-column>
-        <el-table-column prop="C_TRANSBILL" label="物流单号" align="center" ></el-table-column>
-        <el-table-column prop="TYPE" label="投诉类型" align="center" ></el-table-column>
-        <el-table-column prop="SUBMITTS" label="投诉时间" align="center" >
-          <template slot-scope="scope">
-            <span>{{scope.row.SUBMITTS | datatrans}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="MEMO" label="投诉内容"  align="center"></el-table-column>
-        <el-table-column  label="状态" align="center">
-          <template slot-scope="scope">
-            <span>{{scope.row.STATUS | transStatus}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center"  label="操作" >
-          <template slot-scope="scope">
-            <el-button
-              v-if="scope.row.STATUS !=2"
-              @click="_CheckDetail(scope.row.SID)"
-              type="warning"
-              size="mini"
-              icon="el-icon-search"
-              circle
-            ></el-button>
-             <el-button
-              v-if="scope.row.STATUS ==2"
-              @click="_EditDetail(scope.row.SID)"
-              type="primary"
-              size="mini"
-              icon="el-icon-edit"
-              circle
-            ></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
+        <el-table
+          border
+          :data="complaintData"
+          style="width: 100%"
+          class="table_1"
+        >
+          <el-table-column
+            prop="SALE_NO"
+            label="提货单号"
+            align="center"
+            width="150px"
+          ></el-table-column>
+          <el-table-column
+            prop="C_TRANSBILL"
+            label="物流单号"
+            align="center"
+            width="150px"
+          ></el-table-column>
+          <el-table-column
+            prop="TYPE"
+            label="投诉类型"
+            align="center"
+            width="100px"
+          ></el-table-column>
+          <el-table-column prop="SUBMITTS" label="投诉时间" align="center" width="120px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.SUBMITTS | datatrans }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="MEMO"
+            label="投诉内容"
+            align="center"
+          ></el-table-column>
+          <el-table-column label="状态" align="center" width="150px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.STATUS | transStatus }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作" width="100px">
+            <template slot-scope="scope">
+              <el-button
+                v-if="scope.row.STATUS != 2"
+                @click="_CheckDetail(scope.row.SID)"
+                type="warning"
+                size="mini"
+                icon="el-icon-search"
+                circle
+              ></el-button>
+              <el-button
+                v-if="scope.row.STATUS == 2"
+                @click="_EditDetail(scope.row.SID)"
+                type="primary"
+                size="mini"
+                icon="el-icon-edit"
+                circle
+              ></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
-      <div style="margin:0 25%;" class="block">
+
+      <div style="margin:0 25%;margin-top:10px" class="block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -103,6 +119,7 @@
           :total="count"
         ></el-pagination>
       </div>
+
     </el-card>
 
     <el-dialog title="投诉登记表" :visible.sync="complaintDetail" :close-on-click-modal="false" width="40%">
@@ -263,7 +280,7 @@
 
         </table>   
 
-    </div>
+      </div>
 
 
     </el-dialog>
