@@ -9,6 +9,8 @@
              v-model="date1"
             align="right"
             type="date"
+             format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
             placeholder="选择日期"
           >
           </el-date-picker>
@@ -17,10 +19,12 @@
             v-model="date2"
             align="right"
             type="date"
+             format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
             placeholder="选择日期"
           ></el-date-picker>
           <el-button :id="'test111'" @click="autoSearch()"  icon="el-icon-search" style="margin-left:8px" class="button_1">搜索</el-button>
-          <el-button :id="'test111'" class="button_1" >导出Excel</el-button>
+         
             </div>
             <hr>
           <el-table
@@ -176,9 +180,6 @@ export default {
     //       console.log( this.arr_span);
     //     }
     //   }
-
-   
-      
     // },
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 1) {//查询出那列就合并那列，index别写成别的列
@@ -219,7 +220,7 @@ export default {
         finishTime: this.date2,
         limit: this.limit,
         page: this.currentPage,
-        current_id: "I0002",
+        current_id: Cookies.get("companyId"),
         supply_type: "",
         po_type: this.po_type //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
       };
