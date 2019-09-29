@@ -39,7 +39,7 @@
           >查询</el-button
         >
         <el-button
-          style="float:right"
+          style="float:right;margin-right:20px;"
           size="medium"
           @click="newOne()"
           type="primary"
@@ -53,7 +53,7 @@
         :row-class-name="tableRowClassName"
       >
         <el-table-column
-          width="130"
+          width="120"
           prop="ID"
           label="申请单号"
           align="center"
@@ -62,14 +62,14 @@
           prop="CREATER"
           label="申请人"
           align="center"
-          width="100"
+          width="80"
         ></el-table-column>
         <el-table-column width="100" label="申请时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.DATE_CRE | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="100" label="店面形式" align="center">
+        <el-table-column width="90" label="店面形式" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.STORE_FORM | formTrans }}</span>
           </template></el-table-column
@@ -78,33 +78,49 @@
           prop="STORE_AREA"
           label="店面面积(m2)"
           align="center"
-          width="120"
+          width="110"
         ></el-table-column>
         <el-table-column
           prop="STORE_PLIE"
           label="层数"
           align="center"
-          width="80"
+          width="60"
         ></el-table-column>
-        <el-table-column width="120" label="计划动工时间" align="center">
+        <el-table-column width="110" label="计划动工时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.PLAN_DATE | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="100" label="实施形式" align="center">
+        <el-table-column width="80" label="实施形式" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.IMPLEMENTTATION_FORM | formTrans2 }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="100" label="上门测量" align="center">
+        <el-table-column width="80" label="上门测量" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.MEASURE == 1">是</span>
             <span v-else>否</span>
           </template>
         </el-table-column>
-        <el-table-column width="100" label="状态" align="center">
+        <el-table-column width="80" label="状态" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.STATUS | transStatus }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="PAYMENT"
+          label="付款凭证"
+          align="center"
+          width="130"
+        ></el-table-column>
+        <el-table-column width="60" label="附件" align="center">
+          <template slot-scope="scope">
+            <a
+              title="点击下载压缩包"
+              class="attachLink"
+              @click="downLoad(scope.row)"
+              >{{ scope.row.ATTACHMENT_FILE.split(";").length - 1 }}个</a
+            >
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
@@ -374,6 +390,7 @@
 
             <td colspan="2" style="height:14px;">
               <el-upload
+                v-if="!EDITorCHECK"
                 class="upload-de"
                 action="http://localhost:49438//IMAGE_STORE/UploadFiles"
                 :on-success="handleAvatarSuccess"
@@ -397,6 +414,23 @@
                   可上传jpg、dwg、pdf等格式
                 </div>
               </el-upload>
+              <ul v-else class="el-upload-list el-upload-list--text">
+                <li
+                  v-for="(fileList, index) in fileList"
+                  :key="index"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
+                >
+                  <a class="el-upload-list__item-name">
+                    <i class="el-icon-document"> </i>{{ fileList.name }}
+                  </a>
+                  <label
+                    style="display:block;position:absolute;top:1px;right:20px;"
+                  >
+                    <a style="cursor:pointer;">下载附件</a>
+                  </label>
+                </li>
+              </ul>
             </td>
 
             <td colspan="1" style="font-size:12px;color:gray">
@@ -409,11 +443,25 @@
               付款信息
             </td>
             <td class="grayTD" colspan="1" style="height:28px;">付款凭证</td>
-            <td colspan="1" style="height:28px;">
-              <input placeholder="（是/否）" clearable class="inputStyle" />
-            </td>
-            <td colspan="2" style="font-size:12px;color:gray">
-              选择付款凭证
+            <td colspan="3" style="text-align:left;height:28px;">
+              <el-select
+                v-if="!EDITorCHECK"
+                style="width:500px;"
+                v-model="tableData.PAYMENT"
+                filterable
+                placeholder="请选择汇款凭证"
+              >
+                <el-option
+                  v-for="item in bankData"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+              <span v-else style="margin-left:20px;">{{
+                tableData.PAYMENT
+              }}</span>
             </td>
           </tr>
 
@@ -424,8 +472,11 @@
               >
             </td>
             <td colspan="2" style="text-align:left;height:28px;">
-              <span style="margin-left:10px;"
-                >日期：{{ new Date() | datatrans }}</span
+              <span v-if="!EDITorCHECK" style="margin-left:10px;"
+                >日期：{{ new Date().getTime() | datatrans }}</span
+              >
+              <span v-else style="margin-left:10px;"
+                >日期：{{ tableData.DATE_CRE | datatrans }}</span
               >
             </td>
           </tr>
@@ -467,12 +518,14 @@
 
 
 <script>
+import { getBankList } from "@/api/bank";
 import {
   GetImageCustomer,
   InsertImageStore,
   UploadFiles
 } from "@/api/imageStoreASP";
 import { getCustomerInfo } from "@/api/orderListASP";
+import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 
 export default {
@@ -480,6 +533,7 @@ export default {
   data() {
     return {
       chargeData: [],
+      bankData: [],
       cid: Cookies.get("cid"),
       dateStamp: "",
       fileList: [],
@@ -530,6 +584,7 @@ export default {
   created: function() {
     this.chargeQuery();
     this.getDetail();
+    this._getBankList();
   },
   filters: {
     transStatus(value) {
@@ -610,8 +665,7 @@ export default {
     },
     //确定新建
     sumbitNEW() {
-      //this.$refs.upload.submit();
-      console.log(this.fileList);
+      this.$refs.upload.submit();
       //判断是否填完所有信息
       if (
         !this.tableData.STORE_ADDRESS ||
@@ -619,7 +673,8 @@ export default {
         !this.tableData.STORE_AREA ||
         !this.tableData.STORE_PLIE ||
         !this.tableData.PLAN_DATE ||
-        !this.tableData.IMPLEMENTTATION_FORM
+        !this.tableData.IMPLEMENTTATION_FORM ||
+        !this.tableData.PAYMENT
       ) {
         this.$alert("请完善信息", "提示", {
           confirmButtonText: "确定",
@@ -647,6 +702,8 @@ export default {
           this.fileList[i].name +
           ";";
       }
+      this.tableData.ATTACHMENT_FILE_FOLDER =
+        "/Files/IMAGE_STORE/" + this.cid + "/" + this.dateStamp;
       InsertImageStore(this.tableData).then(res => {
         console.log(res);
         if (res.code == 0) {
@@ -654,6 +711,8 @@ export default {
             confirmButtonText: "确定",
             type: "success"
           });
+          //this.$refs.upload.clearFiles();
+          this.fileList = [];
           this.currentPage = 1;
           this.getDetail();
           this.imageStoreDetail = false;
@@ -674,12 +733,15 @@ export default {
         CUSTOMER_CODE: Cookies.get("companyId"),
         CUSTOMER_NAME: Cookies.get("realName"),
         CUSTOMER_AGENT: this.chargeData.CUSTOMER_AGENT,
+        ATTACHMENT_FILE: "",
         OFFICE_TEL: this.chargeData.OFFICE_TEL,
         CREATER: Cookies.get("cid"),
         STATUS: 0,
         MEASURE: 0
       };
       this.dateStamp = new Date().getTime();
+      this.fileList = [];
+      this._getBankList();
     },
     //编辑列表详情
     editIt(tab) {
@@ -701,7 +763,17 @@ export default {
     },
     //查看列表详情
     checkDetail(tab) {
+      this.fileList = [];
       this.tableData = JSON.parse(JSON.stringify(tab));
+      var list = this.tableData.ATTACHMENT_FILE.split(";");
+      for (var i = 0; i < list.length - 1; i++) {
+        var index = list[i].lastIndexOf("/");
+        var fileName = list[i].substr(index + 1);
+        this.fileList.push({
+          name: fileName,
+          url: list[i]
+        });
+      }
       this.EDITorCHECK = true;
       this.imageStoreDetail = true;
     },
@@ -732,6 +804,37 @@ export default {
         this.count = res.count;
         this.imageStoreData = res.data;
       });
+    },
+    _getBankList() {
+      let url =
+        "http://14.29.223.114:10250/yulan-capital/PaymentBill/getPayBills.do";
+      if (this.beginTime == null) this.beginTime = "";
+      if (this.finishTime == null) this.finishTime = "";
+      let data = {
+        cid: Cookies.get("companyId"), //公司id
+        state: "", //状态状态(SUBMITED（已提交）,PROCESED（已处理）,SENDBACK（退回）,CANCELED（作废）)
+        beginTime: "", //起始时间
+        finishTime: "", //结束时间
+        limit: 100000, //限制数
+        page: 1 //页数
+      };
+      getBankList(url, data).then(res => {
+        for (var i = 0; i < res.data.length; i++) {
+          this.bankData[i] = new Object();
+          this.bankData[i].label =
+            "流水号:" +
+            res.data[i].id +
+            " 付款账号：" +
+            res.data[i].payerAccount +
+            " 付款金额：" +
+            res.data[i].payAmount;
+          this.bankData[i].value = res.data[i].id;
+        }
+        console.log(this.bankData);
+      });
+    },
+    downLoad(row) {
+      if (row.ATTACHMENT_FILE.split(";").length - 1 == 0) return;
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -819,6 +922,12 @@ export default {
 }
 .statusCombobox {
   margin-left: 10px;
+}
+.attachLink {
+  cursor: pointer;
+}
+.attachLink:hover {
+  text-decoration: underline;
 }
 </style>
 
