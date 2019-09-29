@@ -38,7 +38,7 @@ import AreaQuery from '@/components/query/areaQuery'
 import OrderQuery from '@/components/query/orderQuery'
 import SupplyPort from '@/components/supplierModule/supplyPort'
 import Trans from '@/components/supplierModule/trans'
-
+import ISExamineMarket from '@/components/design/ISExamineMarket'
 
 Vue.use(Router)
 
@@ -299,7 +299,11 @@ const router = new Router({
           name: 'supplyPort',
           component: SupplyPort
         },
-
+        {
+          path: '/design/ISExamineMarket',
+          name: 'ISExamineMarket',
+          component: ISExamineMarket
+        },
       ]
     }
   ]
