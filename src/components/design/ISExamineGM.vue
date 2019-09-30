@@ -451,11 +451,13 @@
           <el-upload
             v-if="tableData.STATUS == 2"
             class="upload-de2"
-            :action="Global.uploadUrl+'/IMAGE_STORE/UploadFiles'"
+            :action="Global.uploadUrl + '/IMAGE_STORE/UploadFiles'"
             drag
             multiple
             :on-change="handleChange"
             :on-remove="handleRemove"
+            :on-success="handleSuccess"
+            :on-error="handleError"
             ref="upload"
             :auto-upload="false"
             :file-list="fileListGM"
@@ -534,6 +536,7 @@ export default {
       status: "2",
       imgUrl: "",
       examineSuggestion: "",
+      successCount: 0,
       options: [
         {
           label: "全部状态",
@@ -719,21 +722,23 @@ export default {
         return;
       }
       this.$refs.upload.submit();
+    },
+    passANSYC() {
       var filePath = "";
       //附件拼接
-      for (var i = 0; i < this.fileList.length; i++) {
+      for (var i = 0; i < this.fileListGM.length; i++) {
         filePath +=
           "/Files/IMAGE_STORE/" +
           this.cid +
           "/" +
           this.dateStamp +
           "/" +
-          this.fileList[i].name +
+          this.fileListGM[i].name +
           ";";
       }
       var fileFolder = "/Files/IMAGE_STORE/" + this.cid + "/" + this.dateStamp;
       var data = {
-        id: id,
+        id: this.tableData.ID,
         cid: Cookies.get("cid"),
         status: 3,
         suggestion: this.examineSuggestion,
@@ -778,11 +783,26 @@ export default {
       this.getDetail();
     },
     handleChange(file, fileList) {
-      this.fileListGM = fileList.slice(-3);
+      this.fileListGM = fileList;
     },
     handleRemove(file, fileList) {
-      this.fileListGM = fileList.slice(-3);
+      this.fileListGM = fileList;
       this.fileChange = true;
+    },
+    handleSuccess(res, file, fileList) {
+      this.successCount++;
+      if (this.successCount == fileList.length) {
+        this.passANSYC();
+      }
+    },
+    handleError(err, file, fileList) {
+      this.$refs.upload.clearFiles();
+      this.fileList = [];
+      this.dateStamp = new Date().getTime();
+      this.$alert("文件上传失败", "提示", {
+        confirmButtonText: "确定",
+        type: "success"
+      });
     }
   }
 };

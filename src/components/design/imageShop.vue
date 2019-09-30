@@ -443,11 +443,13 @@
               <el-upload
                 v-if="!EDITorCHECK"
                 class="upload-de"
-                :action="Global.uploadUrl+'/IMAGE_STORE/UploadFiles'"
+                :action="Global.uploadUrl + '/IMAGE_STORE/UploadFiles'"
                 drag
                 multiple
                 :on-change="handleChange"
                 :on-remove="handleRemove"
+                :on-success="handleSuccess"
+                :on-error="handleError"
                 ref="upload"
                 :auto-upload="false"
                 :file-list="fileList"
@@ -634,6 +636,7 @@ export default {
       finishTime: "",
       status: "",
       imgUrl: "",
+      successCount: 0,
       options: [
         {
           label: "全部状态",
@@ -763,6 +766,7 @@ export default {
       this.fileList = [];
       this.fileListGM = [];
       this._getBankList();
+      this.successCount = 0;
     },
     //确定新建
     sumbitNEW() {
@@ -791,6 +795,8 @@ export default {
         return;
       }
       this.$refs.upload.submit();
+    },
+    sumbitNEWANSYC() {
       //附件拼接
       for (var i = 0; i < this.fileList.length; i++) {
         this.tableData.ATTACHMENT_FILE +=
@@ -1042,12 +1048,27 @@ export default {
       this.getDetail();
     },
     handleChange(file, fileList) {
-      this.fileList = fileList.slice(-3);
+      this.fileList = fileList;
       this.fileChange = true;
     },
     handleRemove(file, fileList) {
-      this.fileList = fileList.slice(-3);
+      this.fileList = fileList;
       this.fileChange = true;
+    },
+    handleSuccess(res, file, fileList) {
+      this.successCount++;
+      if (this.successCount == fileList.length) {
+        this.sumbitNEWANSYC();
+      }
+    },
+    handleError(err, file, fileList) {
+      this.$refs.upload.clearFiles();
+      this.fileList = [];
+      this.dateStamp = new Date().getTime();
+      this.$alert("文件上传失败", "提示", {
+        confirmButtonText: "确定",
+        type: "success"
+      });
     }
   }
 };
