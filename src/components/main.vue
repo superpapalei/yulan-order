@@ -49,7 +49,7 @@
         </el-scrollbar>
       </el-aside>
       <el-container style="width:85%; min-width:1050px;">
-        <el-header height="50px">
+        <el-header height="45px">
           <ul class="l">
             <li
               :title="asideStatus == true ? '菜单展开' : '菜单收起'"
@@ -239,7 +239,7 @@ export default {
       studySelectData: [],
       studyVisible: false,
       asideStatus: false, //false:菜单栏处于展开状态； true：菜单栏处于收起状态
-      asideWidth: "180px",
+      asideWidth: "190px",
       defaultUrl: "",
       isFullscreen: false,
       adminText: "无新公告发布!",
@@ -317,7 +317,7 @@ export default {
     changeAside() {
       this.asideStatus = !this.asideStatus;
       if (this.asideStatus == false) {
-        this.asideWidth = "180px";
+        this.asideWidth = "190px";
         document.getElementById("aside-logo").style.display = "block";
         document.getElementById("asideControll").innerHTML = "&#xe61e;";
       } else {
@@ -545,19 +545,19 @@ export default {
 <style scoped>
 @media (min-width: 1920px) {
   .center {
-    width: 1600px;
+    width: 1650px;
     margin: 0 auto;
   }
 }
 @media (max-width: 1920px) {
   .center {
-    width: 1600px;
+    width: 1650px;
     margin: 0 auto;
   }
 }
 @media (max-width: 1680px) {
   .center {
-    width: 1500px;
+    width: 1525px;
     margin: 0 auto;
   }
 }
@@ -624,7 +624,7 @@ export default {
   color: #303133;
 }
 .el-menu-item-group span {
-  margin-left: 25px;
+  margin-left: 20px;
 }
 .el-icon-goods {
   color: #303133;

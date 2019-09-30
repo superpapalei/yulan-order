@@ -62,7 +62,7 @@
             <span>{{ scope.row.DATE_CRE | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="90" label="店面形式" align="center">
+        <el-table-column width="80" label="店面形式" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.STORE_FORM | formTrans }}</span>
           </template></el-table-column
@@ -160,6 +160,37 @@
         </h2>
         <h3 v-if="EDITorCHECK">
           提交时间：{{ tableData.DATE_CRE | datatrans }}
+        </h3>
+        <h3
+          v-if="
+            (EDITorCHECK || newORedit) &&
+              (tableData.STATUS == 2 ||
+                tableData.STATUS == 3 ||
+                tableData.STATUS == 5)
+          "
+        >
+          市场部确认时间：{{
+            tableData.DATE_ENTER | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="tableData.ENTER_SUG"
+            >审核意见：{{ tableData.ENTER_SUG }}</span
+          >
+        </h3>
+        <h3 v-if="(EDITorCHECK || newORedit) && tableData.STATUS == 3">
+          广美确认时间：{{
+            tableData.DATE_PASS | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="tableData.PASS_SUG"
+            >审核意见：{{ tableData.PASS_SUG }}</span
+          >
+        </h3>
+        <h3 v-if="(EDITorCHECK || newORedit) && tableData.STATUS == 4">
+          市场部退回时间：{{
+            tableData.DATE_ENTER | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{ tableData.ENTER_SUG }}
+        </h3>
+        <h3 v-if="(EDITorCHECK || newORedit) && tableData.STATUS == 5">
+          广美退回时间：{{
+            tableData.DATE_PASS | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{ tableData.PASS_SUG }}
         </h3>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
@@ -294,31 +325,7 @@
             </td>
 
             <td colspan="2" style="height:14px;">
-              <el-upload
-                v-if="!EDITorCHECK"
-                class="upload-de"
-                action="http://localhost:49438//IMAGE_STORE/UploadFiles"
-                :on-success="handleAvatarSuccess"
-                drag
-                multiple
-                :on-change="handleChange"
-                ref="upload"
-                :auto-upload="false"
-                :file-list="fileList"
-                :data="{ cid: cid, dateStamp: dateStamp }"
-              >
-                <i
-                  class="el-icon-upload"
-                  style="width:300px;height:30px;margin-top:10px;"
-                ></i>
-                <div class="el-upload__text">
-                  将文件拖到此处，或<em>点击上传</em>
-                </div>
-                <div class="el-upload__tip" slot="tip">
-                  可上传jpg、dwg、pdf等格式
-                </div>
-              </el-upload>
-              <ul v-else class="el-upload-list el-upload-list--text">
+              <ul class="el-upload-list el-upload-list--text">
                 <li
                   v-for="(fileList, index) in fileList"
                   :key="index"
@@ -386,7 +393,7 @@
         </table>
 
         <br />
-        <span v-if="tableData.ENTER_SUG"
+        <span v-if="tableData.STATUS == 1 && tableData.ENTER_SUG"
           >上次审核意见:{{ tableData.ENTER_SUG }}</span
         >
         <div style="margin:0 auto; text-align: center;">
@@ -740,29 +747,6 @@ export default {
 }
 .inputStyle .el-textarea__inner {
   border-radius: 0;
-}
-.avatar-uploader .el-upload {
-  border: 1px dashed black;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 12px;
-  color: #8c939d;
-  width: 14px;
-  height: 14px;
-  line-height: 14px;
-  text-align: center;
-}
-.avatar {
-  width: 14px;
-  height: 14px;
-  display: block;
 }
 .upload-de .el-upload-dragger {
   height: 100px;
