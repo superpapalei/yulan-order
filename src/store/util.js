@@ -81,6 +81,8 @@ export function tabsName(index) {
       return "采购单确认";
     case "supplierModule/trans":
       return "入库记录查询";
+    case "design/ISExamineMarket":
+      return "形象店设计审核";
     default:
       return "xxx";
   }
