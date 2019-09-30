@@ -29,7 +29,7 @@
             <hr>
           <el-table
             :data="tableData"
-       
+       :span-method="arraySpanMethod"
             style="width: 100%"
           >
             <el-table-column
@@ -149,6 +149,8 @@ export default {
 
     //计算合并行的index和需合并的行数，太慢拖累加载速度 在表个后加 :span-method="arraySpanMethod" 原32
     mergeColumnIndex() {
+      this.arr_index.splice(0,this.arr_index.length);
+       this.arr_span.splice(0,this.arr_span.length);
       //遍历表格需要合并的列
       var arr = this.tableData;
       var intSpan=1;
@@ -236,8 +238,10 @@ export default {
       GetTransDetail(data).then(res => {
         this.count = res.count;
         this.tableData = res.data;
+           this.mergeColumnIndex();
+           this.arraySpanMethod();
       });
-      this.mergeColumnIndex();
+   
     },
   },
    filters: {
