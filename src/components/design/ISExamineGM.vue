@@ -536,7 +536,6 @@ export default {
       status: "2",
       imgUrl: "",
       examineSuggestion: "",
-      successCount: 0,
       options: [
         {
           label: "全部状态",
@@ -790,8 +789,8 @@ export default {
       this.fileChange = true;
     },
     handleSuccess(res, file, fileList) {
-      this.successCount++;
-      if (this.successCount == fileList.length) {
+      var successCount = fileList.filter(item=>item.status == "success").length;
+      if (successCount == fileList.length) {
         this.passANSYC();
       }
     },

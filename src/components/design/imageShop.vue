@@ -574,10 +574,18 @@
           </ul>
         </div>
         <div style="margin:0 auto; text-align: center;">
-          <el-button v-if="newORedit" type="success" @click="submitEDIT"
+          <el-button
+            :disabled="btnDisable"
+            v-if="newORedit"
+            type="success"
+            @click="submitEDIT"
             >修改并提交</el-button
           >
-          <el-button v-else-if="!EDITorCHECK" type="success" @click="sumbitNEW"
+          <el-button
+            :disabled="btnDisable"
+            v-else-if="!EDITorCHECK"
+            type="success"
+            @click="sumbitNEW"
             >提交</el-button
           >
         </div>
@@ -625,6 +633,7 @@ export default {
       EDITorCHECK: false, //决定显示编辑或者查看
       imageStoreData: [],
       tableData: [],
+      deleteFile: [],
       isDelete: false,
       isChuli: false,
       isBack: false,
@@ -636,7 +645,7 @@ export default {
       finishTime: "",
       status: "",
       imgUrl: "",
-      successCount: 0,
+      btnDisable: false,
       options: [
         {
           label: "全部状态",
@@ -752,6 +761,7 @@ export default {
       this.EDITorCHECK = false;
       this.newORedit = false;
       this.imageStoreDetail = true;
+      this.btnDisable = false;
       this.tableData = {
         CUSTOMER_CODE: Cookies.get("companyId"),
         CUSTOMER_NAME: Cookies.get("realName"),
@@ -766,7 +776,6 @@ export default {
       this.fileList = [];
       this.fileListGM = [];
       this._getBankList();
-      this.successCount = 0;
     },
     //确定新建
     sumbitNEW() {
@@ -794,9 +803,11 @@ export default {
         });
         return;
       }
+      this.btnDisable = true;
       this.$refs.upload.submit();
     },
     sumbitNEWANSYC() {
+      //相当于同步，等提交成功后再执行
       //附件拼接
       for (var i = 0; i < this.fileList.length; i++) {
         this.tableData.ATTACHMENT_FILE +=
@@ -833,6 +844,7 @@ export default {
     editIt(tab) {
       this.fileList = [];
       this.fileListGM = [];
+      this.deleteFile = [];
       this.tableData = JSON.parse(JSON.stringify(tab));
       this._getBankList();
       var list = this.tableData.ATTACHMENT_FILE.split(";");
@@ -848,6 +860,7 @@ export default {
       this.EDITorCHECK = false;
       this.newORedit = true;
       this.imageStoreDetail = true;
+      this.btnDisable = false;
     },
     submitEDIT() {
       if (
@@ -875,6 +888,7 @@ export default {
       }
       if (this.fileChange) {
         //文件发生改变，重新上传一次
+        this.btnDisable = true;
         this.$refs.upload.submit();
         this.tableData.ATTACHMENT_FILE = "";
         //附件拼接
@@ -890,10 +904,23 @@ export default {
         }
         this.tableData.ATTACHMENT_FILE_FOLDER =
           "/Files/IMAGE_STORE/" + this.cid + "/" + this.dateStamp;
+      } else {
+        if(this.deleteFile.length>0)
+        {
+          this.tableData.ATTACHMENT_FILE = '';
+          for (var i = 0; i < this.fileList.length; i++) {
+          this.tableData.ATTACHMENT_FILE +=this.fileList[i].url + ";";
+        }
+        }
+        this.submitEDITANSYC();
       }
+    },
+    submitEDITANSYC() {
+      //相当于同步，等提交成功后再执行
       EditImageStore({
         model: this.tableData,
-        attchmentChange: this.fileChange
+        attchmentChange: this.fileChange,
+        deleteFile: this.deleteFile
       })
         .then(res => {
           this.$alert("提交成功", "提示", {
@@ -1053,18 +1080,26 @@ export default {
     },
     handleRemove(file, fileList) {
       this.fileList = fileList;
-      this.fileChange = true;
+      //this.fileChange = true;
+      if ((file.status = "success")) {
+        this.deleteFile.push(file.url);
+      }
     },
     handleSuccess(res, file, fileList) {
-      this.successCount++;
-      if (this.successCount == fileList.length) {
-        this.sumbitNEWANSYC();
+      var successCount = fileList.filter(item=>item.status == "success").length;
+      if (successCount == fileList.length) {
+        if (this.newORedit) {
+          this.submitEDITANSYC();
+        } else {
+          this.sumbitNEWANSYC();
+        }
       }
     },
     handleError(err, file, fileList) {
       this.$refs.upload.clearFiles();
       this.fileList = [];
       this.dateStamp = new Date().getTime();
+      this.btnDisable = false;
       this.$alert("文件上传失败", "提示", {
         confirmButtonText: "确定",
         type: "success"
