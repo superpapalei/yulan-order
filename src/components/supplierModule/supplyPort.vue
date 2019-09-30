@@ -144,6 +144,7 @@
           </div>
           <div>
             <el-button
+              @click="updateFlag()"
               style="width:10%;margin-left:48%;margin-top:10px"
               type="warning"
               size="small"
@@ -153,92 +154,269 @@
         </div>
         <keep-alive> </keep-alive>
       </el-dialog>
-
-<el-dialog
-        :show-close="true"
+      <el-dialog
+        title=""
         :visible.sync="detailVisible1"
-        disabled="true"
-        width="80%"
-        top="28vh"
+        :show-close="true"
+        width="60%"
+        top="5vh"
       >
-        <div style="margin-bottom:10px">
-          <h1>采购单（{{ pur_headForm.PUR_NO }}）</h1>
-          <span style="float:right">{{
-            pur_headForm.DATE_PUR | datatrans
-          }}</span>
-        </div>
-        <hr />
-        <div style="width:100%">
-          <el-table :data="gridData" style="width:100%" max-height="400px">
-            <el-table-column
-              property="ITEM_NO"
-              label="物料号"
-              width="150"
-            ></el-table-column>
-            <el-table-column
-              property="MGUIGE"
-              label="物料型号"
-              width="150"
-            ></el-table-column>
-            <el-table-column
-              property="MNAME"
-              label="名称"
-              width="150"
-            ></el-table-column>
-            <el-table-column
-              property="GRADE"
-              label="规格"
-              width="100"
-            ></el-table-column>
-            <el-table-column
-              property="QTY_PUR"
-              label="数量"
-              width="60"
-            ></el-table-column>
-            <el-table-column label="含税单价" width="80">
-              <template slot-scope="scope">
-                <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
-              </template></el-table-column
-            >
-            <el-table-column
-              property="UNIT1"
-              label="单位"
-              width="60"
-            ></el-table-column>
-            <el-table-column
-              property="TOTAL_MONEY"
-              label="金额"
-              width="80"
-            ></el-table-column>
-            <el-table-column
-              property="NOTE"
-              label="备注"
-              width="300"
-            ></el-table-column>
-            <el-table-column property="DATE_PUR" label="约定日期" width="100">
-              <template slot-scope="scope">
-                <span>{{ scope.row.DATE_PUR | datatrans }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              property="DATE_DELIVER"
-              label="送货日期"
-              width="100"
-            >
-              <template slot-scope="scope">
-                <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              property="SUPPLY_CHECK_NOTES"
-              label="说明"
-            ></el-table-column>
-          </el-table>
-          <hr />
-        </div>
-        <keep-alive> </keep-alive>
-      </el-dialog>
+        <div style="width:100% ;margin:0 auto;">
+          <table style=" width:100% ;margin:0 auto; ">
+            <tbody>
+              <tr>
+                <td
+                  colspan="2"
+                  style="font-family:黑体;font-size:1.6em;font-weight:bold;"
+                  align="center"
+                >
+                  采购单
+                </td>
+              </tr>
+              <tr>
+                <td style="border-bottom:solid 3px gray;">
+                  订单状态
+                  <span style="margin-left:font-weight:bold;">{{
+                    pur_headForm.STATUS| pur_headStatus
+                  }}</span>
+                </td>
+                <td style="border-bottom:solid 3px gray;" align="right">
+                  {{ pur_headForm.PUR_NO }}
+                  <span style="margin-left:font-weight:bold;">2019-09-23</span>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style="border-right:solid 1px gray;border-bottom:solid 3px gray;"
+                  width="50%"
+                  valign="top"
+                >
+                  <table class="PUR_HEAD_COLUMNS">
+                    <tbody>
+                      <tr>
+                        <th>流水号:</th>
+                        <td>{{ pur_headForm.PUR_NO }}</td>
+                      </tr>
+                      <tr>
+                        <th>采购员:</th>
+                        <td>{{ pur_headForm.BUYER }}</td>
+                      </tr>
+                      <tr>
+                        <th>建立日期:</th>
+                        <td>{{ pur_headForm.DATE_PUR }}</td>
+                      </tr>
+                      <tr>
+                        <th>采购商:</th>
+                        <td>{{ pur_headForm.PUR_MYFACT }}</td>
+                      </tr>
+                      <tr>
+                        <th>采购商地址:</th>
+                        <td>{{ pur_headForm.C_ADDRESS }}</td>
+                      </tr>
+                      <tr>
+                        <th>开户银行:</th>
+                        <td>{{ pur_headForm.C_BANK }}</td>
+                      </tr>
+                      <tr>
+                        <th>邮政编码:</th>
+                        <td>{{ pur_headForm.C_POST }}</td>
+                      </tr>
+                      <tr>
+                        <th>银行账号:</th>
+                        <td>{{ pur_headForm.C_BANKNO }}</td>
+                      </tr>
+                      <tr>
+                        <th>税务登记号:</th>
+                        <td>{{ pur_headForm.C_TAX }}</td>
+                      </tr>
+                      <tr>
+                        <th>联系电话:</th>
+                        <td>{{ pur_headForm.OWN_TEL }}</td>
+                      </tr>
+                      <tr>
+                        <th>付款方式:</th>
+                        <td>{{ pur_headForm.PAY_TYPE }}</td>
+                      </tr>
+                      <tr>
+                        <th>付款期限:</th>
+                        <td>{{ pur_headForm.PAY_DATELIMIT }}</td>
+                      </tr>
+                      <tr>
+                        <th>备注:</th>
+                        <td>{{ pur_headForm.NOTES }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                
+                <td
+                  style="border-left:solid 1px gray;border-bottom:solid 3px gray;"
+                  width="50%"
+                >
+                  <table class="PUR_HEAD_COLUMNS">
+                    <tbody>
+                      <tr>
+                        <th>采购部门:</th>
+                        <td colsan="3">{{ pur_headForm.DEPT_NO }}</td>
+                      </tr>
+                      <tr>
+                        <th>使用部门:</th>
+                        <td>{{ pur_headForm.DEPT_NO2 }}</td>
+                        <th>生产归类:</th>
+                        <td>null</td>
+                      </tr>
+                      <tr>
+                        <th>合同号:</th>
+                        <td colsan="3"></td>
+                      </tr>
+                      <tr>
+                        <th>供应商:</th>
+                        <td colsan="3">{{ pur_headForm.SUPPLY_CODE }}</td>
+                      </tr>
+                      <tr>
+                        <th>供应商地址:</th>
+                        <td colsan="3">{{ pur_headForm.G_ADDRESS }}</td>
+                      </tr>
+                      <tr>
+                        <th>联系人:</th>
+                        <td colsan="3">{{ pur_headForm.G_LINK }}</td>
+                      </tr>
+                      <tr>
+                        <th>传真号码:</th>
+                        <td colsan="3">{{ pur_headForm.G_TYPE }}</td>
+                      </tr>
+                      <tr>
+                        <th>电话:</th>
+                        <td colsan="3">{{ pur_headForm.G_PHONE }}</td>
+                      </tr>
+                      <tr>
+                        <th>手机:</th>
+                        <td colsan="3">{{ pur_headForm.G_PHONE }}</td>
+                      </tr>
+                      <tr>
+                        <th>B2B订单号:</th>
+                        <td colsan="3">{{ pur_headForm.ORDER_NO }}</td>
+                      </tr>
+                      <tr>
+                        <th>ERP订单号:</th>
+                        <td colsan="3">{{ pur_headForm.OA_NO }}</td>
+                      </tr>
 
+                      <tr>
+                        <th>接单人:</th>
+                        <td colsan="3">{{ pur_headForm.ORDER_MAN }}</td>
+                      </tr>
+                      <tr>
+                        <th>收货人:</th>
+                        <td colsan="3"></td>
+                      </tr>
+                      <tr>
+                        <th>客户名称:</th>
+                        <td colsan="3">{{ pur_headForm.CUSTOMER_NAME }}</td>
+                      </tr>
+                      <tr>
+                        <th>联系人:</th>
+                        <td colsan="3">{{ pur_headForm.LINKMAN }}</td>
+                      </tr>
+                      <tr>
+                        <th>联系电话:</th>
+                        <td colsan="3">{{ pur_headForm.LINKTEL }}</td>
+                      </tr>
+                      <tr>
+                        <th>发货地址:</th>
+                        <td colsan="3">{{ pur_headForm.POST_ADDRESS }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <el-table
+                    :data="gridData"
+                    id="PURCHASEDETAILLISTTABLE"
+                    class="GCGRID"
+                    object_class="_Object:GridTable"
+                    object_hashcode="6"
+                    cellpadding="0"
+                    style="width:100%"
+                  >
+                    <el-table-column
+                      property="ITEM_NO"
+                      label="物料号"
+                      width="150"
+                    ></el-table-column>
+                    <el-table-column
+                      property="MGUIGE"
+                      label="物料型号"
+                      width="150"
+                    ></el-table-column>
+                    <el-table-column
+                      property="MNAME"
+                      label="名称"
+                      width="150"
+                    ></el-table-column>
+                    <el-table-column
+                      property="GRADE"
+                      label="规格"
+                      width="100"
+                    ></el-table-column>
+                    <el-table-column
+                      property="QTY_PUR"
+                      label="数量"
+                      width="60"
+                    ></el-table-column>
+                    <el-table-column label="含税单价" width="80">
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
+                      </template></el-table-column
+                    >
+                    <el-table-column
+                      property="UNIT1"
+                      label="单位"
+                      width="60"
+                    ></el-table-column>
+                    <el-table-column
+                      property="TOTAL_MONEY"
+                      label="金额"
+                      width="80"
+                    ></el-table-column>
+                    <el-table-column
+                      property="NOTE"
+                      label="备注"
+                      width="300"
+                    ></el-table-column>
+                    <el-table-column
+                      property="DATE_PUR"
+                      label="约定日期"
+                      width="100"
+                    >
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      property="DATE_DELIVER"
+                      label="送货日期"
+                      width="100"
+                    >
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      property="SUPPLY_CHECK_NOTES"
+                      label="说明"
+                    ></el-table-column>
+                    ></el-table
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </el-dialog>
 
       <div id="supplyCon">
         <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -278,7 +456,7 @@
                     @click="openDialog(scope.row.PUR_NO)"
                     type="primary"
                     size="small"
-                    >确认</el-button
+                    >前往确认</el-button
                   >
                 </template>
               </el-table-column>
@@ -361,7 +539,7 @@ export default {
       // companyId: Cookies.get("companyId"),
       gridData: [],
       detailVisible: false,
-        detailVisible1: false,
+      detailVisible1: false,
       po_type: "",
       limit: 10,
       count: 0,
@@ -369,16 +547,7 @@ export default {
       activeName: "first",
       count: 0,
       pur_headData: [],
-      pur_headForm: {
-        PUR_NO: "",
-        linkMan: "",
-        DATE_DELIVER: "",
-        DATE_PUR: "",
-        DATE_REQ: "",
-        NOTES: "",
-        SUPPLY_CODE: "",
-        SUPPLY_CHECK_NOTES: ""
-      }
+      pur_headForm: {}
     };
   },
   methods: {
@@ -389,7 +558,7 @@ export default {
 
       //查看详情页
     },
-      openDialog1(PUR_NO) {
+    openDialog1(PUR_NO) {
       this.detailVisible1 = true;
       this.autoSearchDetail(PUR_NO);
 
@@ -447,14 +616,37 @@ export default {
       GetPoDetail(data).then(res => {
         this.gridData = res.data;
         this.pur_headForm.PUR_NO = this.gridData[0].PUR_NO;
-        this.pur_headForm.linkMan = this.gridData[0].linkMan;
+        this.pur_headForm.LINKMAN = this.gridData[0].LINKMAN;
         this.pur_headForm.DATE_PUR = this.gridData[0].DATE_PUR;
         this.pur_headForm.DATE_DELIVER = this.gridData[0].DATE_DELIVER;
         this.pur_headForm.NOTES = this.gridData[0].NOTES;
         this.pur_headForm.SUPPLY_CHECK_NOTES = this.gridData[0].SUPPLY_CHECK_NOTES;
+        this.pur_headForm.DEPT_NO = this.gridData[0].DEPT_NO;
+        this.pur_headForm.DEPT_NO2 = this.gridData[0].DEPT_NO2;
+        this.pur_headForm.SUPPLY_CODE = this.gridData[0].SUPPLY_CODE;
+        this.pur_headForm.G_ADDRESS = this.gridData[0].G_ADDRESS;
+        this.pur_headForm.G_LINK = this.gridData[0].G_LINK;
+        this.pur_headForm.G_TYPE = this.gridData[0].NOTES;
+        this.pur_headForm.G_PHONE = this.gridData[0].G_PHONE;
+        this.pur_headForm.ORDER_NO = this.gridData[0].ORDER_NO;
+        this.pur_headForm.OA_NO = this.gridData[0].OA_NO;
+        this.pur_headForm.ORDER_MAN = this.gridData[0].ORDER_MAN;
+        this.pur_headForm.CUSTOMER_NAME = this.gridData[0].CUSTOMER_NAME;
+        this.pur_headForm.PUR_MYFACT = this.gridData[0].PUR_MYFACT;
+        this.pur_headForm.BUYER = this.gridData[0].BUYER;
+        this.pur_headForm.PAY_TYPE = this.gridData[0].PAY_TYPE;
+        this.pur_headForm.PAY_DATELIMIT = this.gridData[0].PAY_DATELIMIT;
+        this.pur_headForm.C_BANK = this.gridData[0].C_BANK;
+        this.pur_headForm.C_ADDRESS = this.gridData[0].C_ADDRESS;
+        this.pur_headForm.C_POST = this.gridData[0].C_POST;
+        this.pur_headForm.C_BANKNO = this.gridData[0].C_BANKNO;
+        this.pur_headForm.C_TAX = this.gridData[0].C_TAX;
+        this.pur_headForm.OWN_TEL = this.gridData[0].OWN_TEL;
+        this.pur_headForm.LINKTEL = this.gridData[0].LINKTEL;
+        this.pur_headForm.POST_ADDRESS = this.gridData[0].POST_ADDRESS;
+           this.pur_headForm.STATUS = this.gridData[0].STATUS;
       });
-    },
-     
+    }
   },
   filters: {
     pur_headStatus(value) {
