@@ -104,7 +104,7 @@
                       format="yyyy-MM-dd"
                       value-format="yyyy-MM-dd"
                       placeholder="统一设置送货期"
-                      v-model="beginTime_1"
+                      v-model="DATE_DELIVER"
                       style="width:10%"
                     ></el-date-picker>
                   </div>
@@ -135,7 +135,10 @@
                   ></el-input>
                 </div>
                 <div style="margin-top:40px">
-                  <el-button style="width:10%;" class="button_clolur"
+                  <el-button
+                    @click="SaveNotes()"
+                    style="width:10%;"
+                    class="button_clolur"
                     >保存说明</el-button
                   >
                 </div>
@@ -144,7 +147,7 @@
           </div>
           <div>
             <el-button
-              @click="updateFlag()"
+              @click="UpdateFlag()"
               style="width:10%;margin-left:48%;margin-top:10px"
               type="warning"
               size="small"
@@ -158,31 +161,26 @@
         title=""
         :visible.sync="detailVisible1"
         :show-close="true"
-        width="60%"
+        width="100%"
         top="5vh"
       >
         <div style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
+             <tr><td colspan="2" style="font-family:黑体;font-size:1.6em;font-weight:bold;" align="center">
+			采购单</td>
+	</tr>
               <tr>
-                <td
-                  colspan="2"
-                  style="font-family:黑体;font-size:1.6em;font-weight:bold;"
-                  align="center"
-                >
-                  采购单
-                </td>
-              </tr>
-              <tr>
-                <td style="border-bottom:solid 3px gray;">
+                <td style="border-bottom:solid 3px gray;text-align:left">
                   订单状态
                   <span style="margin-left:font-weight:bold;">{{
-                    pur_headForm.STATUS| pur_headStatus
+                    pur_headForm.STATUS | pur_headStatus
                   }}</span>
                 </td>
                 <td style="border-bottom:solid 3px gray;" align="right">
-                  {{ pur_headForm.PUR_NO }}
-                  <span style="margin-left:font-weight:bold;">2019-09-23</span>
+                  <span style="margin-left:font-weight:bold;">{{
+                    now.getFullYear() + "-" + Month + "-" + now.getDate()
+                  }}</span>
                 </td>
               </tr>
               <tr>
@@ -191,146 +189,199 @@
                   width="50%"
                   valign="top"
                 >
-                  <table class="PUR_HEAD_COLUMNS">
+                  <table class="PUR_HEAD_COLUMNS" style="text-align:right">
                     <tbody>
                       <tr>
                         <th>流水号:</th>
-                        <td>{{ pur_headForm.PUR_NO }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.PUR_NO }}
+                        </td>
                       </tr>
                       <tr>
                         <th>采购员:</th>
-                        <td>{{ pur_headForm.BUYER }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.BUYER }}
+                        </td>
                       </tr>
                       <tr>
                         <th>建立日期:</th>
-                        <td>{{ pur_headForm.DATE_PUR }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.DATE_PUR }}
+                        </td>
                       </tr>
                       <tr>
                         <th>采购商:</th>
-                        <td>{{ pur_headForm.PUR_MYFACT }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.PUR_MYFACT }}
+                        </td>
                       </tr>
                       <tr>
                         <th>采购商地址:</th>
-                        <td>{{ pur_headForm.C_ADDRESS }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.C_ADDRESS }}
+                        </td>
                       </tr>
                       <tr>
                         <th>开户银行:</th>
-                        <td>{{ pur_headForm.C_BANK }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.C_BANK }}
+                        </td>
                       </tr>
                       <tr>
                         <th>邮政编码:</th>
-                        <td>{{ pur_headForm.C_POST }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.C_POST }}
+                        </td>
                       </tr>
                       <tr>
                         <th>银行账号:</th>
-                        <td>{{ pur_headForm.C_BANKNO }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.C_BANKNO }}
+                        </td>
                       </tr>
                       <tr>
                         <th>税务登记号:</th>
-                        <td>{{ pur_headForm.C_TAX }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.C_TAX }}
+                        </td>
                       </tr>
                       <tr>
                         <th>联系电话:</th>
-                        <td>{{ pur_headForm.OWN_TEL }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.OWN_TEL }}
+                        </td>
                       </tr>
                       <tr>
                         <th>付款方式:</th>
-                        <td>{{ pur_headForm.PAY_TYPE }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.PAY_TYPE }}
+                        </td>
                       </tr>
                       <tr>
                         <th>付款期限:</th>
-                        <td>{{ pur_headForm.PAY_DATELIMIT }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.PAY_DATELIMIT }}
+                        </td>
                       </tr>
                       <tr>
                         <th>备注:</th>
-                        <td>{{ pur_headForm.NOTES }}</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.NOTES }}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
                 </td>
-                
+
                 <td
                   style="border-left:solid 1px gray;border-bottom:solid 3px gray;"
                   width="50%"
                 >
-                  <table class="PUR_HEAD_COLUMNS">
+                  <table class="PUR_HEAD_COLUMNS" style="text-align:right">
                     <tbody>
                       <tr>
                         <th>采购部门:</th>
-                        <td colsan="3">{{ pur_headForm.DEPT_NO }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.DEPT_NO }}
+                        </td>
                       </tr>
                       <tr>
                         <th>使用部门:</th>
-                        <td>{{ pur_headForm.DEPT_NO2 }}</td>
-                        <th>生产归类:</th>
-                        <td>null</td>
+                        <td style="text-align:left">
+                          {{ pur_headForm.DEPT_NO2 }}
+                        </td>
                       </tr>
                       <tr>
                         <th>合同号:</th>
-                        <td colsan="3"></td>
+                        <td colsan="3" style="text-align:left"></td>
                       </tr>
                       <tr>
                         <th>供应商:</th>
-                        <td colsan="3">{{ pur_headForm.SUPPLY_CODE }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.SUPPLY_CODE }}
+                        </td>
                       </tr>
                       <tr>
                         <th>供应商地址:</th>
-                        <td colsan="3">{{ pur_headForm.G_ADDRESS }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.G_ADDRESS }}
+                        </td>
                       </tr>
                       <tr>
                         <th>联系人:</th>
-                        <td colsan="3">{{ pur_headForm.G_LINK }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.G_LINK }}
+                        </td>
                       </tr>
                       <tr>
                         <th>传真号码:</th>
-                        <td colsan="3">{{ pur_headForm.G_TYPE }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.G_TYPE }}
+                        </td>
                       </tr>
                       <tr>
                         <th>电话:</th>
-                        <td colsan="3">{{ pur_headForm.G_PHONE }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.G_PHONE }}
+                        </td>
                       </tr>
                       <tr>
                         <th>手机:</th>
-                        <td colsan="3">{{ pur_headForm.G_PHONE }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.G_PHONE }}
+                        </td>
                       </tr>
                       <tr>
                         <th>B2B订单号:</th>
-                        <td colsan="3">{{ pur_headForm.ORDER_NO }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.ORDER_NO }}
+                        </td>
                       </tr>
                       <tr>
                         <th>ERP订单号:</th>
-                        <td colsan="3">{{ pur_headForm.OA_NO }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.OA_NO }}
+                        </td>
                       </tr>
 
                       <tr>
                         <th>接单人:</th>
-                        <td colsan="3">{{ pur_headForm.ORDER_MAN }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.ORDER_MAN }}
+                        </td>
                       </tr>
                       <tr>
                         <th>收货人:</th>
-                        <td colsan="3"></td>
+                        <td colsan="3" style="text-align:left"></td>
                       </tr>
                       <tr>
                         <th>客户名称:</th>
-                        <td colsan="3">{{ pur_headForm.CUSTOMER_NAME }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.CUSTOMER_NAME }}
+                        </td>
                       </tr>
                       <tr>
                         <th>联系人:</th>
-                        <td colsan="3">{{ pur_headForm.LINKMAN }}</td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.LINKMAN }}
+                        </td>
                       </tr>
                       <tr>
                         <th>联系电话:</th>
-                        <td colsan="3">{{ pur_headForm.LINKTEL }}</td>
+                        <td colsan="4" style="text-align:left">
+                          {{ pur_headForm.LINKTEL }}
+                        </td>
                       </tr>
                       <tr>
                         <th>发货地址:</th>
-                        <td colsan="3">{{ pur_headForm.POST_ADDRESS }}</td>
+                        <td colsan="4" style="text-align:left">
+                          {{ pur_headForm.POST_ADDRESS }}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
                 </td>
               </tr>
-
               <tr>
                 <td colspan="2">
                   <el-table
@@ -533,8 +584,10 @@ export default {
   name: "SupplyPort",
   data() {
     return {
+      now: new Date(),
+      Month: new Date().getMonth() + 1,
       input: "",
-      beginTime_1: "",
+      DATE_DELIVER: "",
       current_id: Cookies.get("cid"),
       // companyId: Cookies.get("companyId"),
       gridData: [],
@@ -594,6 +647,25 @@ export default {
       this.currentPage = val;
       this.autoSearch();
     },
+    SaveNotes() {
+      var data = {
+        PUR_NO: this > pur_headForm.PUR_NO
+      };
+      SaveHeadNotes(data).then(res => {
+        // this.count = res.count;
+        // this.pur_headData = res.data;
+      });
+    },
+
+    UpdateFlag() {
+      var data = {
+        PUR_NO: this > pur_headForm.PUR_NO
+      };
+      UpdateCheckFlag(data).then(res => {
+        // this.count = res.count;
+        // this.pur_headData = res.data;
+      });
+    },
 
     autoSearch() {
       var data = {
@@ -644,7 +716,7 @@ export default {
         this.pur_headForm.OWN_TEL = this.gridData[0].OWN_TEL;
         this.pur_headForm.LINKTEL = this.gridData[0].LINKTEL;
         this.pur_headForm.POST_ADDRESS = this.gridData[0].POST_ADDRESS;
-           this.pur_headForm.STATUS = this.gridData[0].STATUS;
+        this.pur_headForm.STATUS = this.gridData[0].STATUS;
       });
     }
   },
