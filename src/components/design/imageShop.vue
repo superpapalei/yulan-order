@@ -186,8 +186,39 @@
         <h2 style="text-align:center;margin-bottom:10px;">
           形象店建设申请表
         </h2>
-        <h3 v-if="EDITorCHECK">
+        <h3 v-if="EDITorCHECK || newORedit">
           提交时间：{{ tableData.DATE_CRE | datatrans }}
+        </h3>
+        <h3
+          v-if="
+            (EDITorCHECK || newORedit) &&
+              (tableData.STATUS == 2 ||
+                tableData.STATUS == 3 ||
+                tableData.STATUS == 5)
+          "
+        >
+          市场部确认时间：{{
+            tableData.DATE_ENTER | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="tableData.ENTER_SUG"
+            >审核意见：{{ tableData.ENTER_SUG }}</span
+          >
+        </h3>
+        <h3 v-if="(EDITorCHECK || newORedit) && tableData.STATUS == 3">
+          广美确认时间：{{
+            tableData.DATE_PASS | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="tableData.PASS_SUG"
+            >审核意见：{{ tableData.PASS_SUG }}</span
+          >
+        </h3>
+        <h3 v-if="(EDITorCHECK || newORedit) && tableData.STATUS == 4">
+          市场部退回时间：{{
+            tableData.DATE_ENTER | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{ tableData.ENTER_SUG }}
+        </h3>
+        <h3 v-if="(EDITorCHECK || newORedit) && tableData.STATUS == 5">
+          广美退回时间：{{
+            tableData.DATE_PASS | datatrans
+          }}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{ tableData.PASS_SUG }}
         </h3>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
@@ -401,7 +432,6 @@
                 v-if="!EDITorCHECK"
                 class="upload-de"
                 action="http://localhost:49438//IMAGE_STORE/UploadFiles"
-                :on-success="handleAvatarSuccess"
                 drag
                 multiple
                 :on-change="handleChange"
@@ -481,7 +511,7 @@
               <span style="margin-left:10px;">责任人签字：</span>
             </td>
             <td colspan="2" style="text-align:left;height:28px;">
-              <span v-if="!EDITorCHECK" style="margin-left:10px;"
+              <span v-if="!EDITorCHECK && !newOne" style="margin-left:10px;"
                 >日期：{{ new Date().getTime() | datatrans }}</span
               >
               <span v-else style="margin-left:10px;"
@@ -508,7 +538,7 @@
         <div style="margin:0 auto; text-align: center;">
           <br />
           <el-button v-if="newORedit" type="success" @click="submitEDIT"
-            >确定</el-button
+            >修改并提交</el-button
           >
           <el-button v-else-if="!EDITorCHECK" type="success" @click="sumbitNEW"
             >提交</el-button
@@ -532,6 +562,8 @@ import { GetPaymentById } from "@/api/paymentASP";
 import {
   GetImageCustomer,
   InsertImageStore,
+  EditImageStore,
+  DeleteImageStore,
   UploadFiles
 } from "@/api/imageStoreASP";
 import { getCustomerInfo } from "@/api/orderListASP";
@@ -548,6 +580,7 @@ export default {
       cid: Cookies.get("cid"),
       dateStamp: "",
       fileList: [],
+      fileChange: false,
       BigPic: false,
       sqlpath: "", //保存图片相对路径
       newORedit: false, //决定显示新建或者编辑
@@ -675,6 +708,25 @@ export default {
     implentmentChange() {
       if (this.tableData.IMPLEMENTTATION_FORM != 1) this.tableData.MEASURE = 0;
     },
+    //新建
+    newOne() {
+      this.EDITorCHECK = false;
+      this.newORedit = false;
+      this.imageStoreDetail = true;
+      this.tableData = {
+        CUSTOMER_CODE: Cookies.get("companyId"),
+        CUSTOMER_NAME: Cookies.get("realName"),
+        CUSTOMER_AGENT: this.chargeData.CUSTOMER_AGENT,
+        ATTACHMENT_FILE: "",
+        OFFICE_TEL: this.chargeData.OFFICE_TEL,
+        CREATER: Cookies.get("cid"),
+        STATUS: 0,
+        MEASURE: 0
+      };
+      this.dateStamp = new Date().getTime();
+      this.fileList = [];
+      this._getBankList();
+    },
     //确定新建
     sumbitNEW() {
       this.$refs.upload.submit();
@@ -703,7 +755,6 @@ export default {
         return;
       }
       //附件拼接
-      var saveUrl = "";
       for (var i = 0; i < this.fileList.length; i++) {
         this.tableData.ATTACHMENT_FILE +=
           "/Files/IMAGE_STORE/" +
@@ -716,8 +767,8 @@ export default {
       }
       this.tableData.ATTACHMENT_FILE_FOLDER =
         "/Files/IMAGE_STORE/" + this.cid + "/" + this.dateStamp;
-      InsertImageStore(this.tableData).then(res => {
-        if (res.code == 0) {
+      InsertImageStore(this.tableData)
+        .then(res => {
           this.$alert("提交成功", "提示", {
             confirmButtonText: "确定",
             type: "success"
@@ -727,47 +778,97 @@ export default {
           this.currentPage = 1;
           this.getDetail();
           this.imageStoreDetail = false;
-        } else {
+        })
+        .catch(res => {
           this.$alert("提交失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
             type: "warning"
           });
-        }
-      });
-    },
-    //新建
-    newOne() {
-      this.EDITorCHECK = false;
-      this.imageStoreDetail = true;
-      this.newORedit = false;
-      this.tableData = {
-        CUSTOMER_CODE: Cookies.get("companyId"),
-        CUSTOMER_NAME: Cookies.get("realName"),
-        CUSTOMER_AGENT: this.chargeData.CUSTOMER_AGENT,
-        ATTACHMENT_FILE: "",
-        OFFICE_TEL: this.chargeData.OFFICE_TEL,
-        CREATER: Cookies.get("cid"),
-        STATUS: 0,
-        MEASURE: 0
-      };
-      this.dateStamp = new Date().getTime();
-      this.fileList = [];
-      this._getBankList();
+        });
     },
     //编辑列表详情
     editIt(tab) {
-      let url = Quest + "/PaymentBill/getPayBillContent.do";
-      let data = {
-        id: tab.id
-      };
-      getPayBillContent(url, data).then(res => {
-        this.sqlpath = res.data.imgUrl; //先保存一个
-        res.data.imgUrl = Head + res.data.imgUrl;
-        this.sumbit = res.data;
-        this.EDITorCHECK = false;
-        this.newORedit = true; //显示流水号 等编辑一类
-        this.imageStoreDetail = true;
-      });
+      this.fileList = [];
+      this.tableData = JSON.parse(JSON.stringify(tab));
+      this._getBankList();
+      var list = this.tableData.ATTACHMENT_FILE.split(";");
+      for (var i = 0; i < list.length - 1; i++) {
+        var index = list[i].lastIndexOf("/");
+        var fileName = list[i].substr(index + 1);
+        this.fileList.push({
+          name: fileName,
+          url: list[i]
+        });
+      }
+      this.dateStamp = new Date().getTime();
+      this.EDITorCHECK = false;
+      this.newORedit = true;
+      this.imageStoreDetail = true;
+    },
+    submitEDIT() {
+      if (this.fileChange) {
+        //文件发生改变，重新上传一次
+        this.$refs.upload.submit();
+      }
+      if (
+        !this.tableData.STORE_ADDRESS ||
+        !this.tableData.STORE_FORM ||
+        !this.tableData.STORE_AREA ||
+        !this.tableData.STORE_PLIE ||
+        !this.tableData.PLAN_DATE ||
+        !this.tableData.IMPLEMENTTATION_FORM ||
+        !this.tableData.PAYMENT
+      ) {
+        this.$alert("请完善信息", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      //判断是否上传图片
+      if (this.fileList.length == 0) {
+        this.$alert("请上传附件", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (this.fileChange) {
+        this.tableData.ATTACHMENT_FILE = "";
+        //附件拼接
+        for (var i = 0; i < this.fileList.length; i++) {
+          this.tableData.ATTACHMENT_FILE +=
+            "/Files/IMAGE_STORE/" +
+            this.cid +
+            "/" +
+            this.dateStamp +
+            "/" +
+            this.fileList[i].name +
+            ";";
+        }
+        this.tableData.ATTACHMENT_FILE_FOLDER =
+          "/Files/IMAGE_STORE/" + this.cid + "/" + this.dateStamp;
+      }
+      EditImageStore({
+        model: this.tableData,
+        attchmentChange: this.fileChange
+      })
+        .then(res => {
+          this.$alert("提交成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.fileList = [];
+          this.currentPage = 1;
+          this.getDetail();
+          this.imageStoreDetail = false;
+        })
+        .catch(res => {
+          this.$alert("提交失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        });
     },
     //查看列表详情
     checkDetail(tab) {
@@ -784,6 +885,24 @@ export default {
       }
       this.EDITorCHECK = true;
       this.imageStoreDetail = true;
+    },
+    deleteDetail(tab) {
+      this.$confirm("删除的数据无法恢复，是否删除？", "提示", {
+        confirmButtonText: "是",
+        cancelButtonText: "否",
+        type: "warning"
+      })
+        .then(() => {
+          DeleteImageStore(JSON.parse(JSON.stringify(tab))).then(res => {
+            this.$alert("删除成功", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.currentPage = 1;
+            this.getDetail();
+          });
+        })
+        .catch(() => {});
     },
     //搜索
     search() {
@@ -878,6 +997,7 @@ export default {
     },
     handleChange(file, fileList) {
       this.fileList = fileList.slice(-3);
+      this.fileChange = true;
     }
   }
 };

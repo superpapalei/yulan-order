@@ -125,11 +125,6 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button
-              v-if="
-                scope.row.STATUS == 1 ||
-                  scope.row.STATUS == 2 ||
-                  scope.row.STATUS == 3
-              "
               @click="checkDetail(scope.row)"
               type="success"
               icon="el-icon-search"
@@ -390,8 +385,11 @@
           </tr>
         </table>
 
+        <br />
+        <span v-if="tableData.ENTER_SUG"
+          >上次审核意见:{{ tableData.ENTER_SUG }}</span
+        >
         <div style="margin:0 auto; text-align: center;">
-          <br />
           <el-input
             v-if="tableData.STATUS == 1"
             style="margin-bottom: 10px"
@@ -559,9 +557,6 @@ export default {
     }
   },
   methods: {
-    implentmentChange() {
-      if (this.tableData.IMPLEMENTTATION_FORM != 1) this.tableData.MEASURE = 0;
-    },
     //查看列表详情
     checkDetail(tab) {
       this.examineSuggestion = "";

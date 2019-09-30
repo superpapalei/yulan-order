@@ -24,6 +24,22 @@ export function InsertImageStore(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//编辑
+export function EditImageStore(data, config = {}) {
+    return post('/IMAGE_STORE/EditImageStore', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//删除
+export function DeleteImageStore(data, config = {}) {
+    return post('/IMAGE_STORE/DeleteImageStore', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
 //上传文件
 export function UploadFiles(data, config = {}) {
     return post('/IMAGE_STORE/UploadFiles', data, config).then((res) => {
