@@ -56,3 +56,11 @@ export function MarketUpdateStatus(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//广美审核
+export function GMUpdateStatus(data, config = {}) {
+    return post('/IMAGE_STORE/GMUpdateStatus', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}

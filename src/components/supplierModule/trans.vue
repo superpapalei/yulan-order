@@ -9,6 +9,8 @@
              v-model="date1"
             align="right"
             type="date"
+             format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
             placeholder="选择日期"
           >
           </el-date-picker>
@@ -17,15 +19,17 @@
             v-model="date2"
             align="right"
             type="date"
+             format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
             placeholder="选择日期"
           ></el-date-picker>
           <el-button :id="'test111'" @click="autoSearch()"  icon="el-icon-search" style="margin-left:8px" class="button_1">搜索</el-button>
-          <el-button :id="'test111'" class="button_1" >导出Excel</el-button>
+         
             </div>
             <hr>
           <el-table
             :data="tableData"
-            
+       
             style="width: 100%"
           >
             <el-table-column
@@ -127,8 +131,8 @@ export default {
   },
 
   created() {
-    //this.autoSearch();
-    // this.mergeColumnIndex();
+    this.autoSearch();
+
   },
   methods: {
      //页面条数
@@ -142,46 +146,44 @@ export default {
       this.currentPage = val;
       this.autoSearch();
     },
-    //计算合并行的index和需合并的行数，太慢拖累加载速度 在表个后加 :span-method="arraySpanMethod"
-    // mergeColumnIndex() {
-    //   //遍历表格需要合并的列
-    //   var arr = this.tableData;
-    //   var intSpan=1;
-    //   var intIndex=0;
-    //   var len = 0;
-    //   for (var i = 1, len = arr.length; i < len; i++) {//从第二行开始与前一行比较
-    //     if (arr[i].TRANS_NO == arr[i - 1].TRANS_NO ) {
-    //       intSpan = intSpan + 1;//如果相同,该合并的rowSpan+1
-    //       intIndex = i +1- intSpan;//row
-    //       console.log("相同则累加合并项");
-    //       console.log(intSpan);
-    //       console.log(intIndex);
-    //     } 
-    //     else if (arr[i].TRANS_NO != arr[i - 1].TRANS_NO  ) {
-    //       this.arr_index.push(intIndex);
-    //       this.arr_span.push(intSpan);
-    //       console.log("不相同则追加数组");
-    //       console.log(this.arr_index);
-    //       console.log( this.arr_span);
-    //       intSpan = 1;
-    //       intIndex = i; 
-    //     }
-    //      if (i==len -1){
-    //       //  intSpan = 1;
-    //       // intIndex = i-1; 
-    //       this.arr_index.push(intIndex);
-    //       this.arr_span.push(intSpan);
-    //       console.log("末尾则追加数组");
-    //       console.log(this.arr_index);
-    //       console.log( this.arr_span);
-    //     }
-    //   }
 
-   
-      
-    // },
+    //计算合并行的index和需合并的行数，太慢拖累加载速度 在表个后加 :span-method="arraySpanMethod" 原32
+    mergeColumnIndex() {
+      //遍历表格需要合并的列
+      var arr = this.tableData;
+      var intSpan=1;
+      var intIndex=0;
+      var len = 0;
+      for (var i = 1, len = arr.length; i < len; i++) {//从第二行开始与前一行比较
+        if (arr[i].TRANS_NO === arr[i - 1].TRANS_NO ) {
+          intSpan = intSpan + 1;//如果相同,该合并的rowSpan+1
+          intIndex = i +1- intSpan;//row
+          console.log("相同则累加合并项");
+          console.log(intSpan);
+          console.log(intIndex);
+        } 
+        else if (arr[i].TRANS_NO != arr[i - 1].TRANS_NO  ) {
+          this.arr_index.push(intIndex);
+          this.arr_span.push(intSpan);
+          console.log("不相同则追加数组");
+          console.log(this.arr_index);
+          console.log( this.arr_span);
+          intSpan = 1;
+          intIndex = i; 
+        }
+         if (i==len -1){
+          //  intSpan = 1;
+          // intIndex = i-1; 
+          this.arr_index.push(intIndex);
+          this.arr_span.push(intSpan);
+          console.log("末尾则追加数组");
+          console.log(this.arr_index);
+          console.log( this.arr_span);
+        }
+      }
+    },
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 1) {//查询出那列就合并那列，index别写成别的列
+      if (columnIndex === 0) {//特别注意：查询出那列就合并那列，index别写成别的列
       if(this.arr_index.indexOf(rowIndex)>-1){
         var i=this.arr_index.indexOf(rowIndex);
          return [this.arr_span[i], 1];
@@ -219,7 +221,7 @@ export default {
         finishTime: this.date2,
         limit: this.limit,
         page: this.currentPage,
-        current_id: "I0002",
+        current_id: Cookies.get("companyId"),
         supply_type: "",
         po_type: this.po_type //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
       };
@@ -235,6 +237,7 @@ export default {
         this.count = res.count;
         this.tableData = res.data;
       });
+      this.mergeColumnIndex();
     },
   },
    filters: {
