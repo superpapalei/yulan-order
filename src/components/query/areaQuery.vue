@@ -372,6 +372,8 @@ export default {
     
     //根据用户查区域市场
     _getAreaCode(){
+      this.tableData = []
+      this.value_4= []
       this.AREACODE= [];
       var userInfo = JSON.parse(Cookies.get("userInfo"));
       var data = {
@@ -387,6 +389,8 @@ export default {
     },
     //根据市场区域查片区
     areaCode(val){          //点击选择市场事件
+    this.tableData = []
+    this.value_4= []
           var data = {
             areaCode:val
           }
@@ -399,6 +403,8 @@ export default {
       },
       //根据市场和片区查可选用户
     district_code(val){
+      this.tableData = []
+      this.value_4= []
       this.second = val
          var data = {
            areaCode:this.first,
@@ -408,6 +414,8 @@ export default {
       },
       //根据市场，片区，客户类型查可选用户
     customer_type(val){
+      this.tableData = [] 
+      this.value_4= []
         var data = {
            areaCode:this.first,
             district:this.second,
@@ -418,11 +426,14 @@ export default {
       //状态搜索
     status_id(val){
       this.status_info = val
+      this.tableData = []
       this._queryQuYu_1();
     },
     //通过区域查询可选用户
     _getCustomerByAreaCode_1(val) {
+      this.tableData = []
       this.customerData=[]
+      this.value_4= []
       var data = {
         areaCode:val,//市场
         district:this.AREA_DISTRICT,//片区
@@ -434,6 +445,8 @@ export default {
     },
     _getCustomerByAreaCode_2(val) {
       this.customerData=[]
+      this.tableData = []
+      this.value_4= []
       var data = {
         areaCode:val.areaCode,//市场
         district:val.AREA_DISTRICT,//片区
@@ -445,6 +458,8 @@ export default {
     },
     _getCustomerByAreaCode_3(val) {
       this.customerData=[]
+      this.tableData = []
+      this.value_4= []
       var data = {
         areaCode:val.areaCode,//市场
         district:val.district,//片区
@@ -462,6 +477,9 @@ export default {
     queryQuYu_1() {      
       this.query_1 = true
       this.tableData = []
+      if(this.value_4 == []){
+        return this.tableData = []
+      }else{
       var data = {
         costomerCodes:this.value_4,//已选用户
         beginTime: this.beginTime_1, //起始时间
@@ -481,7 +499,8 @@ export default {
       getPackDetails(data).then(res => {
         this.count = res.count;
         this.tableData = res.data
-      })       
+      })   
+      }    
       // this.$router.push("/QYTable");
     },
     //计算表格末行
