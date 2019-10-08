@@ -120,6 +120,16 @@
                       :label="item.label"
                       :value="item.value"
                     ></el-option>
+                  </el-select>
+                  状态搜索
+                  <el-select v-model= "STATUS.label" placeholder="全部" style="width:178px"
+                  @change="status_id(STATUS.label)">
+                    <el-option
+                      v-for="item in STATUS"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
                   </el-select></div>
                   <div style="margin-top:15px">
                     <div>
@@ -130,7 +140,7 @@
                         type="#DCDFE6"
                         icon="el-icon-search"
                         class="cx"
-                        @click="queryQuYu_1"
+                        @click="_queryQuYu_1"
                         style="margin-left:65px"
                         >查询</el-button
                       >
@@ -162,7 +172,7 @@
           :data="tableData"
           border
           highlight-current-row
-          style="width: 100%"
+          style="width: 100%;font-weight:normal;font-size:12px"
           class="table_1"
         >
           <el-table-column prop="num" label width="80" align="center">
@@ -302,7 +312,50 @@ export default {
         }
       ],
       AREACODE: [],
-      tableData: []
+      tableData: [],
+      STATUS:[
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "0",
+          label: "待提交"
+        },
+        {
+          value: "1",
+          label: "已提交"
+        },
+        {
+          value: "2",
+          label: "已受理"
+        },
+        {
+          value: "3",
+          label: "已作废"
+        },
+        {
+          value: "4",
+          label: "部分发货"
+        },
+        {
+          value: "5",
+          label: "余额不足待提交"
+        },
+        {
+          value: "6",
+          label: "余额不足可提交"
+        },
+        {
+          value: "7",
+          label: "已完成"
+        },
+        {
+          value: "12",
+          label: "已接收"
+        },
+      ],
+      status_info:"",
     };
   },
   //生命周期
@@ -445,6 +498,11 @@ export default {
          }
          this._getCustomerByAreaCode_3(data);
     },
+    //状态搜索
+    status_id(val){
+      this.status_info = val
+      this._queryQuYu_1();
+    },
     //通过区域查询可选用户
     _getCustomerByAreaCode_1(val) {
       this.customerData=[]
@@ -480,8 +538,11 @@ export default {
       })       
     },
     //订单查询
+    _queryQuYu_1(){
+      this.currentPage = 1
+      this.queryQuYu_1()
+    },
     queryQuYu_1() {  
-       
       this.query_1 = true
       this.tableData = []
       if(this.value_4 === []){
@@ -492,7 +553,8 @@ export default {
          beginTime: this.beginTime_1, //起始时间
         finishTime: this.finishTime_1, //结束时间
         limit: this.limit, //限制数
-        page: this.currentPage //页数
+        page: this.currentPage, //页数
+        status: this.status_info,//状态
       }
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";
@@ -512,19 +574,76 @@ export default {
     //翻页获取订单
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.bankData = [];
+      this.tableData = []
       this.queryQuYu_1();
     },  
     
     //重置
     reset(){
+      this.currentPage = 1
       this.customerData=[]
       this.beginTime_1=""
       this.finishTime_1=""
       this.value_4=[]
       this.tableData=[]
       this.AREA_DISTRICT=[]
-      this.CUSTOMER_TYPE=[]
+      this.CUSTOMER_TYPE = [
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "notspeciality",
+          label: "非专业市场客户"
+        },
+        {
+          value: "speciality",
+          label: "专业市场客户"
+        }
+      ],
+      this.status_info= ""
+      this.STATUS=[
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "0",
+          label: "待提交"
+        },
+        {
+          value: "1",
+          label: "已提交"
+        },
+        {
+          value: "2",
+          label: "已受理"
+        },
+        {
+          value: "3",
+          label: "已作废"
+        },
+        {
+          value: "4",
+          label: "部分发货"
+        },
+        {
+          value: "5",
+          label: "余额不足待提交"
+        },
+        {
+          value: "6",
+          label: "余额不足可提交"
+        },
+        {
+          value: "7",
+          label: "已完成"
+        },
+        {
+          value: "12",
+          label: "已接收"
+        },
+      ],
       this.count = 0
       Cookies.set("ORDER_NO",0)
        this._getAreaCode();
