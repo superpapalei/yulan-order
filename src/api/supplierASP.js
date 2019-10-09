@@ -28,6 +28,13 @@ export function SaveHeadNotes(data, config = {}) {
         return Promise.reject(err);
     })
 }
+export function Submit(data, config = {}) {
+    return post('/PUR_HEAD/Submit', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
 export function UpdateCheckFlag(data, config = {}) {
     return post('/PUR_HEAD/UpdateCheckFlag', data, config).then((res) => {
         return Promise.resolve(res);
@@ -37,6 +44,13 @@ export function UpdateCheckFlag(data, config = {}) {
 }
 export function UpdatePartDetail(data, config = {}) {
     return post('/PUR_HEAD/UpdatePartDetail', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+export function UpdateCheckFlagBatch(data, config = {}) {
+    return post('/PUR_HEAD/UpdateCheckFlagBatch', data, config).then((res) => {
         return Promise.resolve(res);
     }).catch((err) => {
         return Promise.reject(err);

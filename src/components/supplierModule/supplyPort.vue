@@ -5,8 +5,8 @@
         :show-close="true"
         :visible.sync="detailVisible"
         disabled="true"
-        width="80%"
-        top="28vh"
+        width="70%"
+        top="8vh"
       >
         <div style="margin-bottom:10px">
           <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
@@ -26,22 +26,22 @@
             <el-table-column
               property="ITEM_NO"
               label="物料号"
-              width="150"
+              width="90"
             ></el-table-column>
             <el-table-column
               property="MGUIGE"
               label="物料型号"
-              width="150"
+              width="90"
             ></el-table-column>
             <el-table-column
               property="MNAME"
               label="名称"
-              width="150"
+              width="50"
             ></el-table-column>
             <el-table-column
               property="GRADE"
               label="规格"
-              width="100"
+              width="50"
             ></el-table-column>
             <el-table-column
               property="QTY_PUR"
@@ -61,31 +61,49 @@
             <el-table-column
               property="TOTAL_MONEY"
               label="金额"
-              width="80"
+              width="100"
             ></el-table-column>
             <el-table-column
               property="NOTE"
               label="备注"
-              width="300"
+              width="170"
             ></el-table-column>
-            <el-table-column property="DATE_PUR" label="约定日期" width="100">
+            <el-table-column property="DATE_REQ" label="约定日期" width="100">
               <template slot-scope="scope">
-                <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+                <span>{{ scope.row.DATE_REQ | datatrans }}</span>
               </template>
             </el-table-column>
+            
+             <el-table-column
+                      
+                      label="送货日期1"
+                      width="120"
+                    >
+                       <template slot-scope="scope">
+                      <el-date-picker
+                       v-model="scope.row.DATE_DELIVER"
+            align="right"
+            type="date"
+             format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+            placeholder="选择日期"
+          >
+          </el-date-picker>
+          </template>
+                    </el-table-column>
             <el-table-column
-              property="DATE_DELIVER"
-              label="送货日期"
-              width="100"
-            >
-              <template slot-scope="scope">
-                <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              property="SUPPLY_CHECK_NOTES"
               label="说明"
-            ></el-table-column>
+               width="130"
+            >
+            <template slot-scope="scope">
+                        <el-input
+                            type="textarea"
+                            v-model="scope.row.SUPPLY_NOTES"
+                            clearable>
+                        </el-input>
+                       
+                    </template>
+            </el-table-column>
           </el-table>
           <hr />
           <div style="margin-top:10px">
@@ -96,22 +114,23 @@
                 </div>
                 <div>
                   <div>
-                    <el-button style="width:10%" class="button_clolur"
+                    <el-button style="width:15%" class="button_clolur" @click="Unitdeliver"
                       >统一设置送货期</el-button
                     >
                     <el-date-picker
                       type="date"
                       format="yyyy-MM-dd"
                       value-format="yyyy-MM-dd"
-                      placeholder="统一设置送货期"
-                      v-model="DATE_DELIVER"
-                      style="width:10%"
+                      placeholder="选择时间"
+                      v-model="date_deliver"
+                      style="width:15%"
                     ></el-date-picker>
                   </div>
                   <div>
                     <el-button
-                      style="width:10%;margin-top:10px"
+                      style="width:16%;margin-top:10px"
                       class="button_clolur"
+                      @click="AllAccordPromise"
                       >全部设为约定日期</el-button
                     >
                   </div>
@@ -127,16 +146,19 @@
                   <span class="CARD">说明</span>
                 </div>
                 <div>
+                 
                   <el-input
-                    v-model="input"
+                        v-model="supply_check_notes"
                     placeholder="说明:"
                     style="width:30%;height:20px"
                     type="textarea"
-                  ></el-input>
+                  clearable></el-input>
+           
                 </div>
                 <div style="margin-top:40px">
                   <el-button
                     @click="SaveNotes()"
+                
                     style="width:10%;"
                     class="button_clolur"
                     >保存说明</el-button
@@ -147,12 +169,18 @@
           </div>
           <div>
             <el-button
-              @click="UpdateFlag()"
-              style="width:10%;margin-left:48%;margin-top:10px"
+              @click="SubmitVue"
+              style="width:10%;margin-left:35%;margin-top:10px"
               type="warning"
               size="small"
-              >确认</el-button
-            >
+              >确认</el-button>
+               <el-button
+              @click="returnMain"
+              style="width:10%;margin-left:5%;margin-top:10px"
+              type="primary"
+              size="small"
+              >返回</el-button>
+              
           </div>
         </div>
         <keep-alive> </keep-alive>
@@ -162,7 +190,7 @@
         :visible.sync="detailVisible1"
         :show-close="true"
         width="100%"
-        top="5vh"
+        top="8vh"
       >
         <div style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
@@ -431,20 +459,20 @@
                     <el-table-column
                       property="TOTAL_MONEY"
                       label="金额"
-                      width="80"
+                      width="100"
                     ></el-table-column>
                     <el-table-column
                       property="NOTE"
                       label="备注"
-                      width="300"
+                      width="200"
                     ></el-table-column>
                     <el-table-column
-                      property="DATE_PUR"
+                      property="DATE_REQ"
                       label="约定日期"
                       width="100"
                     >
                       <template slot-scope="scope">
-                        <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+                        <span>{{ scope.row.DATE_REQ | datatrans }}</span>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -472,6 +500,20 @@
       <div id="supplyCon">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="待确认" name="first" align="left">
+            <div align="right">
+            <template>
+  <el-select v-model="selvalue" @change="SelectClick" placeholder="全部" >
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      >
+    </el-option>
+  </el-select>
+</template>
+</div>
+
             <el-table border :data="pur_headData" style="width: 100%">
               <el-table-column type="index" :index="indexMethod">
               </el-table-column>
@@ -499,7 +541,7 @@
               <el-table-column
                 prop="NOTES"
                 label="备注"
-                align="center"
+                align="left"
               ></el-table-column>
               <el-table-column label="" width="120" align="center">
                 <template slot-scope="scope">
@@ -515,6 +557,46 @@
           </el-tab-pane>
 
           <el-tab-pane label="已确认" name="second" align="left">
+                      <div align="right">
+                          采购单号：（精确）
+    <el-input
+    prefix-icon="el-icon-search"
+   style="width:10%; min-width:200px;"
+   @blur="SelectClick"
+    v-model="po">
+  </el-input>
+                        <el-date-picker
+             v-model="date1"
+              @change="SelectClick"
+            align="right"
+            type="date"
+             format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
+            placeholder="选择日期"
+          >
+          </el-date-picker>
+          <span class="demonstration">至</span>
+          <el-date-picker
+            v-model="date2"
+            @change="SelectClick"
+            align="right"
+            type="date"
+             format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            placeholder="选择日期"
+          ></el-date-picker>
+            <template>
+  <el-select v-model="selvalue" @change="SelectClick" placeholder="全部" >
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      >
+    </el-option>
+  </el-select>
+</template>
+</div>
             <el-table border :data="pur_headData" style="width: 100%">
               <el-table-column type="index" :index="indexMethod">
               </el-table-column>
@@ -574,7 +656,7 @@
 </template>
 
 <script>
-import { GetPoDetail, GetRelativePo } from "@/api/supplierASP";
+import { GetPoDetail, GetRelativePo,SaveHeadNotes,Submit } from "@/api/supplierASP";
 import Cookies from "js-cookie";
 // const Head = "http://14.29.223.114:10250/upload";
 // const Quest = "http://14.29.223.114:10250/yulan-capital";
@@ -584,38 +666,96 @@ export default {
   name: "SupplyPort",
   data() {
     return {
+      is_check:0,
+      po:"",
+      date1: "",
+      date2: "",
       now: new Date(),
       Month: new Date().getMonth() + 1,
       input: "",
-      DATE_DELIVER: "",
+      supply_check_notes:"",
+      selvalue:"all",
+      date_deliver: "",
       current_id: Cookies.get("cid"),
       // companyId: Cookies.get("companyId"),
       gridData: [],
       detailVisible: false,
       detailVisible1: false,
-      po_type: "",
+      po_type: "all",
       limit: 10,
       count: 0,
       currentPage: 1,
       activeName: "first",
       count: 0,
+      check_flag:0,
       pur_headData: [],
-      pur_headForm: {}
+      pur_headForm: {},
+      options: [ 
+        {
+          value: 'all',
+          label: '所有状态'
+        }, {
+          value: 'cancel',
+          label: '取消'
+        }, 
+        {
+          value: 'efficient',
+          label: '生效'
+        },{
+          value: 'enforce',
+          label: '执行'
+        }, {
+          value: 'fulfill',
+          label: '完成'
+        }],
+      
     };
   },
   methods: {
-    //确认页面
+    //获取当月第一天零时
+     getCurrentMonthFirst(){
+      var date=new Date();
+      date.setDate(1);
+      date.setHours(0,0,0);
+      return date;
+},
+    //打开确认页面
     openDialog(PUR_NO) {
+      this.is_check=0;
       this.detailVisible = true;
       this.autoSearchDetail(PUR_NO);
-
       //查看详情页
     },
     openDialog1(PUR_NO) {
+      this.is_check=0;
       this.detailVisible1 = true;
       this.autoSearchDetail(PUR_NO);
-
       //将表头内容填充到明细
+    },
+    //统一送货日期
+    Unitdeliver(){
+      if(this.date_deliver==""){
+         this.$alert('请选择一个统一的时间！', '提示', {
+                                confirmButtonText: '好的',
+                                type: 'warning'
+                            });
+                            return;
+      }
+       for (let i=0;i<this.gridData.length;i++){
+      this.gridData[i].DATE_DELIVER=this.date_deliver
+      }
+    },
+     //全部按约定日期
+    AllAccordPromise(){
+       for (let i=0;i<this.gridData.length;i++){
+      this.gridData[i].DATE_DELIVER=this.gridData[i].DATE_REQ
+      }
+    },
+    //选择或输入条件后搜索
+       SelectClick() {
+      this.currentPage = 1;
+      this.po_type=this.selvalue;
+      this.autoSearch();
     },
     //标签页切换
     handleClick(tab) {
@@ -623,14 +763,23 @@ export default {
       this.currentPage = 1;
       switch (tabName) {
         case "first":
-          this.po_type = "efficient";
-          this.autoSearch();
+          this.check_flag = 0;
+          this.selvalue="all";
+          this.po_type="all";
+          this.po="";
+          this.date1 = "0001/1/1";
+          this.date2 = "9999/1/1";
           break;
         case "second":
-          this.po_type = "cancel";
-          this.autoSearch();
+          this.check_flag = 1;
+           this.selvalue="all";
+           this.po_type="all";
+             this.po="";
+             this.date1=this.getCurrentMonthFirst();
+    this.date2=new Date();
           break;
       }
+         this.autoSearch();
     },
     //首列序号自定义
     indexMethod(index) {
@@ -649,7 +798,8 @@ export default {
     },
     SaveNotes() {
       var data = {
-        PUR_NO: this > pur_headForm.PUR_NO
+        PUR_NO: this.pur_headForm.PUR_NO,
+        NOTE:this.supply_check_notes,
       };
       SaveHeadNotes(data).then(res => {
         // this.count = res.count;
@@ -666,15 +816,61 @@ export default {
         // this.pur_headData = res.data;
       });
     },
+    returnMain(){
+      if (this.is_check==1){
+      this.autoSearch();
+      this.is_check=0;
+      }
+      this.detailVisible = false;
+    },
+ //确认之前要检查是否填好必要的信息
+     SubmitVue() {
+       this.pur_headForm.SUPPLY_CHECK_NOTES=this.supply_check_notes;
+        for (let i=0;i<this.gridData.length;i++){
+      if(this.gridData[i].DATE_DELIVER=="9999/12/31 00:00:00"||this.gridData[i].DATE_DELIVER=="") {
+           this.$alert('送货日期不能为空！', '提示', {
+            confirmButtonText: '好的',
+            type: 'warning'
+             });
+              return;
+      }
+      }
+      var data = {
 
+        pur_headForm:this.pur_headForm,
+        gridData:this.gridData,
+      };
+     
+      Submit(data).then(res => {
+          if (res.code == 0) {
+          this.$alert("确认成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.autoSearch();
+          this.is_check=1;
+          this.detailVisible = false;
+        } else {
+          this.$alert("确认失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        }
+        
+      });
+    },
     autoSearch() {
       var data = {
+        
         limit: this.limit,
         page: this.currentPage,
         current_id: Cookies.get("cid"),
-        // companyId: Cookies.get("companyId"),
-        supply_type: "",
-        po_type: this.po_type //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
+        customer:"",
+        po_type: this.po_type, //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
+        check_flag:this.check_flag,
+        beginTime: this.date1,
+        finishTime: this.date2,
+        po:this.po,
       };
       GetRelativePo(data).then(res => {
         this.count = res.count;
@@ -686,7 +882,14 @@ export default {
         PUR_NO: PUR_NO
       };
       GetPoDetail(data).then(res => {
+        
         this.gridData = res.data;
+     for (let i=0;i<this.gridData.length;i++){
+      if(this.gridData[i].DATE_DELIVER=="9999/12/31 00:00:00") {
+        this.gridData[i].DATE_DELIVER=""
+      }
+      }
+        
         this.pur_headForm.PUR_NO = this.gridData[0].PUR_NO;
         this.pur_headForm.LINKMAN = this.gridData[0].LINKMAN;
         this.pur_headForm.DATE_PUR = this.gridData[0].DATE_PUR;
@@ -717,9 +920,13 @@ export default {
         this.pur_headForm.LINKTEL = this.gridData[0].LINKTEL;
         this.pur_headForm.POST_ADDRESS = this.gridData[0].POST_ADDRESS;
         this.pur_headForm.STATUS = this.gridData[0].STATUS;
+        this.input=this.pur_headForm.SUPPLY_CHECK_NOTES;
+        this.supply_check_notes=this.pur_headForm.SUPPLY_CHECK_NOTES;
+        this.date_deliver="";
       });
     }
   },
+ 
   filters: {
     pur_headStatus(value) {
       switch (value) {
@@ -768,7 +975,9 @@ export default {
   },
 
   created() {
-    this.po_type = "efficient";
+    this.po_type = "all";
+     this.date1 = "0001/1/1";
+          this.date2 = "9999/1/1";
     this.autoSearch();
   }
 };
