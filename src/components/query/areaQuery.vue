@@ -5,7 +5,7 @@
         title="提货单详情"
         :visible.sync="detailVisible"
         :close-on-click-modal="false"
-        width="60%"
+        width="80%"
         style="heitht:100%"
       >
         <div style="width:90% ;margin:0 auto;">
@@ -47,24 +47,24 @@
             border
             style="width: 100%; margin:10px auto;heitht:400px"
           >
-            <el-table-column width="100" label="状态" >
+            <el-table-column width="100" label="状态" align="center">
               <template slot-scope="scope1">
                 <span>{{scope1.row.STATUS_ID|transStatus}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="ITEM_NO" label="型号" width="110">
+            <el-table-column prop="ITEM_NO" label="型号" width="130" align="center">
             </el-table-column>
-            <el-table-column prop="BATCH_NO" label="批次" width="150">
+            <el-table-column prop="BATCH_NO" label="批次" width="200" align="center">
 
             </el-table-column>
-            <el-table-column prop="PRODUCTVERSION_NAME" label="版本" width="150"></el-table-column>
-            <el-table-column prop="NOTE" label="仓库" ></el-table-column>
-            <el-table-column prop="AREA" label="区位" width="100"></el-table-column>
-            <el-table-column prop="QTY_DELIVER" label="计划数" width="80"></el-table-column>
-            <el-table-column prop="TRANS_PRICE" label="物流单价" width="80"></el-table-column>
-            <el-table-column prop="SALE_PRICE" label="单价" width="80">
+            <el-table-column prop="PRODUCTVERSION_NAME" label="版本" width="150" align="center"></el-table-column>
+            <el-table-column prop="NOTE" label="仓库" align="center"></el-table-column>
+            <el-table-column prop="AREA" label="区位" width="100" align="center"></el-table-column>
+            <el-table-column prop="QTY_DELIVER" label="计划数" width="80" align="center"></el-table-column>
+            <el-table-column prop="TRANS_PRICE" label="物流单价" width="80" align="center"></el-table-column>
+            <el-table-column prop="SALE_PRICE" label="单价" width="80" align="center">
             </el-table-column>
-            <el-table-column prop="MONEY" label="金额" width="80"></el-table-column>
+            <el-table-column prop="MONEY" label="金额" width="110" align="center"></el-table-column>
           </el-table>
            </div>
       </el-dialog>
@@ -134,7 +134,18 @@
                       :label="item.label"
                       :value="item.value"
                     ></el-option>
-                  </el-select></div>
+                  </el-select>
+                  状态搜索
+                  <el-select v-model= "STATUS.label" placeholder="全部" style="width:178px"
+                  @change="status_id(STATUS.label)">
+                    <el-option
+                      v-for="item in STATUS"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                  </div>
                   <div style="margin-top:15px">
                     <div>
                       <el-button type="#DCDFE6" icon="el-icon-s-grid" class="cx" @click="reset"
@@ -144,8 +155,8 @@
                         type="#DCDFE6"
                         icon="el-icon-search"
                         class="cx"
-                        @click="queryQuYu_1"
-                        style="margin-left:60px"
+                        @click="_queryQuYu_1"
+                        style="margin-left:65px"
                         >查询</el-button
                       >
                     </div>
@@ -177,14 +188,14 @@
           :data="tableData"
           border
           highlight-current-row
-          style="width: 100%"
+          style="width: 100%;font-weight:normal;font-size:12px"
           class="table_1"
          
         >
-          <el-table-column prop="num" label width="60" align="center">
+          <el-table-column prop="num" label width="50" align="center">
             <template slot-scope="scope"><span>{{scope.$index+(currentPage - 1) * limit + 1}} </span></template>
           </el-table-column>
-          <el-table-column label="提货单号" width="120" align="center">
+          <el-table-column label="提货单号" width="110" align="center">
             <template slot-scope="scope1">
               <el-button
               size="mini"
@@ -194,13 +205,13 @@
               >
             </template>
           </el-table-column>
-          <el-table-column label="状态"  align="center" width="80">
+          <el-table-column label="状态"  align="center" width="70">
             <template slot-scope="scope2">
               {{ scope2.row.STATUS_ID|transStatus }}
             </template>
           </el-table-column>
-          <el-table-column prop="CONTRACT_NO" label="订单号"  align="center"></el-table-column>
-          <el-table-column prop="HTBM" label="合同号"  align="center"></el-table-column>
+          <el-table-column prop="CONTRACT_NO" label="订单号"  align="center" width="130px"></el-table-column>
+          <el-table-column prop="HTBM" label="合同号"  align="center" width="130px"></el-table-column>
           <el-table-column prop="ORDERTYPE_NAME" label="类型" width="100" align="center"></el-table-column>
           <el-table-column label="开单日期" width="110"  align="center">
             <template slot-scope="scope4">
@@ -212,13 +223,13 @@
               {{ scope5.row.DATE_OUT_STOCK|datatrans }}
             </template>
           </el-table-column>
-          <el-table-column prop="CUSTOMER_NAME" label="客户名称" align="center" width="300">
+          <el-table-column prop="CUSTOMER_NAME" label="客户名称" align="center">
             <template slot-scope="scope3">
               {{ scope3.row.CUSTOMER_NAME}}/联系人:{{scope3.row.LINKMAN}}
             </template>
           </el-table-column>
           <el-table-column prop="MONEY_SUM" label="金额" width="100" align="center"></el-table-column>
-          <el-table-column prop="NAME" label="物流管理员" align="center" width="110"></el-table-column>
+          <el-table-column prop="NAME" label="物流管理员" align="center" width="100"></el-table-column>
         </el-table>
         <!-- 分页 -->
       <div style="margin:0 40%;" class="block">
@@ -262,7 +273,6 @@ export default {
       tableDetail: [],
       tableDetail_1: [],
       theBody: {},
-      status:"已提交",
       first:"",
       second:"",
        activeName: "first",
@@ -294,7 +304,30 @@ export default {
         }
       ],
       AREACODE: [],
-      tableData: []
+      tableData: [],
+      STATUS:[
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "1",
+          label: "待提"
+        },
+        {
+          value: "2",
+          label: "已提货"
+        },
+        {
+          value: "3",
+          label: "作废"
+        },
+        {
+          value: "4",
+          label: "已月结"
+        }
+      ],
+      status_info:"",
     };
   },
   filters: {
@@ -373,15 +406,20 @@ export default {
          }
          this._getCustomerByAreaCode_2(data);
       },
-//根据市场，片区，客户类型查可选用户
-customer_type(val){
-var data = {
+      //根据市场，片区，客户类型查可选用户
+    customer_type(val){
+        var data = {
            areaCode:this.first,
             district:this.second,
           customerType:val
          }
          this._getCustomerByAreaCode_3(data);
-},
+      },
+      //状态搜索
+    status_id(val){
+      this.status_info = val
+      this._queryQuYu_1();
+    },
     //通过区域查询可选用户
     _getCustomerByAreaCode_1(val) {
       this.customerData=[]
@@ -416,15 +454,21 @@ var data = {
         this.customerData = res.data
       })       
     },
-    queryQuYu_1() {      //提货单查询
+    //提货单查询
+    _queryQuYu_1(){
+      this.currentPage = 1
+      this.queryQuYu_1()
+    },
+    queryQuYu_1() {      
       this.query_1 = true
       this.tableData = []
       var data = {
         costomerCodes:this.value_4,//已选用户
-         beginTime: this.beginTime_1, //起始时间
+        beginTime: this.beginTime_1, //起始时间
         finishTime: this.finishTime_1, //结束时间
         limit: this.limit, //限制数
-        page: this.currentPage //页数
+        page: this.currentPage, //页数
+        status: this.status_info,//状态
       }
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";
@@ -459,8 +503,12 @@ var data = {
                 return prev;
               }
             }, 0);
-            sums[index] += ' 元';
-          } 
+            sums[index] = sums[index].toFixed(2);
+            if (this.isManager == "0")
+              sums[index] = "***";
+          } else {
+            sums[index] = "";
+          }
           }
          else {
             sums[index] = '';
@@ -472,7 +520,6 @@ var data = {
     //翻页获取订单
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.bankData = [];
       this.queryQuYu_1();
     },  
     //重置
@@ -483,9 +530,46 @@ var data = {
       this.value_4=[]
       this.tableData=[]
       this.AREA_DISTRICT=[]
-      this.CUSTOMER_TYPE=[]
+      this.status_info= ""
+      this.CUSTOMER_TYPE = [
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "notspeciality",
+          label: "非专业市场客户"
+        },
+        {
+          value: "speciality",
+          label: "专业市场客户"
+        }
+      ],
+      this.STATUS=[
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "1",
+          label: "待提"
+        },
+        {
+          value: "2",
+          label: "已提货"
+        },
+        {
+          value: "3",
+          label: "作废"
+        },
+        {
+          value: "4",
+          label: "已月结"
+        }
+      ]
       this.tableDetail = []
       this.count = 0
+      this.currentPage = 1
       this._getAreaCode();
     },
 
@@ -525,7 +609,7 @@ var data = {
 </script>
 <style>
 .table_1 .el-table__row {
-   height: 5px;
+   height: 3px;
 }
 </style>
 <style scoped>
@@ -555,9 +639,7 @@ var data = {
 .jiange {
   margin-left: 10px;
 }
-.NEWUI_BUTTON_0 {
-  padding: 0.5em;
-}
+
 .CONDITION_DIV {
   margin-left: 10px;
   height: 250px;

@@ -30,7 +30,7 @@
                 class="NEWUI_BUTTON_1"
                 type="primary"
                 icon="el-icon-search"
-                @click="StockQuery"
+                @click="_StockQuery"
                 >查询</el-button
               >
             </td>
@@ -117,7 +117,7 @@
                             prop="AREA"
                             label="区"
                             align="center"
-                            width="50"
+                            width="60"
                           ></el-table-column>
                           <el-table-column
                             prop="SEAT"
@@ -132,7 +132,7 @@
                             width="50"
                           ></el-table-column>
                           <el-table-column
-                            prop="QTY"
+                            prop="QTY_SUM"
                             label="可分配量"
                             align="center"
                             width="100"
@@ -145,24 +145,24 @@
                 </div>
               </el-card>
 
-              <el-card class="DETAIL_2" style="min-height:300px">
+              <el-card class="DETAIL_2" style="min-height:270px">
                 <div slot="header" class="clearfix">
                   <span class="CARD">产品信息：</span>
                 </div>
-                <div style="max-height:300px;">
+                <div style="max-height:270px;">
                   <h1 v-show="stockInfo">
                     <table
                       width="100%"
                       class="table_1"
                       border="1"
-                      style="border-collapse:collapse;"
+                      style="font-weight:normal;font-size:15px;align:center"
+                      
                     >
                       <tr>
                         <td class="CPXXBJYS">型号</td>
-                        <td style="width:100px">{{ dormitory.ITEM_NO }}</td>
-                        <td rowspan="7" width="30px"></td>
+                        <td style="width:70px">{{ dormitory.ITEM_NO }}</td>
                         <td class="CPXXBJYS">墙纸规格</td>
-                        <td width="50px">
+                        <td width="85px">
                           {{ dormitory.PRODUCT_PAPER_ID | transPaper }}
                         </td>
                         <td class="CPXXBJYS">毛重（kg）</td>
@@ -541,10 +541,13 @@ export default {
       });
     },
     //查询
+    _StockQuery(){
+      this.currentPage = 1;
+      this.StockQuery();
+    },
     StockQuery() {
       this.tables = [];
       this.dormitory = [];
-      this.stockInfo_1 = [];
       this.stockInfo = false; //库存信息显示
       var data = {
         productType: this.productType, //产品类型
@@ -578,13 +581,14 @@ export default {
       this.stockInfo_1 = [];
       this.stockInfo = false; //库存信息显示
       this.empty = true; //库存信息为空
-      this.count = 0
-      this._GetStockByUser();
+      this.count = 0;
+      this.currentPage = 1;
     },
     //点击行的事件
     KC_CP_SC(val) {
       this.stockInfo = true; //库存信息显示
       this.empty = false; //库存信息为空
+      this.stockInfo_1 = [];
       var data_1 = {
         itemNo: val.ITEM_NO,
         stock_no: this.stockIds
@@ -628,7 +632,6 @@ export default {
     //翻页获取订单
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.bankData = [];
       this.StockQuery();
     }
   }
@@ -642,7 +645,7 @@ export default {
 }
 .CPXXBJYS {
   background: #d5ecb8;
-  width: 65px;
+  width: 55px;
 }
 .BK_1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
