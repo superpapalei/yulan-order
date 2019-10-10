@@ -455,6 +455,8 @@ export default {
     
     //根据用户查区域市场
     _getAreaCode(){
+      this.tableData = []
+      this.value_4= []
       this.AREACODE= [];
       var userInfo = JSON.parse(Cookies.get("userInfo"));
       var data = {
@@ -470,6 +472,8 @@ export default {
     },
     //根据市场区域查片区
     areaCode(val){          //点击选择市场事件
+    this.tableData = []
+      this.value_4= []
           var data = {
             areaCode:val
           }
@@ -482,6 +486,8 @@ export default {
     },
     //根据市场和片区查可选用户
     district_code(val){
+      this.tableData = []
+      this.value_4= []
       this.second = val
          var data = {
            areaCode:this.first,
@@ -491,6 +497,8 @@ export default {
     },
     //根据市场，片区，客户类型查可选用户
     customer_type(val){
+      this.tableData = []
+      this.value_4= []
       var data = {
            areaCode:this.first,
             district:this.second,
@@ -545,7 +553,7 @@ export default {
     queryQuYu_1() {  
       this.query_1 = true
       this.tableData = []
-      if(this.value_4 === []){
+      if(this.value_4 == []){
         return this.tableData = []
       }else{
       var data = {
