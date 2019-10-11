@@ -739,7 +739,6 @@ export default {
                     return;
                 }
             }
-            console.log(_data)
             this.$emit('visible',false);
             this.$emit('finalData',_data);
             this.$emit('suggest',this.suggestionLJ);
@@ -786,7 +785,6 @@ export default {
         },
         //获取每页的条数
         handleSizeChange(val) {
-            //console.log(`每页 ${val} 条`);
         },
         //当前页改变时的操作
         handleCurrentChange(val){
@@ -860,7 +858,6 @@ export default {
             });
             this.data[this.chooseIndex].curtainItemName = data.note;
             this.data[this.chooseIndex].specification = data.fixGrade/1000;
-            console.log(this.data[this.chooseIndex],this.curtainData[this.chooseIndex])
             let theFixType;
             if(this.data[this.chooseIndex].itemType === 'lspb'){
                 this.data[this.chooseIndex].certainHeightWidth = null
@@ -923,7 +920,6 @@ export default {
                         this.updateDosage(_data.itemType,keys);
                     }
                     this.data[this.chooseIndex].item.itemNo = this.itemNo;
-                    console.log(this.data[this.chooseIndex],this.curtainData[this.chooseIndex])
                     this.judgeTip(this.data[this.chooseIndex],this.chooseIndex);
                 }).catch(err =>{
                     console.log(err);
@@ -931,7 +927,6 @@ export default {
             }
             else if(status1){
                 this.data[this.chooseIndex].item.itemNo = this.itemNo;
-                console.log(this.data[this.chooseIndex],this.curtainData[this.chooseIndex])
                 this.judgeTip(this.data[this.chooseIndex],this.chooseIndex);
                 if(this.data[this.chooseIndex].item.itemNo === 'GY-003'){
                     this.data[this.chooseIndex].dosage = this.curtainData[this.chooseIndex].dosage;
@@ -1086,7 +1081,6 @@ export default {
         //动态判断制造说明
         judgeTip(data,index){
             let status = -1;
-            console.log(data,this.compareData[index])
             if(data.certainHeightWidth === 0 && this.compareData[index].certainHeightWidth === 1){
                 status = 1;
             }
@@ -1283,7 +1277,6 @@ export default {
                         break;
                 }
             }
-            //console.log(_data);
             let _index = [0,0,0,0,0];
             for(let i = 0; i < _data.length; i++){
                 for(let k = i; k >= 0; k--){
@@ -1349,7 +1342,6 @@ export default {
                 customerType: this.customerType,
                 curtainLists: _curtainLists
             }
-            //console.log(obj,_deleteId)
             if(_deleteId.length > 0){
                 deleteTheGroup(_deleteId).then(res =>{
                     //console.log(res)
@@ -1476,10 +1468,6 @@ export default {
         }
     },
     computed:{
-        // data(){
-        //     console.log(1,this.curtainData)
-        //     return JSON.parse(JSON.stringify(this.curtainData));
-        // }
     },
     activated:function(){
         //按规则排序
@@ -1489,7 +1477,6 @@ export default {
         })
         this.data = JSON.parse(JSON.stringify(this.curtainData))
         this.oldData = JSON.parse(JSON.stringify(this.curtainData));
-        console.log(this.headerData,this.data,this.curtainData);
         this.getOldData(this.headerData);
         this.clearArr();
         this.getSpanArr(this.data);

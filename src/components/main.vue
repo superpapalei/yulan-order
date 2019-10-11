@@ -368,7 +368,7 @@ export default {
       this.$router.push({
         path: "/login"
       });
-      this.$router.go(0);
+      this.$router.go(0);//刷新页面
     },
     //获得菜单数组并传入store ,await并不会阻塞主线程，这里并不起作用
     async getMenuTree() {

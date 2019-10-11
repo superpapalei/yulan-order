@@ -118,6 +118,7 @@ export default {
           this.$router.push({
             path: "/main"
           });
+          //this.$router.go(0);//刷新页面
         })
         .catch(err => {
           this.$alert(`${err.msg}`, "提示", {
