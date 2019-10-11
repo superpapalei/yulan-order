@@ -84,6 +84,10 @@ export function tabsName(index) {
     case "design/ISExamineMarket":
     case "design/ISExamineGM":
       return "形象店设计审核";  
+    case "design/lanJuGMExamine":
+        return "兰居设计审核";
+    case "design/lanJuMarketExamine":
+        return "兰居设计审核";
     default:
       return "xxx";
   }
