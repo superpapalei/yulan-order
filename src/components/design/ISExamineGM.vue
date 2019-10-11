@@ -648,8 +648,8 @@ export default {
       }
       var listGM = this.tableData.GM_FILE.split(";");
       for (var i = 0; i < listGM.length - 1; i++) {
-        var index = list[i].lastIndexOf("/");
-        var fileName = list[i].substr(index + 1);
+        var index = listGM[i].lastIndexOf("/");
+        var fileName = listGM[i].substr(index + 1);
         this.fileListGM.push({
           name: fileName,
           url: list[i]

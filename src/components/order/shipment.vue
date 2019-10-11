@@ -314,7 +314,7 @@ export default {
         });
         return;
       }
-      if (this.submit.TYPE == "丢失" )
+      if (this.s.TYPE == "丢失" )
       {
           this.submit.DAMAGED_QUANTITY = 0;
       }
@@ -347,20 +347,21 @@ export default {
         });
         return;
       }
-      addSubmit(data).then(res => {
-        if (res.code == 0) {
-          this.$alert("提交成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.init_shipment();
-        } else {
-          this.$alert("提交失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-        }
-      });
+      console.log(data);
+      // addSubmit(data).then(res => {
+      //   if (res.code == 0) {
+      //     this.$alert("提交成功", "提示", {
+      //       confirmButtonText: "确定",
+      //       type: "success"
+      //     });
+      //     this.init_shipment();
+      //   } else {
+      //     this.$alert("提交失败，请稍后重试", "提示", {
+      //       confirmButtonText: "确定",
+      //       type: "warning"
+      //     });
+      //   }
+      // });
       this.complaintDetail=false;
     },
     ...mapMutations("navTabs", ["addTab"]),

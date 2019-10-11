@@ -40,6 +40,8 @@ import SupplyPort from '@/components/supplierModule/supplyPort'
 import Trans from '@/components/supplierModule/trans'
 import ISExamineMarket from '@/components/design/ISExamineMarket'
 import ISExamineGM from '@/components/design/ISExamineGM'
+import lanJuGMExamine from '@/components/design/lanJuGMExamine'
+import lanJuMarketExamine from '@/components/design/lanJuMarketExamine'
 
 Vue.use(Router)
 
@@ -309,6 +311,16 @@ const router = new Router({
           path: '/design/ISExamineGM',
           name: 'ISExamineGM',
           component: ISExamineGM
+        },        
+        {
+          path: '/design/lanJuGMExamine',
+          name: 'lanJuGMExamine',
+          component: lanJuGMExamine
+        },        
+        {
+          path: '/design/lanJuMarketExamine',
+          name: 'lanJuMarketExamine',
+          component: lanJuMarketExamine
         },
       ]
     }
