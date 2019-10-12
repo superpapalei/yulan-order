@@ -74,9 +74,9 @@ export function tabsName(index) {
     case "query/stockQuery":
       return "库存查询";
     case "query/areaQuery":
-      return "区域订单查询";
+      return "区域提货单查询";
     case "query/orderQuery":
-      return "订单查询";
+      return "区域订单查询";
     case "supplierModule/supplyPort":
       return "采购单确认";
     case "supplierModule/trans":
