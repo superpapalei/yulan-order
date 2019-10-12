@@ -443,7 +443,7 @@
               <el-upload
                 v-if="!EDITorCHECK"
                 class="upload-de"
-                :action="Global.uploadUrl + '/IMAGE_STORE/UploadFiles'"
+                :action="Global.baseUrl + '/IMAGE_STORE/UploadFiles'"
                 drag
                 multiple
                 :on-change="handleChange"
@@ -905,12 +905,11 @@ export default {
         this.tableData.ATTACHMENT_FILE_FOLDER =
           "/Files/IMAGE_STORE/" + this.cid + "/" + this.dateStamp;
       } else {
-        if(this.deleteFile.length>0)
-        {
-          this.tableData.ATTACHMENT_FILE = '';
+        if (this.deleteFile.length > 0) {
+          this.tableData.ATTACHMENT_FILE = "";
           for (var i = 0; i < this.fileList.length; i++) {
-          this.tableData.ATTACHMENT_FILE +=this.fileList[i].url + ";";
-        }
+            this.tableData.ATTACHMENT_FILE += this.fileList[i].url + ";";
+          }
         }
         this.submitEDITANSYC();
       }
@@ -959,7 +958,7 @@ export default {
         var fileName = listGM[i].substr(index + 1);
         this.fileListGM.push({
           name: fileName,
-          url: list[i]
+          url: listGM[i]
         });
       }
       this.EDITorCHECK = true;
@@ -1040,12 +1039,12 @@ export default {
     },
     downLoad(path) {
       downLoadFile(
-        this.Global.uploadUrl + `DownLoadAPI/DownloadFile?path=${path}&`
+        this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     },
     downLoadCompress(path) {
       downLoadFile(
-        this.Global.uploadUrl + `DownLoadAPI/DownloadFileCompress?path=${path}&`
+        this.Global.baseUrl + `DownLoadAPI/DownloadFileCompress?path=${path}&`
       );
     },
     //隔行变色
@@ -1086,7 +1085,8 @@ export default {
       }
     },
     handleSuccess(res, file, fileList) {
-      var successCount = fileList.filter(item=>item.status == "success").length;
+      var successCount = fileList.filter(item => item.status == "success")
+        .length;
       if (successCount == fileList.length) {
         if (this.newORedit) {
           this.submitEDITANSYC();

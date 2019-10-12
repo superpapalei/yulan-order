@@ -774,7 +774,7 @@ export default {
     },
     downLoad(path) {
       downLoadFile(
-        this.Global.uploadUrl + `DownLoadAPI/DownloadFile?path=${path}&`
+        this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     },
   }

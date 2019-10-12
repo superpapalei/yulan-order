@@ -15,7 +15,7 @@ import './assets/css/base.css'
 import store from './store'
 import { showFullScreenLoading, tryHideFullScreenLoading } from './api/loading'
 import * as custom from './common/js/filter'
-import * as Global from './common/js/global'
+import * as Global from './api/httpASP.js'
 
 Vue.use(ElementUI);
 Vue.use(Cookies);
@@ -124,7 +124,7 @@ Vue.component('currency-input', {
       var decimalNum = this.decimalNum ? this.decimalNum : 2;//保留位数控制
       formattedValue = value
         //先把非数字的都替换掉，除了数字和小数点
-        .replace(/[^\d\.]/g, '')
+        .replace(/[^(\-?)\d\.]/g, '')
         .replace(/^0+/g, '0')
         //必须保证第一个为数字而不是小数点
         .replace(/^\./g, '')

@@ -610,12 +610,12 @@ export default {
     },
     downLoad(path) {
       downLoadFile(
-        this.Global.uploadUrl + `DownLoadAPI/DownloadFile?path=${path}&`
+        this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     },
     downLoadCompress(path) {
       downLoadFile(
-        this.Global.uploadUrl + `DownLoadAPI/DownloadFileCompress?path=${path}&`
+        this.Global.baseUrl + `DownLoadAPI/DownloadFileCompress?path=${path}&`
       );
     },
     //隔行变色
