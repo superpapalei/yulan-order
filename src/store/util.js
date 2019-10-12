@@ -81,6 +81,8 @@ export function tabsName(index) {
       return "采购单确认";
     case "supplierModule/trans":
       return "入库记录查询";
+      case "supplierModule/lanJuPort":
+      return "采购单确认";
     default:
       return "xxx";
   }

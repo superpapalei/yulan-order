@@ -38,6 +38,7 @@ import AreaQuery from '@/components/query/areaQuery'
 import OrderQuery from '@/components/query/orderQuery'
 import SupplyPort from '@/components/supplierModule/supplyPort'
 import Trans from '@/components/supplierModule/trans'
+import LanJuPort from '@/components/supplierModule/lanJuPort'
 
 
 Vue.use(Router)
@@ -298,6 +299,11 @@ const router = new Router({
           path: '/supplierModule/supplyPort',
           name: 'supplyPort',
           component: SupplyPort
+        },
+        {
+          path: '/supplierModule/lanJuPort',
+          name: 'lanJuPort',
+          component: LanJuPort
         },
 
       ]
