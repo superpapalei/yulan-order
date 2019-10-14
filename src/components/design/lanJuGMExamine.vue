@@ -334,7 +334,7 @@
                 <div>
                   <el-upload
                      class="upload-de"
-                     :action="Global.uploadUrl + '/LANJU_STORE/UploadFiles'"
+                     :action="Global.baseUrl + '/LANJU_STORE/UploadFiles'"
                      drag
                      multiple
                      :on-change="handleChange"
@@ -719,7 +719,7 @@ export default {
         var fileName = listGM[i].substr(index + 1);
         this.fileListGM.push({
           name: fileName,
-          url: list[i]
+          url: listGM[i]
         });
         }
         this.usedRowspan = this.initRowspan + this.detailCount - 1;
@@ -939,7 +939,7 @@ export default {
     },
     downLoad(path) {
       downLoadFile(
-        this.Global.uploadUrl + `DownLoadAPI/DownloadFile?path=${path}&`
+        this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     }
   }

@@ -451,7 +451,7 @@
           <el-upload
             v-if="tableData.STATUS == 2"
             class="upload-de2"
-            :action="Global.uploadUrl + '/IMAGE_STORE/UploadFiles'"
+            :action="Global.baseUrl + '/IMAGE_STORE/UploadFiles'"
             drag
             multiple
             :on-change="handleChange"
@@ -652,7 +652,7 @@ export default {
         var fileName = listGM[i].substr(index + 1);
         this.fileListGM.push({
           name: fileName,
-          url: list[i]
+          url: listGM[i]
         });
       }
       this.dateStamp = new Date().getTime();
@@ -688,12 +688,12 @@ export default {
     },
     downLoad(path) {
       downLoadFile(
-        this.Global.uploadUrl + `DownLoadAPI/DownloadFile?path=${path}&`
+        this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     },
     downLoadCompress(path) {
       downLoadFile(
-        this.Global.uploadUrl + `DownLoadAPI/DownloadFileCompress?path=${path}&`
+        this.Global.baseUrl + `DownLoadAPI/DownloadFileCompress?path=${path}&`
       );
     },
     //隔行变色
@@ -789,7 +789,8 @@ export default {
       this.fileChange = true;
     },
     handleSuccess(res, file, fileList) {
-      var successCount = fileList.filter(item=>item.status == "success").length;
+      var successCount = fileList.filter(item => item.status == "success")
+        .length;
       if (successCount == fileList.length) {
         this.passANSYC();
       }
