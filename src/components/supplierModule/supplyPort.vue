@@ -189,7 +189,7 @@
         title=""
         :visible.sync="detailVisible1"
         :show-close="true"
-        width="100%"
+        width="70%"
         top="8vh"
       >
         <div style="width:100% ;margin:0 auto;">
@@ -476,7 +476,7 @@
         title=""
         :visible.sync="detailVisible2"
         :show-close="true"
-        width="100%"
+        width="70%"
         top="8vh"
       >
         <div style="width:100% ;margin:0 auto;">

@@ -196,7 +196,7 @@
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
              <tr><td colspan="2" style="font-family:黑体;font-size:1.6em;font-weight:bold;" align="center">
-			采购单*</td>
+			采购单</td>
 	</tr>
               <tr>
                 <td style="border-bottom:solid 3px gray;text-align:left">
@@ -462,10 +462,15 @@
                    <el-table-column
                     width="80"
                     header-align="center"
+                    align="left"
                     label="名称">
                     <template>
+                      <div>
+                        <body margin:0>
+                          
+                   
                            <el-table 
-                                :data="item.tab2[index]" :show-header="false" class="el-table__header"  >
+                                :data="item.tab2[index]" :show-header="false" class="el-table__header" style="width:100%;" >
                              <el-table-column  width="70" label="名称">
                               <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template>
                              </el-table-column>
@@ -490,10 +495,12 @@
                              <el-table-column label="制造说明"  header-align="center" width="100">
                                <template slot-scope="scope">{{scope.row.product_note}} </template>     
                              </el-table-column>
-                             <el-table-column label="备注"  header-align="center" width="100">
+                             <el-table-column label="备注"  header-align="center" >
                                <template slot-scope="scope">{{scope.row.notes}} </template> 
                              </el-table-column>
                           </el-table>
+                               </body>
+                          </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="编码" header-align="center" width="130"> </el-table-column>
@@ -536,6 +543,13 @@
   <el-col :span="3"><div class="grid-content bg-purple" style="font-weight:bold;"> {{ sumMoney|numFilter}}   </div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"> </div></el-col>
 </el-row>
+<div>
+    <el-button
+                    @click="downLoad()"
+                    type="primary"
+                    size="small"
+                    >导出Excel</el-button>
+</div>
         </el-card>
    </td>
               </tr>
@@ -547,7 +561,7 @@
         title=""
         :visible.sync="detailVisible2"
         :show-close="true"
-        width="100%"
+        width="70%"
         top="8vh"
       >
         <div style="width:100% ;margin:0 auto;">
@@ -782,27 +796,27 @@
                     <el-table-column
                       property="ITEM_NO"
                       label="物料号"
-                      width="150"
+                      width="100"
                     ></el-table-column>
                     <el-table-column
                       property="MGUIGE"
                       label="物料型号"
-                      width="150"
+                      width="100"
                     ></el-table-column>
                     <el-table-column
                       property="MNAME"
                       label="名称"
-                      width="150"
+                      width="130"
                     ></el-table-column>
                     <el-table-column
                       property="GRADE"
                       label="规格"
-                      width="100"
+                      width="50"
                     ></el-table-column>
                     <el-table-column
                       property="QTY_PUR"
                       label="数量"
-                      width="60"
+                      width="70"
                     ></el-table-column>
                     <el-table-column label="含税单价" width="80">
                       <template slot-scope="scope">
@@ -822,7 +836,7 @@
                     <el-table-column
                       property="NOTE"
                       label="备注"
-                      width="200"
+                      width="180"
                     ></el-table-column>
                     <el-table-column
                       property="DATE_REQ"
@@ -857,8 +871,13 @@
       <div id="supplyCon">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="待确认" name="first" align="left">
+            <div></div>
             <div align="right">
             <template>
+              <el-button
+                    @click="downLoadAll()"
+                    size="small"
+                    >下载采购单表头及明细</el-button>
   <el-select v-model="selvalue" @change="SelectClick" placeholder="全部" >
     <el-option
       v-for="item in options"
@@ -913,8 +932,7 @@
                     @click="openDialog(scope.row.PUR_NO)"
                     type="primary"
                     size="small"
-                    >前往确认</el-button
-                  >
+                    >前往确认</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1003,8 +1021,7 @@
                     @click="openDialog1(scope.row.PUR_NO,scope.row.ORDER_NO)"
                     type="primary"
                     size="small"
-                    >查看详情</el-button
-                  >
+                    >查看详情</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1027,7 +1044,8 @@
 </template>
 
 <script>
-import { GetPoDetail, GetRelativePo,SaveHeadNotes,Submit } from "@/api/supplierASP";
+import { GetPoDetail, GetRelativePo,SaveHeadNotes,Submit,CreateExcel } from "@/api/supplierASP";
+import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 
 
@@ -1039,6 +1057,7 @@ export default {
   name: "LanJuPort",
   data() {
     return {
+     companyId: Cookies.get("companyId"),
       sumMoney:0,
       items:[],
       table1Datas:[],
@@ -1154,8 +1173,8 @@ export default {
          }
          ],
       po:"",
-      date1: "",
-      date2: "",
+      date1 :"0001/1/1",
+      date2 : "9999/1/1",
       now: new Date(),
       Month: new Date().getMonth() + 1,
       input: "",
@@ -1208,6 +1227,7 @@ export default {
 
 
   methods: {
+  
         datatransMethod(value) {
       //时间戳转化大法
       if (value == null) {
@@ -1267,6 +1287,13 @@ export default {
       date.setHours(0,0,0);
       return date;
 },
+    //获取最近一周时间
+     getCurrentWeek(){
+      var date=new Date();
+      date.setDate(date.getDate()-7);
+      date.setHours(0,0,0);
+      return date;
+     },
     //打开确认页面
     openDialog(PUR_NO) {
     
@@ -1368,9 +1395,9 @@ export default {
           this.check_flag = 1;
            this.selvalue="all";
            this.po_type="all";
-             this.po="";
-             this.date1=this.getCurrentMonthFirst();
-    this.date2=new Date();
+           this.po="";
+           this.date1=this.getCurrentWeek();
+           this.date2=new Date();
           break;
       }
          this.autoSearch();
@@ -1467,6 +1494,32 @@ export default {
         this.pur_headData = res.data;
       });
     },
+
+     downLoad() {
+       var PUR_NO=this.pur_headForm.PUR_NO;
+        //  downLoadFile(this.Global.fileCenterUrl + `FILE_CENTERAPI/DownloadFile?FILE_ID=${PUR_NO}`);
+         downLoadFile(this.Global.baseUrl + `PUR_HEAD/CreateExcel?PUR_NO=${PUR_NO}`);
+    },
+    downLoadAll(){
+      var cid=this.companyId;
+        //  downLoadFile(this.Global.fileCenterUrl + `FILE_CENTERAPI/DownloadFile?FILE_ID=${PUR_NO}`);
+         downLoadFile(this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}`);
+    },
+      GetDetailExcel(){
+     var data={
+          PUR_NO: this.pur_headForm.PUR_NO
+     };
+     CreateExcel(data).then(res=>{
+       var tt=res.data;
+             console.log("Excel地址：");
+       console.log(tt);
+
+       window.open(tt)
+      // window.location.href = "excel地址"
+     })
+
+
+    },
     autoSearchDetail(PUR_NO) {
       var data = {
         PUR_NO: PUR_NO
@@ -1484,10 +1537,12 @@ export default {
         this.gridData[i].DATE_DELIVER=""
        }
        //将所有位置列出来
-         if(loc.indexOf(this.gridData[i].CL_PLACE)==-1){
-            loc.push(this.gridData[i].CL_PLACE);
+         if(loc.indexOf(this.gridData[i].CL_PLACE_ID)==-1){
+            loc.push(this.gridData[i].CL_PLACE_ID);
           
-            let temObj1={"cl_place":this.gridData[i].CL_PLACE,
+            let temObj1={
+                       "cl_place_id":this.gridData[i].CL_PLACE_ID,
+                       "cl_place":this.gridData[i].CL_PLACE,
                        "cl_item_no":this.gridData[i].CL_ITEM_NO,
                        "cl_width":this.gridData[i].CL_WIDTH,
                        "cl_high":this.gridData[i].CL_HIGH,
@@ -1514,7 +1569,7 @@ export default {
         tab3[k].littleSum=0.00;
          for(let i=0;i<this.gridData.length;i++){
             
-            if (tab1[k].cl_place==this.gridData[i].CL_PLACE){
+            if (tab1[k].cl_place_id==this.gridData[i].CL_PLACE_ID){
                 
               let temObj2={"cl_name":this.gridData[i].CL_NAME,
                            "item_no":this.gridData[i].ITEM_NO,
@@ -1657,8 +1712,7 @@ export default {
 
   created() {
     this.po_type = "all";
-     this.date1 = "0001/1/1";
-          this.date2 = "9999/1/1";
+   
     this.autoSearch();
   }
 };
@@ -1730,4 +1784,7 @@ export default {
 td {
   text-align: center;
 }
+</style>
+<style >
+
 </style>
