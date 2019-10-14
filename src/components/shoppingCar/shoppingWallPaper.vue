@@ -19,18 +19,40 @@
             style="width:100%;"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="55" :selectable="checkActiviyEffect"></el-table-column>
-            <el-table-column prop="item.itemNo" label="型号" min-width="100"></el-table-column>
-            <el-table-column label="活动" min-width="140px" show-overflow-tooltip>
+            <el-table-column
+              type="selection"
+              width="55"
+              :selectable="checkActiviyEffect"
+            ></el-table-column>
+            <el-table-column
+              prop="item.itemNo"
+              label="型号"
+              min-width="100"
+            ></el-table-column>
+            <el-table-column
+              label="活动"
+              min-width="140px"
+              show-overflow-tooltip
+            >
               <template slot-scope="scope">
-                <span style="color: red;" v-if="scope.row.activityEffective === false">(过期活动)</span>
-                {{scope.row.activityName?scope.row.activityName:'不参与活动'}}
+                <span
+                  style="color: red;"
+                  v-if="scope.row.activityEffective === false"
+                  >(过期活动)</span
+                >
+                {{
+                  scope.row.activityName ? scope.row.activityName : "不参与活动"
+                }}
               </template>
               <!-- <template slot-scope="scope1">
                             {{scope1.row.activityName?scope1.row.activityName:'--'}}
               </template>-->
             </el-table-column>
-            <el-table-column label="发货说明" min-width="80" show-overflow-tooltip>
+            <el-table-column
+              label="发货说明"
+              min-width="80"
+              show-overflow-tooltip
+            >
               <template slot-scope="scope">
                 <span v-if="scope.row.splitShipment === 0">等生产</span>
                 <span v-else-if="scope.row.splitShipment === 1">分批发货</span>
@@ -40,15 +62,15 @@
             <el-table-column label="单价">
               <template slot-scope="scope">
                 <span v-if="isManager === '0'">***</span>
-                <span v-else>{{scope.row.price}}</span>
+                <span v-else>{{ scope.row.price }}</span>
               </template>
             </el-table-column>
             <el-table-column label="数量" min-width="120">
               <template slot-scope="scope1">
                 <div v-if="scope1.row.unit === '平方米'">
                   <span>
-                    {{scope1.row.width}} × {{scope1.row.height}}
-                    = {{scope1.row.width*scope1.row.height | dosageFilter}}
+                    {{ scope1.row.width }} × {{ scope1.row.height }} =
+                    {{ (scope1.row.width * scope1.row.height) | dosageFilter }}
                   </span>
                   <!-- <el-input size="mini"
                                     style="width: 70px;"
@@ -63,7 +85,7 @@
                   </el-input>-->
                 </div>
                 <div v-else>
-                  <span>{{scope1.row.quantity}}</span>
+                  <span>{{ scope1.row.quantity }}</span>
                   <!-- <el-input size="mini"
                                     style="width: 100px;"
                                     @change="numberChange($event,scope1.$index,scope.$index)"
@@ -88,18 +110,30 @@
             <el-table-column label="小计">
               <template slot-scope="scope">
                 <div v-if="isManager === '0'">***</div>
-                <div
-                  v-else-if="scope.row.unit === '平方米'"
-                >{{subtotal(scope.row.width, scope.row.height, scope.row.price)}}</div>
-                <div
-                  v-else
-                >{{parseFloat(scope.row.price) * parseFloat(scope.row.quantity)|dosageFilter}}</div>
+                <div v-else-if="scope.row.unit === '平方米'">
+                  {{
+                    subtotal(scope.row.width, scope.row.height, scope.row.price)
+                  }}
+                </div>
+                <div v-else>
+                  {{
+                    (parseFloat(scope.row.price) *
+                      parseFloat(scope.row.quantity))
+                      | dosageFilter
+                  }}
+                </div>
               </template>
             </el-table-column>
             <el-table-column label="操作" min-width="170">
               <template slot-scope="scope">
-                <a class="link-detail" @click="handleDetails(scope.$index, scope.row)">查看详情</a>
-                <a class="link-delete" @click="deleteSingle(scope.row)">删除商品</a>
+                <a
+                  class="link-detail"
+                  @click="handleDetails(scope.$index, scope.row)"
+                  >查看详情</a
+                >
+                <a class="link-delete" @click="deleteSingle(scope.row)"
+                  >删除商品</a
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -108,12 +142,13 @@
       <el-table-column>
         <template slot-scope="scope">
           <div v-if="scope.row.activity">
-            {{scope.row.activity}}
+            {{ scope.row.activity }}
             <a
               class="ml20"
               style="color:#606266"
               @click="deleteGroup(scope.$index)"
-            >删除分组</a>
+              >删除分组</a
+            >
           </div>
           <!-- {{scope.$index}}
           {{shopsData.cartItems.wallPaper[scope.$index]}}-->
@@ -124,7 +159,12 @@
         <template slot-scope="scope">
           <div class="r">
             <!-- <a class="ml20" @click="changeChoose(scope.$index)" style="color: #606266;">切换选择项</a> -->
-            <a class="ml20" @click="deleteChoose(scope.$index)" style="color: red;">删除选中的商品</a>
+            <a
+              class="ml20"
+              @click="deleteChoose(scope.$index)"
+              style="color: red;"
+              >删除选中的商品</a
+            >
           </div>
         </template>
       </el-table-column>
@@ -134,13 +174,20 @@
       <div class="r">
         <div>
           <span>已选择</span>
-          <span style="color:red;">{{multipleSelection.length}}</span>
+          <span style="color:red;">{{ multipleSelection.length }}</span>
           <span>件商品</span>
         </div>
         <div>
           <span>合计：</span>
-          <span v-if="isManager === '0'" style="color:red; font-size:20px;" class="mr10">***</span>
-          <span v-else style="color:red; font-size:20px;" class="mr10">￥{{totalMoney|dosageFilter}}</span>
+          <span
+            v-if="isManager === '0'"
+            style="color:red; font-size:20px;"
+            class="mr10"
+            >***</span
+          >
+          <span v-else style="color:red; font-size:20px;" class="mr10"
+            >￥{{ totalMoney | dosageFilter }}</span
+          >
         </div>
         <div
           @click="handleCommit"
@@ -148,7 +195,9 @@
           style="width:80px; height:50px;
                         color:white; font-size:18px; 
                         text-align:center; cursor: pointer;"
-        >去结算</div>
+        >
+          去结算
+        </div>
       </div>
     </div>
   </div>
@@ -303,7 +352,6 @@ export default {
     squareChange(value, index, groupIndex, flag) {
       return;
       var re = /((^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$))/;
-      console.log(re.test(value));
       if (re.test(value) === false) {
         this.$alert("请填写正确的数字", "提示", {
           type: "warning",
@@ -325,9 +373,7 @@ export default {
           height: this.shopsData[groupIndex].commodities[index].height,
           remark: this.shopsData[groupIndex].commodities[index].remark
         })
-          .then(res => {
-            console.log(res);
-          })
+          .then(res => {})
           .catch(err => {
             console.log(err);
           });
@@ -340,9 +386,7 @@ export default {
           height: value,
           remark: this.shopsData[groupIndex].commodities[index].remark
         })
-          .then(res => {
-            console.log(res);
-          })
+          .then(res => {})
           .catch(err => {
             console.log(err);
           });
@@ -374,11 +418,6 @@ export default {
     //计算每件商品的小计:非长乘高
     numberChange(value, index, groupIndex) {
       return;
-      // console.log(this.data[index].commodities.id);
-      // console.log(this.shopsData);
-      // console.log(index, groupIndex);
-      // console.log(typeof(value));
-      // console.log(Number(value));
       var re = /((^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$))/;
       console.log(re.test(value));
       if (re.test(value) === false) {
@@ -398,9 +437,7 @@ export default {
         height: "",
         remark: this.shopsData[groupIndex].commodities[index].remark
       })
-        .then(res => {
-          console.log(res);
-        })
+        .then(res => {})
         .catch(err => {
           console.log(err);
         });
@@ -430,13 +467,9 @@ export default {
         }
         this.totalMoney = total;
       }
-      console.log(value, index);
     },
     //监测选中项的变化
     handleSelectionChange(val) {
-      if (val) {
-      }
-      console.log(this.multipleSelection);
       //当已有选项时，只能选当前组其他项，不可选其他组，若选其他组，原有组清空
       if (this.multipleSelection.length !== 0) {
         var value;
@@ -464,7 +497,6 @@ export default {
           this.$refs[re].clearSelection();
         }
       }
-      console.log(val);
       var total = 0;
       this.multipleSelection = val;
       for (var i = 0; i < this.multipleSelection.length; i++) {
@@ -484,8 +516,6 @@ export default {
     },
     //查看详情
     handleDetails(index, row) {
-      console.log(index);
-      console.log(row);
       this.addTab("detail/detailWallPaper");
       this.$router.push({
         name: `detailWallPaper`,
@@ -504,8 +534,6 @@ export default {
     },
     //切换选中项
     changeChoose(index) {
-      console.log(index);
-      console.log(this.shopsData[index].commodities.length);
       var re = "multipleTable" + index;
       // if(this.multipleSelection.length !== this.shopsData[index].commodities.length)
       for (var i = 0; i < this.shopsData[index].commodities.length; i++)
@@ -565,7 +593,6 @@ export default {
           }
           deleteItems(data)
             .then(res => {
-              console.log(res);
               this.$alert("删除成功", "提示", {
                 confirmButtonText: "确定",
                 type: "success"
@@ -595,7 +622,6 @@ export default {
     },
     //删除一整个分组
     deleteGroup(index) {
-      console.log(index);
       this.$confirm("是否删除本组中的商品？删除后将不可恢复！", "提示", {
         confirmButtonText: "确定删除",
         cancelButtonText: "我再想想",
@@ -608,7 +634,6 @@ export default {
           }
           deleteGroup([this.shopsData[index].cartItemId])
             .then(res => {
-              console.log(res);
               this.activityData = [];
               this.init();
               this.$alert("删除成功", "提示", {
@@ -701,7 +726,7 @@ export default {
     }
   },
   created() {
-      //this.init();
+    //this.init();
   },
   watch: {
     wallpaperData(data) {

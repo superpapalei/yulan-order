@@ -54,7 +54,6 @@ export default {
     ...mapMutations("navTabs", ["addTab"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"]),
     handleClick(tab, event) {
-      console.log(tab.name);
       this.addTab("shoppingCar/shopping" + "?" + tab.name);
       this.$router.push({
         path: "/shoppingCar/shopping" + "?" + tab.name

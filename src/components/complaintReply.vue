@@ -74,21 +74,27 @@
             width="150px"
           ></el-table-column>
           <el-table-column
+            prop="CUSTOMER_CODE"
+            label="客户代码"
+            align="center"
+            width="100px"
+          ></el-table-column>
+          <el-table-column
+            prop="CUSTOMER_NAME"
+            label="客户名称"
+            align="center"
+          ></el-table-column>
+          <el-table-column
             prop="TYPE"
             label="投诉类型"
             align="center"
             width="100px"
           ></el-table-column>
-          <el-table-column prop="SUBMITTS" label="投诉时间" align="center" width="100px">
+          <el-table-column prop="SUBMITTS" label="投诉时间" align="center" width="120px">
             <template slot-scope="scope">
               <span>{{ scope.row.SUBMITTS | datatrans }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="MEMO"
-            label="投诉内容"
-            align="center"
-          ></el-table-column>
           <el-table-column label="状态" align="center" width="150px">
             <template slot-scope="scope">
               <span>{{ scope.row.STATUS | transStatus }}</span>
@@ -117,7 +123,7 @@
         </el-table>
       </div>
 
-      <div style="margin:0 25%;" class="block">
+      <div style="margin:0 25%;margin-top:10px" class="block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -146,7 +152,7 @@
             <td class="grayTD" style="width:16%;height:15px">客户代码</td>
             <td style="width:34%;height:15px">{{ tableData.CUSTOMER_CODE }}</td>
             <td class="grayTD" style="width:16%;height:15px">客户名称</td>
-            <td style="width:34%;height:15px">{{ this.CNAME }}</td>
+            <td style="width:34%;height:15px">{{ tableData.CUSTOMER_NAME  }}</td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">提货单号</td>
@@ -279,7 +285,7 @@
             </td>
             <td class="grayTD" style="width:16%;height:15px">客户名称</td>
             <td v-if="isEdit" style="width:34%;height:15px" class="grayTD">
-              {{ this.CNAME }}
+              {{ submit.CUSTOMER_NAME}}
             </td>
             <td v-else style="width:34%;height:15px" class="grayTD">
               (提交后自动生成)
@@ -403,6 +409,7 @@
 <script>
 import {
   GetAllComplaintInfo,
+  GetAllUserComplaint,
   GetAllComplaint,
   addSubmit,
   editSubmit,
@@ -585,7 +592,7 @@ export default {
       } else {
         data.finishTime = data.finishTime + " 23:59:59";
       }
-      GetAllComplaint(data).then(res => {
+        GetAllUserComplaint(data).then(res => {
         this.count = res.count;
         this.complaintData = res.data;
       });

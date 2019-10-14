@@ -16,7 +16,7 @@
           <span>{{scope1.row.dateCre |datatrans}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="有效期">
+      <el-table-column align="center" label="有效期" width="200">
         <template slot-scope="scope1">
           <span>{{scope1.row.dateStart |datatrans}}至{{scope1.row.dateEnd |datatrans}}</span>
         </template>

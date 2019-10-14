@@ -144,7 +144,7 @@
 
         <div style="margin:0 auto; width:75px;">
           <br />
-          <el-button type="success"  @click="addSubmit">提 交</el-button>                       <!-- 新增时的按钮 -->
+          <el-button type="success"  @click="_addSubmit()">提 交</el-button>                       <!-- 新增时的按钮 -->
         </div>
 
       </div>
@@ -298,7 +298,7 @@ export default {
       this.submit.C_TRANSBILL = data.TRANS_ID;
     },
     //新增记录提交
-    addSubmit() {
+    _addSubmit() {
       let data = this.submit;
       //判断是否填完所有信息
       if (
@@ -314,7 +314,7 @@ export default {
         });
         return;
       }
-      if (this.submit.TYPE == "丢失" )
+      if (this.s.TYPE == "丢失" )
       {
           this.submit.DAMAGED_QUANTITY = 0;
       }
@@ -347,20 +347,21 @@ export default {
         });
         return;
       }
-      addSubmit(data).then(res => {
-        if (res.code == 0) {
-          this.$alert("提交成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.init_shipment();
-        } else {
-          this.$alert("提交失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-        }
-      });
+      console.log(data);
+      // addSubmit(data).then(res => {
+      //   if (res.code == 0) {
+      //     this.$alert("提交成功", "提示", {
+      //       confirmButtonText: "确定",
+      //       type: "success"
+      //     });
+      //     this.init_shipment();
+      //   } else {
+      //     this.$alert("提交失败，请稍后重试", "提示", {
+      //       confirmButtonText: "确定",
+      //       type: "warning"
+      //     });
+      //   }
+      // });
       this.complaintDetail=false;
     },
     ...mapMutations("navTabs", ["addTab"]),

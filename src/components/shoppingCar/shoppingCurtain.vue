@@ -19,39 +19,51 @@
             style="width:100%;"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="55" :selectable="checkActiviyEffect"></el-table-column>
+            <el-table-column
+              type="selection"
+              width="55"
+              :selectable="checkActiviyEffect"
+            ></el-table-column>
             <el-table-column label="型号">
-              <template slot-scope="scope1">{{scope1.row.modelNumber}}</template>
+              <template slot-scope="scope1">{{
+                scope1.row.modelNumber
+              }}</template>
             </el-table-column>
             <el-table-column label="宽度(m)">
-              <template slot-scope="scope1">{{scope1.row.width}}</template>
+              <template slot-scope="scope1">{{ scope1.row.width }}</template>
             </el-table-column>
             <el-table-column label="高度(m)">
-              <template slot-scope="scope1">{{scope1.row.height}}</template>
+              <template slot-scope="scope1">{{ scope1.row.height }}</template>
             </el-table-column>
             <el-table-column label="帘外包宽度(m)">
               <template slot-scope="scope1">
-                <span
-                  v-if="scope1.row.outsourcingBoxExist === 1"
-                >{{(scope1.row.outsourcingBoxWidth !== null)?scope1.row.outsourcingBoxWidth:'--'}}</span>
+                <span v-if="scope1.row.outsourcingBoxExist === 1">{{
+                  scope1.row.outsourcingBoxWidth !== null
+                    ? scope1.row.outsourcingBoxWidth
+                    : "--"
+                }}</span>
                 <span v-else>--</span>
               </template>
             </el-table-column>
             <el-table-column label="褶皱倍数">
-              <template slot-scope="scope1">{{scope1.row.drape}}</template>
+              <template slot-scope="scope1">{{ scope1.row.drape }}</template>
             </el-table-column>
             <el-table-column label="位置">
-              <template
-                slot-scope="scope1"
-              >{{(scope1.row.location === null)?'--':scope1.row.location}}</template>
+              <template slot-scope="scope1">{{
+                scope1.row.location === null ? "--" : scope1.row.location
+              }}</template>
             </el-table-column>
             <el-table-column label="活动">
               <template slot-scope="scope1">
                 <span
                   style="color: red;"
-                  v-if="scope1.row.curtainLists[scope1.row.unNullNum].curtainCommodities[0].activityEffective === false"
-                >(过期活动)</span>
-                {{scope1.row.activity}}
+                  v-if="
+                    scope1.row.curtainLists[scope1.row.unNullNum]
+                      .curtainCommodities[0].activityEffective === false
+                  "
+                  >(过期活动)</span
+                >
+                {{ scope1.row.activity }}
               </template>
             </el-table-column>
             <el-table-column min-width="100" label="数量">
@@ -71,13 +83,21 @@
             <el-table-column label="小计">
               <template slot-scope="scope1">
                 <span v-if="isManager === '0'">***</span>
-                <span v-else>{{scope1.row.price*scope1.row.count|dosageFilter}}</span>
+                <span v-else>{{
+                  (scope1.row.price * scope1.row.count) | dosageFilter
+                }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="160px">
               <template slot-scope="scope1">
-                <a class="link-detail" @click="handleDetails(scope1.$index, scope1.row)">查看详情</a>
-                <a class="link-delete" @click="deleteSingle(scope1.row)">删除商品</a>
+                <a
+                  class="link-detail"
+                  @click="handleDetails(scope1.$index, scope1.row)"
+                  >查看详情</a
+                >
+                <a class="link-delete" @click="deleteSingle(scope1.row)"
+                  >删除商品</a
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -86,12 +106,13 @@
       <el-table-column>
         <template slot-scope="scope">
           <div v-if="scope.row.activity">
-            {{scope.row.activity}}
+            {{ scope.row.activity }}
             <a
               class="ml20"
               style="color:#606266"
               @click="deleteGroup(scope.$index)"
-            >删除分组</a>
+              >删除分组</a
+            >
           </div>
           <!-- {{scope.$index}}
           {{shopsData.cartItems.wallPaper[scope.$index]}}-->
@@ -102,7 +123,12 @@
         <template slot-scope="scope">
           <div class="r">
             <!-- <a class="ml20" @click="changeChoose(scope.$index)" style="color: #606266;">切换选择项</a> -->
-            <a class="ml20" @click="deleteChoose(scope.$index)" style="color: red;">删除选中的商品</a>
+            <a
+              class="ml20"
+              @click="deleteChoose(scope.$index)"
+              style="color: red;"
+              >删除选中的商品</a
+            >
           </div>
         </template>
       </el-table-column>
@@ -112,13 +138,20 @@
       <div class="r">
         <div>
           <span>已选择</span>
-          <span style="color:red;">{{multipleSelection.length}}</span>
+          <span style="color:red;">{{ multipleSelection.length }}</span>
           <span>件商品</span>
         </div>
         <div>
           <span>合计：</span>
-          <span v-if="isManager === '0'" style="color:red; font-size:20px;" class="mr10">***</span>
-          <span v-else style="color:red; font-size:20px;" class="mr10">￥{{totalMoney|dosageFilter}}</span>
+          <span
+            v-if="isManager === '0'"
+            style="color:red; font-size:20px;"
+            class="mr10"
+            >***</span
+          >
+          <span v-else style="color:red; font-size:20px;" class="mr10"
+            >￥{{ totalMoney | dosageFilter }}</span
+          >
         </div>
         <div
           @click="handleCommitNew"
@@ -126,7 +159,9 @@
           style="width:80px; height:50px;
                         color:white; font-size:18px; 
                         text-align:center; cursor: pointer;"
-        >去结算</div>
+        >
+          去结算
+        </div>
       </div>
     </div>
   </div>
@@ -251,7 +286,8 @@ export default {
               ) {
                 totalPrice +=
                   theData[i].curtainCartItems[j].curtainLists[k]
-                    .curtainCommodities[l].price * theData[i].curtainCartItems[j].curtainLists[k]
+                    .curtainCommodities[l].price *
+                  theData[i].curtainCartItems[j].curtainLists[k]
                     .curtainCommodities[l].dosage;
               }
             }
@@ -311,7 +347,6 @@ export default {
     },
     //监测选中项的变化
     handleSelectionChange(val) {
-      console.log(val);
       //不可选择多组
       if (this.multipleSelection.length !== 0 && val.length !== 0) {
         if (this.multipleSelection[0].index !== val[0].index) {
@@ -377,7 +412,6 @@ export default {
     },
     //查看详情
     handleDetails(index, data) {
-      console.log(index, data);
       //Cookies.set('curtain',data);
       this.addTab("detail/detailCurtain");
       this.$router.push({
@@ -396,7 +430,6 @@ export default {
           this.shopsData[i].curtainCartItems[j].index--;
         }
       }
-      console.log(this.shopsData);
     },
     //删除单件商品
     deleteSingle(data) {
@@ -486,7 +519,6 @@ export default {
     },
     //删除分组
     deleteGroup(index) {
-      console.log(index);
       let obj = [];
       let multipleTable = "multipleTable" + index;
       for (let i = 0; i < this.shopsData[index].curtainCartItems.length; i++) {
@@ -509,7 +541,6 @@ export default {
             this.$refs[multipleTable].clearSelection();
           });
         });
-      console.log(index);
     },
     //新建一个方法，不动原来的
     handleCommitNew() {

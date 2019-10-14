@@ -44,55 +44,78 @@
       </el-input>
       <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
 
-      <!-- <el-button
-        style="float:right"
-        size="medium"
-        type="primary"
-        @click="_addRecord()">新增投诉单
-      </el-button> -->
       </div>
       
       <div style="margin-top:10px">
-        
-      <el-table border :data="complaintData" :default-sort ="{prop:'date',order:'descending'}" style="width: 100%" class="table_1">
-        <el-table-column prop="SALE_NO" label="提货单号" align="center" ></el-table-column>
-        <el-table-column prop="C_TRANSBILL" label="物流单号" align="center" ></el-table-column>
-        <el-table-column prop="TYPE" label="投诉类型" align="center" ></el-table-column>
-        <el-table-column prop="SUBMITTS" label="投诉时间" align="center" >
-          <template slot-scope="scope">
-            <span>{{scope.row.SUBMITTS | datatrans}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="MEMO" label="投诉内容"  align="center"></el-table-column>
-        <el-table-column  label="状态" align="center">
-          <template slot-scope="scope">
-            <span>{{scope.row.STATUS | transStatus}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center"  label="操作" >
-          <template slot-scope="scope">
-            <el-button
-              v-if="scope.row.STATUS !=2"
-              @click="_CheckDetail(scope.row.SID)"
-              type="warning"
-              size="mini"
-              icon="el-icon-search"
-              circle
-            ></el-button>
-             <el-button
-              v-if="scope.row.STATUS ==2"
-              @click="_EditDetail(scope.row.SID)"
-              type="primary"
-              size="mini"
-              icon="el-icon-edit"
-              circle
-            ></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
+        <el-table
+          border
+          :data="complaintData"
+          style="width: 100%"
+          class="table_1"
+        >
+          <el-table-column
+            prop="SALE_NO"
+            label="提货单号"
+            align="center"
+            width="150px"
+          ></el-table-column>
+          <el-table-column
+            prop="C_TRANSBILL"
+            label="物流单号"
+            align="center"
+            width="150px"
+          ></el-table-column>
+          <el-table-column
+            prop="CUSTOMER_CODE"
+            label="客户代码"
+            align="center"
+            width="100px"
+          ></el-table-column>
+          <el-table-column
+            prop="CUSTOMER_NAME"
+            label="客户名称"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="TYPE"
+            label="投诉类型"
+            align="center"
+            width="100px"
+          ></el-table-column>
+          <el-table-column prop="SUBMITTS" label="投诉时间" align="center" width="120px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.SUBMITTS | datatrans }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="状态" align="center" width="150px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.STATUS | transStatus }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作" width="100px">
+            <template slot-scope="scope">
+              <el-button
+                v-if="scope.row.STATUS != 2"
+                @click="_CheckDetail(scope.row.SID)"
+                type="warning"
+                size="mini"
+                icon="el-icon-search"
+                circle
+              ></el-button>
+              <el-button
+                v-if="scope.row.STATUS == 2"
+                @click="_EditDetail(scope.row.SID)"
+                type="primary"
+                size="mini"
+                icon="el-icon-edit"
+                circle
+              ></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
-      <div style="margin:0 25%;" class="block">
+
+       <div style="margin:0 25%;margin-top:10px" class="block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -116,7 +139,7 @@
             <td class="grayTD" style="width:16%;height:15px">客户代码</td>
             <td style="width:34%;height:15px">{{tableData.CUSTOMER_CODE}}</td>
             <td class="grayTD" style="width:16%;height:15px">客户名称</td>
-            <td style="width:34%;height:15px">{{this.CNAME}}</td>
+            <td style="width:34%;height:15px">{{tableData.CUSTOMER_NAME}}</td>
           </tr>
 
           <tr>
@@ -178,7 +201,7 @@
             <td v-if="isEdit" style="width:34%;height:15px" class="grayTD">{{submit.CUSTOMER_CODE}}</td>
             <td v-else style="width:34%;height:15px" class="grayTD">(提交后自动生成)</td>
             <td class="grayTD" style="width:16%;height:15px">客户名称</td>
-            <td v-if="isEdit" style="width:34%;height:15px" class="grayTD">{{this.CNAME}}</td>
+            <td v-if="isEdit" style="width:34%;height:15px" class="grayTD">{{submit.CUSTOMER_NAME}}</td>
             <td v-else style="width:34%;height:15px" class="grayTD">(提交后自动生成)</td>
           </tr>
 
@@ -263,10 +286,8 @@
 
         </table>   
 
-    </div>
-
-
-    </el-dialog>
+      </div>
+    </el-dialog>  
   </div>
 </template>
 
@@ -449,7 +470,7 @@ export default {
         beginTime: this.beginTime,
         finishTime: this.finishTime,
         STATUS: this.SELECT_STATUS,
-        SEARCHKEY:this.SEARCHKEY
+        SEARCHKEY:this.SEARCHKEY,
       };
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";
