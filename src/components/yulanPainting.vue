@@ -9,7 +9,8 @@
           placeholder="日期区间"
           v-model="startDate"
           style="width:14%;"
-        ></el-date-picker>--
+        ></el-date-picker
+        >--
         <el-date-picker
           type="date"
           format="yyyy-MM-dd"
@@ -32,43 +33,82 @@
           v-model="cid"
           style="width:250px;"
         >
-          <el-button @click="search()" slot="append" icon="el-icon-search">查询</el-button>
+          <el-button @click="search()" slot="append" icon="el-icon-search"
+            >查询</el-button
+          >
         </el-input>
         <el-button
-          @click="checkDialog = true;checkID = ''"
+          @click="
+            checkDialog = true;
+            checkID = '';
+          "
           style="float:right"
           size="medium"
           type="primary"
-        >新建</el-button>
+          >新建</el-button
+        >
       </div>
-      <el-table border :data="bankData" style="width: 100%" :row-class-name="tableRowClassName">
-        <el-table-column prop="id" label="编号" align="center"></el-table-column>
+      <el-table
+        border
+        :data="bankData"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+      >
+        <el-table-column
+          prop="id"
+          label="编号"
+          align="center"
+        ></el-table-column>
         <el-table-column label="创建时间" width="180" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.createTs | datatrans}}</span>
+            <span>{{ scope.row.createTs | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="cname" width="180" label="客户名称" align="center"></el-table-column>
-        <el-table-column prop="customerAgent" label="联系人" align="center"></el-table-column>
-        <el-table-column prop="officeTel" width="200" label="联系电话" align="center"></el-table-column>
-        <el-table-column prop="imageCount" label="图片数" width="80" align="center"></el-table-column>
+        <el-table-column
+          prop="cname"
+          width="180"
+          label="客户名称"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="customerAgent"
+          label="联系人"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="officeTel"
+          width="200"
+          label="联系电话"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="imageCount"
+          label="图片数"
+          width="80"
+          align="center"
+        ></el-table-column>
         <el-table-column label="状态" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.state | transStatus}}</span>
+            <span>{{ scope.row.state | transStatus }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" width="200" label="操作">
           <template slot-scope="scope">
-            <el-button @click="lookIt(scope.row)" type="warning" icon="el-icon-search" circle></el-button>
             <el-button
-              v-if="scope.row.state =='ONCREATE'"
+              @click="lookIt(scope.row)"
+              type="warning"
+              icon="el-icon-search"
+              circle
+            ></el-button>
+            <el-button
+              v-if="scope.row.state == 'ONCREATE'"
               @click="editIt(scope.row)"
               type="primary"
               icon="el-icon-edit"
               circle
             ></el-button>
             <el-button
-              v-if="scope.row.state =='ONCREATE'"
+              v-if="scope.row.state == 'ONCREATE'"
               @click="deleteIt(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
@@ -106,11 +146,11 @@
           </tr>
           <tr>
             <td class="grayTD">编号</td>
-            <td>{{sumbit.abdrId}}</td>
+            <td>{{ sumbit.abdrId }}</td>
             <td class="grayTD">建立人</td>
-            <td>{{sumbit.erpCreator}}</td>
+            <td>{{ sumbit.erpCreator }}</td>
             <td class="grayTD">建立时间</td>
-            <td>{{sumbit.createTs | datatrans}}</td>
+            <td>{{ sumbit.createTs | datatrans }}</td>
           </tr>
           <tr class="tableCol">
             <td colspan="4">委托人基本信息</td>
@@ -118,16 +158,16 @@
           </tr>
           <tr>
             <td class="grayTD" colspan="2">名称</td>
-            <td colspan="2">{{checkData.shortName}}</td>
+            <td colspan="2">{{ checkData.shortName }}</td>
             <td colspan="2" rowspan="3">广东玉兰集团股份有限公司</td>
           </tr>
           <tr>
             <td class="grayTD" colspan="2">联系人</td>
-            <td colspan="2">{{checkData.customerAgent}}</td>
+            <td colspan="2">{{ checkData.customerAgent }}</td>
           </tr>
           <tr>
             <td class="grayTD" colspan="2">电话</td>
-            <td colspan="2">{{checkData.officeTel}}</td>
+            <td colspan="2">{{ checkData.officeTel }}</td>
           </tr>
           <tr class="tableCol">
             <td colspan="5">委托人来图定制要求</td>
@@ -139,7 +179,11 @@
                 content="点击添加"
                 placement="top"
               >
-                <i @click="addPIC = true" style="font-size:30px;" class="el-icon-circle-plus"></i>
+                <i
+                  @click="addPIC = true"
+                  style="font-size:30px;"
+                  class="el-icon-circle-plus"
+                ></i>
               </el-tooltip>
             </td>
           </tr>
@@ -150,22 +194,38 @@
             <td colspan="2">定制要求</td>
           </tr>
           <tr v-for="item of abdrImage" :key="item.index">
-            <td colspan="1">{{item.imageIndex}}</td>
+            <td colspan="1">{{ item.imageIndex }}</td>
             <td colspan="2">
-              <el-tooltip class="item" effect="dark" content="点击放大图片" placement="top">
-                <img @click="showBIG(item.imagePath)" class="IMG" :src="item.imagePath" />
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="点击放大图片"
+                placement="top"
+              >
+                <img
+                  @click="showBIG(item.imagePath)"
+                  class="IMG"
+                  :src="item.imagePath"
+                />
               </el-tooltip>
             </td>
-            <td colspan="1">{{item.specifications}}</td>
-            <td colspan="2">{{item.memo}}</td>
+            <td colspan="1">{{ item.specifications }}</td>
+            <td colspan="2">{{ item.memo }}</td>
           </tr>
           <tr>
             <td colspan="2">委托人来图版权保证声明</td>
             <td colspan="4">
               <br />
-              <p>本人确认对其提供给受托人用于产品定制的图片拥有著作权或使用权，已保证其来源合法。受托人仅</p>
-              <p>按照本人提供的图片进行相应定制提供给本人，无义务对本人提供的图片进行实质审查。 本人因该图片的</p>
-              <p>著作权或使用权问题与第三方发生纠纷，受托人将不承担任何的法律责任，由此造成的损失由本人全部承担。</p>
+              <p>
+                本人确认对其提供给受托人用于产品定制的图片拥有著作权或使用权，已保证其来源合法。受托人仅
+              </p>
+              <p>
+                按照本人提供的图片进行相应定制提供给本人，无义务对本人提供的图片进行实质审查。
+                本人因该图片的
+              </p>
+              <p>
+                著作权或使用权问题与第三方发生纠纷，受托人将不承担任何的法律责任，由此造成的损失由本人全部承担。
+              </p>
               <p></p>
               <br />
               <br />
@@ -173,10 +233,15 @@
             </td>
           </tr>
         </table>
+
         <div style="width:180px;margin:0 auto;">
           <br />
-          <el-button type="danger" @click="deleteIt(sumbit.abdrId)">删 除</el-button>
-          <el-button type="success" @click="_changeStatus(sumbit.abdrId)">提 交</el-button>
+          <el-button type="danger" @click="deleteIt(sumbit.abdrId)"
+            >删 除</el-button
+          >
+          <el-button type="success" @click="_changeStatus(sumbit.abdrId)"
+            >提 交</el-button
+          >
         </div>
       </div>
     </el-dialog>
@@ -198,11 +263,11 @@
           </tr>
           <tr>
             <td class="grayTD">编号</td>
-            <td>{{tableData.id}}</td>
+            <td>{{ tableData.id }}</td>
             <td class="grayTD">建立人</td>
-            <td>{{tableData.realName}}</td>
+            <td>{{ tableData.realName }}</td>
             <td class="grayTD">建立时间</td>
-            <td>{{tableData.createTs | datatrans}}</td>
+            <td>{{ tableData.createTs | datatrans }}</td>
           </tr>
           <tr>
             <td class="tableCol" colspan="4">委托人基本信息</td>
@@ -210,16 +275,16 @@
           </tr>
           <tr>
             <td class="grayTD" colspan="2">名称</td>
-            <td colspan="2">{{tableData.cname}}</td>
+            <td colspan="2">{{ tableData.cname }}</td>
             <td colspan="2" rowspan="3">广东玉兰集团股份有限公司</td>
           </tr>
           <tr>
             <td class="grayTD" colspan="2">联系人</td>
-            <td colspan="2">{{tableData.customerAgent}}</td>
+            <td colspan="2">{{ tableData.customerAgent }}</td>
           </tr>
           <tr>
             <td class="grayTD" colspan="2">电话</td>
-            <td colspan="2">{{tableData.officeTel}}</td>
+            <td colspan="2">{{ tableData.officeTel }}</td>
           </tr>
           <tr v-if="lookORedit" class="tableCol">
             <td colspan="6">委托人来图定制要求</td>
@@ -234,7 +299,11 @@
                 content="点击添加"
                 placement="top"
               >
-                <i @click="addPIC = true" style="font-size:30px;" class="el-icon-circle-plus"></i>
+                <i
+                  @click="addPIC = true"
+                  style="font-size:30px;"
+                  class="el-icon-circle-plus"
+                ></i>
               </el-tooltip>
             </td>
           </tr>
@@ -245,51 +314,89 @@
             <td colspan="2">定制要求</td>
           </tr>
           <tr v-for="item of abdrImage" :key="item.index">
-            <td colspan="1">{{item.imageIndex}}</td>
+            <td colspan="1">{{ item.imageIndex }}</td>
             <td colspan="2">
-              <el-tooltip class="item" effect="dark" content="点击放大图片" placement="top">
-                <img @click="showBIG(item.imagePath)" class="IMG" :src="item.imagePath" />
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="点击放大图片"
+                placement="top"
+              >
+                <img
+                  @click="showBIG(item.imagePath)"
+                  class="IMG"
+                  :src="item.imagePath"
+                />
               </el-tooltip>
             </td>
-            <td colspan="1">{{item.specifications}}</td>
-            <td colspan="2">{{item.memo}}</td>
+            <td colspan="1">{{ item.specifications }}</td>
+            <td colspan="2">{{ item.memo }}</td>
           </tr>
           <tr>
             <td colspan="2">委托人来图版权保证声明</td>
             <td colspan="4">
               <br />
-              <p>本人确认对其提供给受托人用于产品定制的图片拥有著作权或使用权，已保证其来源合法。受托人仅</p>
-              <p>按照本人提供的图片进行相应定制提供给本人，无义务对本人提供的图片进行实质审查。 本人因该图片的</p>
-              <p>著作权或使用权问题与第三方发生纠纷，受托人将不承担任何的法律责任，由此造成的损失由本人全部承担。</p>
+              <p>
+                本人确认对其提供给受托人用于产品定制的图片拥有著作权或使用权，已保证其来源合法。受托人仅
+              </p>
+              <p>
+                按照本人提供的图片进行相应定制提供给本人，无义务对本人提供的图片进行实质审查。
+                本人因该图片的
+              </p>
+              <p>
+                著作权或使用权问题与第三方发生纠纷，受托人将不承担任何的法律责任，由此造成的损失由本人全部承担。
+              </p>
               <p></p>
               <br />
               <br />
-              <p
-                v-if="agree"
-              >受托人签名（盖章）：{{tableData.customerAgent}}&nbsp;&nbsp;&nbsp;&nbsp;确认时间：{{tableData.reassureTs | datatrans}}</p>
+              <p v-if="agree">
+                受托人签名（盖章）：{{
+                  tableData.customerAgent
+                }}&nbsp;&nbsp;&nbsp;&nbsp;确认时间：{{
+                  tableData.reassureTs | datatrans
+                }}
+              </p>
             </td>
           </tr>
         </table>
+
         <div v-show="isCHULI" style="width:180px;margin:0 auto;">
           <br />
-          <el-button type="danger" @click="deleteIt(tableData.id)">删 除</el-button>
-          <el-button type="success" @click="_changeStatus(tableData.abdrId)">提 交</el-button>
+          <el-button type="danger" @click="deleteIt(tableData.id)"
+            >删 除</el-button
+          >
+          <el-button type="success" @click="_changeStatus(tableData.abdrId)"
+            >提 交</el-button
+          >
         </div>
       </div>
     </el-dialog>
 
     <!-- 图片表 -->
-    <el-dialog title="上传喷绘样图" :visible.sync="addPIC" :close-on-click-modal="false" width="40%">
+    <el-dialog
+      title="上传喷绘样图"
+      :visible.sync="addPIC"
+      :close-on-click-modal="false"
+      width="40%"
+    >
       <div>
         <span>
           规格参数：
-          <el-input v-model="sumbit.specifications" placeholder="请输入规格参数" style="width:450px;"></el-input>
+          <el-input
+            v-model="sumbit.specifications"
+            placeholder="请输入规格参数"
+            style="width:450px;"
+          ></el-input>
         </span>
         <br />
         <br />
         <span>
           定制要求：
-          <el-input v-model="sumbit.memo" placeholder="请输入定制要求" style="width:450px;"></el-input>
+          <el-input
+            v-model="sumbit.memo"
+            placeholder="请输入定制要求"
+            style="width:450px;"
+          ></el-input>
         </span>
         <br />
         <br />
@@ -315,8 +422,13 @@
     <!-- 客户检验表 -->
     <el-dialog title="客户信息" :visible.sync="checkDialog" width="40%">
       <span>
-        客户编号
-        <el-input v-model="checkID" placeholder="请输入客户编号" style="width:400px;"></el-input>
+        客户编号：
+        <el-input
+          v-model="checkID"
+          placeholder="请输入客户编号"
+          style="width:400px;"
+          @keyup.enter.native="_getWaterNumber()"
+        ></el-input>
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="checkDialog = false">取 消</el-button>
@@ -339,6 +451,7 @@ import {
   AddImage,
   getPictureList
 } from "@/api/painting";
+import { InsertBrush } from "@/api/paymentASP";
 import Cookies from "js-cookie";
 //const Quest = 'http://106.14.159.244:8080/yulan-capital';
 //const Head = 'http://106.14.159.244:8080/upload';
@@ -480,7 +593,6 @@ export default {
         state: "客户确认中"
       };
       changeStatus(url, data).then(res => {
-        console.log(res);
         this.$alert("提交成功", "提示", {
           confirmButtonText: "确定",
           type: "success"
@@ -498,7 +610,6 @@ export default {
         id: id
       };
       DeletePainting(url, data).then(res => {
-        console.log(res);
         if (res.code == 0) {
           this.$alert("删除成功", "提示", {
             confirmButtonText: "确定",
@@ -532,9 +643,7 @@ export default {
       }
       let url = Quest + "/AbdrImage/insertAbdrImage.do";
       let data = this.sumbit;
-      console.log(data);
       AddImage(url, data).then(res => {
-        console.log(res);
         this.getPicture(this.sumbit.abdrId);
         this.addPIC = false;
       });
@@ -551,29 +660,37 @@ export default {
         companyId: this.checkID,
         erpCreator: Cookies.get("cid") //创建人
       };
-      getWaterNumber(url, data).then(res => {
+      //getWaterNumber(url, data).then(res => {
+      InsertBrush(data).then(async res => {
         this.abdrImage = [];
+        this.sumbit.abdrId = res.data.ID;
+        this.sumbit.createTs = res.data.CREATE_TS;
+        this.sumbit.erpCreator = Cookies.get("realName");
+        this.checkData.customerCode = res.data.CID;
+        this.checkData.shortName = res.data.CNAME;
+        this.checkData.officeTel = res.data.OFFICE_TEL;
+        this.checkData.customerAgent = res.data.CUSTOMER_AGENT;
 
-        console.log(res);
-        if (res.code == 0) {
-          this.sumbit.abdrId = res.AirbrushDesignerAssure.id;
-          this.sumbit.createTs = res.AirbrushDesignerAssure.createTs;
-          this.sumbit.erpCreator = res.AirbrushDesignerAssure.realName;
+        this.PaintingDia = true; //大表格
+        this.checkDialog = false;
+        // if (res.code == 0) {
+        //   this.sumbit.abdrId = res.AirbrushDesignerAssure.id;
+        //   this.sumbit.createTs = res.AirbrushDesignerAssure.createTs;
+        //   this.sumbit.erpCreator = res.AirbrushDesignerAssure.realName;
 
-          this.checkData.customerCode = res.customerInfo.customerCode;
-          this.checkData.shortName = res.customerInfo.shortName;
-          this.checkData.officeTel = res.customerInfo.officeTel;
-          this.checkData.customerAgent = res.customerInfo.customerAgent;
+        //   this.checkData.customerCode = res.customerInfo.customerCode;
+        //   this.checkData.shortName = res.customerInfo.shortName;
+        //   this.checkData.officeTel = res.customerInfo.officeTel;
+        //   this.checkData.customerAgent = res.customerInfo.customerAgent;
 
-          this.PaintingDia = true; //大表格
-          this.checkDialog = false;
-        } else {
-          this.$alert("查询失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-        }
-        console.log(this.checkData);
+        //   this.PaintingDia = true; //大表格
+        //   this.checkDialog = false;
+        // } else {
+        //   this.$alert("查询失败，请稍后重试", "提示", {
+        //     confirmButtonText: "确定",
+        //     type: "warning"
+        //   });
+        // }
       });
     },
     //获取喷绘列表
@@ -592,7 +709,6 @@ export default {
         data.endDate = this.endDate + "23:59:59";
       }
       getPaintingList(url, data).then(res => {
-        console.log(res);
         this.bankData = res.airbrushDesignerAssureList;
         if (res.airbrushDesignerAssureList) {
           this.count = res.airbrushDesignerAssureList[0].total;
@@ -608,12 +724,10 @@ export default {
         this.agree = false;
       }
       this.abdrImage = [];
-      console.log(tab);
       this.tableData = tab;
       this.lookORedit = true;
       if (tab.abdrImage.length) {
         if (tab.abdrImage[0].imagePath.startsWith(Head)) {
-          console.log("OK");
         } else {
           for (let i = 0; i < tab.abdrImage.length; i++) {
             tab.abdrImage[i].imagePath = Head + tab.abdrImage[i].imagePath;
@@ -632,12 +746,10 @@ export default {
       this.abdrImage = [];
       this.sumbit.abdrId = tab.id;
       this.lookDia = true;
-      console.log(tab);
       this.tableData = tab;
       this.lookORedit = false;
       if (tab.abdrImage.length) {
         if (tab.abdrImage[0].imagePath.startsWith(Head)) {
-          console.log("OK");
         } else {
           for (let i = 0; i < tab.abdrImage.length; i++) {
             tab.abdrImage[i].imagePath = Head + tab.abdrImage[i].imagePath;
@@ -665,8 +777,6 @@ export default {
         abdrImageId: abdrImageId
       };
       getPictureList(url, data).then(res => {
-        console.log(res);
-
         for (let i = 0; i < res.abdrImageList.length; i++) {
           res.abdrImageList[i].imagePath =
             Head + res.abdrImageList[i].imagePath;
@@ -686,7 +796,6 @@ export default {
 
     handleAvatarSuccess(res, file) {
       this.imgUrl = URL.createObjectURL(file.raw);
-      console.log(res.data.path);
       this.sumbit.imagePath = res.data.path;
     },
     beforeAvatarUpload(file) {
