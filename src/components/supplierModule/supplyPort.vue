@@ -82,7 +82,7 @@
             
              <el-table-column
                       
-                      label="送货日期1"
+                      label="送货日期"
                       width="120"
                     >
                        <template slot-scope="scope">
@@ -103,7 +103,6 @@
             >
             <template slot-scope="scope">
                         <el-input
-                            type="textarea"
                             v-model="scope.row.SUPPLY_NOTES"
                             clearable>
                         </el-input>
@@ -118,11 +117,7 @@
                 <div slot="header" class="clearfix">
                   <span class="CARD">送货日期：</span>
                 </div>
-                <div>
                   <div>
-                    <el-button style="width:15%" class="button_clolur" @click="Unitdeliver"
-                      >统一设置送货期</el-button
-                    >
                     <el-date-picker
                       type="date"
                       format="yyyy-MM-dd"
@@ -131,16 +126,14 @@
                       v-model="date_deliver"
                       style="width:15%"
                     ></el-date-picker>
-                  </div>
-                  <div>
-                    <el-button
+                    <el-button style="width:16%" class="button_clolur" @click="Unitdeliver"
+                      >统一设置送货期</el-button>
+                       <el-button
                       style="width:16%;margin-top:10px"
                       class="button_clolur"
                       @click="AllAccordPromise"
-                      >全部设为约定日期</el-button
-                    >
+                      >全部设为约定日期</el-button>
                   </div>
-                </div>
               </el-card>
             </div>
             <div
@@ -151,24 +144,17 @@
                 <div slot="header" class="clearfix">
                   <span class="CARD">说明</span>
                 </div>
-                <div>
-                 
+                 <div>
                   <el-input
                         v-model="supply_check_notes"
                     placeholder="说明:"
-                    style="width:30%;height:20px"
-                    type="textarea"
-                  clearable></el-input>
-           
-                </div>
-                <div style="margin-top:40px">
-                  <el-button
+                    style="width:30%;height:10px"
+                    clearable></el-input>
+                    <el-button
                     @click="SaveNotes()"
                 
                     style="width:10%;"
-                    class="button_clolur"
-                    >保存说明</el-button
-                  >
+                    class="button_clolur">保存说明</el-button>
                 </div>
               </el-card>
             </div>
@@ -832,7 +818,7 @@
               <el-table-column label="" width="120" align="center">
                 <template slot-scope="scope">
                   <el-button
-                    @click="openDialog(scope.row.PUR_NO)"
+                    @click="openDialog(scope.row.PUR_NO,scope.row.ORDER_NO)"
                     type="primary"
                     size="small"
                     >前往确认</el-button
@@ -1006,8 +992,15 @@ export default {
       date.setHours(0,0,0);
       return date;
 },
-    //打开确认页面
-    openDialog(PUR_NO) {
+ //获取最近一周时间
+     getCurrentWeek(){
+      var date=new Date();
+      date.setDate(date.getDate()-7);
+      date.setHours(0,0,0);
+      return date;
+     },
+    //打开确认页面，也需要根据订单号判定打开那个对话框
+    openDialog(PUR_NO,ORDER_NO) {
       this.is_check=0;
       this.detailVisible = true;
       this.autoSearchDetail(PUR_NO);
@@ -1073,7 +1066,8 @@ export default {
            this.selvalue="all";
            this.po_type="all";
              this.po="";
-             this.date1=this.getCurrentMonthFirst();
+              this.date1=this.getCurrentWeek();
+          
     this.date2=new Date();
           break;
       }

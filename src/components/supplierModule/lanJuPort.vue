@@ -51,40 +51,33 @@
             <el-table-column label="含税单价" width="80">
               <template slot-scope="scope">
                 <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
-              </template></el-table-column
-            >
+              </template></el-table-column>
             <el-table-column
               property="UNIT1"
               label="单位"
-              width="60"
-            ></el-table-column>
+              width="60"></el-table-column>
             <el-table-column
               property="TOTAL_MONEY"
               label="金额"
-              width="70"
-            ></el-table-column>
+              width="70"></el-table-column>
             <el-table-column
               property="NOTE"
               label="备注"
-              width="50"
-            ></el-table-column>
+              width="50"></el-table-column>
             <el-table-column property="DATE_REQ" label="约定日期" width="100">
               <template slot-scope="scope">
                 <span>{{ scope.row.DATE_REQ | datatrans }}</span>
               </template>
             </el-table-column>
-            
              <el-table-column
-                      
                       label="送货日期"
-                      width="120"
-                    >
+                      width="120">
                        <template slot-scope="scope">
                       <el-date-picker
                        v-model="scope.row.DATE_DELIVER"
-            align="right"
-            type="date"
-             format="yyyy-MM-dd"
+              align="right"
+              type="date"
+              format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
             placeholder="选择日期"
           >
@@ -96,12 +89,10 @@
                width="100"
             >
             <template slot-scope="scope">
-                        <el-input
-                            type="textarea"
+                        <el-input 
                             v-model="scope.row.SUPPLY_NOTES"
                             clearable>
-                        </el-input>
-                       
+                        </el-input> 
                     </template>
             </el-table-column>
           </el-table>
@@ -112,11 +103,7 @@
                 <div slot="header" class="clearfix">
                   <span class="CARD">送货日期：</span>
                 </div>
-                <div>
                   <div>
-                    <el-button style="width:16%" class="button_clolur" @click="Unitdeliver"
-                      >统一设置送货期</el-button
-                    >
                     <el-date-picker
                       type="date"
                       format="yyyy-MM-dd"
@@ -125,16 +112,14 @@
                       v-model="date_deliver"
                       style="width:15%"
                     ></el-date-picker>
-                  </div>
-                  <div>
-                    <el-button
+                    <el-button style="width:16%" class="button_clolur" @click="Unitdeliver"
+                      >统一设置送货期</el-button>
+                       <el-button
                       style="width:16%;margin-top:10px"
                       class="button_clolur"
                       @click="AllAccordPromise"
-                      >全部设为约定日期</el-button
-                    >
+                      >全部设为约定日期</el-button>
                   </div>
-                </div>
               </el-card>
             </div>
             <div
@@ -146,24 +131,18 @@
                   <span class="CARD">说明</span>
                 </div>
                 <div>
-                 
                   <el-input
                         v-model="supply_check_notes"
                     placeholder="说明:"
-                    style="width:30%;height:20px"
-                    type="textarea"
-                  clearable></el-input>
-           
-                </div>
-                <div style="margin-top:40px">
-                  <el-button
+                    style="width:30%;height:10px"
+                    clearable></el-input>
+                    <el-button
                     @click="SaveNotes()"
                 
                     style="width:10%;"
-                    class="button_clolur"
-                    >保存说明</el-button
-                  >
+                    class="button_clolur">保存说明</el-button>
                 </div>
+               
               </el-card>
             </div>
           </div>
@@ -190,14 +169,12 @@
         :visible.sync="detailVisible1"
         :show-close="true"
         width="70%"
-        top="8vh"
-      >
+        top="8vh">
         <div style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
-             <tr><td colspan="2" style="font-family:黑体;font-size:1.6em;font-weight:bold;" align="center">
-			采购单</td>
-	</tr>
+             <tr><td colspan="2" style="font-family:黑体;font-size:1.6em;font-weight:bold;" align="center">采购单</td>
+	       </tr>
               <tr>
                 <td style="border-bottom:solid 3px gray;text-align:left">
                   订单状态
@@ -457,10 +434,7 @@
                             <label>帘倍数:</label>
                             <div class="messageInput">{{item.tab1[index].cl_size_times}}</div>
                         </div>
-                     
-                      
                         </div>
-                  
                     </template>
                 </el-table-column>
                    <el-table-column
@@ -471,8 +445,6 @@
                     <template>
                       <div>
                         <body margin:0>
-                          
-                   
                            <el-table 
                                 :data="item.tab2[index]" :show-header="false" class="el-table__header" style="width:100%;" >
                              <el-table-column  width="70" label="名称">
@@ -540,21 +512,18 @@
                 <el-table-column label="备注" width="80" header-align="center" align="center"> </el-table-column>
              </el-table>
          </div>
-
-<el-row>
-  <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-  <el-col :span="2"><div class="grid-content bg-purple" style="font-weight:bold;">  总金额：</div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple" style="font-weight:bold;"> {{ sumMoney|numFilter}}   </div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple"> </div></el-col>
-</el-row>
-<div>
-    <el-button
+             <el-row>
+               <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                 <el-col :span="2"><div class="grid-content bg-purple" style="font-weight:bold;">  总金额：</div></el-col>
+                 <el-col :span="3"><div class="grid-content bg-purple" style="font-weight:bold;"> {{ sumMoney|numFilter}}   </div></el-col>
+                 <el-col :span="3"><div class="grid-content bg-purple"> </div></el-col>
+              </el-row>
+           <div>
+                <el-button
                     @click="downLoad()"
                     type="primary"
-                    size="small"
-                    >导出Excel</el-button>
-</div>
-      
+                    size="small">导出Excel</el-button>
+            </div>
    </td>
               </tr>
             </tbody>
@@ -849,7 +818,7 @@
                     <el-table-column
                       property="NOTE"
                       label="备注"
-                      width="180"
+                      width="100"
                     ></el-table-column>
                     <el-table-column
                       property="DATE_REQ"
@@ -939,7 +908,7 @@
               <el-table-column label="" width="120" align="center">
                 <template slot-scope="scope">
                   <el-button
-                    @click="openDialog(scope.row.PUR_NO)"
+                    @click="openDialog(scope.row.PUR_NO,scope.row.ORDER_NO)"
                     type="primary"
                     size="small"
                     >前往确认</el-button>
@@ -1180,13 +1149,7 @@ export default {
          },
          
        ],
-       table3Data:[{
-         date_req:"预约："+"2019-10-5",
-         date_deliver:"交货："+"2019-10-5",
-         cont_str1:"小计：",
-         littleSum:100,//需处理
-         }
-         ],
+   
       po:"",
       date1 :"0001/1/1",
       date2 : "9999/1/1",
@@ -1245,7 +1208,7 @@ export default {
   
         datatransMethod(value) {
       //时间戳转化大法
-      if (value == null) {
+      if (value == null||value=="") {
         return "";
       }
       let date = new Date(value);
@@ -1269,9 +1232,6 @@ export default {
     Print(data){
       console.log(data);
     },
-   //合计行方法
-  
-
     //获取窗帘大类名称
         getTypeName(val){
             switch(val){
@@ -1289,9 +1249,6 @@ export default {
                     return '暂无名称';
             }
         },
-//动态创建表格
-
-    //动态生成表格
     addToTable(){
       var tablec=document.getElementById();
     },
@@ -1309,8 +1266,8 @@ export default {
       date.setHours(0,0,0);
       return date;
      },
-    //打开确认页面
-    openDialog(PUR_NO) {
+    //打开确认页面，确认页面也分两种情况
+    openDialog(PUR_NO,ORDER_NO) {
     
       this.detailVisible = true;
       this.autoSearchDetail(PUR_NO);
@@ -1323,11 +1280,9 @@ export default {
       }
      else if(ORDER_NO.substring(0,1)=='X'){ 
           this.detailVisible1 = true;
-          // console.log(ORDER_NO.substring(0,1));  
       }
       else{
        this.detailVisible2 = true;
-      //  console.log(ORDER_NO.substring(0,1));
       }
       this.autoSearchDetail(PUR_NO);
       //将表头内容填充到明细
@@ -1517,24 +1472,9 @@ export default {
     },
     downLoadAll(){
       var cid=this.companyId;
-        //  downLoadFile(this.Global.fileCenterUrl + `FILE_CENTERAPI/DownloadFile?FILE_ID=${PUR_NO}`);
          downLoadFile(this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}`);
     },
-      GetDetailExcel(){
-     var data={
-          PUR_NO: this.pur_headForm.PUR_NO
-     };
-     CreateExcel(data).then(res=>{
-       var tt=res.data;
-             console.log("Excel地址：");
-       console.log(tt);
-
-       window.open(tt)
-      // window.location.href = "excel地址"
-     })
-
-
-    },
+    
     autoSearchDetail(PUR_NO) {
       var data = {
         PUR_NO: PUR_NO
@@ -1574,7 +1514,7 @@ export default {
             tempArr3.push(temObj3);
             tab1.push(temObj1);
             tab3.push(tempArr3);
-           // console.log("检查tab3长度："+tab3.length);
+         
          }
       }  
       this.items=[];//先请空items
@@ -1682,28 +1622,10 @@ export default {
 		return value;
 	}
 },
-//   numFilter(x) {
-//  var f_x = parseFloat(x);
-//  if (isNaN(f_x)) {
-//  alert('function:changeTwoDecimal->parameter error');
-//  return false;
-//  }
-//  var f_x = Math.round(x * 100) / 100;
-//  var s_x = f_x.toString();
-//  var pos_decimal = s_x.indexOf('.');
-//  if (pos_decimal < 0) {
-//  pos_decimal = s_x.length;
-//  s_x += '.';
-//  }
-//  while (s_x.length <= pos_decimal + 2) {
-//  s_x += '0';
-//  }
-//  return s_x;
-// },
 
     datatrans(value) {
       //时间戳转化大法
-      if (value == null) {
+      if (value == null ||value =="") {
         return "";
       }
       let date = new Date(value);
@@ -1740,12 +1662,7 @@ export default {
   margin-right: 10px;
   font-weight: bold;
 }
-.el-row {
-     margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+
   .el-col {
     border-radius: 4px;
   }
@@ -1801,5 +1718,10 @@ td {
 }
 </style>
 <style >
-
+/* .el-row {
+     margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  } */
 </style>
