@@ -62,7 +62,7 @@
             <el-table-column
               property="TOTAL_MONEY"
               label="金额"
-              width="100"
+              width="80"
               align="right"
             >
             <template slot-scope="scope">
@@ -445,7 +445,7 @@
                     <el-table-column
                       property="TOTAL_MONEY"
                       label="金额"
-                      width="100"
+                      width="80"
                     ></el-table-column>
                     <el-table-column
                       property="NOTE"

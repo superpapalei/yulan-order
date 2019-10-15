@@ -493,10 +493,10 @@
                              <el-table-column label="含税单价"  header-align="center" width="100" align="right">
                                <template slot-scope="scope">{{scope.row.price_taxin|numFilter}} </template>          
                              </el-table-column>
-                             <el-table-column label="金额"  header-align="center" width="100"  align="right">
+                             <el-table-column label="金额"  header-align="center" width="80"  align="right">
                                <template slot-scope="scope">{{scope.row.total_money|numFilter}} </template>          
                              </el-table-column>
-                             <el-table-column label="制造说明"  header-align="center" width="90">
+                             <el-table-column label="制造说明"  header-align="center" width="80">
                                <template slot-scope="scope">{{scope.row.product_note}} </template>     
                              </el-table-column>
                              <el-table-column label="备注"  header-align="center" >
@@ -512,7 +512,7 @@
                 <el-table-column label="规格:米/对" header-align="center" align="center" width="60"> </el-table-column>
                 <el-table-column label="用量" width="60" header-align="center" align="center"></el-table-column>
                 <el-table-column label="含税单价"  width="100"  header-align="center"  align="center"> </el-table-column>
-                <el-table-column label="金额" width="100" header-align="center" align="center"> </el-table-column>
+                <el-table-column label="金额" width="80" header-align="center" align="center"> </el-table-column>
                 <el-table-column label="制造说明" width="80" header-align="center" align="center"> </el-table-column>
                 <el-table-column label="备注"  header-align="center" align="center"> </el-table-column>
                
@@ -533,11 +533,11 @@
                               <el-table-column label="含税单价"  width="100"  header-align="center"  align="center">
                               <template > 小计 </template>
                               </el-table-column>
-                            <el-table-column label="金额" width="100" header-align="left" align="right"> 
+                            <el-table-column label="金额" width="80" header-align="left" align="right"> 
                             <template slot-scope="scope"> {{scope.row.littleSum|numFilter}} </template>
                             </el-table-column>
                 <el-table-column label="制造说明" width="80" header-align="center" align="center"> </el-table-column>
-                <el-table-column label="备注" width="100" header-align="center" align="center"> </el-table-column>
+                <el-table-column label="备注" width="80" header-align="center" align="center"> </el-table-column>
              </el-table>
          </div>
 
@@ -839,7 +839,7 @@
                     <el-table-column
                   
                       label="金额"
-                      width="100"
+                      width="80"
                       align="right"
                     >
                     <template slot-scope="scope">
