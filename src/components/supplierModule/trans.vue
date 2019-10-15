@@ -4,13 +4,20 @@
       <div id="trans">
         <div class="block">
           <div class="first_1">
+               <!-- 采购单号：（精确）
+            <el-input
+           @keyup.enter.native="SelectClick()"
+           prefix-icon="el-icon-search"
+           style="width:10%; min-width:200px;"
+           v-model="po">
+          </el-input> -->
           <span class="demonstration"></span>
           <el-date-picker
              v-model="date1"
             align="right"
             type="date"
              format="yyyy-MM-dd"
-        value-format="yyyy-MM-dd"
+             value-format="yyyy-MM-dd"
             placeholder="选择日期"
           >
           </el-date-picker>
@@ -126,15 +133,24 @@ export default {
       date1: "",
       date2: "",
       activeName: "third",
-      
+      po:"",
     };
   },
 
   created() {
-    this.autoSearch();
+    this.date1=this.getCurrentWeek();
+     this.date2 = new Date();
+    //this.autoSearch();
 
   },
   methods: {
+    //获取最近一周时间
+     getCurrentWeek(){
+      var date=new Date();
+      date.setDate(date.getDate()-7);
+      date.setHours(0,0,0);
+      return date;
+     },
      //页面条数
     handleSizeChange(val) {
       this.limit = val;
@@ -215,8 +231,8 @@ export default {
         }
       },
       //查询语句
-          autoSearch() {
-      var data = {
+      autoSearch() {
+        var data = {
         cid: Cookies.get("cid"),
         companyId: Cookies.get("companyId"),
         beginTime: this.date1,
@@ -225,16 +241,17 @@ export default {
         page: this.currentPage,
         current_id: Cookies.get("companyId"),
         supply_type: "",
-        po_type: this.po_type //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
+        po_type: this.po_type ,//  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
+        po:"",
       };
-        if (!data.beginTime) {
-        data.beginTime = "0001/1/1";
-      }
-      if (!data.finishTime) {
-        data.finishTime = "9999/12/19";
-      } else {
-        data.finishTime = data.finishTime + " 23:59:59";
-      }
+      //   if (!data.beginTime) {
+      //   data.beginTime = "0001/1/1";
+      // }
+      // if (!data.finishTime) {
+      //   data.finishTime = "9999/12/19";
+      // } else {
+      //   data.finishTime = data.finishTime + " 23:59:59";
+      // }
       GetTransDetail(data).then(res => {
         this.count = res.count;
         this.tableData = res.data;

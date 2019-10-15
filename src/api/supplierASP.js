@@ -57,4 +57,12 @@ export function UpdateCheckFlagBatch(data, config = {}) {
     })
 }
 
+export function CreateExcel(data, config = {}) {
+    return post('/PUR_HEAD/CreateExcel', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
 
