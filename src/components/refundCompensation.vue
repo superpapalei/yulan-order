@@ -49,6 +49,9 @@
             v-if="identity === 'USER'"
             >重 置</el-button
           >
+          <el-button @click.native="checkNoPrint" v-if="identity === 'USER'"
+            >查看未打印</el-button
+          >
           <el-button
             type="primary"
             @click.native="insertRefund"
@@ -89,34 +92,34 @@
           :data="tableData"
           style="width: 100%"
         >
-          <el-table-column label="编号" prop="id"> </el-table-column>
+          <el-table-column label="编号" prop="ID"> </el-table-column>
           <el-table-column min-width="130" label="创建时间">
             <template slot-scope="scope">
-              {{ toLocale(scope.row.createTs) }}
+              {{ toLocale(scope.row.CREATE_TS) }}
             </template>
           </el-table-column>
           <el-table-column
             v-if="identity === 'USER'"
             label="客户名称"
-            prop="cname"
+            prop="CNAME"
           >
           </el-table-column>
           <el-table-column
             v-if="identity === 'ECWEB'"
             label="玉兰业务员"
-            prop="erpCreatorname"
+            prop="ERP_CREATORNAME"
           >
           </el-table-column>
-          <el-table-column label="货品数" prop="itemCount"> </el-table-column>
+          <el-table-column label="货品数" prop="ITEM_COUNT"> </el-table-column>
           <el-table-column label="状态">
             <template slot-scope="scope">
-              {{ getNameByState(scope.row.state) }}
+              {{ getNameByState(scope.row.STATE) }}
             </template>
           </el-table-column>
           <el-table-column
             v-if="identity === 'USER'"
             label="创建人"
-            prop="erpCreatorname"
+            prop="ERP_CREATORNAME"
           >
           </el-table-column>
           <el-table-column min-width="90" label="操作">
@@ -133,8 +136,8 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.state === 'CUSTOMERAFFIRM' &&
-                    scope.row.erpCreator === cid
+                  scope.row.STATE === 'CUSTOMERAFFIRM' &&
+                    scope.row.ERP_CREATOR === cid
                 "
                 content="撤回"
                 placement="top"
@@ -150,7 +153,8 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.state === 'ONCREATE' && scope.row.erpCreator === cid
+                  scope.row.STATE === 'ONCREATE' &&
+                    scope.row.ERP_CREATOR === cid
                 "
                 content="编辑"
                 placement="top"
@@ -166,9 +170,9 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.state === 'ONCREATE' &&
-                    scope.row.erpCreator === cid &&
-                    scope.row.itemCount === 0
+                  scope.row.STATE === 'ONCREATE' &&
+                    scope.row.ERP_CREATOR === cid &&
+                    scope.row.ITEM_COUNT === 0
                 "
                 content="删除"
                 placement="top"
@@ -187,18 +191,18 @@
           <el-table-column
             v-if="identity === 'USER'"
             label="打印标记"
-            prop="printed"
+            prop="PRINTED"
           >
             <template slot-scope="scope">
               <el-checkbox
                 v-if="
-                  scope.row.state === 'APPROVED' ||
-                    scope.row.state === 'CANCELED'
+                  scope.row.STATE === 'APPROVED' ||
+                    scope.row.STATE === 'CANCELED'
                 "
                 @change="changePrinted(scope.row, scope.$index)"
-                v-model="scope.row.printed"
+                v-model="scope.row.PRINTED"
               >
-                {{ scope.row.printed === false ? "未打印" : "已打印" }}
+                {{ scope.row.PRINTED === false ? "未打印" : "已打印" }}
               </el-checkbox>
             </template>
           </el-table-column>
@@ -222,17 +226,19 @@
 import Cookies from "js-cookie";
 import "@/assets/css/base.css";
 import {
-  getSaleManData,
-  getProductData,
-  addRefund,
   getAllRefund,
-  getRefundById,
   deleteRefund,
   updataRefundStatus,
-  updateRefund,
   updatePrinted
 } from "@/api/refund";
 import { getCustomerInfo } from "@/api/orderListASP";
+import {
+  GetAllCompensation,
+  UpdatePrintedById,
+  DeleteCompensation,
+  UpdateState,
+  GetNoPrinted
+} from "@/api/paymentASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 
@@ -317,12 +323,21 @@ export default {
         cName: this.cname, //客户名称
         itemNo: this.itemNo //产品号
       };
+      if (!obj.startDate) {
+        obj.startDate = "0001/1/1";
+      }
+      if (!obj.endDate) {
+        obj.endDate = "9999/12/31";
+      } else {
+        obj.endDate = obj.endDate + " 23:59:59";
+      }
       let filter = this.$options.filters["propertyFilter"];
-      getAllRefund(filter(obj))
+      //getAllRefund(filter(obj))
+      GetAllCompensation(filter(obj))
         .then(res => {
           this.tableData = res.data;
           this.tableData.forEach(item => {
-            item.printed = item.printed === "0" ? true : false;
+            item.PRINTED = item.PRINTED === "0" ? true : false;
           });
           this.allNum = res.count;
         })
@@ -365,13 +380,12 @@ export default {
                   }
                 )
                   .then(async confirmRes => {
-                    let erp = await getSaleManData({ CID: this.cid });
                     let obj = {
-                      erpCreator: this.cid, //创建人id
-                      erpCreatorname: erp.shortName, //创建人名称
-                      cid: value, //客户id
-                      cname: res.data.CUSTOMER_NAME, //客户名称
-                      state: "ONCREATE" //状态同属确认中
+                      ERP_CREATOR: this.cid, //创建人id
+                      ERP_CREATORNAME: "", //创建人名称
+                      CID: value, //客户id
+                      CNAME: res.data.CUSTOMER_NAME, //客户名称
+                      STATE: "ONCREATE" //状态同属确认中
                     };
                     this.toDetail(obj, "new");
                   })
@@ -389,14 +403,11 @@ export default {
       let _data = data;
       _data.method = method;
       sessionStorage.setItem("refund", JSON.stringify(_data));
-      console.log(_data);
-      console.log(JSON.stringify(_data));
-      console.log(JSON.parse(sessionStorage.getItem("refund")));
       this.addTab("detail/detailRefund");
     },
     //撤回/删除确认书
     returnBack(data, method) {
-      if (data.erpCreator !== this.cid) {
+      if (data.ERP_CREATOR !== this.cid) {
         this.$alert("您不是此确认书的创建人，无权利进行此操作", "提示", {
           type: "warning",
           confirmButtonText: "好的"
@@ -404,10 +415,11 @@ export default {
       }
       if (method === "back") {
         let obj = {
-          id: data.id,
+          id: data.ID,
           state: "ONCREATE"
         };
-        updataRefundStatus(obj)
+        //updataRefundStatus(obj)
+        UpdateState(obj)
           .then(res => {
             this.$alert("撤回成功", "提示", {
               type: "success",
@@ -425,8 +437,9 @@ export default {
             }).catch(() => {});
           });
       } else if (method === "delete") {
-        deleteRefund({
-          id: data.id
+        //deleteRefund({
+        DeleteCompensation({
+          id: data.ID
         })
           .then(res => {
             this.$alert("删除成功", "提示", {
@@ -450,6 +463,15 @@ export default {
       this.cname = "";
       this.erpCreatorname = "";
     },
+    checkNoPrint() {
+      GetNoPrinted().then(res => {
+        this.tableData = res.data;
+        this.tableData.forEach(item => {
+          item.PRINTED = item.PRINTED === "0" ? true : false;
+        });
+        this.allNum = res.count;
+      });
+    },
     //切换下一页
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -457,10 +479,11 @@ export default {
     },
     //修改打印标记
     changePrinted(value, index) {
-      updatePrinted({
-        id: value.id,
-        printed: value.printed ? "0" : "1"
-      }).catch(() => {});
+      //updatePrinted({
+      UpdatePrintedById({
+        id: value.ID,
+        printed: value.PRINTED ? "0" : "1"
+      });
     },
     //隔行变色
     tableRowClassName({ row, rowIndex }) {
@@ -528,14 +551,22 @@ export default {
       this.initBadge();
     }
     this.searchRefund();
+    this.$root.$on("updateRefund", () => {
+      if (this.identity === "USER") {
+        //this.initDate();
+      } else if (this.identity === "ECWEB") {
+        this.initBadge();
+      }
+      this.searchRefund();
+    });
   },
   activated: function() {
-    if (this.identity === "USER") {
-      this.initDate();
-    } else if (this.identity === "ECWEB") {
-      this.initBadge();
-    }
-    this.searchRefund();
+    // if (this.identity === "USER") {
+    //   this.initDate();
+    // } else if (this.identity === "ECWEB") {
+    //   this.initBadge();
+    // }
+    // this.searchRefund();
   },
   filters: {
     //过滤掉值为空的属性

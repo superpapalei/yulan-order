@@ -4,19 +4,19 @@
       <div
         id="printTable"
         class="f16"
-        style="width: 1064px; border:1px solid #000; margin: -1px;"
+        style="width: 1164px; border:1px solid #000; margin: -1px;"
       >
         <section class="f14 t-foot border-b tr">
-          <span v-if="baseData.method !== 'new'">编号：{{ baseData.id }}</span>
-          <span>创建人：{{ baseData.erpCreatorname }}</span>
+          <span v-if="baseData.method !== 'new'">编号：{{ baseData.ID }}</span>
+          <span>创建人：{{ baseData.ERP_CREATORNAME }}</span>
           <span>建立时间：{{ toLocaleTime }}&emsp;</span>
         </section>
         <h3 class="mt10 tc rel">
-          客户确认书【{{ getNameByState(baseData.state) }}】
+          客户确认书【{{ getNameByState(baseData.STATE) }}】
           <i
             v-if="
-              baseData.state === 'APPROVED' ||
-                (baseData.state === 'CANCELED' && identity === 'USER')
+              baseData.STATE === 'APPROVED' ||
+                (baseData.STATE === 'CANCELED' && identity === 'USER')
             "
             class="icon-print el-icon-printer cpoi"
             @click="printRefund"
@@ -46,7 +46,7 @@
           <a
             v-else-if="
               baseData.method === 'see' &&
-                baseData.state === 'CUSTOMERAFFIRM' &&
+                baseData.STATE === 'CUSTOMERAFFIRM' &&
                 identity === 'ECWEB'
             "
           >
@@ -63,7 +63,7 @@
           </a>
         </p>
         <section class="mt10">
-          <p class="uli">TO：{{ baseData.cname }}</p>
+          <p class="uli">TO：{{ baseData.CNAME }}</p>
           <p class="t-indent">
             我公司现收到以下拟申请退货产品，经调查、检测核实，作如下处理：
           </p>
@@ -75,19 +75,19 @@
           class="border-t border-b"
           style="width: 100%;"
         >
-          <el-table-column prop="productionVersion" label="产品/项目">
+          <el-table-column prop="PRODUCTION_VERSION" label="产品/项目">
           </el-table-column>
-          <el-table-column prop="itemNo" label="型号"> </el-table-column>
-          <el-table-column prop="unit" label="单位"> </el-table-column>
-          <el-table-column prop="qty" align="right" label="数量">
+          <el-table-column prop="ITEM_NO" label="型号"> </el-table-column>
+          <el-table-column prop="UNIT" label="单位"> </el-table-column>
+          <el-table-column prop="QTY" align="right" label="数量">
           </el-table-column>
-          <el-table-column prop="totalmoney" align="right" label="金额">
+          <el-table-column prop="TOTALMONEY" align="right" label="金额">
           </el-table-column>
-          <el-table-column prop="notes" label="质量问题"> </el-table-column>
-          <el-table-column prop="process" label="处理意见"> </el-table-column>
+          <el-table-column prop="NOTES" label="质量问题"> </el-table-column>
+          <el-table-column prop="PROCESS" label="处理意见"> </el-table-column>
           <el-table-column
             label="操作"
-            v-if="baseData.method !== 'see' && baseData.erpCreator === cid"
+            v-if="baseData.method !== 'see' && baseData.ERP_CREATOR === cid"
           >
             <template slot-scope="scope">
               <i
@@ -104,16 +104,16 @@
           v-if="item.length > 0"
         >
           <tr>
-            <td width="12.5%">金额（小写）</td>
-            <td width="50%" class="tr">{{ totalMoney }}</td>
+            <td width="12.8%">金额（小写）</td>
+            <td width="49.85%" class="tr">{{ totalMoney }}</td>
             <td
               :width="baseData.method === 'see' ? '25%' : '37.5%'"
               rowspan="2"
             ></td>
           </tr>
           <tr>
-            <td width="12.5%">金额（大写）</td>
-            <td width="50%" class="tr">{{ totalMoneyUpper }}</td>
+            <td width="12.8%">金额（大写）</td>
+            <td width="49.85%" class="tr">{{ totalMoneyUpper }}</td>
           </tr>
         </table>
 
@@ -137,23 +137,23 @@
             <div class="t-com dib border-r l">
               广东玉兰集团股份有限公司<br />
               市场部<br />
-              {{ new Date(baseData.createTs).getFullYear() }}年
-              {{ addZeroIfNeed(new Date(baseData.createTs).getMonth() + 1) }}月
-              {{ addZeroIfNeed(new Date(baseData.createTs).getDate()) }}日
+              {{ new Date(baseData.CREATE_TS).getFullYear() }}年
+              {{ addZeroIfNeed(new Date(baseData.CREATE_TS).getMonth() + 1) }}月
+              {{ addZeroIfNeed(new Date(baseData.CREATE_TS).getDate()) }}日
             </div>
             <div class="t-com dib r">
               经销商
-              <span v-if="baseData.state === 'APPROVED'"
-                >:{{ baseData.cname }}</span
+              <span v-if="baseData.STATE === 'APPROVED'"
+                >:{{ baseData.CNAME }}</span
               ><br />
               （盖章）<br />
-              <span v-if="baseData.state !== 'APPROVED'"> 年 月 日</span>
+              <span v-if="baseData.STATE !== 'APPROVED'"> 年 月 日</span>
               <span v-else>
-                {{ new Date(baseData.reassureTs).getFullYear() }}年
+                {{ new Date(baseData.REASSURE_TS).getFullYear() }}年
                 {{
-                  addZeroIfNeed(new Date(baseData.reassureTs).getMonth() + 1)
+                  addZeroIfNeed(new Date(baseData.REASSURE_TS).getMonth() + 1)
                 }}月
-                {{ addZeroIfNeed(new Date(baseData.reassureTs).getDate()) }}日
+                {{ addZeroIfNeed(new Date(baseData.REASSURE_TS).getDate()) }}日
               </span>
             </div>
           </section>
@@ -191,27 +191,27 @@
         <el-form-item label="型号">
           <el-input
             style="width:300px;"
-            v-model="itemMsg.itemNo"
+            v-model="itemMsg.ITEM_NO"
             readonly
           ></el-input>
         </el-form-item>
         <el-form-item label="产品/项目">
           <el-input
             style="width:300px;"
-            v-model="itemMsg.productionVersion"
+            v-model="itemMsg.PRODUCTION_VERSION"
             readonly
           ></el-input>
         </el-form-item>
         <el-form-item label="单位">
           <el-input
             style="width:300px;"
-            v-model="itemMsg.unit"
+            v-model="itemMsg.UNIT"
             readonly
           ></el-input>
         </el-form-item>
         <el-form-item label="数量">
           <currency-input
-            v-model="itemMsg.qty"
+            v-model="itemMsg.QTY"
             :placeholder="''"
             :customStyle="'width: 300px; height: 40px;'"
           >
@@ -219,17 +219,17 @@
         </el-form-item>
         <el-form-item label="金额">
           <currency-input
-            v-model="itemMsg.totalmoney"
+            v-model="itemMsg.TOTALMONEY"
             :placeholder="''"
             :customStyle="'width: 300px; height: 40px;'"
           >
           </currency-input>
         </el-form-item>
         <el-form-item label="质量问题">
-          <el-input style="width:300px;" v-model="itemMsg.notes"></el-input>
+          <el-input style="width:300px;" v-model="itemMsg.NOTES"></el-input>
         </el-form-item>
         <el-form-item label="处理意见">
-          <el-select v-model="itemMsg.process" placeholder="请选择处理意见">
+          <el-select v-model="itemMsg.PROCESS" placeholder="请选择处理意见">
             <el-option label="赔偿" value="赔偿"></el-option>
             <el-option label="退货" value="退货"></el-option>
           </el-select>
@@ -248,7 +248,6 @@ import "@/assets/css/base.css";
 import { digitUppercase } from "@/common/js/money.js";
 import { toLocale } from "@/common/js/date.js";
 import {
-  getSaleManData,
   getProductData,
   addRefund,
   getRefundById,
@@ -256,6 +255,14 @@ import {
   updataRefundStatus,
   updateRefund
 } from "@/api/refund";
+import {
+  GetCompensationById,
+  InsertCompensation,
+  UpdateCompensation,
+  DeleteCompensation,
+  UpdateState
+} from "@/api/paymentASP";
+import { GetItemDetailById } from "@/api/itemInfoASP";
 import Cookies from "js-cookie";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -271,15 +278,7 @@ export default {
       item: [],
       dialogFormVisible: false, //是否打开弹框
       //商品信息
-      itemMsg: {
-        itemNo: "", //当前商品的型号
-        productionVersion: "", //商品的型号
-        unit: "", //商品单位
-        qty: "", //商品数量
-        totalmoney: "", //总金额
-        notes: "", //备注
-        process: "" //处理意见：赔偿/退货
-      }
+      itemMsg: {}
     };
   },
   methods: {
@@ -287,18 +286,20 @@ export default {
     async init() {
       let method = this.baseData.method;
       if (method !== "new") {
-        let obj = { id: this.baseData.id };
-        let _data = await getRefundById(obj);
+        let obj = { id: this.baseData.ID };
+        //let _data = await getRefundById(obj);
+        let _data = await GetCompensationById(obj);
+        _data = _data.data[0];
         _data.method = method;
         _data.rtcbItems.forEach(item => {
-          if (item.unit === "°ü") item.unit = "包";
+          if (item.UNIT === "°ü") item.UNIT = "包";
         });
         this.baseData = _data;
         this.item = _data.rtcbItems;
       } else {
-        this.baseData.erpCreatorname = Cookies.get("realName");
-        if (!this.baseData.createTs) {
-          this.baseData.createTs = new Date().getTime();
+        this.baseData.ERP_CREATORNAME = Cookies.get("realName");
+        if (!this.baseData.CREATE_TS) {
+          this.baseData.CREATE_TS = new Date().getTime();
           sessionStorage.setItem("refund", JSON.stringify(this.baseData));
         }
       }
@@ -310,16 +311,23 @@ export default {
         cancelButtonText: "取消"
       })
         .then(async ({ value }) => {
-          getProductData({ itemNo: value })
+          //getProductData({ itemNo: value })
+          GetItemDetailById({ itemNo: value })
             .then(res => {
-              if (res.code === 1) {
-                throw "cannot get message";
+              if (res.data.length > 0) {
+                var data = res.data[0];
+                this.clearItemMsg();
+                this.itemMsg.ITEM_NO = data.ITEM_NO;
+                this.itemMsg.PRODUCTION_VERSION = data.PRODUCTVERSION_NAME;
+                this.itemMsg.UNIT =
+                  data.UNIT_NAME === "°ü" ? "包" : data.UNIT_NAME;
+                this.dialogFormVisible = true;
+              } else {
+                this.$alert(`${value}--未查询到货品信息`, "提示", {
+                  type: "warning",
+                  confirmButtonText: "好的"
+                }).catch(() => {});
               }
-              this.clearItemMsg();
-              this.itemMsg.itemNo = res.itemNo;
-              this.itemMsg.productionVersion = res.productVersionName;
-              this.itemMsg.unit = res.unit === "°ü" ? "包" : res.unit;
-              this.dialogFormVisible = true;
             })
             .catch(err => {
               this.$alert(`${value}--未查询到货品信息`, "提示", {
@@ -372,13 +380,13 @@ export default {
     //清空货品信息表
     clearItemMsg() {
       this.itemMsg = {
-        itemNo: "",
-        productionVersion: "",
-        unit: "",
-        qty: "",
-        totalmoney: "",
-        notes: "",
-        process: ""
+        ITEM_NO: "",
+        PRODUCTION_VERSION: "",
+        UNIT: "",
+        QTY: "",
+        TOTALMONEY: "",
+        NOTES: "",
+        PROCESS: ""
       };
     },
     //返回退货赔偿页面
@@ -393,9 +401,10 @@ export default {
       //判断商品个数,0--删除，!0--提交
       if (this.item.length === 0) {
         let obj = {
-          id: this.baseData.id
+          id: this.baseData.ID
         };
-        deleteRefund(obj)
+        //deleteRefund(obj)
+        DeleteCompensation(obj)
           .then(res => {
             this.$alert("删除成功", "提示", {
               type: "warning",
@@ -403,9 +412,11 @@ export default {
             })
               .then(() => {
                 this.returnBack();
+                this.$root.$emit("updateRefund");
               })
               .catch(() => {
                 this.returnBack();
+                this.$root.$emit("updateRefund");
               });
           })
           .catch(err => {
@@ -417,21 +428,25 @@ export default {
       } else {
         let _rcbItems = this.item;
         _rcbItems.forEach((item, index) => {
-          item.itemIndex = index + 1;
+          item.ITEM_INDEX = index + 1;
         });
         let obj = this.baseData;
-        obj.sendbackReason = null;
-        obj.itemCount = _rcbItems.length;
-        obj.itemMaxIndex = _rcbItems.length;
-        obj.rtcbItems = _rcbItems;
+        obj.SENDBACK_REASON = null;
+        obj.ITEM_COUNT = _rcbItems.length;
+        obj.ITEM_MAX_INDEX = _rcbItems.length;
+        //obj.rtcbItems = _rcbItems;
         //new--新建
         if (this.baseData.method === "new") {
-          addRefund(obj)
+          //addRefund(obj)
+          InsertCompensation({ head: obj, details: _rcbItems })
             .then(res => {
               if (status === 1) {
-                obj.id = res.data;
-                obj.state = "CUSTOMERAFFIRM";
-                updateRefund(obj)
+                //直接提交
+                //updateRefund(obj)
+                UpdateState({
+                  id: res.data.ID,
+                  state: "CUSTOMERAFFIRM"
+                })
                   .then(res => {
                     this.$alert("提交成功", "提示", {
                       type: "success",
@@ -439,9 +454,11 @@ export default {
                     })
                       .then(res => {
                         this.returnBack();
+                        this.$root.$emit("updateRefund");
                       })
                       .catch(err => {
                         this.returnBack();
+                        this.$root.$emit("updateRefund");
                       });
                   })
                   .catch(() => {
@@ -454,9 +471,11 @@ export default {
                 })
                   .then(res => {
                     this.returnBack();
+                    this.$root.$emit("updateRefund");
                   })
                   .catch(err => {
                     this.returnBack();
+                    this.$root.$emit("updateRefund");
                   });
               }
             })
@@ -472,11 +491,12 @@ export default {
           //status：1--提交，0--保存
           let tipWord = "";
           if (status === 1) {
-            (tipWord = "提交"), (obj.state = "CUSTOMERAFFIRM");
+            (tipWord = "提交"), (obj.STATE = "CUSTOMERAFFIRM");
           } else {
             tipWord = "保存";
           }
-          updateRefund(obj)
+          //updateRefund(obj)
+          UpdateCompensation({ head: obj, details: _rcbItems })
             .then(res => {
               this.$alert(`${tipWord}成功`, "提示", {
                 type: "success",
@@ -484,9 +504,11 @@ export default {
               })
                 .then(res => {
                   this.returnBack();
+                  this.$root.$emit("updateRefund");
                 })
                 .catch(err => {
                   this.returnBack();
+                  this.$root.$emit("updateRefund");
                 });
             })
             .catch(err => {
@@ -502,17 +524,20 @@ export default {
     userOperation(flag) {
       //1--同意 0--不同意
       let obj = {
-        id: this.baseData.id,
+        id: this.baseData.ID,
         state: flag ? "APPROVED" : "CANCELED"
       };
-      updataRefundStatus(obj)
+      //updataRefundStatus(obj)
+      UpdateState(obj)
         .then(res => {
+          this.$root.$emit("updateRefund");
           //成功后，调用查询接口，重新覆盖渲染
-          getRefundById({
-            id: this.baseData.id
+          //getRefundById({
+          GetCompensationById({
+            id: this.baseData.ID
           })
             .then(async res => {
-              this.baseData = res;
+              this.baseData = res.data[0];
               this.baseData.method = "see";
               this.releaseBadge("refund");
               this.init();
@@ -586,13 +611,13 @@ export default {
     },
     //返回特定格式的时间戳
     toLocaleTime: function() {
-      return toLocale(this.baseData.createTs);
+      return toLocale(this.baseData.CREATE_TS);
     },
     //返回总金额
     totalMoney: function() {
       let total = 0;
       this.item.forEach(_item => {
-        total += Number(_item.totalmoney);
+        total += Number(_item.TOTALMONEY);
       });
       return total;
     },
