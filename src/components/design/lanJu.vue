@@ -96,13 +96,22 @@
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作" width="100px">
-            <template slot-scope="scope">
+            <template slot-scope="scope" >
               <el-button
-                @click="_CheckDetail(scope.row.ID)"
+                @click="_EditDetail(scope.row)"
+                type="primary"
+                size="mini"
+                icon="el-icon-edit"
+                circle
+                v-show="scope.row.STATUS==2||scope.row.STATUS==4"
+              ></el-button>
+              <el-button
+                @click="_CheckDetail(scope.row)"
                 type="warning"
                 size="mini"
                 icon="el-icon-search"
                 circle
+                v-show="scope.row.STATUS!=2&&scope.row.STATUS!=4"
               ></el-button>
             </template>
           </el-table-column>
@@ -231,7 +240,7 @@
 
   
       <!--编辑区 -->
-      <div v-show="isAdd" class="table-c" >
+      <div v-show="isAdd||isEdit" class="table-c" >
        <div>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr class="grayTD">
@@ -300,7 +309,7 @@
           </tr>
 
           <tr>
-            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">户型编号
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">
               <template>
                 <el-button 
                  type="primary" 
@@ -308,7 +317,8 @@
                  icon="el-icon-plus" 
                  @click="_rowPlus()"
                  circle></el-button>
-             </template>
+              </template>
+              户型编号
             </td>
             <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">建筑面积</td>
             <td class="grayTD"  colspan="2" rowspan="1" style="height:15px">风格：如美式、欧式、中式、地中海、田园、日式、简约、复古、混搭等</td>
@@ -318,11 +328,29 @@
 
           <tr v-for="(item,index) of submitDetailForm" :key="index">
             <td colspan="1" rowspan="1" style="height:30px">
+                  <span>
+                    <el-button 
+                     type="danger" 
+                     size="mini" 
+                     icon="el-icon-minus" 
+                     @click="_rowSubtract(index)"
+                     v-if="index!=0"
+                     circle></el-button>
+                  </span>
                   <input
                   v-model="submitDetailForm[index].HOUSE_CODE"
                   placeholder=""
-                  clearable
-                  class="inputStyle">
+                  v-if="index==0"
+                  clearable 
+                  class="inputStyle"
+                  >
+                  <input
+                  v-model="submitDetailForm[index].HOUSE_CODE"
+                  placeholder=""
+                  v-if="index!=0"
+                  clearable 
+                  class="inputStyleNew"
+                  >
             </td>
             <td colspan="1" rowspan="1" style="height:30px">
                   <input
@@ -353,7 +381,7 @@
                 drag
                 multiple
                 :on-change="function(file,fileList){return  handleChange(file,fileList,index)}"
-                :on-remove="handleRemove"
+                :on-remove="function(file,fileList){return  handleRemove(file,fileList,index)}"
                 :on-success="function(res,file,fileList){return  handleSuccess(res,file,fileList,index)}"
                 ref="upload"
                 :auto-upload="false"
@@ -395,7 +423,8 @@
 
         <div style="text-align:center;margin-top:10px">           
           <el-button type="warning" @click="_checkServiceDetail()">服务须知</el-button>
-          <el-button type="success" :disabled="btnDisable"  @click="_addSubmit()">提 交</el-button>  
+          <el-button type="success"  v-if="this.submitForm.STATUS==1" @click="_addSubmit()">提 交</el-button>  
+          <el-button type="success"  v-if="this.submitForm.STATUS!=1"  @click="_editSubmit()">确定</el-button>  
         </div>    
 
       </div>
@@ -494,10 +523,10 @@ import {
   GetAllData,
   CheckDetailByID,
   addSubmit,
+  editByCustomer,
  } from "@/api/lanju";
 import {
-  EditImageStore,
-  UploadFiles
+  UploadFiles,
 } from "@/api/imageStoreASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
@@ -511,9 +540,11 @@ export default {
       dateStamp: "",
       fileChange: false,
       deleteFile: [],
+      subtractDeleteFile:[],//点击减号准备删除明细，预删除的文件集合
+      deleteIndex:[],//删除文件对应的明细的索引
       btnDisable: false,
       companyId: "",
-      CID: "", //客户账号
+      CID: Cookies.get("cid"), //客户账号
       CNAME: "", //客户名
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
@@ -534,23 +565,18 @@ export default {
       count: 0,
       detailCount:0,//新增户型记录数
       currentPage: 1,
-      rateArray: ["极差", "失望", "一般", "满意", "惊喜"],
       statusArray: [
         {
           label: "未审核",
           value: 1
         },
         {
-          label: "市场部审核未通过",
+          label: "已退回",
           value: 2
         },
         {
           label: "市场部审核通过",
           value: 3
-        },
-        {
-          label: "广美审核未通过",
-          value: 4
         },
         {
           label: "广美审核通过",
@@ -714,6 +740,7 @@ export default {
       this.successCount=0;
       this.allCount=0;
       this.submitDetailForm = [];
+      this.subtractDeleteFile = [];
       this.submitForm = [];
       this.fileListGM=[];
       this.dateStamp = new Date().getTime();
@@ -735,6 +762,8 @@ export default {
         EXPECTED_DRAW_DATE:"",
         SUBMIT_DATE:"",
         STATUS:1,
+        USER_CODE:"",
+        USER_NAME: "", 
       },
       this.submitDetailForm=[{
         ID: "", 
@@ -747,9 +776,11 @@ export default {
         ATTACHMENT_FILE: "",
         ATTACHMENT_FILE_FOLDER:"",
         fileList:[],
+        rowNumber:this.initRowspan,
         }],
-      this.submitForm.DISTRIBUTOR_NAME = Cookies.get("realName");
-      this.submitForm.DISTRIBUTOR_CODE = Cookies.get("companyId");
+      this.submitForm.USER_CODE = Cookies.get("cid");   
+      this.submitForm.USER_NAME = Cookies.get("realName");   
+      this.submitForm.DISTRIBUTOR_CODE = Cookies.get("companyId");   //经销商（公司）的编码和名字不同于账号的编码和名字；
       this.usedRowspan=this.initRowspan;
     },
     //新增记录提交
@@ -767,6 +798,7 @@ export default {
         });
         return;
       }
+      var flag=0;
       //判断户型信息是否填写完整
       for (let i = 0; i < this.submitDetailForm.length; i++) {
           if(this.submitDetailForm[i].STYLE == "")
@@ -777,25 +809,53 @@ export default {
                });
               return;
           }
-          // var  upload= this.submitDetailForm[i].ID;
-          this.$refs.upload[i].submit();
+          if(this.submitDetailForm[i].fileList.length == 0)
+          {
+              flag+=1;
+          }
+      }
+      if(flag==this.submitDetailForm.length)
+      {
+          addSubmit({model:this.submitForm,detailModels:this.submitDetailForm}).then(res => {
+            if (res.code == 0) {
+              this.$alert("提交成功", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.currentPage = 1;
+            this.usedRowspan=5;
+            this.refresh();
+            this.lanjuDetail = false;
+            return;
+            } else {
+              this.$alert("提交失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            return;
+            }
+          });
+      }
+      for (let i = 0; i < this.submitDetailForm.length; i++) {
+         this.$refs.upload[i].submit();
       }
     },
     //查看列表详情
     _CheckDetail(val) {
-      this.submitForm=[];
-      this.submitDetailForm=[];
+      this.submitDetailForm = [];
+      this.submitForm = val;
       this.fileListGM=[];
       this.usedRowspan = this.initRowspan;
       let data = {
-        ID: val
+        DESIGN_ID: val.ID
       };
       this.CNAME = Cookies.get("realName");
       CheckDetailByID(data).then(res => {
         if (res.count > 0) {
           this.submitDetailForm = res.data;
           this.detailCount = res.count;
-          this.submitForm = res.data[0];
+          this.submitForm.CUSTOMER_AGENT = this.submitDetailForm[0].CUSTOMER_AGENT;
+          this.submitForm.OFFICE_TEL= this.submitDetailForm[0].OFFICE_TEL;
         }
         for (let j = 0; j < this.submitDetailForm.length; j++) {
           var list = this.submitDetailForm[j].ATTACHMENT_FILE.split(";");
@@ -815,7 +875,7 @@ export default {
         var fileName = listGM[i].substr(index + 1);
         this.fileListGM.push({
           name: fileName,
-          url: listGM[i]
+          url: list[i]
         });
         }
         this.usedRowspan = this.initRowspan + this.detailCount - 1;
@@ -826,65 +886,95 @@ export default {
         this.lanjuDetail = true;
       });
     },
-    //编辑列表详情
+    //编辑状态下查看列表详情
     _EditDetail(val) {
+      this.submitDetailForm = [];
+      this.submitForm = val;
+      this.deleteFile = [];
+      this.subtractDeleteFile = [];
+      this.deleteIndex = [];
+      this.usedRowspan=this.initRowspan;
       let data = {
-        SID: val
+        DESIGN_ID: val.ID
       };
-      this.CNAME = Cookies.get("realName"),
-        CheckDetailByID(data).then(res => {
+      this.CNAME = Cookies.get("realName");
+      CheckDetailByID(data).then(res => {
           if (res.count > 0) {
-            this.submit = res.data[0];
+            this.submitDetailForm = res.data;
+            this.detailCount=res.count;
+            this.submitForm.CUSTOMER_AGENT = this.submitDetailForm[0].CUSTOMER_AGENT;
+            this.submitForm.OFFICE_TEL= this.submitDetailForm[0].OFFICE_TEL;
           }
-          (this.isAdd = false), (this.isEdit = true);
-          this.isCheck = false;
-          this.lanjuDetail = true;
-        });
+          //将数据库里文件路径集合数据拆解，拆分成可以访问的路径
+          for (let j = 0; j < this.submitDetailForm.length; j++) {
+          this.submitDetailForm[j].rowNumber=this.initRowspan+j;
+          var list = this.submitDetailForm[j].ATTACHMENT_FILE.split(";");
+          this.submitDetailForm[j].fileList=[];
+          for (var i = 0; i < list.length - 1; i++) {
+          var index = list[i].lastIndexOf("/");
+          var fileName = list[i].substr(index + 1);
+          this.submitDetailForm[j].fileList.push({
+          name: fileName,
+          url: list[i]
+          });
+          }
+          }
+         this.usedRowspan=this.initRowspan+this.detailCount-1;
+         this.dateStamp = new Date().getTime();
+         this.isAdd = false;
+         this.isEdit = true;
+         this.isCheck = false;
+         this.lanjuDetail = true;
+         });
     },
     //编辑列表详情修改
     _editSubmit() {
       //判断是否填完所有信息
       if (
-        this.submit.SALE_NO == "" ||
-        this.submit.C_TRANSBILL == "" ||
-        this.submit.TYPE == "" ||
-        this.submit.PROCESSDESC == "" ||
-        this.submit.WLTS_THINK == ""
+        this.submitForm.MANAGER == "" ||
+        this.submitForm.MANAGER_TEL == ""||
+        this.submitForm.EMAIL == ""||
+        this.submitForm.SOLUTION_NAME == ""
       ) {
-        this.$alert("请完善信息", "提示", {
+        this.$alert("请完善单据信息", "提示", {
           confirmButtonText: "确定",
           type: "warning"
         });
         return;
       }
-      if (
-        this.submit.DAMAGED_QUANTITY == "" ||
-        this.submit.DAMAGED_QUANTITY == null
-      ) {
-        this.submit.DAMAGED_QUANTITY = 0;
+      //点击提交，将预删除的文件传入要删除的文件的数组中
+      for (let i = 0; i < this.subtractDeleteFile.length; i++) {
+            this.deleteFile.push(this.subtractDeleteFile[i]);
       }
-      if (
-        this.submit.LOSED_QUANTITY == "" ||
-        this.submit.LOSED_QUANTITY == null
-      ) {
-        this.submit.LOSED_QUANTITY = 0;
-      }
-      editSubmit(this.submit).then(res => {
-        if (res.code == 0) {
-          this.$alert("修改成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.currentPage = 1;
-          this.refresh();
-        } else {
-          this.$alert("修改失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
+      if (this.fileChange) {
+        //文件发生改变，重新上传一次(仅选中修改后的文件，而不是所有文件效率会更高)
+        for (let i = 0; i < this.submitDetailForm.length; i++) {
+            this.$refs.upload[i].submit();
+            this.submitDetailForm[i].ATTACHMENT_FILE = "";
+            for (let j = 0; j < this.submitDetailForm[i].fileList.length; j++) {
+               this.submitDetailForm[i].ATTACHMENT_FILE +=
+                "/Files/LANJU_STORE/" +
+               this.CID +
+               "/" +
+               this.dateStamp +
+                "/" +
+               this.submitDetailForm[i].fileList[j].name +
+                ";"; 
+              }
+          this.submitDetailForm[i].ATTACHMENT_FILE_FOLDER =
+        "/Files/LANJU_STORE/" + this.CID + "/" + this.dateStamp;
         }
-      });
-      this.lanjuDetail = false;
+      } else {
+        if (this.deleteFile.length > 0) {
+          for (let i = 0; i < this.deleteFile.length; i++) {
+            this.submitDetailForm[this.deleteIndex[i]].ATTACHMENT_FILE="";
+            for (var j = 0; j < this.submitDetailForm[this.deleteIndex[i]].fileList.length; j++) {
+                this.submitDetailForm[this.deleteIndex[i]].ATTACHMENT_FILE += this.submitDetailForm[this.deleteIndex[i]].fileList[j].url + ";";
+            }
+          }
+        }
+        this.submitEDITANSYC();
+      }
     },
     //添加基本信息中的户型编辑项数目
     _rowPlus(){
@@ -908,8 +998,41 @@ export default {
         ATTACHMENT_FILE: "",
         ATTACHMENT_FILE_FOLDER:"",
         fileList:[],
+        rowNumber:this.usedRowspan+1,
         }),
          this.usedRowspan+=1;
+        }
+    },
+    _rowSubtract(index){
+        if(this.usedRowspan==5)
+        {
+        this.$alert("必须至少有一项该类信息", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+        }
+        else{
+          var flag=false;
+          for (let i = 0; i < this.submitDetailForm.length; i++) {
+            if(this.submitDetailForm[i].rowNumber-5==index)
+            {
+              this.submitDetailForm.splice(index,1);
+              this.usedRowspan-=1;
+              flag=true;
+              //将删除的明细的文件存进预删除数组中
+              for (let j = 0; j < this.submitDetailForm[i].fileList.length; j++) {
+                   this.subtractDeleteFile.push(this.submitDetailForm[i].fileList[j].url);
+              }    
+            }   
+            if(flag)
+            {
+                for (let j = i; j < this.submitDetailForm.length; j++) {
+                  this.submitDetailForm[j].rowNumber-=1;
+                }
+                break;
+            }
+          }
         }
     },
     _checkServiceDetail()
@@ -921,10 +1044,11 @@ export default {
       this.submitDetailForm[index].fileList = fileList;
       this.fileChange = true;
     },
-    handleRemove(file, fileList) {
-      this.fileList = fileList;
+    handleRemove(file, fileList,index) {
+      this.submitDetailForm[index].fileList = fileList;
       if ((file.status = "success")) {
         this.deleteFile.push(file.url);
+        this.deleteIndex.push(index)
       }
     },
     handleSuccess(res, file, fileList,index) {
@@ -948,27 +1072,25 @@ export default {
     },
     submitEDITANSYC() {
       //相当于同步，等提交成功后再执行
-      EditImageStore({
-        model: this.submitForm,
-        attchmentChange: this.fileChange,
-        deleteFile: this.deleteFile
-      })
-        .then(res => {
-          this.$alert("提交成功", "提示", {
+      editByCustomer({model:this.submitForm,detailModels:this.submitDetailForm, attchmentChange: this.fileChange,deleteFile: this.deleteFile}).then(res => {
+        if (res.code == 0) {
+          this.$alert("修改成功", "提示", {
             confirmButtonText: "确定",
             type: "success"
           });
-          this.submitForm.fileList = [];
           this.currentPage = 1;
           this.refresh();
+          this.usedRowspan=5;
           this.lanjuDetail = false;
-        })
-        .catch(res => {
-          this.$alert("提交失败，请稍后重试", "提示", {
+          return;
+        } else {
+          this.$alert("修改失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
             type: "warning"
           });
-        });
+          return;
+        }
+      });
     },
     sumbitNEWANSYC() {
       //相当于同步，等提交成功后再执行
@@ -994,7 +1116,9 @@ export default {
             type: "success"
           });
           this.currentPage = 1;
+          this.usedRowspan=5;
           this.refresh();
+          this.lanjuDetail = false;
         } else {
           this.$alert("提交失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
@@ -1002,10 +1126,6 @@ export default {
           });
         }
       });
-      this.usedRowspan=5;
-      this.currentPage = 1;
-      this.refresh();
-      this.lanjuDetail = false;
     },
     handleError(err, file, fileList) {
       this.$refs.upload.clearFiles();
@@ -1022,7 +1142,7 @@ export default {
         this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     },
-
+    
   },
 }
 </script>
@@ -1120,6 +1240,13 @@ export default {
   border: 0;
   height: 100%;
   width: 100%;
+  font-size: 16px;
+  text-align: center;
+}
+.inputStyleNew {
+  border: 0;
+  height: 100%;
+  width: 54%;
   font-size: 16px;
   text-align: center;
 }

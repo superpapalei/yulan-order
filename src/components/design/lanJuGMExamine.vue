@@ -96,7 +96,7 @@
             <template slot-scope="scope">
               <el-button
                 v-if="scope.row.STATUS == 3||scope.row.STATUS == 5"
-                @click="_EditDetail(scope.row.ID)"
+                @click="_EditDetail(scope.row)"
                 type="primary"
                 size="mini"
                 icon="el-icon-edit"
@@ -104,7 +104,7 @@
               ></el-button>
               <el-button
                 v-else
-                @click="_CheckDetail(scope.row.ID)"
+                @click="_CheckDetail(scope.row)"
                 type="warning"
                 size="mini"
                 icon="el-icon-search"
@@ -435,16 +435,12 @@ export default {
           value: 1
         },
         {
-          label: "市场部审核未通过",
+          label: "已退回",
           value: 2
         },
         {
           label: "市场部审核通过",
           value: 3
-        },
-        {
-          label: "广美审核未通过",
-          value: 4
         },
         {
           label: "广美审核通过",
@@ -687,19 +683,20 @@ export default {
     },
     //查看列表详情
     _CheckDetail(val) {
-      this.submitForm=[];
-      this.submitDetailForm=[];
+      this.submitDetailForm = [];
+      this.submitForm = val;
       this.fileListGM=[];
       this.usedRowspan = this.initRowspan;
       let data = {
-        ID: val
+        DESIGN_ID: val.ID
       };
       this.CNAME = Cookies.get("realName");
       CheckDetailByID(data).then(res => {
         if (res.count > 0) {
           this.submitDetailForm = res.data;
           this.detailCount = res.count;
-          this.submitForm = res.data[0];
+          this.submitForm.CUSTOMER_AGENT = this.submitDetailForm[0].CUSTOMER_AGENT;
+          this.submitForm.OFFICE_TEL= this.submitDetailForm[0].OFFICE_TEL;
         }
         for (let j = 0; j < this.submitDetailForm.length; j++) {
           var list = this.submitDetailForm[j].ATTACHMENT_FILE.split(";");
@@ -719,7 +716,7 @@ export default {
         var fileName = listGM[i].substr(index + 1);
         this.fileListGM.push({
           name: fileName,
-          url: listGM[i]
+          url: list[i]
         });
         }
         this.usedRowspan = this.initRowspan + this.detailCount - 1;
@@ -733,45 +730,41 @@ export default {
     //编辑状态下查看列表详情
     _EditDetail(val) {
       this.submitDetailForm = [];
-      this.submitForm = [];
-      this.fileListGM=[];
-      this.CID=Cookies.get("cid");
-      this.dateStamp = new Date().getTime();
-      this.usedRowspan = this.initRowspan;
+      this.submitForm = val;
+      this.usedRowspan=this.initRowspan;
       let data = {
-        ID: val
+        DESIGN_ID: val.ID
       };
       this.CNAME = Cookies.get("realName");
       CheckDetailByID(data).then(res => {
-        if (res.count > 0) {
-          this.submitDetailForm = res.data;
-          this.detailCount = res.count;
-          this.submitForm = res.data[0];
-        }
-        //将数据库里文件路径集合数据拆解，拆分成可以访问的路径
-        for (let j = 0; j < this.submitDetailForm.length; j++) {
-          var list = this.submitDetailForm[j].ATTACHMENT_FILE.split(";");
-          this.submitDetailForm[j].fileList = [];
-          for (var i = 0; i < list.length - 1; i++) {
-            var index = list[i].lastIndexOf("/");
-            var fileName = list[i].substr(index + 1);
-            this.submitDetailForm[j].fileList.push({
-              name: fileName,
-              url: list[i]
-            });
+          if (res.count > 0) {
+            this.submitDetailForm = res.data;
+            this.detailCount=res.count;
+            this.submitForm.CUSTOMER_AGENT = this.submitDetailForm[0].CUSTOMER_AGENT;
+            this.submitForm.OFFICE_TEL= this.submitDetailForm[0].OFFICE_TEL;
+            this.submitForm.EXPECTED_DRAW_DATE= "";
+
           }
-        }
-        if(this.submitForm.STATUS==3)
-        {
-           this.submitForm.EXPECTED_DRAW_DATE="";
-        }
-        this.usedRowspan = this.initRowspan + this.detailCount - 1;
-        console.log(this.usedRowspan);
-        this.isAdd = false;
-        this.isEdit = true;
-        this.isCheck = false;
-        this.lanjuDetail = true;
-      });
+          //将数据库里文件路径集合数据拆解，拆分成可以访问的路径
+          for (let j = 0; j < this.submitDetailForm.length; j++) {
+          var list = this.submitDetailForm[j].ATTACHMENT_FILE.split(";");
+          this.submitDetailForm[j].fileList=[];
+          for (var i = 0; i < list.length - 1; i++) {
+          var index = list[i].lastIndexOf("/");
+          var fileName = list[i].substr(index + 1);
+          this.submitDetailForm[j].fileList.push({
+          name: fileName,
+          url: list[i]
+          });
+          }
+          }
+         this.usedRowspan=this.initRowspan+this.detailCount-1;
+         console.log(this.usedRowspan);
+         this.isAdd = false;
+         this.isEdit = true;
+         this.isCheck = false;
+         this.lanjuDetail = true;
+         });
     },
     //列表详情审核
     _editSubmit(val) {
@@ -783,7 +776,7 @@ export default {
       }
       //判断是否填完所有信息
       if (
-        this.submitForm.EXPECTED_DRAW_DATE == ""&&val!=0
+        this.submitForm.EXPECTED_DRAW_DATE == ""&&val!=0 &&val!=4
       ) {
         this.$alert("请填写预计出图日期", "提示", {
           confirmButtonText: "确定",
@@ -803,7 +796,7 @@ export default {
         this.submitForm.ARTS_NAME = Cookies.get("realName");
         this.submitForm.ARTS_CODE = Cookies.get("cid");
       }
-      editSubmit(this.submitForm).then(res => {
+      editSubmit({model:this.submitForm,detailModels:this.submitDetailForm}).then(res => {
         if (res.code == 0) {
           this.$alert("修改成功", "提示", {
             confirmButtonText: "确定",

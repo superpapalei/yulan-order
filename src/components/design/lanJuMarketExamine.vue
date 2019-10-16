@@ -96,7 +96,7 @@
             <template slot-scope="scope">
               <el-button
                 v-if="scope.row.STATUS == 1"
-                @click="_EditDetail(scope.row.ID)"
+                @click="_EditDetail(scope.row)"
                 type="primary"
                 size="mini"
                 icon="el-icon-edit"
@@ -104,7 +104,7 @@
               ></el-button>
               <el-button
                 v-if="scope.row.STATUS != 1"
-                @click="_CheckDetail(scope.row.ID)"
+                @click="_CheckDetail(scope.row)"
                 type="warning"
                 size="mini"
                 icon="el-icon-search"
@@ -389,16 +389,12 @@ export default {
           value: 1
         },
         {
-          label: "市场部审核未通过",
+          label: "已退回",
           value: 2
         },
         {
           label: "市场部审核通过",
           value: 3
-        },
-        {
-          label: "广美审核未通过",
-          value: 4
         },
         {
           label: "广美审核通过",
@@ -641,18 +637,19 @@ export default {
     //查看列表详情
     _CheckDetail(val) {
       this.submitDetailForm = [];
-      this.submitForm = [];
+      this.submitForm = val;
       this.fileListGM=[];
       this.usedRowspan = this.initRowspan;
       let data = {
-        ID: val
+        DESIGN_ID: val.ID
       };
       this.CNAME = Cookies.get("realName");
       CheckDetailByID(data).then(res => {
         if (res.count > 0) {
           this.submitDetailForm = res.data;
           this.detailCount = res.count;
-          this.submitForm = res.data[0];
+          this.submitForm.CUSTOMER_AGENT = this.submitDetailForm[0].CUSTOMER_AGENT;
+          this.submitForm.OFFICE_TEL= this.submitDetailForm[0].OFFICE_TEL;
         }
         for (let j = 0; j < this.submitDetailForm.length; j++) {
           var list = this.submitDetailForm[j].ATTACHMENT_FILE.split(";");
@@ -686,17 +683,18 @@ export default {
     //编辑状态下查看列表详情
     _EditDetail(val) {
       this.submitDetailForm = [];
-      this.submitForm = [];
+      this.submitForm = val;
       this.usedRowspan=this.initRowspan;
       let data = {
-        ID: val
+        DESIGN_ID: val.ID
       };
       this.CNAME = Cookies.get("realName");
       CheckDetailByID(data).then(res => {
           if (res.count > 0) {
             this.submitDetailForm = res.data;
             this.detailCount=res.count;
-            this.submitForm = res.data[0];
+            this.submitForm.CUSTOMER_AGENT = this.submitDetailForm[0].CUSTOMER_AGENT;
+            this.submitForm.OFFICE_TEL= this.submitDetailForm[0].OFFICE_TEL;
           }
           //将数据库里文件路径集合数据拆解，拆分成可以访问的路径
           for (let j = 0; j < this.submitDetailForm.length; j++) {
@@ -721,7 +719,6 @@ export default {
     },
     //列表详情审核
     _editSubmit(val) {
-      this.submitForm.STATUS=val;
       if(val==2||val==3)
       {
       this.submitForm.AUDITOR_NAME=Cookies.get("realName");
@@ -732,7 +729,8 @@ export default {
       this.submitForm.ARTS_NAME=Cookies.get("realName");
       this.submitForm.ARTS_CODE=Cookies.get("cid");
       }
-      editSubmit(this.submitForm).then(res => {
+      this.submitForm.STATUS=val;
+      editSubmit({model:this.submitForm,detailModels:this.submitDetailForm}).then(res => {
         if (res.code == 0) {
           this.$alert("修改成功", "提示", {
             confirmButtonText: "确定",

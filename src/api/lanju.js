@@ -29,7 +29,7 @@ export function addSubmit(data,config = {}) {
 }
 
 
-//提交或者修改投诉单
+//市场部和广美修改申请单
 export function editSubmit(data, config = {}) {
     return post('/Lanju/EditRecord', data, config).then((res) => {
         return Promise.resolve(res);
@@ -37,6 +37,16 @@ export function editSubmit(data, config = {}) {
         return Promise.reject(err);
     })
 }
+
+//供应商修改申请单
+export function editByCustomer(data,config = {}) {
+    return post('/Lanju/EditByCustomer', data,config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
 
 //查看兰居软装设计单详情
 export function CheckDetailByID(data, config = {}) {
@@ -46,3 +56,4 @@ export function CheckDetailByID(data, config = {}) {
         return Promise.reject(err);
     })
 }
+
