@@ -74,8 +74,7 @@
             <td class="grayTD" style="width:16%;height:15px">客户代码</td>
             <td style="width:34%;height:15px" class="grayTD">(提交后自动生成)</td>
             <td class="grayTD" style="width:16%;height:15px">客户名称</td>
-            <td v-if="isEdit" style="width:34%;height:15px" class="grayTD">{{this.CNAME}}</td>
-            <td v-else style="width:34%;height:15px" class="grayTD">(提交后自动生成)</td>
+            <td style="width:34%;height:15px" class="grayTD">(提交后自动生成)</td>
           </tr>
 
           <tr>
@@ -314,7 +313,7 @@ export default {
         });
         return;
       }
-      if (this.s.TYPE == "丢失" )
+      if (this.submit.TYPE == "丢失" )
       {
           this.submit.DAMAGED_QUANTITY = 0;
       }
@@ -348,20 +347,20 @@ export default {
         return;
       }
       console.log(data);
-      // addSubmit(data).then(res => {
-      //   if (res.code == 0) {
-      //     this.$alert("提交成功", "提示", {
-      //       confirmButtonText: "确定",
-      //       type: "success"
-      //     });
-      //     this.init_shipment();
-      //   } else {
-      //     this.$alert("提交失败，请稍后重试", "提示", {
-      //       confirmButtonText: "确定",
-      //       type: "warning"
-      //     });
-      //   }
-      // });
+      addSubmit(data).then(res => {
+        if (res.code == 0) {
+          this.$alert("提交成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.init_shipment();
+        } else {
+          this.$alert("提交失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        }
+      });
       this.complaintDetail=false;
     },
     ...mapMutations("navTabs", ["addTab"]),

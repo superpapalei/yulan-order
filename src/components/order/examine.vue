@@ -1,12 +1,18 @@
 <template>
   <el-card class="centerCard">
     <div>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs style="display:inline-block;width:900px;" v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="待处理的订单" name="unCheck"></el-tab-pane>
         <el-tab-pane label="待客户处理的订单" name="customCheck"></el-tab-pane>
         <el-tab-pane label="审核过的订单" name="checked"></el-tab-pane>
         <el-tab-pane label="全部订单" name="allOrder"></el-tab-pane>
       </el-tabs>
+      <a
+        target="_blank"
+        style="float:right;"
+        href="http://www.luxlano.com/ddkc/"
+        >玉兰·兰居尚品->订单及库存查询</a
+      >
     </div>
     <div>
       <el-date-picker

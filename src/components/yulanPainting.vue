@@ -99,6 +99,7 @@
               type="warning"
               icon="el-icon-search"
               circle
+              size="small"
             ></el-button>
             <el-button
               v-if="scope.row.state == 'ONCREATE'"
@@ -106,6 +107,7 @@
               type="primary"
               icon="el-icon-edit"
               circle
+              size="small"
             ></el-button>
             <el-button
               v-if="scope.row.state == 'ONCREATE'"
@@ -113,6 +115,7 @@
               type="danger"
               icon="el-icon-delete"
               circle
+              size="small"
             ></el-button>
           </template>
         </el-table-column>

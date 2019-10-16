@@ -131,6 +131,7 @@
                   @click="toDetail(scope.row, 'see')"
                   type="warning"
                   icon="el-icon-search"
+                  size="small"
                 >
                 </el-button>
               </el-tooltip>
@@ -148,6 +149,7 @@
                   @click="returnBack(scope.row, 'back')"
                   type="info"
                   icon="el-icon-back"
+                  size="small"
                 >
                 </el-button>
               </el-tooltip>
@@ -165,6 +167,7 @@
                   @click="toDetail(scope.row, 'edit')"
                   type="primary"
                   icon="el-icon-edit"
+                  size="small"
                 >
                 </el-button>
               </el-tooltip>
@@ -183,6 +186,7 @@
                   @click="returnBack(scope.row, 'delete')"
                   type="danger"
                   icon="el-icon-delete"
+                  size="small"
                 >
                 </el-button>
               </el-tooltip>
@@ -299,10 +303,13 @@ export default {
     },
     //初始化角标
     async initBadge() {
-      let _refund = await getAllRefund({
+      //let _refund = await getAllRefund({
+      let _refund = await GetAllCompensation({
         CID: this.cid,
         page: 1,
-        number: 1,
+        number: 10000,
+        startDate: "0001/1/1",
+        endDate: "9999/12/31",
         state: "CUSTOMERAFFIRM"
       });
       this.changeBadge({

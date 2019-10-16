@@ -9,7 +9,8 @@
           placeholder="日期区间"
           v-model="startDate"
           style="width:14%;"
-        ></el-date-picker>--
+        ></el-date-picker
+        >--
         <el-date-picker
           type="date"
           format="yyyy-MM-dd"
@@ -26,26 +27,56 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-button type="success" @click="search()" icon="el-icon-search">查询</el-button>
+        <el-button type="success" @click="search()" icon="el-icon-search"
+          >查询</el-button
+        >
       </div>
-      <el-table border :data="paintingData" style="width: 100%" :row-class-name="tableRowClassName">
-        <el-table-column prop="id" label="编号" align="center"></el-table-column>
+      <el-table
+        border
+        :data="paintingData"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+      >
+        <el-table-column
+          prop="id"
+          label="编号"
+          align="center"
+        ></el-table-column>
         <el-table-column label="创建时间" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.createTs | datatrans}}</span>
+            <span>{{ scope.row.createTs | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="realName" label="玉兰业务员" align="center"></el-table-column>
-        <el-table-column prop="officeTel" width="220" label="联系电话" align="center"></el-table-column>
-        <el-table-column prop="imageCount" label="图片数" width="80" align="center"></el-table-column>
+        <el-table-column
+          prop="realName"
+          label="玉兰业务员"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="officeTel"
+          width="220"
+          label="联系电话"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="imageCount"
+          label="图片数"
+          width="80"
+          align="center"
+        ></el-table-column>
         <el-table-column label="状态" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.state | transStatus}}</span>
+            <span>{{ scope.row.state | transStatus }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button @click="lookIt(scope.row)" type="warning" icon="el-icon-search"></el-button>
+            <el-button
+              @click="lookIt(scope.row)"
+              type="warning"
+              icon="el-icon-search"
+              size="small"
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -81,11 +112,11 @@
           </tr>
           <tr>
             <td class="grayTD">编号</td>
-            <td>{{tableData.id}}</td>
+            <td>{{ tableData.id }}</td>
             <td class="grayTD">建立人</td>
-            <td>{{tableData.erpCreator}}</td>
+            <td>{{ tableData.erpCreator }}</td>
             <td class="grayTD">建立时间</td>
-            <td>{{tableData.createTs | datatrans}}</td>
+            <td>{{ tableData.createTs | datatrans }}</td>
           </tr>
           <tr class="tableCol">
             <td colspan="4">委托人基本信息</td>
@@ -93,16 +124,16 @@
           </tr>
           <tr>
             <td class="grayTD" colspan="2">名称</td>
-            <td colspan="2">{{tableData.cname}}</td>
+            <td colspan="2">{{ tableData.cname }}</td>
             <td colspan="2" rowspan="3">广东玉兰集团股份有限公司</td>
           </tr>
           <tr>
             <td class="grayTD" colspan="2">联系人</td>
-            <td colspan="2">{{tableData.customerAgent}}</td>
+            <td colspan="2">{{ tableData.customerAgent }}</td>
           </tr>
           <tr>
             <td class="grayTD" colspan="2">电话</td>
-            <td colspan="2">{{tableData.officeTel}}</td>
+            <td colspan="2">{{ tableData.officeTel }}</td>
           </tr>
 
           <tr class="tableCol">
@@ -115,35 +146,60 @@
             <td colspan="2">定制要求</td>
           </tr>
           <tr v-for="item of abdrImage" :key="item.index">
-            <td colspan="1">{{item.imageIndex}}</td>
+            <td colspan="1">{{ item.imageIndex }}</td>
             <td colspan="2">
-              <el-tooltip class="item" effect="dark" content="点击放大图片" placement="top">
-                <img @click="showBIG(item.imagePath)" class="IMG" :src="item.imagePath" />
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="点击放大图片"
+                placement="top"
+              >
+                <img
+                  @click="showBIG(item.imagePath)"
+                  class="IMG"
+                  :src="item.imagePath"
+                />
               </el-tooltip>
             </td>
-            <td colspan="1">{{item.specifications}}</td>
-            <td colspan="2">{{item.memo}}</td>
+            <td colspan="1">{{ item.specifications }}</td>
+            <td colspan="2">{{ item.memo }}</td>
           </tr>
           <tr>
             <td colspan="2">委托人来图版权保证声明</td>
             <td colspan="4">
               <br />
-              <p>本人确认对其提供给受托人用于产品定制的图片拥有著作权或使用权，已保证其来源合法。受托人仅</p>
-              <p>按照本人提供的图片进行相应定制提供给本人，无义务对本人提供的图片进行实质审查。 本人因该图片的</p>
-              <p>著作权或使用权问题与第三方发生纠纷，受托人将不承担任何的法律责任，由此造成的损失由本人全部承担。</p>
+              <p>
+                本人确认对其提供给受托人用于产品定制的图片拥有著作权或使用权，已保证其来源合法。受托人仅
+              </p>
+              <p>
+                按照本人提供的图片进行相应定制提供给本人，无义务对本人提供的图片进行实质审查。
+                本人因该图片的
+              </p>
+              <p>
+                著作权或使用权问题与第三方发生纠纷，受托人将不承担任何的法律责任，由此造成的损失由本人全部承担。
+              </p>
               <p></p>
               <br />
               <br />
-              <p
-                v-show="!agree"
-              >受托人签名（盖章）：{{tableData.customerAgent}}&nbsp;&nbsp;&nbsp;&nbsp;确认时间：{{tableData.reassureTs | datatrans}}</p>
+              <p v-show="!agree">
+                受托人签名（盖章）：{{
+                  tableData.customerAgent
+                }}&nbsp;&nbsp;&nbsp;&nbsp;确认时间：{{
+                  tableData.reassureTs | datatrans
+                }}
+              </p>
             </td>
           </tr>
         </table>
+
         <div v-show="agreeJudge" style="width:180px;margin:0 auto;">
           <br />
-          <el-button type="success" @click="_changeStatus('同意')">同 意</el-button>
-          <el-button type="danger" @click="_changeStatus('不同意')">不同意</el-button>
+          <el-button type="success" @click="_changeStatus('同意')"
+            >同 意</el-button
+          >
+          <el-button type="danger" @click="_changeStatus('不同意')"
+            >不同意</el-button
+          >
         </div>
       </div>
     </el-dialog>

@@ -20,6 +20,7 @@
               :key="item.SystemMenuID"
               :menuTreeItem="item"
             />
+             <!-- 有角标的另外加载 -->
             <router-link to="/painting" tag="div">
               <el-menu-item v-if="isContainAttr('painting')" index="painting">
                 <i class="iconfont icon-color">&#xe7fb;</i>
@@ -218,6 +219,7 @@ import Vue from "vue";
 import Cookies from "js-cookie";
 import menuTree from "./menuTree";
 import studyContextDetail from "./studyContext/studyContextDetail";
+import { GetAllCompensation } from "@/api/paymentASP";
 
 export default {
   name: "Main",
@@ -256,10 +258,13 @@ export default {
     //获取角标情况【退货】
     async addBadgeIcon() {
       if (Cookies.get("identity") === "ECWEB") {
-        let _refund = await getAllRefund({
+        //let _refund = await getAllRefund({
+        let _refund = await GetAllCompensation({
           CID: this.cid,
           page: 1,
-          number: 1,
+          number: 10000,
+          startDate: "0001/1/1",
+          endDate: "9999/12/31",
           state: "CUSTOMERAFFIRM"
         });
         this.changeBadge({
@@ -430,7 +435,7 @@ export default {
     },
     getStudy() {
       GetCustomerMustWriteStudy({ cid: this.cid }).then(res => {
-        if (res.data.length > 0){
+        if (res.data.length > 0) {
           this.studySelectData = res.data[0];
           this.studyVisible = true;
         }

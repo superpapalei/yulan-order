@@ -1566,7 +1566,7 @@ export default {
 }
 .rightDiv {
   float: right;
-  margin-right: 10%;
+  margin-right: 5%;
 }
 .rightDiv span {
   font-weight: bold;
