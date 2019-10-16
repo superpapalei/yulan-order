@@ -24,3 +24,11 @@ export function GetStockByUser(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//根据item_no查询item详情
+export function GetItemDetailById(data, config = {}) {
+    return post('/ITEM/GetItemDetailById', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
