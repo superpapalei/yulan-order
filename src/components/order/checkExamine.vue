@@ -76,6 +76,12 @@
       >
         <el-table-column
           align="center"
+          prop="LINE_NO"
+          label="序号"
+          width="50"
+        ></el-table-column>
+        <el-table-column
+          align="center"
           prop="ITEM_NO"
           label="型号"
           width="140"

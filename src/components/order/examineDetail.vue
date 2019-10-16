@@ -46,11 +46,29 @@
         </span>
         <span class="zoomLeft">
           经办人：
-          <span class="zoomRight">{{ ruleForm.LINKPERSON }}</span>
+          <span class="zoomRight"
+            >{{ ruleForm.LINKPERSON }}({{ ruleForm.TELEPHONE }})</span
+          >
         </span>
         <span class="zoomLeft">
-          联系方式：
-          <span class="zoomRight">{{ ruleForm.TELEPHONE }}</span>
+          收货人：
+          <span class="zoomRight"
+            >{{ ruleForm.WL_CONTACTS }}({{ ruleForm.WL_TEL }})</span
+          >
+        </span>
+        <br />
+        <span class="zoomLeft">
+          收货地址：
+          <span class="zoomRight">{{ ruleForm.ALL_ADDRESS }}</span>
+        </span>
+        <span class="zoomLeft">
+          订单备注：
+          <span class="zoomRight">{{ ruleForm.NOTES }}</span>
+        </span>
+        <br />
+        <span class="zoomLeft">
+          玉兰处理说明：
+          <span class="zoomRight">{{ ruleForm.YULAN_NOTES }}</span>
         </span>
       </div>
       <el-table
@@ -59,6 +77,12 @@
         style="width: 100%"
         :row-class-name="tableRowClassName"
       >
+        <el-table-column
+          align="center"
+          prop="LINE_NO"
+          label="序号"
+          width="50"
+        ></el-table-column>
         <el-table-column
           align="center"
           prop="ITEM_NO"
@@ -99,7 +123,7 @@
             <el-button
               @click="openDialog(scope.row, scope.$index)"
               type="primary"
-              size="small"
+              size="mini"
               >查看详情</el-button
             >
           </template>
