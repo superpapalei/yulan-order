@@ -9,6 +9,7 @@ import { get, post, patch, put } from './api/http'
 import qs from 'qs'
 import Cookies from 'js-cookie'
 import ElementUI from 'element-ui'
+import AFTableColumn from 'af-table-column'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/iconfont/iconfont.css'
 import './assets/css/base.css'
@@ -19,6 +20,7 @@ import * as Global from './api/httpASP.js'
 
 Vue.use(ElementUI);
 Vue.use(Cookies);
+Vue.use(AFTableColumn)
 Axios.defaults.withCredentials = true;
 
 Vue.prototype.$axios = Axios;
