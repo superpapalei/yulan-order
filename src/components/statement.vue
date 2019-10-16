@@ -11,7 +11,6 @@
           <el-table-column label="广东玉兰集团股份有限公司对账单">
             <el-table-column
               prop="dateStart"
-              width="200"
               label="起始日期"
             ></el-table-column>
             <el-table-column prop="dateEnd" label="结束日期"></el-table-column>
@@ -57,7 +56,7 @@
             @current-change="outerCurrentChange"
             :current-page.sync="outerCurrentPage"
             :page-size="outerlimit"
-            layout="prev, pager, next, jumper"
+            layout="total, prev, pager, next, jumper"
             :total="outercount"
           ></el-pagination>
         </div>
@@ -67,11 +66,12 @@
         title="对账单明细"
         :visible.sync="detailVisible"
         :close-on-click-modal="false"
-        width="60%"
+        width="65%"
+        top="5vh"
       >
-        <div style="width:90% ;margin:0 auto;">
+        <div style="width:100% ;margin:0 auto;">
           <div
-            style="margin:0 auto; height:50px; width:100%;text-align:center;"
+            style="margin:0 auto; height:40px; width:100%;text-align:center;"
           >
             <h2>广东玉兰集团股份有限公司对账单</h2>
           </div>
@@ -81,7 +81,7 @@
             </h4>
             <el-button
               v-show="showButton"
-              style="float:right; margin-left:10px;"
+              style="float:right; margin-left:10px;margin-bottom:10px;"
               type="primary"
               @click="changeStatus(0)"
               >客户确认</el-button
@@ -135,34 +135,34 @@
               <td align="center" class="grayTD">本年</td>
             </tr>
             <tr>
-              <td class="grayTD">实际发货总金额</td>
-              <td>{{ theBody.fhjeMonth }}</td>
-              <td>{{ theBody.consignmentMoney }}</td>
-              <td class="grayTD">实际收款金额</td>
-              <td>{{ theBody.czskMonth }}</td>
-              <td>{{ theBody.gatherMoneyFax }}</td>
+              <td class="grayTD" align="center">实际发货总金额</td>
+              <td align="center">{{ theBody.fhjeMonth }}</td>
+              <td align="center">{{ theBody.consignmentMoney }}</td>
+              <td class="grayTD" align="center">实际收款金额</td>
+              <td align="center">{{ theBody.czskMonth }}</td>
+              <td align="center">{{ theBody.gatherMoneyFax }}</td>
             </tr>
             <tr>
-              <td class="grayTD">返利发货总金额</td>
-              <td>{{ theBody.moneyFl }}</td>
-              <td>{{ theBody.moneyFlTotal }}</td>
-              <td class="grayTD">本期剩余返利</td>
-              <td>{{ theBody.moneyFl }}</td>
+              <td class="grayTD" align="center">返利发货总金额</td>
+              <td align="center">{{ theBody.moneyFl }}</td>
+              <td align="center">{{ theBody.moneyFlTotal }}</td>
+              <td class="grayTD" align="center">本期剩余返利</td>
+              <td align="center">{{ theBody.moneyFl }}</td>
               <td></td>
             </tr>
             <tr>
-              <td class="grayTD">备货总金额</td>
-              <td>{{ theBody.moneyBh }}</td>
-              <td>{{ theBody.moneyBhTotal }}</td>
-              <td class="grayTD">运费总金额</td>
-              <td>{{ theBody.freightMonth }}</td>
-              <td>{{ theBody.freight }}</td>
+              <td class="grayTD" align="center">备货总金额</td>
+              <td align="center">{{ theBody.moneyBh }}</td>
+              <td align="center">{{ theBody.moneyBhTotal }}</td>
+              <td class="grayTD" align="center">运费总金额</td>
+              <td align="center">{{ theBody.freightMonth }}</td>
+              <td align="center">{{ theBody.freight }}</td>
             </tr>
             <tr>
-              <td class="grayTD">期初应收款</td>
-              <td colspan="2">{{ theBody.qcczysk }}</td>
-              <td class="grayTD">期末应收款</td>
-              <td colspan="2">{{ theBody.czysk }}</td>
+              <td class="grayTD" align="center">期初应收款</td>
+              <td colspan="2" align="center">{{ theBody.qcczysk }}</td>
+              <td class="grayTD" align="center">期末应收款</td>
+              <td colspan="2" align="center">{{ theBody.czysk }}</td>
             </tr>
           </table>
 
@@ -190,7 +190,7 @@
             </el-table-column>
             <el-table-column label="类别">
               <template slot-scope="scope1">
-                <span>{{ scope1.row.billNo }}</span>
+                <span>{{ scope1.row.billNo | stateChange }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="money" label="发货总额"></el-table-column>
@@ -230,7 +230,12 @@
         </div>
       </el-dialog>
 
-      <el-dialog :title="THtitle" :visible.sync="THdetail" :width="THwidth">
+      <el-dialog
+        :title="THtitle"
+        :visible.sync="THdetail"
+        :width="THwidth"
+        :top="THtop"
+      >
         <div style="margin:0 auto;width:20%;" v-show="whatType">
           <span style="font-weight:600">{{ THhead }}明细表</span>
         </div>
@@ -248,10 +253,10 @@
             width="160"
             label="版本型号"
           ></el-table-column>
-          <el-table-column width="150" label="名称">
-            <template slot-scope="scope1">
+          <el-table-column width="150" label="名称" prop="itemNote">
+            <!-- <template slot-scope="scope1">
               <el-button type="text">{{ scope1.row.itemNote }}</el-button>
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column width="150" label="版本名称">
             <template slot-scope="scope">
@@ -310,6 +315,7 @@ export default {
       CZSK: {},
       THtitle: "对账单明细",
       THwidth: "70%",
+      THtop: "15vh",
       whatType: true,
       //外面的翻页
       outerCurrentPage: 1,
@@ -345,15 +351,17 @@ export default {
   methods: {
     //打开对账单提货弹窗
     openTHdia(tab) {
-      if (tab.billNo == "CZSK") {
+      if (tab.billNo == "CZSK" || tab.billNo == "收款") {
         this.whatType = false;
         this.THtitle = "收款备注";
         this.CZSK = tab;
         this.THwidth = "30%";
+        this.THtop = "30vh";
       } else {
         this.whatType = true;
         this.THtitle = "对账单明细";
         this.THwidth = "72%";
+        this.THtop = "15vh";
       }
       this.THdetail = true;
       this.THhead = tab.saleNo;
@@ -362,8 +370,6 @@ export default {
         saleNO: this.THhead
       };
       statementDetail(url, data).then(res => {
-        console.log(res);
-        console.log(res.packDetailList);
         this.THtabledata = res.packDetailList;
       });
     },
@@ -576,6 +582,11 @@ export default {
       if (value == "Y") return "是";
       if (value == "N") return "否";
       if (value == null) return "";
+    },
+    stateChange(value) {
+      if (value == "CZSK") return "收款";
+      if (value == "TD") return "提单";
+      return value;
     }
   }
 };
