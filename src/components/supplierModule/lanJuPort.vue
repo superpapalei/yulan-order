@@ -22,6 +22,7 @@
                             <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
                             <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
                             </div>
+                               <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div>
                         </template>
                     </el-table-column>
                       <el-table-column width="80" header-align="center" valign="baseline"  align="left" label="名称">

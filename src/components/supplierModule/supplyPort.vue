@@ -16,12 +16,13 @@
                           <div><label>位置:</label> <div class="messageInput" style="width: 100px;">
                                 {{(item.tab1[index].cl_place === null ||item.tab1[index].cl_place =="")?'无':item.tab1[index].cl_place}} </div></div> 
                             <div class="messageBox">
-                            <div> <label>款号:</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
-                            <div><label>成品宽:</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
-                            <div> <label>成品高:</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
-                            <div> <label>假帘高:</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
-                            <div> <label>帘倍数:</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
+                            <div> <label>款号：</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
+                            <div><label>成品宽：</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
+                            <div> <label>成品高：</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
+                            <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
+                            <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
                             </div>
+                               <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div>
                         </template>
                     </el-table-column>
                       <el-table-column width="80" header-align="center" align="left" label="名称">
@@ -231,12 +232,13 @@
                           <div><label>位置:</label> <div class="messageInput" style="width: 100px;">
                                 {{(item.tab1[index].cl_place === null ||item.tab1[index].cl_place =="")?'无':item.tab1[index].cl_place}} </div></div> 
                             <div class="messageBox">
-                            <div> <label>款号:</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
-                            <div><label>成品宽:</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
-                            <div> <label>成品高:</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
-                            <div> <label>假帘高:</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
-                            <div> <label>帘倍数:</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
+                            <div> <label>款号：</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
+                            <div><label>成品宽：</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
+                            <div> <label>成品高：</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
+                            <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
+                            <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
                             </div>
+                               <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div>
                         </template>
                     </el-table-column>
                       <el-table-column width="80" header-align="center" align="left" label="名称">
@@ -892,6 +894,16 @@ export default {
 </script>
 
 <style scoped>
+.messageInput{
+  margin: 3px;
+    border: 1px solid #c3c3c3;
+    margin-right: 3px;
+    /* padding: 3px 6px 3px 6px; */
+    min-width: 45px;
+    border-radius: 4px; 
+     color: gray;
+    display: inline-block;
+}
 .btn-style{
   font: 12px Arial;
   height: 24px;
@@ -901,14 +913,38 @@ export default {
    border:  3px solid  #409eff;
   border-radius: 5px;
 }
+.el-scrollbar__wrap
+{
+  overflow-x: hidden;
+}
 .button_clolur {
   background: #8bc34a;
   color: rgb(255, 255, 255);
+}
+.messageBox{
+    padding: 3px 0;
 }
 .data_1 {
   font-size: 1.5em;
 }
 td {
   text-align: center;
+}
+.line_noDiv{
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  border-radius:20px;
+  text-align: center;
+  position: absolute;
+  top: 0px;
+  left: 0;
+}
+.line_noSpan{
+   width: 20px;
+  height: 20px;
+  text-align: center;
+  margin:-1px 0 0 -1px;
+  display:block;
 }
 </style>
