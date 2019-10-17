@@ -292,6 +292,7 @@
               <el-input
                 class="inputWidth"
                 v-model="sumbit.payerAccount"
+                 oninput="value=value.replace(/[^\d]/g,'')"
                 placeholder="请输入付款银行账号"
               ></el-input>
             </td>
@@ -359,6 +360,7 @@ import {
   sumbitForm,
   getHistory
 } from "@/api/bank";
+import { getCustomerInfo } from "@/api/orderListASP";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 const Quest = "http://14.29.223.114:10250/yulan-capital";
@@ -368,6 +370,7 @@ export default {
   name: "BankProof",
   data() {
     return {
+      chargeData: [],
       ROWSPAN: 6,
       BigPic: false,
       showtheHistory: false,
@@ -455,16 +458,16 @@ export default {
       ],
       bankArray: [
         {
-          label: "中信银行",
-          value: "中信银行"
+          label: "中国工商银行(8881)",
+          value: "中国工商银行(8881)"
         },
         {
           label: "中国工商银行(9761)",
           value: "中国工商银行(9761)"
         },
         {
-          label: "中国工商银行(8881)",
-          value: "中国工商银行(8881)"
+          label: "中信银行",
+          value: "中信银行"
         },
         {
           label: "中国邮政储蓄银行",
@@ -475,6 +478,7 @@ export default {
     };
   },
   created: function() {
+    this.chargeQuery();
     this._getBankList();
     this._getHistory();
   },
@@ -525,6 +529,18 @@ export default {
     }
   },
   methods: {
+    chargeQuery() {
+      var data = {
+        cid: Cookies.get("cid"),
+        companyId: Cookies.get("companyId")
+      };
+      getCustomerInfo(data).then(res => {
+        this.chargeData = res.data;
+      });
+    },
+    implentmentChange() {
+      if (this.tableData.IMPLEMENTTATION_FORM != 1) this.tableData.MEASURE = 0;
+    },
     //焦点显示历史记录
     showHistory() {
       this.showtheHistory = true;
@@ -637,7 +653,7 @@ export default {
       this.newORedit = false;
       this.sumbit = {
         cid: Cookies.get("companyId"), //公司号
-        cname: Cookies.get("realName"), //客户名
+        cname: this.chargeData.CUSTOMER_NAME, //客户名
         yulanBank: "", //汇款银行
         payerName: "", //汇款人名
         payAmount: "", //汇款金额

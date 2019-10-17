@@ -91,6 +91,10 @@ export default {
       });
     },
     refreshStudy() {
+      this.$alert("提交成功", "提示", {
+        confirmButtonText: "确定",
+        type: "success"
+      });
       this.studyVisible = false;
       this.getDetail();
     },

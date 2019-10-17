@@ -31,6 +31,7 @@
               {{ context.ORDERINDEX }}.{{ context.TITLE }}
             </h2>
             <!-- 分类加载答案 -->
+            <!-- 标准5项 -->
             <div class="optionClass" v-if="context.TYPE == 'STAND_5_SINGLE'">
               <el-radio-group v-model="context.optionResultValue">
                 <el-radio
@@ -42,6 +43,7 @@
                 >
               </el-radio-group>
             </div>
+            <!-- 标准6分量化 -->
             <div
               class="optionClass"
               v-else-if="context.TYPE == 'STAND_6_SINGLE'"
@@ -62,6 +64,7 @@
                 context.OPTIONTEXT6
               }}</span>
             </div>
+            <!-- 自定义单选 -->
             <div class="optionClass" v-else-if="context.TYPE == 'CUSTM_SINGLE'">
               <el-radio-group v-model="context.optionResultValue">
                 <div
@@ -93,6 +96,7 @@
                 </div>
               </el-radio-group>
             </div>
+            <!-- 自定义多选 -->
             <div class="optionClass" v-else-if="context.TYPE == 'CUSTM_MULTIP'">
               <el-checkbox-group v-model="context.optionResultValue">
                 <div
@@ -129,6 +133,7 @@
                 </div>
               </el-checkbox-group>
             </div>
+            <!-- 短填空 -->
             <div class="optionClass" v-else-if="context.TYPE == 'SHORT_INPUT'">
               <el-input
                 class="optionSingle"
@@ -136,6 +141,7 @@
                 v-model="context.optionResultValue"
               ></el-input>
             </div>
+            <!-- 长填空 -->
             <div class="optionClass" v-else-if="context.TYPE == 'LONG_INPUT'">
               <el-input
                 class="optionSingle"
@@ -288,12 +294,7 @@ export default {
         cid: Cookies.get("cid"),
         sfid: this.selectData.SID
       }).then(res => {
-        this.detailVisible = false;
-        // this.$alert("提交成功", "提示", {
-        //   confirmButtonText: "确定",
-        //   type: "success"
-        // });
-        this.$emit("refresh");//触发父组件刷新
+        this.$emit("refresh"); //触发父组件刷新
       });
     }
   },
