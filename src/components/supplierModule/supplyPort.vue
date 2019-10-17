@@ -1,7 +1,8 @@
 <template>
-     <div>
+  <div>
+       
   <!-- X开头（窗帘）确认采购单界面 -->
-          <el-dialog :show-close="true" :visible.sync="checkX_Visible" disabled="true" width="70%" top="8vh">
+    <el-dialog :show-close="true" :visible.sync="checkX_Visible" disabled="true" width="70%" top="8vh">
                <div style="margin-bottom:10px"> <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO}}）</h1>
                      <span style="float:right">{{ pur_headForm.DATE_PUR | datatrans }}</span> </div>
                         <div> <h1>收货人：{{ pur_headForm.LINKMAN}}</h1></div>
@@ -15,12 +16,13 @@
                           <div><label>位置:</label> <div class="messageInput" style="width: 100px;">
                                 {{(item.tab1[index].cl_place === null ||item.tab1[index].cl_place =="")?'无':item.tab1[index].cl_place}} </div></div> 
                             <div class="messageBox">
-                            <div> <label>款号:</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
-                            <div><label>成品宽:</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
-                            <div> <label>成品高:</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
-                            <div> <label>假帘高:</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
-                            <div> <label>帘倍数:</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
+                            <div> <label>款号：</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
+                            <div><label>成品宽：</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
+                            <div> <label>成品高：</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
+                            <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
+                            <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
                             </div>
+                               <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div>
                         </template>
                     </el-table-column>
                       <el-table-column width="80" header-align="center" align="left" label="名称">
@@ -99,7 +101,7 @@
                     </div>    
           </el-dialog>
   <!-- 非X开头（窗帘）确认采购单界面 -->
-          <el-dialog :show-close="true" :visible.sync="checkY_Visible" disabled="true" width="70%" top="8vh">
+    <el-dialog :show-close="true" :visible.sync="checkY_Visible" disabled="true" width="70%" top="8vh">
                <div style="margin-bottom:10px"> <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO}}）</h1>
                      <span style="float:right">{{ pur_headForm.DATE_PUR | datatrans }}</span> </div>
                         <div> <h1>收货人：{{ pur_headForm.LINKMAN}}</h1></div>
@@ -107,19 +109,19 @@
                         <hr />
                         <div style="width:100%">
                               <el-table :data="gridData" style="width:100%" max-height="400px">
-                                <el-table-column property="ITEM_NO" label="物料号" width="120"></el-table-column>
-                                <el-table-column property="MGUIGE" label="物料型号" width="120"></el-table-column>
-                                <el-table-column property="MNAME" label="名称" width="50"></el-table-column>
-                                <el-table-column property="GRADE" label="规格" width="80" ></el-table-column>
+                                <af-table-column property="ITEM_NO" label="物料号" ></af-table-column>
+                                <af-table-column property="MGUIGE" label="物料型号"></af-table-column>
+                                <af-table-column property="MNAME" label="名称" ></af-table-column>   <!--width="50" -->
+                                <af-table-column property="GRADE" label="规格" ></af-table-column>
                                 <el-table-column property="QTY_PUR" label="数量" width="60" ></el-table-column>
                                 <el-table-column label="含税单价" width="80">
                                   <template slot-scope="scope">
                                     <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
                                   </template>
                                 </el-table-column>
-                                <el-table-column property="UNIT1" label="单位" width="60"></el-table-column>
+                                <el-table-column property="UNIT1" label="单位" width="40"></el-table-column>
                                 <el-table-column property="TOTAL_MONEY" label="金额" width="70"></el-table-column>
-                                <el-table-column property="NOTE" label="备注" width="50"></el-table-column>
+                                <el-table-column property="NOTE" label="备注" ></el-table-column>
                                 <el-table-column property="DATE_REQ" label="约定日期" width="100">
                                   <template slot-scope="scope">
                                     <span>{{ scope.row.DATE_REQ | datatrans }}</span>
@@ -158,7 +160,7 @@
                                   <div style="margin-bottom:10px;width:100%;margin-top:10px" class="data_1">
                                     <el-card class="DETAIL_2" style="min-height:100px"> <div slot="header" class="clearfix"> <span class="CARD">说明</span> </div>
                                       <div><el-input v-model="supply_check_notes" placeholder="说明:" style="width:30%;height:10px" clearable></el-input>
-                                          <el-button @click="SaveNotes()" style="width:10%;" class="button_clolur">保存说明 </el-button></div>
+                                         <el-button @click="SaveNotes()" style="width:10%;" class="button_clolur">保存说明 </el-button></div>
                                     </el-card>
                                   </div>
                               </div>
@@ -168,7 +170,7 @@
                     </div>    
           </el-dialog>
   <!-- X开头（窗帘）订单已确认采购单详情界面 -->
-          <el-dialog  title="" :visible.sync="checkedX_Visible" :show-close="true" width="70%" top="8vh">
+    <el-dialog  title="" :visible.sync="checkedX_Visible" :show-close="true" width="70%" top="8vh">
             <div style="width:100% ;margin:0 auto;">
               <table style=" width:100% ;margin:0 auto; ">
                 <tbody>
@@ -230,12 +232,13 @@
                           <div><label>位置:</label> <div class="messageInput" style="width: 100px;">
                                 {{(item.tab1[index].cl_place === null ||item.tab1[index].cl_place =="")?'无':item.tab1[index].cl_place}} </div></div> 
                             <div class="messageBox">
-                            <div> <label>款号:</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
-                            <div><label>成品宽:</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
-                            <div> <label>成品高:</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
-                            <div> <label>假帘高:</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
-                            <div> <label>帘倍数:</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
+                            <div> <label>款号：</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
+                            <div><label>成品宽：</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
+                            <div> <label>成品高：</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
+                            <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
+                            <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
                             </div>
+                               <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div>
                         </template>
                     </el-table-column>
                       <el-table-column width="80" header-align="center" align="left" label="名称">
@@ -297,7 +300,7 @@
           </el-dialog>
 
        <!-- 非X开头（窗帘）订单 已确认采购单详情界面 -->
-          <el-dialog  title="" :visible.sync="checkedY_Visible" :show-close="true" width="70%" top="8vh">
+    <el-dialog  title="" :visible.sync="checkedY_Visible" :show-close="true" width="70%" top="8vh">
             <div style="width:100% ;margin:0 auto;">
               <table style=" width:100% ;margin:0 auto; ">
                 <tbody>
@@ -356,19 +359,19 @@
                   <tr>
                     <td colspan="2">
                       <el-table :data="gridData" id="PURCHASEDETAILLISTTABLE" class="GCGRID" object_class="_Object:GridTable" object_hashcode="6" cellpadding="0" style="width:100%">
-                        <el-table-column property="ITEM_NO" label="物料号" width="100"></el-table-column>
-                        <el-table-column property="MGUIGE" label="物料型号" width="100"></el-table-column>
-                        <el-table-column property="MNAME" label="名称" width="130"></el-table-column>
-                        <el-table-column property="GRADE" label="规格"  width="50"></el-table-column>
-                        <el-table-column property="QTY_PUR" label="数量" width="70"></el-table-column>
+                        <af-table-column property="ITEM_NO" label="物料号" ></af-table-column>
+                        <af-table-column property="MGUIGE" label="物料型号"></af-table-column>
+                        <af-table-column property="MNAME" label="名称" ></af-table-column>   <!--width="50" -->
+                        <af-table-column property="GRADE" label="规格" ></af-table-column>
+                        <el-table-column property="QTY_PUR" label="数量" width="60" ></el-table-column>
                         <el-table-column label="含税单价" width="80">
-                          <template slot-scope="scope"><span>{{ scope.row.PRICE_TAXIN | numFilter }}</span></template>
-                         </el-table-column>
-                        <el-table-column property="UNIT1" label="单位" width="60" ></el-table-column>
-                        <el-table-column label="金额"  width="80" align="right">
-                        <template slot-scope="scope"><span>{{ scope.row.TOTAL_MONEY | numFilter }}</span></template>
+                          <template slot-scope="scope">
+                            <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
+                          </template>
                         </el-table-column>
-                        <el-table-column property="NOTE" label="备注" width="100"></el-table-column>
+                        <el-table-column property="UNIT1" label="单位" width="40"></el-table-column>
+                        <el-table-column property="TOTAL_MONEY" label="金额" width="70"></el-table-column>
+                        <el-table-column property="NOTE" label="备注" ></el-table-column>
                         <el-table-column property="DATE_REQ" label="约定日期" width="100" >
                           <template slot-scope="scope"> <span>{{ scope.row.DATE_REQ | datatrans }}</span> </template>
                         </el-table-column>
@@ -384,162 +387,164 @@
               </table>
             </div>
           </el-dialog>
-  
+      
       <div id="supplyCon">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="待确认" name="first" align="left">
-            <div align="right">
-            <template>
-  <el-select v-model="selvalue" @change="SelectClick" placeholder="全部" >
-    <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-      >
-    </el-option>
-  </el-select>
-</template>
-</div>
+        <el-card shadow="hover" class="clearfix">
+                              <el-tabs v-model="activeName" @tab-click="handleClick">
+                              <el-tab-pane label="待确认" name="first" align="left">
+                              <div align="right">
+                                <template>
+                                    <el-select v-model="selvalue" @change="SelectClick" placeholder="全部" >
+                                      <el-option
+                                      v-for="item in options"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value"
+                                      >
+                                    </el-option>
+                                    </el-select>
+                                </template>
+                                </div>
 
-            <el-table border :data="pur_headData" style="width: 100%">
-              <el-table-column type="index" :index="indexMethod">
-              </el-table-column>
-              <el-table-column
-                prop="PUR_NO"
-                width="120"
-                label="单号"
-                align="left"
-              ></el-table-column>
-              <el-table-column label="状态" width="50" align="center">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.STATUS | pur_headStatus }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="DATE_PUR"
-                width="100"
-                label="建立日期"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.DATE_PUR | datatrans }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="NOTES"
-                label="备注"
-                align="left"
-              ></el-table-column>
-              <el-table-column label="" width="120" align="center">
-                <template slot-scope="scope">
-                  <el-button
-                    @click="openDialog(scope.row.PUR_NO,scope.row.ORDER_NO)"
-                    type="primary"
-                    size="small"
-                    >前往确认</el-button
-                  >
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-tab-pane>
+                            <el-table border :data="pur_headData" style="width: 100%" >
+                              <el-table-column type="index" :index="indexMethod">
+                              </el-table-column>
+                              <el-table-column
+                                prop="PUR_NO"
+                                width="120"
+                                label="单号"
+                                align="left"
+                              ></el-table-column>
+                              <el-table-column label="状态" width="50" align="center">
+                                <template slot-scope="scope">
+                                  <span>{{ scope.row.STATUS | pur_headStatus }}</span>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="DATE_PUR"
+                                width="100"
+                                label="建立日期"
+                                align="center"
+                              >
+                                <template slot-scope="scope">
+                                  <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="NOTES"
+                                label="备注"
+                                align="left"
+                              ></el-table-column>
+                              <el-table-column label="" width="120" align="center">
+                                <template slot-scope="scope">
+                                  
+                                  <button
+                                  class='btn-style'
+                                    @click="openDialog(scope.row.PUR_NO,scope.row.ORDER_NO)" 
+                                    >    
+                                    前往确认</button>
+                                </template>
+                              </el-table-column>
+                            </el-table>
+                          </el-tab-pane>
 
-          <el-tab-pane label="已确认" name="second" align="left">
-                      <div align="right">
-                          采购单号：（精确）
-    <el-input
-    prefix-icon="el-icon-search"
-   style="width:10%; min-width:200px;"
-    @keyup.enter.native="SelectClick()"
-    v-model="po">
-  </el-input>
-                        <el-date-picker
-             v-model="date1"
-              @change="SelectClick"
-            align="right"
-            type="date"
-             format="yyyy-MM-dd"
-        value-format="yyyy-MM-dd"
-            placeholder="选择日期"
-          >
-          </el-date-picker>
-          <span class="demonstration">至</span>
-          <el-date-picker
-            v-model="date2"
-            @change="SelectClick"
-            align="right"
-            type="date"
-             format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
-            placeholder="选择日期"
-          ></el-date-picker>
-            <template>
-  <el-select v-model="selvalue" @change="SelectClick" placeholder="全部" >
-    <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-      >
-    </el-option>
-  </el-select>
-</template>
-</div>
-            <el-table border :data="pur_headData" style="width: 100%">
-              <el-table-column type="index" :index="indexMethod">
-              </el-table-column>
-              <el-table-column
-                prop="PUR_NO"
-                width="120"
-                label="单号"
-                align="left"
-              ></el-table-column>
-              <el-table-column label="状态" width="50" align="center">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.STATUS | pur_headStatus }}</span>
+                          <el-tab-pane label="已确认" name="second" align="left">
+                                      <div align="right">
+                                          采购单号：（精确）
+                    <el-input
+                    prefix-icon="el-icon-search"
+                  style="width:10%; min-width:200px;"
+                    @keyup.enter.native="SelectClick()"
+                    v-model="po">
+                  </el-input>
+                                        <el-date-picker
+                            v-model="date1"
+                              @change="SelectClick"
+                            align="right"
+                            type="date"
+                            format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                            placeholder="选择日期"
+                          >
+                          </el-date-picker>
+                          <span class="demonstration">至</span>
+                          <el-date-picker
+                            v-model="date2"
+                            @change="SelectClick"
+                            align="right"
+                            type="date"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期"
+                          ></el-date-picker>
+                            <template>
+                  <el-select v-model="selvalue" @change="SelectClick" placeholder="全部" >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                      >
+                    </el-option>
+                  </el-select>
                 </template>
-              </el-table-column>
-              <el-table-column
-                fomate="yyyy-MM-dd"
-                width="100"
-                label="建立日期"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.DATE_PUR | datatrans }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="NOTES"
-                label="备注"
-                align="left"
-              ></el-table-column>
-              <el-table-column label="" width="120" align="center">
-                <template slot-scope="scope">
-                  <el-button
-                    @click="openDialog1(scope.row.PUR_NO,scope.row.ORDER_NO)"
-                    type="primary"
-                    size="small"
-                    >查看详情</el-button
-                  >
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-tab-pane>
-          <div style="margin:0 25%;" class="block">
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page.sync="currentPage"
-              :page-sizes="[5, 10, 15, 20]"
-              :page-size="limit"
-              layout="total,sizes, prev, pager, next, jumper"
-              :total="count"
-            ></el-pagination>
-          </div>
-        </el-tabs>
+                </div>
+                            <el-table border :data="pur_headData" style="width: 100%">
+                              <el-table-column type="index" :index="indexMethod">
+                              </el-table-column>
+                              <el-table-column
+                                prop="PUR_NO"
+                                width="120"
+                                label="单号"
+                                align="left"
+                              ></el-table-column>
+                              <el-table-column label="状态" width="50" align="center">
+                                <template slot-scope="scope">
+                                  <span>{{ scope.row.STATUS | pur_headStatus }}</span>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                fomate="yyyy-MM-dd"
+                                width="100"
+                                label="建立日期"
+                                align="center"
+                              >
+                                <template slot-scope="scope">
+                                  <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="NOTES"
+                                label="备注"
+                                align="left"
+                              ></el-table-column>
+                              <el-table-column label="" width="120" align="center">
+                                <template slot-scope="scope">
+                                  <button
+                                    @click="openDialog1(scope.row.PUR_NO,scope.row.ORDER_NO)"
+                                            class='btn-style'
+                                    >查看详情</button>
+                                </template>
+                              </el-table-column>
+                            </el-table>
+                          </el-tab-pane>
+                          <div style="margin:0 25%;" class="block">
+                            <el-pagination
+                              @size-change="handleSizeChange"
+                              @current-change="handleCurrentChange"
+                              :current-page.sync="currentPage"
+                              :page-sizes="[5, 10, 15, 20]"
+                              :page-size="limit"
+                              layout="total,sizes, prev, pager, next, jumper"
+                              :total="count"
+                            ></el-pagination>
+                          </div>
+                        </el-tabs>
+        </el-card>
       </div>
     
+
+
   </div>
 </template>
 
@@ -654,6 +659,7 @@ export default {
     AllAccordPromise(){
        for (let i=0;i<this.gridData.length;i++){
       this.gridData[i].DATE_DELIVER=this.gridData[i].DATE_REQ
+      // console.log(this.gridData[i].MGUIGE);
       }
     },
     //选择或输入条件后搜索
@@ -888,14 +894,57 @@ export default {
 </script>
 
 <style scoped>
+.messageInput{
+  margin: 3px;
+    border: 1px solid #c3c3c3;
+    margin-right: 3px;
+    /* padding: 3px 6px 3px 6px; */
+    min-width: 45px;
+    border-radius: 4px; 
+     color: gray;
+    display: inline-block;
+}
+.btn-style{
+  font: 12px Arial;
+  height: 24px;
+  width:80px;
+  background: #409eff;
+   color: rgb(255, 255, 255);
+   border:  3px solid  #409eff;
+  border-radius: 5px;
+}
+.el-scrollbar__wrap
+{
+  overflow-x: hidden;
+}
 .button_clolur {
   background: #8bc34a;
   color: rgb(255, 255, 255);
+}
+.messageBox{
+    padding: 3px 0;
 }
 .data_1 {
   font-size: 1.5em;
 }
 td {
   text-align: center;
+}
+.line_noDiv{
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  border-radius:20px;
+  text-align: center;
+  position: absolute;
+  top: 0px;
+  left: 0;
+}
+.line_noSpan{
+   width: 20px;
+  height: 20px;
+  text-align: center;
+  margin:-1px 0 0 -1px;
+  display:block;
 }
 </style>
