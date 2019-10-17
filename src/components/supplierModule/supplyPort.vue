@@ -578,7 +578,7 @@ export default {
       supply_check_notes:"",
       gridData: [],
       po_type: "all",
-      limit: 10,
+      limit: 15,
       count: 0,
       currentPage: 1,
       activeName: "first",
