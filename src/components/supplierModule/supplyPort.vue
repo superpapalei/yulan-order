@@ -22,7 +22,7 @@
                             <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
                             <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
                             </div>
-                               <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div>
+                               <!-- <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div> -->
                         </template>
                     </el-table-column>
                       <el-table-column width="80" header-align="center" align="left" label="名称">
@@ -238,7 +238,7 @@
                             <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
                             <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
                             </div>
-                               <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div>
+                               <!-- <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div> -->
                         </template>
                     </el-table-column>
                       <el-table-column width="80" header-align="center" align="left" label="名称">
@@ -406,7 +406,7 @@
                                 </template>
                                 </div>
 
-                            <el-table border :data="pur_headData" style="width: 100%" >
+                            <el-table border :data="pur_headData" style="width: 100%"  stripe>
                               <el-table-column type="index" :index="indexMethod">
                               </el-table-column>
                               <el-table-column
@@ -489,7 +489,7 @@
                   </el-select>
                 </template>
                 </div>
-                            <el-table border :data="pur_headData" style="width: 100%">
+                            <el-table border :data="pur_headData" style="width: 100%" stripe>
                               <el-table-column type="index" :index="indexMethod">
                               </el-table-column>
                               <el-table-column
@@ -947,4 +947,7 @@ td {
   margin:-1px 0 0 -1px;
   display:block;
 }
+
+
+
 </style>

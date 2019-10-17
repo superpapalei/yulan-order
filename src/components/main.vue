@@ -737,7 +737,7 @@ export default {
 }
 .el-table td,
 .el-table th {
-  padding: 8px 0 !important;
+  padding: 3px 0 !important;
 }
 .el-badge__content {
   border: none !important;
@@ -751,5 +751,10 @@ export default {
 .el-table .success-row {
   background: #f0f9eb;
 }
+
+.el-tabs__header {
+    margin: 0 0 3px;
+}
+
 </style>
 
