@@ -22,7 +22,7 @@
                             <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
                             <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
                             </div>
-                               <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div>
+                               <!-- <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div> -->
                         </template>
                     </el-table-column>
                       <el-table-column width="80" header-align="center" valign="baseline"  align="left" label="名称">
@@ -238,7 +238,7 @@
                             <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
                             <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
                             </div>
-                            <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div>
+                            <!-- <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div> -->
                         </template>
                     </el-table-column>
                       <el-table-column width="80" header-align="center" align="left" label="名称">
@@ -401,7 +401,7 @@
                  </template>
                </div>
 
-                <el-table border :data="pur_headData" style="width: 100%" stripe='ture'>
+                <el-table border :data="pur_headData" style="width: 100%" stripe>
                   <el-table-column type="index" :index="indexMethod"> </el-table-column>
                   <el-table-column prop="PUR_NO" width="140" label="单号" align="left"></el-table-column>
                   <el-table-column prop="CUSTOMER_NAME" width="300" label="客户名称" align="left"></el-table-column>
@@ -423,7 +423,7 @@
               </el-tab-pane>
 
               <el-tab-pane label="已确认" name="second" align="left">
-                <div align="right"> <el-button @click="downLoadAll()" size="small">下载表头及明细</el-button>
+                <div align="right"> 
                       采购单号：（精确）
                       <el-input @keyup.enter.native="SelectClick()" prefix-icon="el-icon-search" style="width:10%; min-width:200px;" v-model="po"> </el-input>
                         <el-date-picker v-model="date1"  @change="SelectClick" align="right" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
@@ -435,8 +435,9 @@
                             <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                           </el-select>
                       </template>
+                      <el-button @click="downLoadAll()" size="small">下载表头及明细</el-button>
               </div>
-                <el-table  border :data="pur_headData" style="width: 100%" cellpadding="0" stripe='ture'>
+                <el-table  border :data="pur_headData" style="width: 100%" cellpadding="0" stripe>
                   <el-table-column type="index" :index="indexMethod"> </el-table-column>
                   <el-table-column prop="PUR_NO" width="120" label="单号" align="left"></el-table-column>
                     <el-table-column prop="CUSTOMER_NAME" width="300" label="客户名称" align="left"></el-table-column>
