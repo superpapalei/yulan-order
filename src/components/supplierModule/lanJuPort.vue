@@ -6,9 +6,10 @@
         :show-close="true"
         :visible.sync="checkX_Visible"
         disabled="true"
-        width="70%"
+        width="1070px"
         top="8vh"
       >
+      <div style="width:100%">
         <div style="margin-bottom:10px">
           <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
           <span style="float:right">{{
@@ -33,8 +34,9 @@
               <el-table-column width="160" header-align="center" label="位置">
                 <template>
                   <div>
-                    <label>位置：</label>
-                    <div class="messageInput">
+                  
+                    <label>{{index+1}} &nbsp; 位置：</label>
+                   
                       {{
                         item.tab1[index].cl_place === null ||
                         item.tab1[index].cl_place == ""
@@ -42,7 +44,7 @@
                           : item.tab1[index].cl_place
                       }}
                     </div>
-                  </div>
+                  
                   <div class="messageBox">
                     <div>
                       <label>款号：</label>
@@ -364,6 +366,7 @@
               >返回</el-button>
           </div>
         </div>
+      </div>
       </el-dialog>
 
       <!-- 非X开头确认采购单界面兰 -->
@@ -371,7 +374,7 @@
         :show-close="true"
         :visible.sync="checkY_Visible"
         disabled="true"
-        width="70%"
+        width="1070px"
         top="8vh"
       >
         <div style="margin-bottom:10px">
@@ -389,6 +392,7 @@
         <hr />
         <div style="width:100%">
           <el-table :data="gridData" style="width:100%" max-height="400px">
+             <el-table-column type="index" :index="indexMethod"> </el-table-column>
             <af-table-column
               property="ITEM_NO"
               label="物料号"
@@ -516,7 +520,7 @@
         title=""
         :visible.sync="checkedX_Visible"
         :show-close="true"
-        width="70%"
+        width="1070px"
         top="8vh"
       >
         <div style="width:100% ;margin:0 auto;">
@@ -758,8 +762,9 @@
                       >
                         <template>
                           <div>
-                            <label>位置：</label>
-                            <div class="messageInput">
+                           
+                            <label>{{index+1}} &nbsp; 位置：</label>
+                     
                               {{
                                 item.tab1[index].cl_place === null ||
                                 item.tab1[index].cl_place == ""
@@ -767,7 +772,7 @@
                                   : item.tab1[index].cl_place
                               }}
                             </div>
-                          </div>
+                        
                           <div class="messageBox">
                             <div>
                               <label>款号：</label>
@@ -1061,7 +1066,7 @@
         title=""
         :visible.sync="checkedY_Visible"
         :show-close="true"
-        width="70%"
+        width="1070px"
         top="8vh"
       >
         <div style="width:100% ;margin:0 auto;">
@@ -1288,6 +1293,7 @@
               </tr>
               <tr>
                 <td colspan="2">
+                
                   <el-table
                     :data="gridData"
                     id="PURCHASEDETAILLISTTABLE"
@@ -1297,6 +1303,7 @@
                     cellpadding="0"
                     style="width:100%"
                   >
+                   <el-table-column type="index" :index="indexMethod"> </el-table-column>
                     <af-table-column
                       property="ITEM_NO"
                       label="物料号"
@@ -1327,7 +1334,7 @@
                     <el-table-column
                       property="UNIT1"
                       label="单位"
-                      width="40"
+                      width="50"
                     ></el-table-column>
                     <el-table-column
                       property="TOTAL_MONEY"
@@ -1392,8 +1399,7 @@
               </div>
 
               <el-table border :data="pur_headData" style="width: 100%" stripe>
-                <el-table-column type="index" :index="indexMethod">
-                </el-table-column>
+                <el-table-column type="index" :index="indexMethod"> </el-table-column>
                 <el-table-column
                   prop="PUR_NO"
                   width="140"
@@ -1402,13 +1408,18 @@
                 ></el-table-column>
                 <el-table-column
                   prop="CUSTOMER_NAME"
-                  width="300"
+                  width="250"
                   label="客户名称"
                   align="left"
                 ></el-table-column>
                 <el-table-column label="状态" width="60" align="center">
                   <template slot-scope="scope">
                     <span>{{ scope.row.STATUS | pur_headStatus }}</span>
+                  </template>
+                </el-table-column>
+                 <el-table-column label="产品类型" width="150" align="center">
+                  <template slot-scope="scope">
+                  <span>{{ getProductType(scope.row.ORDER_NO)   }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -1422,7 +1433,13 @@
                 </el-table-column>
                 <el-table-column
                   prop="NOTES"
+                    width="240"
                   label="备注"
+                  align="left"
+                ></el-table-column>
+                <el-table-column
+                  prop="LJ_SUGGESTION"
+                  label="兰居备注"
                   align="left"
                 ></el-table-column>
                 <el-table-column label="" width="120" align="center">
@@ -1444,7 +1461,7 @@
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:10%; min-width:200px;"
+                  style="width:6%; min-width:200px;"
                   v-model="po"
                 >
                 </el-input>
@@ -1500,7 +1517,7 @@
                 ></el-table-column>
                 <el-table-column
                   prop="CUSTOMER_NAME"
-                  width="300"
+                  width="250"
                   label="客户名称"
                   align="left"
                 ></el-table-column>
@@ -1509,6 +1526,11 @@
                     ><span>{{
                       scope.row.STATUS | pur_headStatus
                     }}</span></template>
+                </el-table-column>
+                 <el-table-column label="产品类型" width="150" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ getProductType(scope.row.ORDER_NO)   }}</span>
+                  </template>
                 </el-table-column>
                 <el-table-column
                   fomate="yyyy-MM-dd"
@@ -1522,7 +1544,13 @@
                 </el-table-column>
                 <el-table-column
                   prop="NOTES"
+                    width="260"
                   label="备注"
+                  align="left"
+                ></el-table-column>
+                 <el-table-column
+                  prop="LJ_SUGGESTION"
+                  label="兰居备注"
                   align="left"
                 ></el-table-column>
                 <el-table-column label="" width="120" align="center">
@@ -1575,8 +1603,8 @@ export default {
       sumMoney: 0,
       items: [],
       po: "",
-      date1: "0001/1/1",
-      date2: "9999/1/1",
+     date1 :"0001/1/1",
+      date2 : "9999/1/1",
       now: new Date(),
       Month: new Date().getMonth() + 1,
       input: "",
@@ -1652,6 +1680,16 @@ export default {
     addToTable() {
       var tablec = document.getElementById();
     },
+    //获取产品类型
+    getProductType(value){
+        if (value.substring(0, 1) == "X") {
+        return "窗帘";}
+        else if (value.substring(0, 1) == "Y") {
+        return "软装";}
+        else if (value.substring(0, 1) == "W") {
+        return "墙纸配套类";}
+    },
+
     //获取当月第一天零时
     getCurrentMonthFirst() {
       var date = new Date();
@@ -1666,11 +1704,31 @@ export default {
       date.setHours(0, 0, 0);
       return date;
     },
+    //获取截止时间一天中的最后时间
+    getTodayMaxTime() {
+      var date = new Date();
+      date.setHours(24, 0, 0);
+      return date;
+    },
+       //获取前500年时间
+    getLongAgao() {
+      var date = new Date();
+      date.setFullYear(date.getFullYear() - 500);
+      date.setHours(0, 0, 0);
+      return date;
+    },
+      //获取后500年时间
+    getLongLater() {
+      var date = new Date();
+      date.setFullYear(date.getFullYear() + 500);
+      date.setHours(0, 0, 0);
+      return date;
+    },
     //打开确认页面，确认页面也分两种情况
     openDialog(PUR_NO, ORDER_NO) {
       if (ORDER_NO == "" || ORDER_NO == null) {
         this.checkY_Visible = true;
-        console.log("无B2B订单号");
+        // console.log("无B2B订单号");
       } else if (ORDER_NO.substring(0, 1) == "X") {
         this.checkX_Visible = true;
       } else {
@@ -1681,7 +1739,7 @@ export default {
     openDialog1(PUR_NO, ORDER_NO) {
       if (ORDER_NO == "" || ORDER_NO == null) {
         this.checkedY_Visible = true;
-        console.log("无B2B订单号");
+        // console.log("无B2B订单号");
       } else if (ORDER_NO.substring(0, 1) == "X") {
         this.checkedX_Visible = true;
       } else {
@@ -1745,8 +1803,8 @@ export default {
           this.selvalue = "all";
           this.po_type = "all";
           this.po = "";
-          this.date1 = "0001/1/1";
-          this.date2 = "9999/1/1";
+          this.date1 = this.getLongAgao();
+          this.date2 = this.getLongLater();
           break;
         case "second":
           this.check_flag = 1;
@@ -1754,7 +1812,7 @@ export default {
           this.po_type = "all";
           this.po = "";
           this.date1 = this.getCurrentWeek();
-          this.date2 = new Date();
+          this.date2 = this.getTodayMaxTime();
           break;
       }
       this.autoSearch();
@@ -1779,7 +1837,24 @@ export default {
         PUR_NO: this.pur_headForm.PUR_NO,
         NOTE: this.supply_check_notes
       };
-      SaveHeadNotes(data).then(res => {});
+      SaveHeadNotes(data).then(res => {
+           if (res.code == 0) {
+          this.$alert("保存说明成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.autoSearch();
+          this.checkX_Visible = false;
+          this.checkY_Visible = false;
+        } else {
+          this.$alert("保存失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        }
+
+
+      });
     },
     returnMain() {
       this.checkY_Visible = false;
@@ -1849,8 +1924,15 @@ export default {
     },
     downLoadAll() {
       var cid = this.companyId;
+      var po =(this.po==null||this.po=="")?"all":this.po;
+      var beginTime=this.datatransMethod(this.date1) ;
+      var finishTime=this.datatransMethod(this.date2) ;
+      var po_type =(this.po_type==null||this.po_type=="")?"all":this.po_type;
+      var selvalue=this.selvalue;
       downLoadFile(
-        this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}`
+        this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}&po=${po}&beginTime=${beginTime}&finishTime=${finishTime}&po_type=${po_type}&selvalue=${selvalue}`,
+
+       
       );
     },
     autoSearchDetail(PUR_NO) {
@@ -2017,14 +2099,15 @@ export default {
   },
   created() {
     this.po_type = "all";
-    this.autoSearch();
+     this.autoSearch();
   }
 };
 </script>
 
 <style scoped>
 .button_1{
-  width: 150px;
+  width: 130px;
+  height:40px;
   background: #8bc34a;
   margin-left: 10px;
   color: rgb(255, 255, 255);

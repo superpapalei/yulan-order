@@ -83,6 +83,8 @@ export function tabsName(index) {
       return "入库记录查询";
       case "supplierModule/lanJuPort":
       return "采购单确认";
+      case "supplierModule/deliveryList":
+        return "送货单";
     case "design/ISExamineMarket":
     case "design/ISExamineGM":
       return "形象店设计审核";  

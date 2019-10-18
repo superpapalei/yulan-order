@@ -207,16 +207,16 @@ export default {
         if (arr[i].TRANS_NO === arr[i - 1].TRANS_NO ) {
           intSpan = intSpan + 1;//如果相同,该合并的rowSpan+1
           intIndex = i +1- intSpan;//row
-          console.log("相同则累加合并项");
-          console.log(intSpan);
-          console.log(intIndex);
+          // console.log("相同则累加合并项");
+          // console.log(intSpan);
+          // console.log(intIndex);
         } 
         else if (arr[i].TRANS_NO != arr[i - 1].TRANS_NO  ) {
           this.arr_index.push(intIndex);
           this.arr_span.push(intSpan);
-          console.log("不相同则追加数组");
-          console.log(this.arr_index);
-          console.log( this.arr_span);
+          // console.log("不相同则追加数组");
+          // console.log(this.arr_index);
+          // console.log( this.arr_span);
           intSpan = 1;
           intIndex = i; 
         }
@@ -225,9 +225,9 @@ export default {
           // intIndex = i-1; 
           this.arr_index.push(intIndex);
           this.arr_span.push(intSpan);
-          console.log("末尾则追加数组");
-          console.log(this.arr_index);
-          console.log( this.arr_span);
+          // console.log("末尾则追加数组");
+          // console.log(this.arr_index);
+          // console.log( this.arr_span);
         }
       }
     },
