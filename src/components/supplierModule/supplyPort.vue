@@ -2,7 +2,7 @@
   <div>
        
   <!-- X开头（窗帘）确认采购单界面 -->
-    <el-dialog :show-close="true" :visible.sync="checkX_Visible" disabled="true" width="70%" top="8vh">
+    <el-dialog :show-close="true" :visible.sync="checkX_Visible" disabled="true" width="1070px" top="8vh">
                <div style="margin-bottom:10px"> <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO}}）</h1>
                      <span style="float:right">{{ pur_headForm.DATE_PUR | datatrans }}</span> </div>
                         <div> <h1>收货人：{{ pur_headForm.LINKMAN}}</h1></div>
@@ -101,7 +101,7 @@
                     </div>    
           </el-dialog>
   <!-- 非X开头（窗帘）确认采购单界面 -->
-    <el-dialog :show-close="true" :visible.sync="checkY_Visible" disabled="true" width="70%" top="8vh">
+    <el-dialog :show-close="true" :visible.sync="checkY_Visible" disabled="true" width="1070px" top="8vh">
                <div style="margin-bottom:10px"> <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO}}）</h1>
                      <span style="float:right">{{ pur_headForm.DATE_PUR | datatrans }}</span> </div>
                         <div> <h1>收货人：{{ pur_headForm.LINKMAN}}</h1></div>
@@ -170,7 +170,7 @@
                     </div>    
           </el-dialog>
   <!-- X开头（窗帘）订单已确认采购单详情界面 -->
-    <el-dialog  title="" :visible.sync="checkedX_Visible" :show-close="true" width="70%" top="8vh">
+    <el-dialog  title="" :visible.sync="checkedX_Visible" :show-close="true" width="1070px" top="8vh">
             <div style="width:100% ;margin:0 auto;">
               <table style=" width:100% ;margin:0 auto; ">
                 <tbody>
@@ -300,7 +300,7 @@
           </el-dialog>
 
        <!-- 非X开头（窗帘）订单 已确认采购单详情界面 -->
-    <el-dialog  title="" :visible.sync="checkedY_Visible" :show-close="true" width="70%" top="8vh">
+    <el-dialog  title="" :visible.sync="checkedY_Visible" :show-close="true" width="1070px" top="8vh">
             <div style="width:100% ;margin:0 auto;">
               <table style=" width:100% ;margin:0 auto; ">
                 <tbody>

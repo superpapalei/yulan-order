@@ -39,7 +39,7 @@ import OrderQuery from '@/components/query/orderQuery'
 import SupplyPort from '@/components/supplierModule/supplyPort'
 import Trans from '@/components/supplierModule/trans'
 import LanJuPort from '@/components/supplierModule/lanJuPort'
-
+import DeliveryList from '@/components/supplierModule/deliveryList'
 import ISExamineMarket from '@/components/design/ISExamineMarket'
 import ISExamineGM from '@/components/design/ISExamineGM'
 import lanJuGMExamine from '@/components/design/lanJuGMExamine'
@@ -308,6 +308,11 @@ const router = new Router({
           path: '/supplierModule/lanJuPort',
           name: 'lanJuPort',
           component: LanJuPort
+        },
+        {
+          path: '/supplierModule/deliveryList',
+          name: 'DeliveryList',
+          component: DeliveryList
         },
         {
           path: '/design/ISExamineMarket',
