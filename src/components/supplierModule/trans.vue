@@ -31,7 +31,7 @@
             placeholder="选择日期"
           ></el-date-picker>
           <el-button :id="'test111'" @click="autoSearch()"  icon="el-icon-search" style="margin-left:8px" class="button_1">搜索</el-button>
-         
+         <el-button @click="downLoadAll()" style="margin-left:8px" class="button_1">下载Excel</el-button>
             </div>
             <hr>
           <el-table
@@ -115,6 +115,7 @@
 
 <script>
 import { GetTransDetail } from "@/api/supplierASP";
+import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 export default {
   name: "trans",
@@ -123,7 +124,7 @@ export default {
       cid: Cookies.get("cid"),
       companyId: Cookies.get("companyId"),
       currentPage: 1,
-      limit: 10,
+      limit: 15,
       count: 0,
       tableData:[],
       arr_index: [],
@@ -144,6 +145,28 @@ export default {
 
   },
   methods: {
+      datatransMethod(value) {
+      //时间戳转化大法
+      if (value == null||value=="") {
+        return "";
+      }
+      let date = new Date(value);
+      let y = date.getFullYear();
+      if (y > 5000) {
+        return "";
+      }
+      let MM = date.getMonth() + 1;
+      MM = MM < 10 ? "0" + MM : MM;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      let h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      let m = date.getMinutes();
+      m = m < 10 ? "0" + m : m;
+      let s = date.getSeconds();
+      s = s < 10 ? "0" + s : s;
+      return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
+    },
     //获取最近一周时间
      getCurrentWeek(){
       var date=new Date();
@@ -163,6 +186,14 @@ export default {
       this.autoSearch();
     },
 
+   downLoadAll(){
+     var companyId=this.companyId;
+      var cid=this.companyId;
+      var beginTime= this.datatransMethod(this.date1);
+      var  finishTime=this.datatransMethod(this.date2);  
+      var po =this.po;
+         downLoadFile(this.Global.baseUrl + `PUR_HEAD/transExcel?companyId=${companyId}&cid=${cid}&beginTime=${beginTime}&finishTime=${finishTime}&po=${po}`);
+    },
     //计算合并行的index和需合并的行数，太慢拖累加载速度 在表个后加 :span-method="arraySpanMethod" 原32
     mergeColumnIndex() {
       this.arr_index.splice(0,this.arr_index.length);
@@ -261,6 +292,7 @@ export default {
    
     },
   },
+
    filters: {
     pur_headStatus(value) {
       switch (value) {
