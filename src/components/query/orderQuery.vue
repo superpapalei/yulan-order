@@ -106,7 +106,7 @@
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   placeholder="开始日期区间"
-                  v-model="beginTime_1"
+                  v-model="ruleForm_1.dateValue"
                   style="width:210px"
                 ></el-date-picker>
                 <span style="margin-left:10px">--</span>
@@ -115,7 +115,7 @@
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   placeholder="结束日期区间"
-                  v-model="finishTime_1"
+                  v-model="ruleForm_2.dateValue"
                   style="width:210px;margin-left:12px"
                 ></el-date-picker>
               </div>
@@ -166,6 +166,7 @@
                     style="margin-left:65px"
                     >查询</el-button
                   >
+                  <el-checkbox v-model="checked" style="margin-left:150px">仅有效客户</el-checkbox>
                 </div>
               </div>
             </div>
@@ -293,6 +294,7 @@ export default {
   name: "OrderQuery",
   data() {
     return {
+      checked:false,
       button_1: false,
       ruleForm: {},
       cid: "",
@@ -318,8 +320,16 @@ export default {
       value1: "",
       value2: "",
       beginTime_1: "",
+      ruleForm_1: { dateValue: "" },
       finishTime_1: "",
+      ruleForm_2: { dateValue: "" },
       AREA_DISTRICT: [],
+      AREA_DISTRICT_1:[
+        {
+          DISTRICT_ID: "",
+          DISTRICT_NAME: "全部"
+        },
+      ],
       customer_main: [
         {
           value: "1",
@@ -448,7 +458,25 @@ export default {
       return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
     }
   },
-
+  //页面加载时候，在mounted中进行赋值
+  mounted() {
+    // 初始化查询，默认为前一天
+    this.ruleForm_1.dateValue = this.timeDefault_1;
+    this.ruleForm_2.dateValue = this.timeDefault_2;
+  },
+  computed: {    
+    timeDefault_1() {      
+      var date = new Date();      
+      var s1 = date.getFullYear() + "-" + "01" + "-" + "01";
+      return s1;    
+      },
+    
+    timeDefault_2() {      
+      var date = new Date();      
+      var s1 = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate());      
+      return s1;    
+      }  
+  },
   methods: {
     openDialog(val) {
       this.cid = Cookies.get("cid");
@@ -515,6 +543,7 @@ export default {
       this.first = val;
       getDistrictByAreaCode(data).then(res => {
         this.AREA_DISTRICT = res.data;
+        this.AREA_DISTRICT.push.apply(this.AREA_DISTRICT,this.AREA_DISTRICT_1)
       });
       this._getCustomerByAreaCode_1(val);
     },
@@ -549,6 +578,9 @@ export default {
     _getCustomerByAreaCode_1(val) {
       this.customerData = [];
       var data = {
+        beginTime:this.ruleForm_1.dateValue,
+        finishTime:this.ruleForm_2.dateValue,
+        isall:this.checked,
         areaCode: val, //市场
         district: this.AREA_DISTRICT, //片区
         customerType: this.customer_type //客户类型
@@ -560,6 +592,9 @@ export default {
     _getCustomerByAreaCode_2(val) {
       this.customerData = [];
       var data = {
+        beginTime:this.ruleForm_1.dateValue,
+        finishTime:this.ruleForm_2.dateValue,
+        isall:this.checked,
         areaCode: val.areaCode, //市场
         district: val.AREA_DISTRICT, //片区
         customerType: this.customer_type //客户类型
@@ -571,6 +606,9 @@ export default {
     _getCustomerByAreaCode_3(val) {
       this.customerData = [];
       var data = {
+        beginTime:this.ruleForm_1.dateValue,
+        finishTime:this.ruleForm_2.dateValue,
+        isall:this.checked,
         areaCode: val.areaCode, //市场
         district: val.district, //片区
         customerType: val.customerType //客户类型
@@ -592,8 +630,8 @@ export default {
       } else {
         var data = {
           costomerCodes: this.value_4, //已选用户
-          beginTime: this.beginTime_1, //起始时间
-          finishTime: this.finishTime_1, //结束时间
+          beginTime: this.ruleForm_1.dateValue, //起始时间
+          finishTime: this.ruleForm_2.dateValue, //结束时间
           limit: this.limit, //限制数
           page: this.currentPage, //页数
           status: this.status_info //状态
@@ -604,7 +642,7 @@ export default {
         if (!data.finishTime) {
           data.finishTime = "9999/12/31";
         } else {
-          data.finishTime = data.finishTime + " 23:59:59";
+          data.finishTime = data.finishTime;
         }
         getOrderByAreaCustomer(data).then(res => {
           this.count = res.count;
@@ -621,6 +659,7 @@ export default {
 
     //重置
     reset() {
+      this.checked=false
       this.currentPage = 1;
       this.customerData = [];
       this.beginTime_1 = "";
@@ -688,6 +727,8 @@ export default {
         (this.count = 0);
       Cookies.set("ORDER_NO", 0);
       this._getAreaCode();
+      this.ruleForm_1.dateValue = this.timeDefault_1;
+      this.ruleForm_2.dateValue = this.timeDefault_2;
     }
   }
 };

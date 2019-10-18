@@ -156,7 +156,6 @@
                       class="table_1"
                       border="1"
                       style="font-weight:normal;font-size:15px;align:center"
-                      
                     >
                       <tr>
                         <td class="CPXXBJYS">型号</td>
@@ -336,8 +335,7 @@ export default {
       empty: true, //库存信息为空
       limit: 15,
       count: 0,
-      currentPage: 1,
-      displayStsates: "none"
+      currentPage: 1
     };
   },
   //生命周期
