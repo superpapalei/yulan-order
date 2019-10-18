@@ -1481,8 +1481,7 @@
                     </el-option>
                   </el-select>
                 </template>
-                <el-button @click="downLoadAll()" size="small"
-                  >下载表头及明细</el-button>
+                <el-button @click="downLoadAll()" size="small"  style="margin-left:8px" class="button_1" >下载表头及明细</el-button>
               </div>
               <el-table
                 border
@@ -1590,7 +1589,7 @@ export default {
       supply_check_notes: "",
       gridData: [],
       po_type: "all",
-      limit: 10,
+      limit: 15,
       count: 0,
       currentPage: 1,
       activeName: "first",
@@ -2024,7 +2023,14 @@ export default {
 </script>
 
 <style scoped>
-.btn-style {
+.button_1{
+  width: 150px;
+  background: #8bc34a;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  text-align: center
+}
+.btn-style{
   font: 12px Arial;
   height: 24px;
   width: 80px;
