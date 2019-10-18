@@ -20,7 +20,7 @@
               :key="item.SystemMenuID"
               :menuTreeItem="item"
             />
-             <!-- 有角标的另外加载 -->
+            <!-- 有角标的另外加载 -->
             <router-link to="/painting" tag="div">
               <el-menu-item v-if="isContainAttr('painting')" index="painting">
                 <i class="iconfont icon-color">&#xe7fb;</i>
@@ -89,6 +89,9 @@
                       >我的优惠券</el-dropdown-item
                     >
                   </router-link>
+                  <el-dropdown-item @click.native="changePasswordVisible = true"
+                    >修改密码</el-dropdown-item
+                  >
                   <el-dropdown-item divided @click.native="logout"
                     >退出登录</el-dropdown-item
                   >
@@ -149,44 +152,6 @@
                 ></i>
               </span>
             </div>
-            <el-dialog
-              :show-close="true"
-              :visible.sync="notificationVisible"
-              width="1000px"
-              top="5vh"
-              center
-            >
-              <div v-html="newsHtmlData"></div>
-              <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="notificationVisible = false"
-                  >确 定</el-button
-                >
-              </span>
-            </el-dialog>
-            <el-dialog
-              title="请填写完此调查表，才能继续操作！"
-              :show-close="false"
-              :close-on-click-modal="false"
-              :close-on-press-escape="false"
-              :visible.sync="studyVisible"
-              width="900px"
-              top="5vh"
-              center
-            >
-              <keep-alive>
-                <studyContextDetail
-                  ref="studyContextDetail"
-                  v-if="studyVisible"
-                  :selectData="studySelectData"
-                  @refresh="refreshStudy"
-                ></studyContextDetail>
-              </keep-alive>
-              <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="submitStudy"
-                  >提交调查表</el-button
-                >
-              </span>
-            </el-dialog>
             <el-tab-pane
               v-for="item in tabList"
               :key="item.name"
@@ -202,6 +167,89 @@
         </el-main>
       </el-container>
     </el-container>
+    <el-dialog
+      :show-close="true"
+      :visible.sync="notificationVisible"
+      width="1000px"
+      top="5vh"
+      center
+    >
+      <div v-html="newsHtmlData"></div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="notificationVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="请填写完此调查表，才能继续操作！"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :visible.sync="studyVisible"
+      width="900px"
+      top="5vh"
+      center
+    >
+      <keep-alive>
+        <studyContextDetail
+          ref="studyContextDetail"
+          v-if="studyVisible"
+          :selectData="studySelectData"
+          @refresh="refreshStudy"
+        ></studyContextDetail>
+      </keep-alive>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitStudy">提交调查表</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="修改密码"
+      :close-on-click-modal="false"
+      :visible.sync="changePasswordVisible"
+      width="450px"
+    >
+      <el-form
+        :model="passwordForm"
+        :rules="passwordRules"
+        ref="passwordForm"
+        class="passwordForm"
+      >
+        <el-form-item label="原密码" prop="pw">
+          <el-input
+            style="width:300px;"
+            type="password"
+            v-model="passwordForm.pw"
+            placeholder="填写原密码"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="npw">
+          <el-input
+            style="width:300px;"
+            type="password"
+            v-model="passwordForm.npw"
+            placeholder="填写新密码"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="npw1">
+          <el-input
+            style="width:300px;"
+            type="password"
+            v-model="passwordForm.npw1"
+            placeholder="再次填写新密码"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item style="text-align:center;">
+          <el-button type="primary" @click="changePassWord('passwordForm')"
+            >确认修改</el-button
+          >
+          <el-button @click="resetForm('passwordForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -220,6 +268,7 @@ import Cookies from "js-cookie";
 import menuTree from "./menuTree";
 import studyContextDetail from "./studyContext/studyContextDetail";
 import { GetAllCompensation } from "@/api/paymentASP";
+import { ChangePassword } from "@/api/webUserASP";
 
 export default {
   name: "Main",
@@ -248,7 +297,51 @@ export default {
       moneySituation: "",
       Initial_balance: 0,
       getTheTab: "",
-      refreshMoneyClass: "el-icon-refresh-left"
+      refreshMoneyClass: "el-icon-refresh-left",
+      changePasswordVisible: false,
+      passwordForm: {},
+      passwordRules: {
+        pw: [
+          {
+            validator: (rule, value, callback) => {
+              if (!value) {
+                callback(new Error("请填写密码"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "change"
+          }
+        ],
+        npw: [
+          {
+            validator: (rule, value, callback) => {
+              if (!value) {
+                callback(new Error("请填写新密码"));
+              } else if (value == this.passwordForm.pw) {
+                callback(new Error("新密码与原始密码一致!"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "change"
+          }
+        ],
+        npw1: [
+          {
+            validator: (rule, value, callback) => {
+              if (!value) {
+                callback(new Error("请再次填写新密码"));
+              } else if (value !== this.passwordForm.npw) {
+                callback(new Error("两次填写的密码不一致!"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "change"
+          }
+        ]
+      }
     };
   },
   methods: {
@@ -447,6 +540,34 @@ export default {
     refreshStudy() {
       this.studyVisible = false;
       this.getStudy();
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    changePassWord(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          ChangePassword({
+            loginName: this.cid,
+            password: this.passwordForm.pw,
+            newPassword: this.passwordForm.npw
+          })
+            .then(res => {
+              this.changePasswordVisible = false;
+              this.resetForm(formName);
+              this.$alert("修改成功", "提示", {
+                confirmButtonText: "确定",
+                type: "success"
+              });
+            })
+            .catch(res => {
+              this.$alert(res.msg ? res.msg : "修改失败", "提示", {
+                confirmButtonText: "确定",
+                type: "success"
+              });
+            });
+        }
+      });
     }
   },
   computed: {
@@ -712,6 +833,9 @@ export default {
 </style>
 
 <style>
+.passwordForm .el-form-item__label {
+  width: 80px;
+}
 .el-transfer-panel {
   width: 300px !important;
   height: 240px !important;
