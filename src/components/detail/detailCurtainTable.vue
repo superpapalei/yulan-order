@@ -1267,10 +1267,10 @@ export default {
         else if (status === 2) status = 5;
         else status = 3;
       }
-      if (data.itemType === "pjb") {
-        if (data.item.itemNo !== this.compareData[index].item.itemNo)
-          status = 3;
-        else status = -1;
+      if (data.itemType === "pjb" || data.productType === "LCB" || data.productType =="GY") {
+        // if (data.itemNo !== this.allData.itemList[index].itemNo) status = 3;
+        // else status = -1;
+        status = -1;
       }
       switch (status) {
         case 1:

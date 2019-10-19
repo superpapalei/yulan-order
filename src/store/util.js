@@ -6,7 +6,7 @@ export function tabsName(index) {
     case "shops/wallPaper":
       return "墙纸";
     case "shops/curtain":
-      return "窗帘";
+      return "定制窗帘";
     case "shops/softSuit":
       return "软装";
     case "shops/shoppingCurtainDetail":
@@ -81,17 +81,17 @@ export function tabsName(index) {
       return "采购单确认";
     case "supplierModule/trans":
       return "入库记录查询";
-      case "supplierModule/lanJuPort":
+    case "supplierModule/lanJuPort":
       return "采购单确认";
-      case "supplierModule/deliveryList":
-        return "送货单";
+    case "supplierModule/deliveryList":
+      return "送货单";
     case "design/ISExamineMarket":
     case "design/ISExamineGM":
-      return "形象店设计审核";  
+      return "形象店设计审核";
     case "design/lanJuGMExamine":
-        return "兰居设计审核";
+      return "兰居设计审核";
     case "design/lanJuMarketExamine":
-        return "兰居设计审核";
+      return "兰居设计审核";
     default:
       return "xxx";
   }
