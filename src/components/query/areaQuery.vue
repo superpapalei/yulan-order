@@ -660,6 +660,7 @@ export default {
       this.queryQuYu_1();
     },
     queryQuYu_1() {
+      this.moneySum=[],
       this.typeFilter=[],
       this.query_1 = true;
       this.tableData = [];
@@ -698,6 +699,9 @@ export default {
     _getTotalMoneySum(val){
       this.moneySum = []
       var data = {
+        beginTime: val.beginTime, //起始时间
+        finishTime: val.finishTime, //结束时间
+        status: val.status, //状态
         customers:val.costomerCodes
       }
       getTotalMoneySum(data).then(res => {
