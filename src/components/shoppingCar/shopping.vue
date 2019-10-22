@@ -47,6 +47,7 @@ export default {
         CID: Cookies.get("cid")
       });
       this.allData = tempData.data.cartItems;
+      console.log(tempData.data);
       this.wallpaperData = this.allData.wallpaper;
       this.curtainData = this.allData.curtain;
       this.softsuitData = this.allData.soft;
