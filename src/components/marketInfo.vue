@@ -22,6 +22,7 @@
               :disabled="scope.row.completeStatus == 2"
               @click="editStudy(scope.row)"
               type="primary"
+              size="mini"
               icon="el-icon-edit"
               circle
             ></el-button>

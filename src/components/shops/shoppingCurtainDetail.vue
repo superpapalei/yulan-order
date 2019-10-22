@@ -948,7 +948,8 @@ export default {
         itemType: this.curtainData[index].itemType,
         fixType: this.curtainData[index].fixType
       };
-      changeDosageByNo(obj)
+      //changeDosageByNo(obj)
+      GetDosageByNo(obj)
         .then(res => {
           if (res.data.length == 0) {
             this.$alert("用量获取失败", "提示", {
@@ -957,7 +958,7 @@ export default {
             });
             return;
           }
-          let _data = this.curtainData[this.chooseIndex];
+          let _data = this.curtainData[index];
           let keys;
           if (_data.itemType == "lt")
             keys = Math.round(res.data[0].dosage * 100) / 100;

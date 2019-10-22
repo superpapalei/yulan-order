@@ -1131,7 +1131,7 @@ export default {
             });
             return;
           }
-          let _data = this.data[this.chooseIndex];
+          let _data = this.data[index];
           let keys;
           if (_data.itemType == "lt")
             keys = Math.round(res.data[0].dosage * 100) / 100;
