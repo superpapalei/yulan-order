@@ -221,12 +221,19 @@
               :data="item.tab3[index]"
             >
               <el-table-column label="预约" header-align="center" width="200">
+                
                 <template slot-scope="scope">
+                    <div   style="font-weight:bold;font-size:16px">
                   {{ scope.row.date_req }}
-                </template></el-table-column>
+                    </div>
+                </template>
+                
+                </el-table-column>
               <el-table-column label="交货" header-align="center" width="200"
                 ><template slot-scope="scope">
+                    <div   style="font-weight:bold;font-size:16px">
                   {{ scope.row.date_deliver }}
+                    </div>
                 </template></el-table-column>
               <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
               <!-- <el-table-column label="交货"  header-align="center" width="80"></el-table-column> -->
@@ -254,7 +261,9 @@
                 header-align="center"
                 align="center"
                 ><template>
-                  小计
+                  <div   style="font-weight:bold;font-size:16px">
+                    小计
+                  </div>
                 </template></el-table-column>
               <el-table-column
                 label="金额"
@@ -263,7 +272,9 @@
                 align="right"
               >
                 <template slot-scope="scope">
-                  {{ scope.row.littleSum | numFilter }}
+               <div   style="font-weight:bold;font-size:16px">
+                    {{ scope.row.littleSum | numFilter }}
+                  </div>
                 </template>
               </el-table-column>
               <el-table-column
@@ -287,12 +298,12 @@
               ><div class="grid-content bg-purple"></div
             ></el-col>
             <el-col :span="2"
-              ><div class="grid-content bg-purple" style="font-weight:bold;">
+              ><div class="grid-content bg-purple" style="font-weight:bold;font-size:20px">
                 总金额：
               </div></el-col
             >
             <el-col :span="3"
-              ><div class="grid-content bg-purple" style="font-weight:bold;">
+              ><div class="grid-content bg-purple" style="font-weight:bold;font-size:20px">
                 {{ sumMoney | numFilter }}
               </div></el-col
             >
@@ -960,7 +971,9 @@
                         width="200"
                       >
                         <template slot-scope="scope">
+                            <div   style="font-weight:bold;font-size:16px">
                           {{ scope.row.date_req }}
+                            </div>
                         </template></el-table-column
                       >
                       <el-table-column
@@ -968,7 +981,9 @@
                         header-align="center"
                         width="200"
                         ><template slot-scope="scope">
+                            <div   style="font-weight:bold;font-size:16px">
                           {{ scope.row.date_deliver }}
+                            </div>
                         </template></el-table-column
                       >
                       <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
@@ -997,7 +1012,9 @@
                         header-align="center"
                         align="center"
                         ><template>
-                          小计
+                          <div   style="font-weight:bold;font-size:16px">
+                    小计
+                  </div>
                         </template></el-table-column>
                       <el-table-column
                         label="金额"
@@ -1006,7 +1023,11 @@
                         align="right"
                       >
                         <template slot-scope="scope">
-                          {{ scope.row.littleSum | numFilter }}
+
+                          <div   style="font-weight:bold;font-size:16px">
+                    {{ scope.row.littleSum | numFilter }}
+                  </div>
+                         
                         </template>
                       </el-table-column>
                       <el-table-column
@@ -1032,7 +1053,7 @@
                     <el-col :span="2"
                       ><div
                         class="grid-content bg-purple"
-                        style="font-weight:bold;"
+                        style="font-weight:bold;font-size:20px"
                       >
                         总金额：
                       </div></el-col
@@ -1040,7 +1061,7 @@
                     <el-col :span="3"
                       ><div
                         class="grid-content bg-purple"
-                        style="font-weight:bold;"
+                          style="font-weight:bold;font-size:20px"
                       >
                         {{ sumMoney | numFilter }}
                       </div></el-col
@@ -1457,11 +1478,12 @@
 
             <el-tab-pane label="已确认" name="second" align="left">
               <div align="right">
-                采购单号：（精确）
+               
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
                   style="width:6%; min-width:200px;"
+                  placeholder=" 采购单号：（精确）"
                   v-model="po"
                 >
                 </el-input>
@@ -1498,7 +1520,8 @@
                     </el-option>
                   </el-select>
                 </template>
-                <el-button @click="downLoadAll()" size="small"  style="margin-left:8px" class="button_1" >下载表头及明细</el-button>
+                <el-button @click="SelectClick()" size="small"  style="margin-left:8px" class="button_2" >搜索</el-button>
+                <el-button @click="downLoadAll()" size="small"  style="margin-left:8px" class="button_1" >下载表头及明细</el-button>  
               </div>
               <el-table
                 border
@@ -2107,6 +2130,14 @@ export default {
 <style scoped>
 .button_1{
   width: 130px;
+  height:40px;
+  background: #8bc34a;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  text-align: center
+}
+.button_2{
+  width: 60px;
   height:40px;
   background: #8bc34a;
   margin-left: 10px;

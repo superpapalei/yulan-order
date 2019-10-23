@@ -44,6 +44,7 @@ import ISExamineMarket from '@/components/design/ISExamineMarket'
 import ISExamineGM from '@/components/design/ISExamineGM'
 import lanJuGMExamine from '@/components/design/lanJuGMExamine'
 import lanJuMarketExamine from '@/components/design/lanJuMarketExamine'
+import PayDelegation from '@/components/supplierModule/payDelegation'
 
 Vue.use(Router)
 
@@ -333,6 +334,11 @@ const router = new Router({
           path: '/design/lanJuMarketExamine',
           name: 'lanJuMarketExamine',
           component: lanJuMarketExamine
+        },
+        {
+          path: '/supplierModule/payDelegation',
+          name: 'payDelegation',
+          component: PayDelegation
         },
       ]
     }

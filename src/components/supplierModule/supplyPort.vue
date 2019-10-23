@@ -291,7 +291,7 @@
                           <el-col :span="3"><div class="grid-content bg-purple" style="font-weight:bold;"> {{ sumMoney|numFilter}}   </div></el-col>
                           <el-col :span="3"><div class="grid-content bg-purple"> </div></el-col>
                       </el-row>
-                    <div><el-button @click="downLoad()" type="primary" size="small">导出Excel</el-button> </div>
+                    <div><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button> </div>
               </td>
                         </tr>
                       </tbody>
@@ -384,8 +384,9 @@
                     </td>
                   </tr>
                 </tbody>
-              </table>
+              </table> 
             </div>
+                <div align="center"><el-button  @click="downLoadY()" type="primary" size="small">导出Excel</el-button> </div>
           </el-dialog>
       
       <div id="supplyCon">
@@ -449,12 +450,12 @@
                           </el-tab-pane>
 
                           <el-tab-pane label="已确认" name="second" align="left">
-                                      <div align="right">
-                                          采购单号：（精确）
+                                      <div align="right"> 
                     <el-input
                     prefix-icon="el-icon-search"
                   style="width:10%; min-width:200px;"
                     @keyup.enter.native="SelectClick()"
+                   placeholder=" 采购单号：（精确）"
                     v-model="po">
                   </el-input>
                                         <el-date-picker
@@ -488,6 +489,8 @@
                     </el-option>
                   </el-select>
                 </template>
+                <el-button @click="SelectClick()" size="small"  style="margin-left:8px" class="button_2" >搜索</el-button>
+
                 </div>
                             <el-table border :data="pur_headData" style="width: 100%" stripe>
                               <el-table-column type="index" :index="indexMethod">
@@ -551,8 +554,7 @@
 <script>
 import { GetPoDetail, GetRelativePo,SaveHeadNotes,Submit } from "@/api/supplierASP";
 import Cookies from "js-cookie";
-// const Head = "http://14.29.223.114:10250/upload";
-// const Quest = "http://14.29.223.114:10250/yulan-capital";
+import { downLoadFile } from "@/common/js/downLoadFile";
 const Head = "http://192.168.123.43:8080/upload";
 const Quest = "http://192.168.123.43:8080/yulan-capital";
 export default {
@@ -786,6 +788,18 @@ export default {
         this.pur_headData = res.data;
       });
     },
+      downLoadX() {
+      var PUR_NO = this.pur_headForm.PUR_NO;
+      downLoadFile(
+        this.Global.baseUrl + `PUR_HEAD/CreateExcel?PUR_NO=${PUR_NO}`
+      );
+    },
+      downLoadY() {
+      var PUR_NO = this.pur_headForm.PUR_NO;
+      downLoadFile(
+        this.Global.baseUrl + `PUR_HEAD/CreateExcelY?PUR_NO=${PUR_NO}`
+      );
+    },
     autoSearchDetail(PUR_NO) {
       var data = {
         PUR_NO: PUR_NO
@@ -894,6 +908,22 @@ export default {
 </script>
 
 <style scoped>
+.button_1{
+  width: 130px;
+  height:40px;
+  background: #8bc34a;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  text-align: center
+}
+.button_2{
+  width: 60px;
+  height:40px;
+  background: #8bc34a;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  text-align: center
+}
 .messageInput{
   margin: 3px;
     border: 1px solid #c3c3c3;

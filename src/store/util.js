@@ -92,6 +92,8 @@ export function tabsName(index) {
         return "兰居设计审核";
     case "design/lanJuMarketExamine":
         return "兰居设计审核";
+    case "supplierModule/payDelegation":
+      return "付款委托书";
     default:
       return "xxx";
   }
