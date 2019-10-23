@@ -580,7 +580,7 @@ export default {
       supply_check_notes:"",
       gridData: [],
       po_type: "all",
-      limit: 15,
+      limit: 10,
       count: 0,
       currentPage: 1,
       activeName: "first",

@@ -661,12 +661,7 @@
                           {{ pur_headForm.DEPT_NO }}
                         </td>
                       </tr>
-                      <tr>
-                        使用部门：
-                        <td style="text-align:left">
-                          {{ pur_headForm.DEPT_NO2 }}
-                        </td>
-                      </tr>
+                     
                       <tr>
                         合同号：
                         <td colsan="3" style="text-align:left"></td>
@@ -1216,12 +1211,7 @@
                           {{ pur_headForm.DEPT_NO }}
                         </td>
                       </tr>
-                      <tr>
-                        使用部门：
-                        <td style="text-align:left">
-                          {{ pur_headForm.DEPT_NO2 }}
-                        </td>
-                      </tr>
+                     
                       <tr>
                         合同号：
                         <td colsan="3" style="text-align:left"></td>
@@ -1477,7 +1467,7 @@
             </el-tab-pane>
 
             <el-tab-pane label="已确认" name="second" align="left">
-              <div align="right">
+              <div align="center">
                
                 <el-input
                   @keyup.enter.native="SelectClick()"
@@ -1640,7 +1630,7 @@ export default {
       supply_check_notes: "",
       gridData: [],
       po_type: "all",
-      limit: 15,
+      limit: 10,
       count: 0,
       currentPage: 1,
       activeName: "first",
@@ -2040,7 +2030,7 @@ export default {
         this.pur_headForm.SUPPLY_CODE = this.gridData[0].SUPPLY_CODE;
         this.pur_headForm.G_ADDRESS = this.gridData[0].G_ADDRESS;
         this.pur_headForm.G_LINK = this.gridData[0].G_LINK;
-        this.pur_headForm.G_TYPE = this.gridData[0].NOTES;
+        this.pur_headForm.G_TYPE = this.gridData[0].G_TYPE;
         this.pur_headForm.G_PHONE = this.gridData[0].G_PHONE;
         this.pur_headForm.HANDSET = this.gridData[0].HANDSET;
         this.pur_headForm.ORDER_NO = this.gridData[0].ORDER_NO;
