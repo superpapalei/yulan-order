@@ -40,7 +40,7 @@
       </div>
       <el-table
         border
-        :data="bankData"
+        :data="payData"
         style="width: 100%"
         :row-class-name="tableRowClassName"
       >
@@ -347,7 +347,7 @@
 
 <script>
 import {
-  getBankList,
+  GetRelativePay,
   getPayBillContent,
   changeStatus,
   sumbitForm,
@@ -466,7 +466,7 @@ export default {
           value: "中国邮政储蓄银行"
         }
       ],
-      bankData: []
+      payData: []
     };
   },
   created: function() {
@@ -730,7 +730,7 @@ export default {
     //搜索
     searchBankList() {
       this.currentPage = 1;
-      this.bankData = [];
+      this.payData = [];
       this._getBankList();
     },
     //获取银行列表
@@ -750,9 +750,9 @@ export default {
         data.beginTime = this.beginTime + "00:00:00";
         data.finishTime = this.finishTime + "23:59:59";
       }
-      getBankList(url, data).then(res => {
+      GetRelativePay(url, data).then(res => {
         this.count = res.count;
-        this.bankData = res.data;
+        this.payData = res.data;
       });
     },
     //隔行变色
@@ -779,7 +779,7 @@ export default {
     //翻页获取订单
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.bankData = [];
+      this.payData = [];
       this._getBankList();
     },
     handleAvatarSuccess(res, file) {
