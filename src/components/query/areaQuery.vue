@@ -556,10 +556,12 @@ export default {
       getAreaCode(data)
         .then(res => {
           this.AREACODE = res.data;
-          //console.log(this.stockIds)
-        })
-        .catch(res => {
-          console.log(res);
+          if(this.AREACODE.length == 0){
+              this.$alert("没有区域权限，请联系管理员配置", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+          }
         });
     },
     //根据市场区域查片区
@@ -664,7 +666,11 @@ export default {
       this.typeFilter=[],
       this.query_1 = true;
       this.tableData = [];
-      if (this.value_4 == []) {
+      if (this.value_4.length == 0) {
+            this.$alert("未选择用户", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
         return (this.tableData = []);
       } else {
         var data = {
