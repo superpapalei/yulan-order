@@ -94,6 +94,7 @@
               @click="checkDetail(scope.row)"
               type="warning"
               icon="el-icon-search"
+              size="mini"
               circle
             ></el-button>
             <el-button
