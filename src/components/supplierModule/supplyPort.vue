@@ -266,43 +266,73 @@
                         <div style="margin-bottom:10px"><h1>备注信息：{{ pur_headForm.NOTES}}</h1> </div>
                         <hr />
                         <div style="width:100%">
-                              <el-table :data="gridData" style="width:100%" max-height="400px">
-                                <af-table-column property="ITEM_NO" label="物料号" ></af-table-column>
-                                <af-table-column property="MGUIGE" label="物料型号"></af-table-column>
-                                <af-table-column property="MNAME" label="名称" ></af-table-column>   <!--width="50" -->
-                                <af-table-column property="GRADE" label="规格" ></af-table-column>
-                                <el-table-column property="QTY_PUR" label="数量" width="60" ></el-table-column>
-                                <el-table-column label="含税单价" width="80">
-                                  <template slot-scope="scope">
-                                    <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column property="UNIT1" label="单位" width="40"></el-table-column>
-                                <el-table-column property="TOTAL_MONEY" label="金额" width="70"></el-table-column>
-                                <el-table-column property="NOTE" label="备注" ></el-table-column>
-                                <el-table-column property="DATE_REQ" label="约定日期" width="100">
-                                  <template slot-scope="scope">
-                                    <span>{{ scope.row.DATE_REQ | datatrans }}</span>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column label="送货日期" width="120">
-                                  <template slot-scope="scope">
-                                    <el-date-picker
-                                      v-model="scope.row.DATE_DELIVER"
-                                      align="right"
-                                      type="date"
-                                      format="yyyy-MM-dd"
-                                      value-format="yyyy-MM-dd"
-                                      placeholder="选择日期">
-                                    </el-date-picker>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column label="说明" width="100">
-                                  <template slot-scope="scope">
-                                      <el-input  v-model="scope.row.SUPPLY_NOTES" clearable></el-input> 
-                                  </template>
-                                </el-table-column>
-                              </el-table>
+                         <el-table :data="gridData" 
+                         style="width:100%" 
+                         max-height="400px" 
+                         :summary-method="getSummaries"
+                         show-summary 
+                         border>
+            <el-table-column type="index" :index="indexMethod">
+            </el-table-column>
+            <af-table-column
+              property="ITEM_NO"
+              label="物料号"
+            ></af-table-column>
+            <af-table-column
+              property="MGUIGE"
+              label="物料型号"
+            ></af-table-column>
+            <af-table-column property="MNAME" label="名称"></af-table-column>
+            <!--width="50" -->
+            <af-table-column property="GRADE" label="规格"></af-table-column>
+            <af-table-column
+              property="QTY_PUR"
+              label="数量"
+              width="60"
+            ></af-table-column>
+            <el-table-column label="含税单价" width="80">
+              <template slot-scope="scope">
+                <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              property="UNIT1"
+              label="单位"
+              width="50"
+            ></el-table-column>
+            <af-table-column
+              property="TOTAL_MONEY"
+              label="金额"
+              width="70"
+            ></af-table-column>
+            <el-table-column property="NOTE" label="备注"></el-table-column>
+            <el-table-column property="DATE_REQ" label="约定日期" width="100">
+              <template slot-scope="scope">
+                <span>{{ scope.row.DATE_REQ | datatrans }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="送货日期" width="120">
+              <template slot-scope="scope">
+                <el-date-picker
+                  v-model="scope.row.DATE_DELIVER"
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                  placeholder="选择日期"
+                >
+                </el-date-picker>
+              </template>
+            </el-table-column>
+            <el-table-column label="说明" width="100">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.SUPPLY_NOTES" clearable></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
+          
+                    
+      
                               <hr />
                               <div style="margin-top:10px">
                                   <div style="margin-bottom:10px;width:100%" class="data_1">
@@ -539,7 +569,7 @@
                     <el-table-column label="备注"  header-align="center" align="center"> </el-table-column>
                 </el-table>
 
-                 <!-- 循环因子 -->
+                 <!-- /循环因子 -->
                  </div>
                  </div>
                   <el-table
@@ -674,7 +704,16 @@
                   </tr>
                   <tr>
                     <td colspan="2">
-                      <el-table :data="gridData" id="PURCHASEDETAILLISTTABLE" class="GCGRID" object_class="_Object:GridTable" object_hashcode="6" cellpadding="0" style="width:100%">
+                      <el-table :data="gridData" 
+                        cellpadding="0" 
+                        style="width:100%"
+                         :summary-method="getSummaries"
+                         show-summary 
+                        >
+                        <el-table-column
+                        type="index"
+                        :index="indexMethod">
+                        </el-table-column>
                         <af-table-column property="ITEM_NO" label="物料号" ></af-table-column>
                         <af-table-column property="MGUIGE" label="物料型号"></af-table-column>
                         <af-table-column property="MNAME" label="名称" ></af-table-column>   <!--width="50" -->
@@ -685,7 +724,7 @@
                             <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
                           </template>
                         </el-table-column>
-                        <el-table-column property="UNIT1" label="单位" width="40"></el-table-column>
+                        <el-table-column property="UNIT1" label="单位" width="50"></el-table-column>
                         <el-table-column property="TOTAL_MONEY" label="金额" width="70"></el-table-column>
                         <el-table-column property="NOTE" label="备注" ></el-table-column>
                         <el-table-column property="DATE_REQ" label="约定日期" width="100" >
@@ -877,6 +916,41 @@ export default {
   name: "SupplyPort",
   data() {
     return {
+          colName:[{
+            name1:"位置",
+            name2:"名称",
+            name3:"编码",
+            name4:"名称",
+            name5:"规格",
+            name6:"用量",
+            name7:"含税单价",
+            name8:"金额",
+            name9:"制造说明",
+            name10:"备注",
+      }],
+      sumMoneyCol:[{
+       
+            name7:"总金额:",
+            name8:0, 
+      }],
+
+        locCol:[{
+            name1:"位置div",
+      }],
+
+detailCol:[
+  {
+      name2:"名称",
+            name3:"编码",
+            name4:"名称",
+            name5:"规格",
+            name6:"用量",
+            name7:"含税单价",
+            name8:"金额",
+            name9:"制造说明",
+            name10:"备注",
+  }
+],
     companyId: Cookies.get("companyId"),
     current_id: Cookies.get("cid"),
       sumMoney:0,
@@ -917,13 +991,63 @@ export default {
     };
   },
   methods: {
+    getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 7) {
+            sums[index] = '汇总';
+            return;
+          }
+           if (index === 3||index === 4||index === 5||index === 9||index === 12) {
+            sums[index] = '';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value)) ) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            sums[index];
+          } 
+        });
+
+        return sums;
+      },
     //获取当月第一天零时
      getCurrentMonthFirst(){
       var date=new Date();
       date.setDate(1);
       date.setHours(0,0,0);
       return date;
-},
+    },
+      datatransMethod(value) {
+      //时间戳转化大法
+      if (value == null || value == "") {
+        return "";
+      }
+      let date = new Date(value);
+      let y = date.getFullYear();
+      if (y > 5000) {
+        return "";
+      }
+      let MM = date.getMonth() + 1;
+      MM = MM < 10 ? "0" + MM : MM;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      let h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      let m = date.getMinutes();
+      m = m < 10 ? "0" + m : m;
+      let s = date.getSeconds();
+      s = s < 10 ? "0" + s : s;
+      return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
+    },
  //获取最近一周时间
      getCurrentWeek(){
       var date=new Date();
@@ -1116,19 +1240,88 @@ export default {
         this.Global.baseUrl + `PUR_HEAD/CreateExcelY?PUR_NO=${PUR_NO}`
       );
     },
-    autoSearchDetail(PUR_NO) {
+     autoSearchDetail(PUR_NO) {
       var data = {
         PUR_NO: PUR_NO
       };
       GetPoDetail(data).then(res => {
-        
         this.gridData = res.data;
-     for (let i=0;i<this.gridData.length;i++){
-      if(this.gridData[i].DATE_DELIVER=="9999/12/31 00:00:00") {
-        this.gridData[i].DATE_DELIVER=""
-      }
-      }
-        
+        let details = this.gridData;
+        let loc = [];
+        let tab1 = [];
+        let tab2 = [];
+        let tab3 = [];
+        this.sumMoneyCol[0].name8=0;
+        for (let i = 0; i < this.gridData.length; i++) {
+          this.sumMoneyCol[0].name8+=this.gridData[i].TOTAL_MONEY;
+          if (this.gridData[i].DATE_DELIVER == "9999/12/31 00:00:00") {
+            this.gridData[i].DATE_DELIVER = "";
+          }
+          //将所有位置列出来
+          if (loc.indexOf(this.gridData[i].CL_PLACE_ID) == -1) {
+            loc.push(this.gridData[i].CL_PLACE_ID);
+
+            let temObj1 = {
+              cl_place_id: this.gridData[i].CL_PLACE_ID,
+              cl_place: this.gridData[i].CL_PLACE,
+              cl_item_no: this.gridData[i].CL_ITEM_NO,
+              cl_width: this.gridData[i].CL_WIDTH,
+              cl_high: this.gridData[i].CL_HIGH,
+              cl_high_jia: this.gridData[i].CL_HIGH_JIA,
+              cl_size_times: this.gridData[i].CL_SIZE_TIMES
+            };
+            let date1 =
+              "预约：" + this.datatransMethod(this.gridData[i].DATE_REQ);
+            let date2 =
+              "交货：" + this.datatransMethod(this.gridData[i].DATE_DELIVER);
+            let temObj3 = {
+              date_req: date1,
+              date_deliver: date2,
+              littleSum: 0
+            };
+            let tempArr3 = [];
+            tempArr3.push(temObj3);
+            tab1.push(temObj1);
+            tab3.push(tempArr3);
+          }
+        }
+        this.items = []; //先请空items
+        this.sumMoney = 0;
+        for (let k = 0; k < tab1.length > 0; k++) {
+          let tabArr2 = [];
+          tab3[k].littleSum = 0.0;
+          for (let i = 0; i < this.gridData.length; i++) {
+            if (tab1[k].cl_place_id == this.gridData[i].CL_PLACE_ID) {
+              let temObj2 = {
+                cl_name: this.gridData[i].CL_NAME,
+                item_no: this.gridData[i].ITEM_NO,
+                mname: this.gridData[i].MNAME,
+                grade: this.gridData[i].GRADE,
+                qty_pur: this.gridData[i].QTY_PUR,
+                unit1: this.gridData[i].UNIT1,
+                price_taxin: this.gridData[i].PRICE_TAXIN,
+                total_money: this.gridData[i].TOTAL_MONEY,
+                product_note: this.gridData[i].PRODICT_NOTE,
+                notes: this.gridData[i].NOTE
+              };
+              tabArr2.push(temObj2);
+              tab3[k][0].littleSum += this.gridData[i].TOTAL_MONEY;
+              this.sumMoney += this.gridData[i].TOTAL_MONEY;
+              
+            }
+          }
+          tab2.push(tabArr2);
+          let sumObj = { id: k, tab1: tab1, tab2: tab2, tab3: tab3 };
+          this.items.push(sumObj);
+        }
+
+
+        //无效
+        // for(let i=0;i<this.items.length;i++){
+        //   for(let j=0;j<this.items[i].tab1.length;j++){
+        //     this.$set(this.items[i].tab1,j,this.items[i].tab1[j])
+        //   }
+        // }
         this.pur_headForm.PUR_NO = this.gridData[0].PUR_NO;
         this.pur_headForm.LINKMAN = this.gridData[0].LINKMAN;
         this.pur_headForm.DATE_PUR = this.gridData[0].DATE_PUR;
@@ -1140,7 +1333,7 @@ export default {
         this.pur_headForm.SUPPLY_CODE = this.gridData[0].SUPPLY_CODE;
         this.pur_headForm.G_ADDRESS = this.gridData[0].G_ADDRESS;
         this.pur_headForm.G_LINK = this.gridData[0].G_LINK;
-        this.pur_headForm.G_TYPE = this.gridData[0].NOTES;
+        this.pur_headForm.G_TYPE = this.gridData[0].G_TYPE;
         this.pur_headForm.G_PHONE = this.gridData[0].G_PHONE;
         this.pur_headForm.HANDSET = this.gridData[0].HANDSET;
         this.pur_headForm.ORDER_NO = this.gridData[0].ORDER_NO;
@@ -1160,9 +1353,9 @@ export default {
         this.pur_headForm.LINKTEL = this.gridData[0].LINKTEL;
         this.pur_headForm.POST_ADDRESS = this.gridData[0].POST_ADDRESS;
         this.pur_headForm.STATUS = this.gridData[0].STATUS;
-        this.input=this.pur_headForm.SUPPLY_CHECK_NOTES;
-        this.supply_check_notes=this.pur_headForm.SUPPLY_CHECK_NOTES;
-        this.date_deliver="";
+        this.input = this.pur_headForm.SUPPLY_CHECK_NOTES;
+        this.supply_check_notes = this.pur_headForm.SUPPLY_CHECK_NOTES;
+        this.date_deliver = "";
       });
     }
   },

@@ -407,6 +407,82 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-table
+                    :data="sumMoneyCol"
+                    :show-header="false"
+                       class="th-font"
+                    id="PURCHASEDETAILLISTTABLE"
+                    object_class="_Object:GridTable"
+                    object_hashcode="6"
+                    cellpadding="0"
+                    style="width:100%"
+                  >
+                    <el-table-column width="48">
+                    </el-table-column>
+                    <af-table-column
+                      property="name1"
+                      label="物料号"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name1"
+                      label="物料型号"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name1"
+                      label="名称"
+                    ></af-table-column>
+                    <!--width="50" -->
+                    <af-table-column
+                      property="name1"
+                      label="规格"
+                    ></af-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="数量"
+                      width="60"
+                    ></el-table-column>
+                
+                    <el-table-column
+                      property="name7"
+                      label="总金额"
+                      width="120"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column
+                      property="TOTAL_MONEY"
+                      label="金额"
+                      width="70"
+                      align="right"
+                    > <template slot-scope="scope">
+                    {{scope.row.name8|numFilter}}
+                    </template></el-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="备注"
+                    ></el-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="约定日期"
+                      width="100"
+                    >
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.DATE_REQ | datatrans }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="送货日期"
+                      width="100"
+                    >
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="说明"
+                    ></el-table-column>
+          </el-table>
           <hr />
           <div style="margin-top:10px">
             <div style="margin-bottom:10px;width:100%" class="data_1">
@@ -932,6 +1008,7 @@
                       label="备注"
                     ></el-table-column>
                   </el-table>
+                    <div><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button> </div>
                 </td>
                 <!-- 明明细细 -->
               </tr>
@@ -1172,35 +1249,46 @@
                 <td colspan="2">
                   <el-table
                     :data="gridData"
+                   
                     id="PURCHASEDETAILLISTTABLE"
                     class="GCGRID"
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
+                    border
                   >
                     <el-table-column type="index" :index="indexMethod">
                     </el-table-column>
                     <af-table-column
                       property="ITEM_NO"
                       label="物料号"
+                      width="110"
+                      :show-overflow-tooltip="true"
                     ></af-table-column>
                     <af-table-column
                       property="MGUIGE"
                       label="物料型号"
+                       width="110"
+                       :show-overflow-tooltip="true"
                     ></af-table-column>
                     <af-table-column
                       property="MNAME"
                       label="名称"
+                      width="60" 
+                     :show-overflow-tooltip="true"
                     ></af-table-column>
-                    <!--width="50" -->
+                    
                     <af-table-column
                       property="GRADE"
                       label="规格"
+                      width="50"
+                      :show-overflow-tooltip="true"
                     ></af-table-column>
                     <el-table-column
                       property="QTY_PUR"
                       label="数量"
+                      :show-overflow-tooltip="true"
                       width="60"
                     ></el-table-column>
                     <el-table-column label="含税单价" width="80">
@@ -1211,20 +1299,24 @@
                     <el-table-column
                       property="UNIT1"
                       label="单位"
+                      :show-overflow-tooltip="true"
                       width="50"
                     ></el-table-column>
                     <el-table-column
                       property="TOTAL_MONEY"
                       label="金额"
+                      :show-overflow-tooltip="true"
                       width="70"
                     ></el-table-column>
                     <el-table-column
                       property="NOTE"
+                      :show-overflow-tooltip="true"
                       label="备注"
                     ></el-table-column>
                     <el-table-column
                       property="DATE_REQ"
                       label="约定日期"
+                     
                       width="100"
                     >
                       <template slot-scope="scope">
@@ -1243,8 +1335,87 @@
                     <el-table-column
                       property="SUPPLY_CHECK_NOTES"
                       label="说明"
+                      :show-overflow-tooltip="true"
                     ></el-table-column>
                   </el-table>
+
+                 <el-table
+                    :data="sumMoneyCol"
+                    :show-header="false"
+                       class="th-font"
+                    id="PURCHASEDETAILLISTTABLE"
+                    object_class="_Object:GridTable"
+                    object_hashcode="6"
+                    cellpadding="0"
+                    style="width:100%"
+                  >
+                    <el-table-column width="48">
+                    </el-table-column>
+                    <af-table-column
+                      property="name1"
+                      label="物料号"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name1"
+                      label="物料型号"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name1"
+                      label="名称"
+                    ></af-table-column>
+                    <!--width="50" -->
+                    <af-table-column
+                      property="name1"
+                      label="规格"
+                    ></af-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="数量"
+                      width="60"
+                    ></el-table-column>
+                
+                    <el-table-column
+                      property="name7"
+                      label="总金额"
+                      width="120"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column
+                      property="TOTAL_MONEY"
+                      label="金额"
+                      width="100"
+                      align="right"
+                    > <template slot-scope="scope">
+                    {{scope.row.name8|numFilter}}
+                    </template></el-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="备注"
+                    ></el-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="约定日期"
+                      width="100"
+                    >
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.DATE_REQ | datatrans }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="送货日期"
+                      width="100"
+                    >
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      property="name1"
+                      label="说明"
+                    ></el-table-column>
+                  </el-table>
+                  <div><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button> </div>
                 </td>
               </tr>
             </tbody>
@@ -1868,11 +2039,16 @@ detailCol:[
       });
     },
 
-    downLoad() {
+       downLoadX() {
       var PUR_NO = this.pur_headForm.PUR_NO;
-      //  downLoadFile(this.Global.fileCenterUrl + `FILE_CENTERAPI/DownloadFile?FILE_ID=${PUR_NO}`);
       downLoadFile(
         this.Global.baseUrl + `PUR_HEAD/CreateExcel?PUR_NO=${PUR_NO}`
+      );
+    },
+      downLoadY() {
+      var PUR_NO = this.pur_headForm.PUR_NO;
+      downLoadFile(
+        this.Global.baseUrl + `PUR_HEAD/CreateExcelY?PUR_NO=${PUR_NO}`
       );
     },
     downLoadAll() {
