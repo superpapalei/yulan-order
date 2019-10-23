@@ -40,14 +40,14 @@
       </div>
       <el-table
         border
-        :data="bankData"
+        :data="payData"
         style="width: 100%"
         :row-class-name="tableRowClassName"
       >
         <el-table-column
           width="130"
-          prop="id"
-          label="凭证单号"
+          prop="ID"
+          label="委托编号"
           align="center"
         ></el-table-column>
         <el-table-column label="凭证时间" align="center">
@@ -56,61 +56,53 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="yulanBank"
+          prop="CUSTOMER_CODE"
           width="160"
-          label="收款银行"
+          label="客户"
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="payerName"
-          label="付款(公司/人)"
+          prop="SUM_MONEY"
+          label="代付金额"
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="payerAccount"
+          prop="STATE"
           width="160"
-          label="付款账号"
+          label="状态"
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="payAmount"
-          label="汇款金额"
+          prop="USER_CRE"
+          label="创建人"
           width="100"
           align="center"
         ></el-table-column>
-        <el-table-column label="汇款时间" align="center">
+        <el-table-column label="确认时间" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.payDate | datatrans }}</span>
+            <span>{{ scope.row.DATE_AFFIRM | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="80" label="状态" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.state | transStatus }}</span>
-          </template>
+        <el-table-column width="80" label="确认人" align="center"  prop="USER_AFFIRM">
         </el-table-column>
-        <el-table-column align="center" width="200" label="操作">
+        <el-table-column width="80" label="退回原因" align="center"  prop="RETURN_REASON">
+        </el-table-column>
+        <el-table-column align="center" width="200" label="查看详情">
           <template slot-scope="scope">
             <el-button
               @click="checkDetail(scope.row)"
-              type="warning"
+              type="primary"
               icon="el-icon-search"
-              size="mini"
               circle
             ></el-button>
             <el-button
-              v-if="scope.row.state == 'SENDBACK'"
-              @click="editIt(scope.row)"
-              type="primary"
+              v-if="scope.row.STATE == 4"
+              @click="checkDetail(scope.row)"
+              type="warning"
               icon="el-icon-edit"
               circle
             ></el-button>
-            <el-button
-              v-if="scope.row.state == 'SENDBACK'"
-              @click="deleteDetail(scope.row)"
-              type="danger"
-              icon="el-icon-delete"
-              circle
-            ></el-button>
+           
           </template>
         </el-table-column>
       </el-table>
@@ -127,7 +119,7 @@
 
     <el-dialog
       title="银行汇款凭证单"
-      :visible.sync="bankDetail"
+      :visible.sync="payDetail"
       :close-on-click-modal="false"
       width="75%"
     >
@@ -293,7 +285,7 @@
               <el-input
                 class="inputWidth"
                 v-model="sumbit.payerAccount"
-                 oninput="value=value.replace(/[^\d]/g,'')"
+                oninput="value=value.replace(/[^\d]/g,'')"
                 placeholder="请输入付款银行账号"
               ></el-input>
             </td>
@@ -351,11 +343,11 @@
       </div>
     </el-dialog>
   </div>
-</template>
+ </template>
 
 <script>
 import {
-  getBankList,
+  GetRelativePay,
   getPayBillContent,
   changeStatus,
   sumbitForm,
@@ -365,11 +357,10 @@ import { getCustomerInfo } from "@/api/orderListASP";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 const Quest = "http://14.29.223.114:10250/yulan-capital";
-//const Head = 'http://192.168.123.43:8080/upload';
-//const Quest = 'http://192.168.123.43:8080/yulan-capital'
+
 export default {
-  name: "BankProof",
-  data() {
+  name: 'payDelegation',
+   data() {
     return {
       chargeData: [],
       ROWSPAN: 6,
@@ -428,7 +419,7 @@ export default {
       isDelete: false,
       isChuli: false,
       isBack: false,
-      bankDetail: false,
+      payDetail: false,
       limit: 8,
       count: 88,
       currentPage: 1,
@@ -475,7 +466,7 @@ export default {
           value: "中国邮政储蓄银行"
         }
       ],
-      bankData: []
+      payData: []
     };
   },
   created: function() {
@@ -589,7 +580,7 @@ export default {
           });
           this.currentPage = 1;
           this._getBankList();
-          this.bankDetail = false;
+          this.payDetail = false;
         } else {
           this.$alert("提交失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
@@ -638,7 +629,7 @@ export default {
           });
           this.currentPage = 1;
           this._getBankList();
-          this.bankDetail = false;
+          this.payDetail = false;
         } else {
           this.$alert("修改失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
@@ -650,7 +641,7 @@ export default {
     //新建
     newOne() {
       this.EDITorCHECK = false;
-      this.bankDetail = true;
+      this.payDetail = true;
       this.newORedit = false;
       this.sumbit = {
         cid: Cookies.get("companyId"), //公司号
@@ -677,7 +668,7 @@ export default {
         this.sumbit = res.data;
         this.EDITorCHECK = false;
         this.newORedit = true; //显示流水号 等编辑一类
-        this.bankDetail = true;
+        this.payDetail = true;
       });
     },
     //查看列表详情
@@ -708,7 +699,7 @@ export default {
         res.data.imgUrl = Head + res.data.imgUrl;
         this.tableData = res.data;
         this.EDITorCHECK = true;
-        this.bankDetail = true;
+        this.payDetail = true;
       });
     },
     //作废列表详情
@@ -739,7 +730,7 @@ export default {
     //搜索
     searchBankList() {
       this.currentPage = 1;
-      this.bankData = [];
+      this.payData = [];
       this._getBankList();
     },
     //获取银行列表
@@ -759,9 +750,9 @@ export default {
         data.beginTime = this.beginTime + "00:00:00";
         data.finishTime = this.finishTime + "23:59:59";
       }
-      getBankList(url, data).then(res => {
+      GetRelativePay(url, data).then(res => {
         this.count = res.count;
-        this.bankData = res.data;
+        this.payData = res.data;
       });
     },
     //隔行变色
@@ -788,7 +779,7 @@ export default {
     //翻页获取订单
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.bankData = [];
+      this.payData = [];
       this._getBankList();
     },
     handleAvatarSuccess(res, file) {
@@ -808,7 +799,9 @@ export default {
       return isLt2M;
     }
   }
-};
+
+
+}
 </script>
 
 <style scoped>
