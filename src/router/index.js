@@ -324,12 +324,12 @@ const router = new Router({
           path: '/design/ISExamineGM',
           name: 'ISExamineGM',
           component: ISExamineGM
-        },        
+        },
         {
           path: '/design/lanJuGMExamine',
           name: 'lanJuGMExamine',
           component: lanJuGMExamine
-        },        
+        },
         {
           path: '/design/lanJuMarketExamine',
           name: 'lanJuMarketExamine',

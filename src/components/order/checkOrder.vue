@@ -346,9 +346,15 @@
     <el-card class="childCard" shadow="never">
       <el-collapse v-model="activeNames">
         <el-collapse-item title="使用优惠券/礼品卡" name="1">
-          <div v-for="(item, index) of couponData" :key="index" class="cctv">
+          <div
+            v-for="(item, index) of couponData"
+            :key="index"
+            :class="item.canUse ? switchClass.cctv : switchClass.cctvF"
+          >
             <div class="couponHead">
-              <div class="logo"></div>
+              <div
+                :class="item.canUse ? switchClass.logo : switchClass.logoF"
+              ></div>
               <div class="logoTxt">
                 <p
                   style="color:white; font-size:15px; padding-top:5px; font-weight:bold; letter-spacing:2px;"
@@ -361,15 +367,24 @@
             </div>
 
             <div class="couponBody">
-              <p style="text-align:center">
-                <span style="color:rgb(253,59,49); font-size:18px;"
-                  >余额￥</span
-                >
-                <span v-if="isManager === '0'" class="transTxt">***</span>
-                <span v-else class="transTxt">{{ item.rebateMoneyOver }}</span>
+              <p
+                style="text-align:center"
+                :class="
+                  item.canUse ? switchClass.transTxt : switchClass.transTxtF
+                "
+              >
+                <span style="font-size:18px;">余额￥</span>
+                <span v-if="isManager === '0'">***</span>
+                <span v-else>{{ item.rebateMoneyOver }}</span>
               </p>
               <div style="margin:0 auto; width:245px;">
-                <div class="roundedRectangle">
+                <div
+                  :class="
+                    item.canUse
+                      ? switchClass.roundedRectangle
+                      : switchClass.roundedRectangleF
+                  "
+                >
                   <p>
                     &nbsp;&nbsp;&nbsp;有效期：{{
                       item.dateStart | datatrans
@@ -377,6 +392,7 @@
                   </p>
                 </div>
                 <el-checkbox
+                  :disabled="!item.canUse"
                   v-model="couponStatus[index]"
                   @change="
                     changeCoupon(couponStatus[index], item.id, item.rebateType)
@@ -392,6 +408,9 @@
                   >查看返利记录>></span
                 >
               </div>
+            </div>
+            <div style="margin-left:20px;" v-if="!item.canUse">
+              由于活动："{{ activityArray.ORDER_NAME }}"，该优惠券无法使用
             </div>
           </div>
         </el-collapse-item>
@@ -472,7 +491,8 @@ import {
   orderSettlement,
   normalOrderSettlement,
   getUseRecord,
-  getCustomerInfo
+  getCustomerInfo,
+  GetPromotionsById
 } from "@/api/orderListASP";
 import { deleteCurtain } from "@/api/curtain";
 import Axios from "axios";
@@ -598,6 +618,17 @@ export default {
         telephone: [
           { min: 11, max: 11, message: "请填写正确的手机号码", trigger: "blur" }
         ]
+      },
+      activityArray: [], //活动集合
+      switchClass: {
+        cctv: "cctv",
+        cctvF: "cctvF",
+        logo: "logo",
+        logoF: "logoF",
+        transTxt: "transTxt",
+        transTxtF: "transTxtF",
+        roundedRectangle: "roundedRectangle",
+        roundedRectangleF: "roundedRectangleF"
       }
     };
   },
@@ -742,15 +773,37 @@ export default {
         typeId: this.product_group_tpye //"A",
       };
       searchTickets(url, data).then(res => {
-        this.couponData = res.data;
-        for (let i = 0; i < this.couponData.length; i++) {
-          if (
-            this.couponData[i].dateId === 0 ||
-            this.couponData[i].rebateMoneyOver <= 0
-          ) {
-            this.couponData.splice(i, 1);
+        GetPromotionsById({ PID: this.activityArray }).then(ress => {
+          this.couponData = res.data;
+          for (let i = 0; i < this.couponData.length; i++) {
+            this.couponData[i].canUse = true;
+            if (
+              this.couponData[i].dateId === 0 ||
+              this.couponData[i].rebateMoneyOver <= 0
+            ) {
+              this.couponData.splice(i, 1);
+            }
           }
-        }
+          if (ress.data.length > 0) {
+            this.activityArray = ress.data[0]; //一般只有一个活动参与结算
+            for (let i = 0; i < this.couponData.length; i++) {
+              if (this.activityArray.REBATE_FLAG == "N") {
+                //不能使用优惠券
+                this.couponData[i].canUse = false;
+              } else {
+                if (
+                  this.couponData[i].rebateType ==
+                    this.activityArray.REBATE_TYPE ||
+                  this.activityArray.REBATE_TYPE == "all"
+                ) {
+                  this.couponData[i].canUse = true;
+                } else {
+                  this.couponData[i].canUse = false;
+                }
+              }
+            }
+          }
+        });
       });
     },
     RecordUse(itemID) {
@@ -1143,7 +1196,7 @@ export default {
       let getPush = JSON.parse(sessionStorage.getItem("shopping"));
       this.product_group_tpye = getPush[0].item.groupType; //产品类别
       if (getPush[0].salPromotion != null) {
-        this.arrearsFlag = getPush[0].salPromotion.arrearsFlag; //用于活动N/Y
+        this.arrearsFlag = getPush[0].salPromotion.arrearsFlag; //用于活动是否判断余额N/Y
       } else {
         this.arrearsFlag = null;
       }
@@ -1154,6 +1207,9 @@ export default {
           this.array[i].pId = "";
         } else {
           this.array[i].pId = getPush[i].activityId;
+          if (this.activityArray.indexOf(getPush[i].activityId) == -1 && getPush[i].activityId)
+            //活动集合
+            this.activityArray.push(getPush[i].activityId);
         }
         this.array[i].item_no = getPush[i].item.itemNo;
         //根据是选择数量还是长*宽
@@ -1387,7 +1443,7 @@ export default {
         var deleteArray = [];
         var getPush3 = JSON.parse(sessionStorage.getItem("shopping"));
         for (var i = 0; i < getPush3.length; i++) {
-          deleteArray[i] = getPush3[i].id;//不像窗帘，这里一个cart_item_id可能对应多个
+          deleteArray[i] = getPush3[i].id; //不像窗帘，这里一个cart_item_id可能对应多个
         }
         var data2 = {
           product_group_tpye: this.product_group_tpye, //产品类别，从购物车出获取
@@ -1585,8 +1641,28 @@ export default {
   border-width: 10px; /*边缘的宽度*/
   border-radius: 15px; /*圆角的大小 */
 }
+.roundedRectangleF {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  margin: 0 auto;
+  color: white;
+  width: 225px;
+  background: gray;
+  border-width: 10px; /*边缘的宽度*/
+  border-radius: 15px; /*圆角的大小 */
+}
 .cctv {
-  background: url("../../../static/coupon.png");
+  background: url("../../assets/img/coupon/coupon.png");
+  width: 350px;
+  height: 230px;
+  margin-right: 10%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+.cctvF {
+  background: url("../../assets/img/coupon/blackCoupon.png");
   width: 350px;
   height: 230px;
   margin-right: 10%;
@@ -1595,17 +1671,26 @@ export default {
   display: inline-block;
 }
 .couponHead {
-  /* 
-  border: 1px solid black; */
   height: 50px;
 }
 .couponBody {
-  height: 170px; /* 
-  border: 1px solid black; */
+  height: 170px;
   margin-top: 5px;
 }
 .logo {
-  background: url("../../../static/logopng.png");
+  background: url("../../assets/img/coupon/logopng.png");
+  width: 40px;
+  height: 40px;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  float: left;
+  margin-top: 10px;
+  margin-left: 5%;
+  margin-right: 3%;
+}
+.logoF {
+  background: url("../../assets/img/coupon/blackLogo.jpg");
   width: 40px;
   height: 40px;
   background-size: 100%;
@@ -1633,10 +1718,14 @@ export default {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.transTxtF {
+  font-size: 40px;
+  font-weight: bold;
+  color: rgb(180, 180, 180);
+}
 .rightCoupon {
   float: right;
   margin-right: 10px;
-  /* cursor: pointer; */
 }
 .Record span:hover {
   color: orange;
@@ -1647,7 +1736,6 @@ export default {
   background: #f0f9eb;
 }
 .couponBody .el-checkbox__inner {
-  /* background-color:rgb(240,249,235); */
   background: greenyellow;
 }
 </style>

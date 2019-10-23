@@ -98,7 +98,7 @@
             ></el-table-column>
             <el-table-column
               prop="QTY_DELIVER"
-              label="计划数"
+              label="发货数"
               width="80"
               align="center"
             ></el-table-column>
@@ -168,14 +168,14 @@
               </el-select>
 
               <div style="margin-top:15px">
-                日期
+                开单日期
                 <el-date-picker
                   type="date"
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   placeholder="开始日期区间"
-                  v-model="beginTime_1"
-                  style="width:210px"
+                  v-model="ruleForm_1.dateValue"
+                  style="width:178px"
                 ></el-date-picker>
                 <span style="margin-left:10px">--</span>
                 <el-date-picker
@@ -183,7 +183,7 @@
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   placeholder="结束日期区间"
-                  v-model="finishTime_1"
+                  v-model="ruleForm_2.dateValue"
                   style="width:210px;margin-left:12px"
                 ></el-date-picker>
               </div>
@@ -234,7 +234,9 @@
                     style="margin-left:65px"
                     >查询</el-button
                   >
+                  <el-checkbox v-model="checked" style="margin-left:150px">仅有效客户</el-checkbox>
                 </div>
+                
               </div>
             </div>
 
@@ -260,6 +262,7 @@
           </div>
         </form>
         <hr />
+        <div style="float:right;font-size:13px;color:blue;margin:10px">汇总金额：{{moneySum.MONEYSUM}}元</div>
         <div v-if="query_1">
           <el-table
             :summary-method="getSummaries"
@@ -270,7 +273,7 @@
             style="width: 100%;font-weight:normal;font-size:12px"
             class="table_1"
           >
-            <el-table-column prop="num" label width="50" align="center">
+            <el-table-column prop="num" label width="58" align="center">
               <template slot-scope="scope"
                 ><span
                   >{{ scope.$index + (currentPage - 1) * limit + 1 }}
@@ -309,6 +312,9 @@
               label="类型"
               width="100"
               align="center"
+              
+              :filters="typeNameFilter"
+              :filter-method="filterHandler"
             ></el-table-column>
             <el-table-column label="开单日期" width="100" align="center">
               <template slot-scope="scope4">
@@ -373,13 +379,20 @@ import {
   getDistrictByAreaCode,
   getCustomerByAreaCode,
   getPackDetails,
-  getPackDetailsBySaleNo
+  getPackDetailsBySaleNo,
+  getPackDetailsType,
+  getTotalMoneySum
 } from "@/api/areaInfoASP";
 import Cookies from "js-cookie";
 export default {
   name: "AreaQuery",
   data() {
     return {
+      moneySum:[],
+      typeNameFilter:[],
+      typeIdFilter:[],
+      typeFilter:[],
+      checked:false,
       detailVisible: false,
       startDate: "",
       endDate: "",
@@ -400,8 +413,16 @@ export default {
       value1: "",
       value2: "",
       beginTime_1: "", //区域提货单查询
+      ruleForm_1: { dateValue: "" },
       finishTime_1: "",
+      ruleForm_2: { dateValue: "" },
       AREA_DISTRICT: [],
+      AREA_DISTRICT_1:[
+        {
+          DISTRICT_ID: "",
+          DISTRICT_NAME: "全部"
+        },
+      ],
       CUSTOMER_TYPE: [
         {
           value: "",
@@ -481,7 +502,48 @@ export default {
   created() {
     this._getAreaCode();
   },
+  //页面加载时候，在mounted中进行赋值
+  mounted() {
+    // 初始化查询，默认为前一天
+    this.ruleForm_1.dateValue = this.timeDefault_1;
+    this.ruleForm_2.dateValue = this.timeDefault_2;
+  },
+  computed: {    
+    timeDefault_1() {      
+      var date = new Date();      
+      var s1 = date.getFullYear() + "-" + "01" + "-" + "01";
+      return s1;    
+      },
+    
+    timeDefault_2() {      
+      var date = new Date();      
+      var s1 = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate());      
+      return s1;    
+      }  
+    },
   methods: {
+    _getPackDetailsType(){
+       getPackDetailsType().then(res => {
+        this.typeFilter = res.data;
+        res.data.forEach(item => {
+                this.initFilter(this.typeIdFilter,item.ORDERTYPE_ID)
+                this.initFilter(this.typeNameFilter,item.ORDERTYPE_NAME)
+            })
+      });
+    },
+    initFilter(array,item){
+    let _obj = {
+        text:item,
+        value:item
+    }
+    if(JSON.stringify(array).indexOf(JSON.stringify(_obj)) === -1){
+        array.push(_obj)
+    }
+    },
+    filterHandler(value, row, column) {
+        const property = column['property'];
+        return row[property] === value;
+    },
     //根据用户查区域市场
     _getAreaCode() {
       this.tableData = [];
@@ -511,6 +573,7 @@ export default {
       this.first = val;
       getDistrictByAreaCode(data).then(res => {
         this.AREA_DISTRICT = res.data;
+        this.AREA_DISTRICT.push.apply(this.AREA_DISTRICT,this.AREA_DISTRICT_1)
       });
       this._getCustomerByAreaCode_1(val);
     },
@@ -548,6 +611,9 @@ export default {
       this.customerData = [];
       this.value_4 = [];
       var data = {
+        beginTime:this.ruleForm_1.dateValue,
+        finishTime:this.ruleForm_2.dateValue,
+        isall:this.checked,
         areaCode: val, //市场
         district: this.AREA_DISTRICT, //片区
         customerType: this.customer_type //客户类型
@@ -561,6 +627,9 @@ export default {
       this.tableData = [];
       this.value_4 = [];
       var data = {
+        beginTime:this.ruleForm_1.dateValue,
+        finishTime:this.ruleForm_2.dateValue,
+        isall:this.checked,
         areaCode: val.areaCode, //市场
         district: val.AREA_DISTRICT, //片区
         customerType: this.customer_type //客户类型
@@ -574,6 +643,9 @@ export default {
       this.tableData = [];
       this.value_4 = [];
       var data = {
+        beginTime:this.ruleForm_1.dateValue,
+        finishTime:this.ruleForm_2.dateValue,
+        isall:this.checked,
         areaCode: val.areaCode, //市场
         district: val.district, //片区
         customerType: val.customerType //客户类型
@@ -588,15 +660,18 @@ export default {
       this.queryQuYu_1();
     },
     queryQuYu_1() {
+      this.moneySum=[],
+      this.typeFilter=[],
       this.query_1 = true;
       this.tableData = [];
       if (this.value_4 == []) {
         return (this.tableData = []);
       } else {
         var data = {
+          type:this.typeFilter,//类型筛选
           costomerCodes: this.value_4, //已选用户
-          beginTime: this.beginTime_1, //起始时间
-          finishTime: this.finishTime_1, //结束时间
+          beginTime: this.ruleForm_1.dateValue, //起始时间
+          finishTime: this.ruleForm_2.dateValue, //结束时间
           limit: this.limit, //限制数
           page: this.currentPage, //页数
           status: this.status_info //状态
@@ -612,9 +687,27 @@ export default {
         getPackDetails(data).then(res => {
           this.count = res.count;
           this.tableData = res.data;
+          if(res.data.length != 0){
+            this._getPackDetailsType();
+            this._getTotalMoneySum(data)
+          }
+          
         });
       }
       // this.$router.push("/QYTable");
+    },
+    _getTotalMoneySum(val){
+      this.moneySum = []
+      var data = {
+        beginTime: val.beginTime, //起始时间
+        finishTime: val.finishTime, //结束时间
+        status: val.status, //状态
+        customers:val.costomerCodes
+      }
+      getTotalMoneySum(data).then(res => {
+        this.moneySum = res.data[0];
+        console.log(this.moneySum)
+      });
     },
     //计算表格末行
     getSummaries(param) {
@@ -623,7 +716,7 @@ export default {
       if (data && data.length > 0) {
         columns.forEach((column, index) => {
           if (index === 0) {
-            sums[index] = "总价";
+            sums[index] = "页合计";
             return;
           } else if (index == 9) {
             var values = data.map(item => Number(item[column.property]));
@@ -656,9 +749,9 @@ export default {
     },
     //重置
     reset() {
+      this.moneySum=[],
+      this.checked=false
       this.customerData = [];
-      this.beginTime_1 = "";
-      this.finishTime_1 = "";
       this.value_4 = [];
       this.tableData = [];
       this.AREA_DISTRICT = [];
@@ -703,6 +796,8 @@ export default {
       this.count = 0;
       this.currentPage = 1;
       this._getAreaCode();
+      this.ruleForm_1.dateValue = this.timeDefault_1;
+      this.ruleForm_2.dateValue = this.timeDefault_2;
     },
 
     //打开弹窗显示详情数据

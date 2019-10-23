@@ -1,7 +1,11 @@
 <template>
   <el-card class="centerCard">
     <div>
-      <el-tabs style="display:inline-block;width:900px;" v-model="activeName" @tab-click="handleClick">
+      <el-tabs
+        style="display:inline-block;width:900px;"
+        v-model="activeName"
+        @tab-click="handleClick"
+      >
         <el-tab-pane label="待处理的订单" name="unCheck"></el-tab-pane>
         <el-tab-pane label="待客户处理的订单" name="customCheck"></el-tab-pane>
         <el-tab-pane label="审核过的订单" name="checked"></el-tab-pane>
@@ -22,7 +26,8 @@
         placeholder="日期区间"
         v-model="date1"
         style="width:14%;"
-      ></el-date-picker>&nbsp;--
+      ></el-date-picker
+      >&nbsp;--
       <el-date-picker
         type="date"
         format="yyyy-MM-dd"
@@ -45,16 +50,22 @@
         v-model="find"
         style="width:300px;"
       >
-        <el-button @click="search()" slot="append" icon="el-icon-search">搜索</el-button>
+        <el-button @click="search()" slot="append" icon="el-icon-search"
+          >搜索</el-button
+        >
       </el-input>
     </div>
     <div id="outDiv">
-      <el-card style="position:relative;" v-for="(item,index) of data" :key="index">
+      <el-card
+        style="position:relative;"
+        v-for="(item, index) of data"
+        :key="index"
+      >
         <div slot="header">
           <i
             style="float: right;color:#20a0ff;line-height: 35px;cursor: pointer;"
             class="el-icon-caret-bottom"
-            @click="collapseClick($event,item.ORDER_NO)"
+            @click="collapseClick($event, item.ORDER_NO)"
           ></i>
           <el-button
             :id="'cardBtnDetail' + item.ORDER_NO"
@@ -63,39 +74,42 @@
             size="mini"
             type="primary"
             plain
-          >订单详情</el-button>
+            >订单详情</el-button
+          >
           <el-button
             :id="'cardBtnCheck' + item.ORDER_NO"
             style="float: right;margin-right:10px;"
-            v-if="(item.CURTAIN_STATUS_ID=='0'&&item.STATUS_ID=='1')||item.CURTAIN_STATUS_ID=='3'"
+            v-if="
+              (item.CURTAIN_STATUS_ID == '0' && item.STATUS_ID == '1') ||
+                item.CURTAIN_STATUS_ID == '3'
+            "
             @click="toExamineDetail(item.ORDER_NO)"
             size="mini"
             type="success"
             plain
-          >审核订单</el-button>
+            >审核订单</el-button
+          >
           <span class="zoomLeft">时间：</span>
-          <span class="zoomRight">{{item.DATE_CRE}}</span>
+          <span class="zoomRight">{{ item.DATE_CRE }}</span>
           <span class="zoomLeft">订单号：</span>
-          <span class="zoomRight">{{item.ORDER_NO}}</span>
+          <span class="zoomRight">{{ item.ORDER_NO }}</span>
           <span class="zoomLeft">窗帘状态：</span>
-          <span
-            style="color:#8BC34A;font-weight:bold;"
-            class="zoomRight"
-          >{{item.CURTAIN_STATUS_ID | curtainStatus}}</span>
+          <span style="color:#8BC34A;font-weight:bold;" class="zoomRight">{{
+            item.CURTAIN_STATUS_ID | curtainStatus
+          }}</span>
           <span class="zoomLeft">订单状态：</span>
-          <span
-            style="color:#8BC34A;font-weight:bold;"
-            class="zoomRight"
-          >{{item.STATUS_ID | transStatus}}</span>
+          <span style="color:#8BC34A;font-weight:bold;" class="zoomRight">{{
+            item.STATUS_ID | transStatus
+          }}</span>
           <br />
           <span class="zoomLeft">客户名称：</span>
-          <span class="zoomRight">{{item.REALNAME||item.realName}}</span>
+          <span class="zoomRight">{{ item.REALNAME || item.realName }}</span>
           <span class="zoomLeft">联系人：</span>
-          <span class="zoomRight">{{item.LINKPERSON}}</span>
+          <span class="zoomRight">{{ item.LINKPERSON }}</span>
           <span class="zoomLeft">电话：</span>
-          <span class="zoomRight">{{item.TELEPHONE}}</span>
+          <span class="zoomRight">{{ item.TELEPHONE }}</span>
           <span class="zoomLeft">地址：</span>
-          <span class="zoomRight">{{item.POST_ADDRESS}}</span>
+          <span class="zoomRight">{{ item.POST_ADDRESS }}</span>
         </div>
         <div :id="'cardBody' + item.ORDER_NO" class="collapseHive">
           <div class="outDiv" style="float:left;width:90%">
@@ -105,36 +119,60 @@
               style="width: 100%;margin-bottom:5px;"
               :row-class-name="tableRowClassName"
             >
-              <el-table-column prop="ITEM_NO" label="型号" align="center"></el-table-column>
-              <el-table-column prop="BRAND_NAME" label="品牌" align="center"></el-table-column>
-              <el-table-column prop="NOTE" label="类型" align="center"></el-table-column>
+              <el-table-column
+                prop="ITEM_NO"
+                label="型号"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                prop="BRAND_NAME"
+                label="品牌"
+                align="center"
+              ></el-table-column>
+              <el-table-column prop="NOTE" label="类型" align="center">
+                <template slot-scope="scope1">
+                  <span v-if="scope1.row.NOTE == '帘头'">定制窗帘</span>
+                  <span v-else>{{ scope1.row.NOTE }}</span>
+                </template>
+              </el-table-column>
               <el-table-column label="数量" align="center">
                 <template slot-scope="scope1">
-                  <span>{{scope1.row.QTY_REQUIRED}}</span>
+                  <span>{{ scope1.row.QTY_REQUIRED }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="商品单价" align="center">
                 <template slot-scope="scope1">
-                  <span>{{scope1.row.UNIT_PRICE}}</span>
+                  <span>{{ scope1.row.UNIT_PRICE }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="商品总价" align="center">
                 <template slot-scope="scope1">
-                  <span>{{scope1.row.UNIT_PRICE*scope1.row.QTY_REQUIRED | priceFilter}}</span>
+                  <span>{{
+                    (scope1.row.UNIT_PRICE * scope1.row.QTY_REQUIRED)
+                      | priceFilter
+                  }}</span>
                 </template>
               </el-table-column>
             </el-table>
           </div>
           <div class="buttonDiv">
-            <p style="width:100px; font-size:18px; color:tomato; text-align:center;">{{item.status}}</p>
+            <p
+              style="width:100px; font-size:18px; color:tomato; text-align:center;"
+            >
+              {{ item.status }}
+            </p>
             <p>
               <el-button
-                v-if="(item.CURTAIN_STATUS_ID=='0'&&item.STATUS_ID=='1')||item.CURTAIN_STATUS_ID=='3'"
+                v-if="
+                  (item.CURTAIN_STATUS_ID == '0' && item.STATUS_ID == '1') ||
+                    item.CURTAIN_STATUS_ID == '3'
+                "
                 @click="toExamineDetail(item.ORDER_NO)"
                 size="medium"
                 type="success"
                 plain
-              >审核订单</el-button>
+                >审核订单</el-button
+              >
             </p>
             <p>
               <el-button
@@ -142,7 +180,8 @@
                 size="medium"
                 type="primary"
                 plain
-              >订单详情</el-button>
+                >订单详情</el-button
+              >
             </p>
           </div>
         </div>

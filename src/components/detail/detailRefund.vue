@@ -352,7 +352,7 @@ export default {
       ];
       let tip = "";
       for (let i = 0; i < key.length; i++) {
-        if (key[i] === "") {
+        if (key[i] === "" && i != 1) {
           tip !== "" ? (tip += `、${property[i]}`) : (tip += `${property[i]}`);
         }
       }
