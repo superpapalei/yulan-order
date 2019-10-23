@@ -347,7 +347,7 @@
 
 <script>
 import {
-  GetRelativePay,
+  //GetRelativePay,
   getPayBillContent,
   changeStatus,
   sumbitForm,

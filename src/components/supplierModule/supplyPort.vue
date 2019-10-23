@@ -9,28 +9,137 @@
                         <div style="margin-bottom:10px"><h1>备注信息：{{ pur_headForm.NOTES}}</h1> </div>
                         <hr />
                         <div style="width:100%">
-                                             <div v-for="(item, index) of items" :key="index">
-                      <el-table style="width:100%;" border :data="detailData"  :span-method="bigTableSpanMethod" >
-                       <el-table-column width="160" header-align="center" label="位置">
-                        <template> 
-                          <div><label>位置:</label> <div class="messageInput" style="width: 100px;">
-                                {{(item.tab1[index].cl_place === null ||item.tab1[index].cl_place =="")?'无':item.tab1[index].cl_place}} </div></div> 
-                            <div class="messageBox">
-                            <div> <label>款号：</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
-                            <div><label>成品宽：</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
-                            <div> <label>成品高：</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
-                            <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
-                            <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
-                            </div>
-                               <!-- <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div> -->
-                        </template>
+         <el-table
+                    :data="colName"
+                      :show-header="false"
+                    border
+                    object_class="_Object:GridTable"
+                    object_hashcode="6"
+                    cellpadding="0"
+                    style="width:100%"
+                    class="th-font"
+                   >
+                    <af-table-column
+                      property="name1"
+                      width="160"
+                      label="位置"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name2"
+                      width="80"
+                      label="名称"
+                    ></af-table-column>
+                     <af-table-column
+                      property="name3"
+                      width="120"
+                      label="编码"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name4"
+                      label="名称"
+                       width="150"
+                    ></af-table-column>
+                    <!--width="50" -->
+                    <af-table-column
+                      property="name5"
+                      label="规格:米/对"
+                         width="60"
+                    ></af-table-column>
+                    <el-table-column
+                      property="name6"
+                      label="用量"
+                      width="60"
+                    ></el-table-column>
+                    <el-table-column property="name7" label="含税单价" width="100">
+                    
                     </el-table-column>
-                      <el-table-column width="80" header-align="center" align="left" label="名称">
-                        <template>
+       
+                    <el-table-column
+                      property="name8"
+                      label="金额"
+                      width="80"
+                    ></el-table-column>
+                    <el-table-column
+                      property="name9"
+                      label="制造说明"
+                      width="80"
+                    ></el-table-column>
+                    <el-table-column
+                      property="name10"
+                      label="备注"
+                    ></el-table-column>
+                  </el-table>
+                  <div  >
+                    <div v-for="(item, index) of items" :key="index">
+                  <!-- 循环因子 -->
+                  <el-card body-style="padding: 0px">
+                 <el-card     style="width:155px;float:left;"  body-style="padding: 5px" align="left">
+                  <div>
+                     <template>
+                        <div>
+                          <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
+                          {{
+                            item.tab1[index].cl_place === null ||
+                            item.tab1[index].cl_place == ""
+                              ? "无"
+                              : item.tab1[index].cl_place
+                          }}
+                        </div>
+                        <div class="messageBox">
                           <div>
-                            <body margin:0>
-                              <el-table  :data="item.tab2[index]" :show-header="false" class="el-table__header" style="width:100%;" >
-                                <el-table-column  width="70" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
+                            <label>款号：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_item_no }}
+                            </div>
+                          </div>
+                          <div>
+                            <label>成品宽：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_width }}
+                            </div>
+                            m
+                          </div>
+                          <div>
+                            <label>成品高：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_high }}
+                            </div>
+                            m
+                          </div>
+                          <div>
+                            <label>假帘高：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_high_jia }}
+                            </div>
+                            m
+                          </div>
+                          <div>
+                            <label>帘倍数：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_size_times }}
+                            </div>
+                          </div>
+                        </div>
+                        <!-- <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div> -->
+                      </template>
+                  </div>
+                 </el-card>
+                      <div style="width:159; float:left">
+                     
+                    </div>
+
+                <el-table
+                    :data="item.tab2[index]"
+                   :show-header="false"
+                    border
+                    object_class="_Object:GridTable"
+                    object_hashcode="6"
+                    cellpadding="0"
+                    style="width:866px; float:right"
+                    
+                   >
+                    
+                                <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
                                 <el-table-column width="120" label="inner编码"> <template slot-scope="scope">{{scope.row.item_no}} </template> </el-table-column>
                                 <el-table-column label="inner名称"  header-align="center" width="150"><template slot-scope="scope">{{scope.row.mname}} </template></el-table-column>
                                 <el-table-column label="inner规格:米/对"  header-align="center" width="60"><template slot-scope="scope">{{scope.row.grade}} </template> </el-table-column>
@@ -39,23 +148,11 @@
                                 <el-table-column label="inner金额"  header-align="center" width="80"  align="right"><template slot-scope="scope">{{scope.row.total_money|numFilter}} </template></el-table-column>
                                 <el-table-column label="inner制造说明"  header-align="center" width="80"> <template slot-scope="scope">{{scope.row.product_note}} </template> </el-table-column>
                                 <el-table-column label="inner备注"  header-align="center"> <template slot-scope="scope">{{scope.row.notes}} </template></el-table-column>
-                              </el-table>
-                             </body>
-                         </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="编码" header-align="center" width="120"> </el-table-column>
-                    <el-table-column label="名称"  header-align="center" width="150"></el-table-column>
-                    <el-table-column label="规格:米/对" header-align="center" align="center" width="60"> </el-table-column>
-                    <el-table-column label="用量" width="60" header-align="center" align="center"></el-table-column>
-                    <el-table-column label="含税单价"  width="100"  header-align="center"  align="center"> </el-table-column>
-                    <el-table-column label="金额" width="80" header-align="center" align="center"> </el-table-column>
-                    <el-table-column label="制造说明" width="80" header-align="center" align="center"> </el-table-column>
-                    <el-table-column label="备注"  header-align="center" align="center"> </el-table-column>
-                </el-table>
+                  </el-table>
 
-                <el-table style="width:100%;" :show-header="false" :data="item.tab3[index]">
-                   <el-table-column label="预约" header-align="center" width="200"> <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
+                  </el-card>
+               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" border>
+                   <el-table-column label="预约" header-align="center" width="160" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
                     <!-- <el-table-column label="交货"  header-align="center" width="80"></el-table-column> -->
@@ -65,16 +162,77 @@
                     <el-table-column label="含税单价"  width="100"  header-align="center"  align="center"><template > 小计 </template></el-table-column>
                     <el-table-column label="金额" width="80" header-align="left" align="right"> <template slot-scope="scope"> {{scope.row.littleSum|numFilter}} </template> </el-table-column>
                     <el-table-column label="制造说明" width="80" header-align="center" align="center"> </el-table-column>
-                    <el-table-column label="备注" width="80" header-align="center" align="center"> </el-table-column>
+                    <el-table-column label="备注"  header-align="center" align="center"> </el-table-column>
                 </el-table>
 
-                  </div>
-                      <el-row>
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                          <el-col :span="2"><div class="grid-content bg-purple" style="font-weight:bold;">  总金额：</div></el-col>
-                          <el-col :span="3"><div class="grid-content bg-purple" style="font-weight:bold;"> {{ sumMoney|numFilter}}   </div></el-col>
-                          <el-col :span="3"><div class="grid-content bg-purple"> </div></el-col>
-                      </el-row>
+                 <!-- /循环因子 -->
+                 </div>
+                 </div>
+                  <el-table
+                    :data="sumMoneyCol"
+                   :show-header="false"
+                    border
+                    object_class="_Object:GridTable"
+                    object_hashcode="6"
+                    cellpadding="0"
+                    style="width:100%"
+                    class="th-font"
+                   >
+                    <af-table-column
+                      property="name1"
+                      width="160"
+                      label="位置"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name2"
+                      width="80"
+                      label="名称"
+                    ></af-table-column>
+                     <af-table-column
+                      property="name3"
+                      width="120"
+                      label="编码"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name4"
+                      label="名称"
+                       width="150"
+                    ></af-table-column>
+                    <!--width="50" -->
+                    <af-table-column
+                      property="name5"
+                      label="规格:米/对"
+                         width="60"
+                    ></af-table-column>
+                    <el-table-column
+                      property="name6"
+                      label="用量"
+                      width="60"
+                    ></el-table-column>
+                    <el-table-column property="name7" label="含税单价" width="100" align="center">
+                    
+                    </el-table-column>
+       
+                    <el-table-column
+                  
+                      label="金额"
+                      width="80"
+                      align="right"
+                    >
+                    <template slot-scope="scope">
+                    {{scope.row.name8|numFilter}}
+                    </template>
+                     </el-table-column>
+                    <el-table-column
+                      property="name9"
+                      label="制造说明"
+                      width="80"
+                    ></el-table-column>
+                    <el-table-column
+                      property="name10"
+                      label="备注"
+                    ></el-table-column>
+                  </el-table>
 
                               <hr />
                               <div style="margin-top:10px">
@@ -225,28 +383,137 @@
                     </td>
                   </tr>
                   <tr> <td colspan="2">
-                     <div v-for="(item, index) of items" :key="index">
-                      <el-table style="width:100%;" border :data="detailData"  :span-method="bigTableSpanMethod" >
-                       <el-table-column width="160" header-align="center" label="位置">
-                        <template> 
-                          <div><label>位置:</label> <div class="messageInput" style="width: 100px;">
-                                {{(item.tab1[index].cl_place === null ||item.tab1[index].cl_place =="")?'无':item.tab1[index].cl_place}} </div></div> 
-                            <div class="messageBox">
-                            <div> <label>款号：</label><div class="messageInput">{{item.tab1[index].cl_item_no}}</div> </div>
-                            <div><label>成品宽：</label><div class="messageInput">{{item.tab1[index].cl_width}}</div>m </div>
-                            <div> <label>成品高：</label><div class="messageInput">{{item.tab1[index].cl_high}}</div>m </div>
-                            <div> <label>假帘高：</label> <div class="messageInput">{{item.tab1[index].cl_high_jia}}</div>m </div>
-                            <div> <label>帘倍数：</label> <div class="messageInput">{{item.tab1[index].cl_size_times}}</div> </div>
-                            </div>
-                               <!-- <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div> -->
-                        </template>
+      <el-table
+                    :data="colName"
+                      :show-header="false"
+                    border
+                    object_class="_Object:GridTable"
+                    object_hashcode="6"
+                    cellpadding="0"
+                    style="width:100%"
+                    class="th-font"
+                   >
+                    <af-table-column
+                      property="name1"
+                      width="160"
+                      label="位置"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name2"
+                      width="80"
+                      label="名称"
+                    ></af-table-column>
+                     <af-table-column
+                      property="name3"
+                      width="120"
+                      label="编码"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name4"
+                      label="名称"
+                       width="150"
+                    ></af-table-column>
+                    <!--width="50" -->
+                    <af-table-column
+                      property="name5"
+                      label="规格:米/对"
+                         width="60"
+                    ></af-table-column>
+                    <el-table-column
+                      property="name6"
+                      label="用量"
+                      width="60"
+                    ></el-table-column>
+                    <el-table-column property="name7" label="含税单价" width="100">
+                    
                     </el-table-column>
-                      <el-table-column width="80" header-align="center" align="left" label="名称">
-                        <template>
+       
+                    <el-table-column
+                      property="name8"
+                      label="金额"
+                      width="80"
+                    ></el-table-column>
+                    <el-table-column
+                      property="name9"
+                      label="制造说明"
+                      width="80"
+                    ></el-table-column>
+                    <el-table-column
+                      property="name10"
+                      label="备注"
+                    ></el-table-column>
+                  </el-table>
+                  <div  >
+                    <div v-for="(item, index) of items" :key="index">
+                  <!-- 循环因子 -->
+                  <el-card body-style="padding: 0px">
+                 <el-card     style="width:155px;float:left;"  body-style="padding: 5px" align="left">
+                  <div>
+                     <template>
+                        <div>
+                          <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
+                          {{
+                            item.tab1[index].cl_place === null ||
+                            item.tab1[index].cl_place == ""
+                              ? "无"
+                              : item.tab1[index].cl_place
+                          }}
+                        </div>
+                        <div class="messageBox">
                           <div>
-                            <body margin:0>
-                              <el-table  :data="item.tab2[index]" :show-header="false" class="el-table__header" style="width:100%;" >
-                                <el-table-column  width="70" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
+                            <label>款号：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_item_no }}
+                            </div>
+                          </div>
+                          <div>
+                            <label>成品宽：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_width }}
+                            </div>
+                            m
+                          </div>
+                          <div>
+                            <label>成品高：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_high }}
+                            </div>
+                            m
+                          </div>
+                          <div>
+                            <label>假帘高：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_high_jia }}
+                            </div>
+                            m
+                          </div>
+                          <div>
+                            <label>帘倍数：</label>
+                            <div class="messageInput">
+                              {{ item.tab1[index].cl_size_times }}
+                            </div>
+                          </div>
+                        </div>
+                        <!-- <div class="line_noDiv"><span class="line_noSpan">{{item.tab1[index].cl_place_id}}</span></div> -->
+                      </template>
+                  </div>
+                 </el-card>
+                      <div style="width:159; float:left">
+                     
+                    </div>
+
+                <el-table
+                    :data="item.tab2[index]"
+                   :show-header="false"
+                    border
+                    object_class="_Object:GridTable"
+                    object_hashcode="6"
+                    cellpadding="0"
+                    style="width:866px; float:right"
+                    
+                   >
+                    
+                                <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
                                 <el-table-column width="120" label="inner编码"> <template slot-scope="scope">{{scope.row.item_no}} </template> </el-table-column>
                                 <el-table-column label="inner名称"  header-align="center" width="150"><template slot-scope="scope">{{scope.row.mname}} </template></el-table-column>
                                 <el-table-column label="inner规格:米/对"  header-align="center" width="60"><template slot-scope="scope">{{scope.row.grade}} </template> </el-table-column>
@@ -255,23 +522,11 @@
                                 <el-table-column label="inner金额"  header-align="center" width="80"  align="right"><template slot-scope="scope">{{scope.row.total_money|numFilter}} </template></el-table-column>
                                 <el-table-column label="inner制造说明"  header-align="center" width="80"> <template slot-scope="scope">{{scope.row.product_note}} </template> </el-table-column>
                                 <el-table-column label="inner备注"  header-align="center"> <template slot-scope="scope">{{scope.row.notes}} </template></el-table-column>
-                              </el-table>
-                             </body>
-                         </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="编码" header-align="center" width="120"> </el-table-column>
-                    <el-table-column label="名称"  header-align="center" width="150"></el-table-column>
-                    <el-table-column label="规格:米/对" header-align="center" align="center" width="60"> </el-table-column>
-                    <el-table-column label="用量" width="60" header-align="center" align="center"></el-table-column>
-                    <el-table-column label="含税单价"  width="100"  header-align="center"  align="center"> </el-table-column>
-                    <el-table-column label="金额" width="80" header-align="center" align="center"> </el-table-column>
-                    <el-table-column label="制造说明" width="80" header-align="center" align="center"> </el-table-column>
-                    <el-table-column label="备注"  header-align="center" align="center"> </el-table-column>
-                </el-table>
+                  </el-table>
 
-                <el-table style="width:100%;" :show-header="false" :data="item.tab3[index]">
-                   <el-table-column label="预约" header-align="center" width="200"> <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
+                  </el-card>
+               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" border>
+                   <el-table-column label="预约" header-align="center" width="160" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
                     <!-- <el-table-column label="交货"  header-align="center" width="80"></el-table-column> -->
@@ -281,16 +536,77 @@
                     <el-table-column label="含税单价"  width="100"  header-align="center"  align="center"><template > 小计 </template></el-table-column>
                     <el-table-column label="金额" width="80" header-align="left" align="right"> <template slot-scope="scope"> {{scope.row.littleSum|numFilter}} </template> </el-table-column>
                     <el-table-column label="制造说明" width="80" header-align="center" align="center"> </el-table-column>
-                    <el-table-column label="备注" width="80" header-align="center" align="center"> </el-table-column>
+                    <el-table-column label="备注"  header-align="center" align="center"> </el-table-column>
                 </el-table>
 
-                  </div>
-                      <el-row>
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                          <el-col :span="2"><div class="grid-content bg-purple" style="font-weight:bold;">  总金额：</div></el-col>
-                          <el-col :span="3"><div class="grid-content bg-purple" style="font-weight:bold;"> {{ sumMoney|numFilter}}   </div></el-col>
-                          <el-col :span="3"><div class="grid-content bg-purple"> </div></el-col>
-                      </el-row>
+                 <!-- 循环因子 -->
+                 </div>
+                 </div>
+                  <el-table
+                    :data="sumMoneyCol"
+                   :show-header="false"
+                    border
+                    object_class="_Object:GridTable"
+                    object_hashcode="6"
+                    cellpadding="0"
+                    style="width:100%"
+                    class="th-font"
+                   >
+                    <af-table-column
+                      property="name1"
+                      width="160"
+                      label="位置"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name2"
+                      width="80"
+                      label="名称"
+                    ></af-table-column>
+                     <af-table-column
+                      property="name3"
+                      width="120"
+                      label="编码"
+                    ></af-table-column>
+                    <af-table-column
+                      property="name4"
+                      label="名称"
+                       width="150"
+                    ></af-table-column>
+                    <!--width="50" -->
+                    <af-table-column
+                      property="name5"
+                      label="规格:米/对"
+                         width="60"
+                    ></af-table-column>
+                    <el-table-column
+                      property="name6"
+                      label="用量"
+                      width="60"
+                    ></el-table-column>
+                      <el-table-column property="name7" label="含税单价" width="100" align="center">
+                    
+                    </el-table-column>
+       
+                    <el-table-column
+                  
+                      label="金额"
+                      width="80"
+                      align="right"
+                    >
+                    <template slot-scope="scope">
+                    {{scope.row.name8|numFilter}}
+                    </template>
+                     </el-table-column>
+                    <el-table-column
+                      property="name9"
+                      label="制造说明"
+                      width="80"
+                    ></el-table-column>
+                    <el-table-column
+                      property="name10"
+                      label="备注"
+                    ></el-table-column>
+                  </el-table>
                     <div><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button> </div>
               </td>
                         </tr>
