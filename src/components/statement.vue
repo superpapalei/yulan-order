@@ -45,7 +45,7 @@
                     )
                   "
                   type="text"
-                  size="medium"
+                  size="mini"
                   >明细</el-button
                 >
               </template>
