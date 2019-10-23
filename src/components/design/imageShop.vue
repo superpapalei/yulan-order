@@ -152,7 +152,7 @@
               @click="checkDetail(scope.row)"
               type="success"
               icon="el-icon-search"
-              size="small"
+              size="mini"
               circle
             ></el-button>
             <el-button
@@ -160,7 +160,7 @@
               @click="editIt(scope.row)"
               type="primary"
               icon="el-icon-edit"
-              size="small"
+              size="mini"
               circle
             ></el-button>
             <el-button
@@ -168,7 +168,7 @@
               @click="deleteDetail(scope.row)"
               type="danger"
               icon="el-icon-delete"
-              size="small"
+              size="mini"
               circle
             ></el-button>
           </template>

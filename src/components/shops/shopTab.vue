@@ -331,7 +331,7 @@ export default {
         });
         return;
       }
-      let storeMessage;
+      let storeMessage = -1;
       if (this.seletedActivity === null || this.seletedActivity === undefined)
         this.seletedActivity = "";
       this.numberList[index].value = this.numberList[index].value.toString();

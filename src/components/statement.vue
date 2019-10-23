@@ -45,6 +45,7 @@
                     )
                   "
                   type="text"
+                  size="medium"
                   >明细</el-button
                 >
               </template>
@@ -183,9 +184,12 @@
             <el-table-column label="单据号" width="130">
               <template slot-scope="scope1">
                 <!-- <span>{{scope1.row.saleNo}}</span> -->
-                <el-button @click="openTHdia(scope1.row)" type="text">{{
-                  scope1.row.saleNo
-                }}</el-button>
+                <el-button
+                  @click="openTHdia(scope1.row)"
+                  type="text"
+                  size="medium"
+                  >{{ scope1.row.saleNo }}</el-button
+                >
               </template>
             </el-table-column>
             <el-table-column label="类别">

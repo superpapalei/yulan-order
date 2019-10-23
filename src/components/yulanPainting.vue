@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card shadow="hover">
-      <div>
+      <div style="margin-bottom:10px;">
         <el-date-picker
           type="date"
           format="yyyy-MM-dd"
@@ -42,7 +42,7 @@
             checkDialog = true;
             checkID = '';
           "
-          style="float:right"
+          style="float:right;margin-right:20px;"
           size="medium"
           type="primary"
           >新建</el-button
@@ -59,14 +59,14 @@
           label="编号"
           align="center"
         ></el-table-column>
-        <el-table-column label="创建时间" width="180" align="center">
+        <el-table-column label="创建时间" width="160" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.createTs | datatrans }}</span>
           </template>
         </el-table-column>
         <el-table-column
           prop="cname"
-          width="180"
+          width="220"
           label="客户名称"
           align="center"
         ></el-table-column>
@@ -77,7 +77,7 @@
         ></el-table-column>
         <el-table-column
           prop="officeTel"
-          width="200"
+          width="220"
           label="联系电话"
           align="center"
         ></el-table-column>
@@ -92,14 +92,14 @@
             <span>{{ scope.row.state | transStatus }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" width="200" label="操作">
+        <el-table-column align="center" width="180" label="操作">
           <template slot-scope="scope">
             <el-button
               @click="lookIt(scope.row)"
               type="warning"
               icon="el-icon-search"
               circle
-              size="small"
+              size="mini"
             ></el-button>
             <el-button
               v-if="scope.row.state == 'ONCREATE'"
@@ -107,7 +107,7 @@
               type="primary"
               icon="el-icon-edit"
               circle
-              size="small"
+              size="mini"
             ></el-button>
             <el-button
               v-if="scope.row.state == 'ONCREATE'"
@@ -115,17 +115,17 @@
               type="danger"
               icon="el-icon-delete"
               circle
-              size="small"
+              size="mini"
             ></el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin:0 25%;" class="block">
+      <div style="margin:0 35%;" class="block">
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
           :page-size="limit"
-          layout="prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="count"
         ></el-pagination>
       </div>

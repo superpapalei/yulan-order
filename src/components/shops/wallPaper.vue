@@ -423,7 +423,7 @@ export default {
       let storeMessage;
       switch (res.msg) {
         case "SUCCESS":
-          storeMessage = null;
+          storeMessage = "-1";
           break;
         case "waitForProduction":
           this.$confirm("当前库存不足，请等待生产", "提示", {

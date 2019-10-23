@@ -36,10 +36,11 @@
             <el-table-column label="高度(m)">
               <template slot-scope="scope1">{{ scope1.row.height }}</template>
             </el-table-column>
-            <el-table-column label="帘外包宽度(m)">
+            <el-table-column label="帘外包宽度(m)" width="120px">
               <template slot-scope="scope1">
                 <span v-if="scope1.row.outsourcingBoxExist === 1">{{
-                  scope1.row.outsourcingBoxWidth !== null
+                  (scope1.row.outsourcingBoxWidth !== null &&
+                  scope1.row.outsourcingBoxWidth !== 0)
                     ? scope1.row.outsourcingBoxWidth
                     : "--"
                 }}</span>
@@ -51,7 +52,7 @@
             </el-table-column>
             <el-table-column label="位置">
               <template slot-scope="scope1">{{
-                scope1.row.location === null ? "--" : scope1.row.location
+                (scope1.row.location === null|| scope1.row.location === "") ? "--" : scope1.row.location
               }}</template>
             </el-table-column>
             <el-table-column label="活动">
@@ -179,8 +180,8 @@ import {
   deleteCurtain,
   alterCount
 } from "@/api/curtain";
+import { GetCartItem } from "@/api/shopASP";
 import { mapMutations, mapActions } from "vuex";
-import { mapState } from "vuex";
 
 export default {
   name: "ShoppingCurtain",
@@ -218,12 +219,16 @@ export default {
       this.expands = [];
       this.totalMoney = 0;
       this.controllNum = 0;
-      getUserMarket({
-        CID: this.cid
+      // getUserMarket({
+      //   CID: this.cid
+      // })
+      GetCartItem({
+        cid: Cookies.get("cid"),
+        commodityType: "curtain"
       })
         .then(res => {
           //过滤无效数据
-          let theData = res.data.cartItems.curtain;
+          let theData = res.data;
           this.dataDeal(theData);
         })
         .catch(err => {
@@ -241,8 +246,8 @@ export default {
         let value = theData[i].productGroupType;
         let value1 = theData[i].activityGroupType;
         let cid;
-        if (value === null || value === undefined) value = "无产品";
-        if (value1 === null || value1 === undefined) value1 = "Z";
+        if (!value || value === undefined) value = "无产品";
+        if (!value1 || value1 === undefined) value1 = "Z";
         if (!theData[i].curtainCartItems.length) {
           cid = "";
         } else {
@@ -253,22 +258,22 @@ export default {
           activity: val
         });
         this.expands.push(val);
-        //获取必要里层数据--单价
-        for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
-          for (
-            let k = 0;
-            k < theData[i].curtainCartItems[j].curtainLists.length;
-            k++
-          ) {
-            let index =
-              theData[i].curtainCartItems[j].curtainLists[k].curtainCommodities
-                .length;
-            if (index > 0) {
-              theData[i].curtainCartItems[j].unNullNum = k;
-              break;
-            }
-          }
-        }
+        
+        // for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
+        //   for (
+        //     let k = 0;
+        //     k < theData[i].curtainCartItems[j].curtainLists.length;
+        //     k++
+        //   ) {
+        //     let index =
+        //       theData[i].curtainCartItems[j].curtainLists[k].curtainCommodities
+        //         .length;
+        //     if (index > 0) {
+        //       theData[i].curtainCartItems[j].unNullNum = k;
+        //       break;
+        //     }
+        //   }
+        // }
         //总价赋值
         for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
           if (theData[i].curtainCartItems[j].price == 0) {
@@ -296,31 +301,32 @@ export default {
           }
         }
       }
+      this.shopsData = theData;
       //获取中文活动名
-      let pIdArr = [];
-      for (let i = 0; i < theData.length; i++) {
-        for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
-          let index = theData[i].curtainCartItems[j].unNullNum;
-          theData[i].curtainCartItems[j].index = i; //赋值下标
-          pIdArr.push(
-            theData[i].curtainCartItems[j].curtainLists[index]
-              .curtainCommodities[0].activityId
-          );
-        }
-      }
-      getActivityByList(pIdArr)
-        .then(res => {
-          let k = 0;
-          for (let i = 0; i < theData.length; i++) {
-            for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
-              theData[i].curtainCartItems[j].activity = res[k++];
-            }
-          }
-          this.shopsData = theData;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      // let pIdArr = [];
+      // for (let i = 0; i < theData.length; i++) {
+      //   for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
+      //     let index = theData[i].curtainCartItems[j].unNullNum;
+      //     theData[i].curtainCartItems[j].index = i; //赋值下标
+      //     pIdArr.push(
+      //       theData[i].curtainCartItems[j].curtainLists[index]
+      //         .curtainCommodities[0].activityId
+      //     );
+      //   }
+      // }
+      // getActivityByList(pIdArr)
+      //   .then(res => {
+      //     let k = 0;
+      //     for (let i = 0; i < theData.length; i++) {
+      //       for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
+      //         theData[i].curtainCartItems[j].activity = res[k++];
+      //       }
+      //     }
+      //     this.shopsData = theData;
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
     },
     ...mapMutations("navTabs", ["addTab"]),
     ...mapActions("navTabs", ["closeTab"]),
@@ -576,7 +582,7 @@ export default {
           i
         ].modelNumber;
         this.multipleSelection[i].item.itemNoSample =
-          _itemNoSample === null
+          (!_itemNoSample)
             ? this.multipleSelection[i].modelNumber
             : _itemNoSample;
         this.multipleSelection[i].item.itemVersion = _data.item.itemVersion;
@@ -616,10 +622,10 @@ export default {
         let _wbh = val[i].outsourcingBoxWidth;
         let _order = {
           flagFlType:
-            val[i].salPromotion === null ? "" : val[i].salPromotion.falgFl, //新增活动字段
+            (!val[i].salPromotion) ? "" : val[i].salPromotion.falgFl, //新增活动字段
           itemNo: val[i].modelNumber, //型号
           itemNoSample:
-            _itemNoSample === null ? val[i].modelNumber : _itemNoSample, //样本型号
+           (!_itemNoSample)? val[i].modelNumber : _itemNoSample, //样本型号
           partSendId: "0", //分批发货标志，0不可以，1可以
           productionVersion: _data.item.itemVersion, //产品版本
           //7.23新需求只要1个
@@ -636,7 +642,7 @@ export default {
           curtainSizeTimes: val[i].drape, //窗帘褶皱倍数2-3 xing
           curtainRoomName: val[i].location
         };
-        if (_wbh !== null) {
+        if (_wbh !== null && _wbh !== 0) {
           _order.curtainWbhSize = _wbh;
         }
         orders.push(_order);
@@ -710,20 +716,20 @@ export default {
     }
   },
   created() {
-    //this.init();
+    this.init();
   },
-  watch: {
-    curtainData(data) {
-      this.shopsData = [];
-      this.activityData = [];
-      this.multipleSelection = [];
-      this.expands = [];
-      this.totalMoney = 0;
-      this.controllNum = 0;
-      this.tempData = data;
-      if (this.tempData.length > 0) this.dataDeal(this.tempData);
-    }
-  }
+  // watch: {
+  //   curtainData(data) {
+  //     this.shopsData = [];
+  //     this.activityData = [];
+  //     this.multipleSelection = [];
+  //     this.expands = [];
+  //     this.totalMoney = 0;
+  //     this.controllNum = 0;
+  //     this.tempData = data;
+  //     if (this.tempData.length > 0) this.dataDeal(this.tempData);
+  //   }
+  // }
 };
 </script>
 <style>

@@ -156,9 +156,6 @@ const router = new Router({
           path: '/shoppingCar/shopping',
           name: 'shopping',
           component: Shopping,
-          meta: {
-            returnMain: true//暂时用这个，该了后台再去掉
-          }
         },
         {
           path: '/detail/detailCurtain',
