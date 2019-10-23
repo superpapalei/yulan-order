@@ -148,7 +148,12 @@
               label="类型"
               align="center"
               width="120"
-            ></el-table-column>
+            >
+              <template slot-scope="scope1">
+                <span v-if="scope1.row.NOTE == '帘头'">定制窗帘</span>
+                <span v-else>{{ scope1.row.NOTE }}</span>
+              </template></el-table-column
+            >
             <el-table-column label="数量" align="center" width="100">
               <template slot-scope="scope1">
                 <span v-if="scope1.row.UNIT == '平方米'"

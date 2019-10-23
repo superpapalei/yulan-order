@@ -3,7 +3,7 @@
         <el-card shadow="hover">
             <div slot="header">
                 <span class="fstrong f16">修改商品信息：</span>
-                <el-steps
+                <!-- <el-steps
                     style="margin-top: -10px;"
                     align-center
                     class="r scale" 
@@ -14,7 +14,7 @@
                     <el-step title="填写商品信息"></el-step>
                     <el-step class="ml10 mr10" title="核对订单信息"></el-step>
                     <el-step class="ml10" title="成功提交订单"></el-step>
-                </el-steps>
+                </el-steps> -->
             </div>
             <router-link to="/shoppingCar/shopping?softSuit" tag="div">
                 <el-button type="info" plain size="mini" class="r mr40"

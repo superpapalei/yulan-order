@@ -4,6 +4,7 @@
       id="shopBox"
       default-expand-all
       width="100%"
+      style="margin-top:10px;"
       :row-class-name="tableRowClassName"
       :row-key="getRowKeys"
       :expand-row-keys="expands"

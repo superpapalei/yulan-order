@@ -861,7 +861,7 @@ export default {
 }
 .el-table td,
 .el-table th {
-  padding: 8px 0 !important;
+  padding: 4px 0 !important;
 }
 .el-badge__content {
   border: none !important;

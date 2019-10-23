@@ -168,7 +168,6 @@ export default {
         companyId: Cookies.get("companyId")
       };
       manageCoupon(url, data).then(res => {
-        console.log(res.data);
         this.couponData = res.data;
       });
     },
@@ -188,8 +187,6 @@ export default {
       };
       //CouponUseRecord(url, data)
       getUseRecord(data).then(res => {
-        console.log(res);
-        console.log(res.data);
         this.useTable = res.data;
         this.useTable.couponId = itemID;
         this.useTable.count = res.count;
@@ -202,8 +199,6 @@ export default {
         id: itemId
       };
       CouponbackRecord(url, data).then(res => {
-        console.log(res);
-        console.log(res.data);
         this.backTable = res.data;
         this.backTable.couponId = itemId;
         this.dialogBack = true;
@@ -268,7 +263,6 @@ export default {
   border-radius: 15px; /*圆角的大小 */
 }
 .cctvF {
-  /* border: 1px solid black; */
   background: url("blackCoupon.png");
   width: 350px;
   height: 230px;
@@ -279,7 +273,6 @@ export default {
   font-size: 13px;
 }
 .cctvT {
-  /* border: 1px solid black; */
   background: url("coupon.png");
   width: 350px;
   height: 230px;
@@ -290,13 +283,10 @@ export default {
   font-size: 13px;
 }
 .couponHead {
-  /* 
-  border: 1px solid black; */
   height: 50px;
 }
 .couponBody {
-  height: 170px; /* 
-  border: 1px solid black; */
+  height: 170px;
   margin-top: 15px;
 }
 .logoF {
