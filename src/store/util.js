@@ -95,8 +95,6 @@ export function tabsName(index) {
     case "supplierModule/payDelegation":
       return "付款委托书";
 
-    case "supplierModule/payDelegation":
-      return "付款委托书";
 
 
     default:
