@@ -66,3 +66,29 @@ export function CreateExcel(data, config = {}) {
 }
 
 
+//付款委托书查询表头
+export function GetRelativePay(data, config = {}) {
+    return post('/PUR_HEAD/GetRelativePay', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+//付款委托书查询明细
+export function CheckDetailByID(data, config = {}) {
+    return post('/PUR_HEAD/CheckDetailByID', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+//客户上传附件
+export function editByCustomer(data,config = {}) {
+    return post('/PUR_HEAD/EditByCustomer', data,config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}

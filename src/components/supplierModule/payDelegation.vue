@@ -1,499 +1,406 @@
+
 <template>
   <div>
     <el-card shadow="hover">
-      <div>
+
+      <div slot="header">
+        <span class="fstrong f16">付款委托书</span>
+      </div>
+
+      <div id="tbar" class="tbarStyle">
         <el-date-picker
           type="date"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          placeholder="日期区间"
+          placeholder="查询开始日期"
           v-model="beginTime"
           style="width:14%;"
-        ></el-date-picker
-        >--
+        ></el-date-picker> --
         <el-date-picker
           type="date"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          placeholder="日期区间"
+          placeholder="查询截止日期"
           v-model="finishTime"
           style="width:14%;"
         ></el-date-picker>
-        <el-select v-model="status" placeholder="全部状态">
+
+        <el-select v-model="SELECT_STATUS" style="margin-left:10px;width:160px;" placeholder="状态">
           <el-option
-            v-for="item in options"
+            v-for="item in statusArray"
             :key="item.label"
             :label="item.label"
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-button size="medium" type="success" @click="searchBankList()"
-          >查询</el-button
-        >
-        <el-button
-          style="float:right"
-          size="medium"
-          @click="newOne"
-          type="primary"
-          >新建</el-button
-        >
+
+
+        <el-input
+        @keyup.enter.native="search()"
+        placeholder="请输入关键字进行查询"
+        v-model="SEARCHKEY"
+        style="width:220px;margin-left:10px"
+         >
+         </el-input>
+
+        <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
+        
       </div>
-      <el-table
+      
+      <div style="margin-top:10px">
+       <el-table
         border
         :data="payData"
         style="width: 100%"
-        :row-class-name="tableRowClassName"
       >
         <el-table-column
-          width="130"
+          width="140"
           prop="ID"
           label="委托编号"
           align="center"
         ></el-table-column>
-        <el-table-column label="凭证时间" align="center">
+        <el-table-column width="130" label="凭证时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.createTs | datatrans }}</span>
           </template>
         </el-table-column>
         <el-table-column
           prop="CUSTOMER_CODE"
-          width="160"
+          width="120"
           label="客户"
           align="center"
         ></el-table-column>
         <el-table-column
           prop="SUM_MONEY"
+          width="110"
           label="代付金额"
           align="center"
         ></el-table-column>
-        <el-table-column
-          prop="STATE"
-          width="160"
-          label="状态"
-          align="center"
-        ></el-table-column>
+        <el-table-column label="状态" align="center" width="120px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.STATE | transStatus }}</span>
+            </template>
+        </el-table-column>
         <el-table-column
           prop="USER_CRE"
           label="创建人"
-          width="100"
+          width="120"
           align="center"
         ></el-table-column>
-        <el-table-column label="确认时间" align="center">
+        <el-table-column width="130" label="确认时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.DATE_AFFIRM | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="80" label="确认人" align="center"  prop="USER_AFFIRM">
+        <el-table-column width="120" label="确认人" align="center"  prop="USER_AFFIRM">
         </el-table-column>
-        <el-table-column width="80" label="退回原因" align="center"  prop="RETURN_REASON">
+        <el-table-column  label="退回原因" width="295" align="center"  prop="RETURN_REASON">
         </el-table-column>
-        <el-table-column align="center" width="200" label="查看详情">
-          <template slot-scope="scope">
-            <el-button
-              @click="checkDetail(scope.row)"
-              type="primary"
-              icon="el-icon-search"
-              circle
-            ></el-button>
-            <el-button
-              v-if="scope.row.STATE == 4"
-              @click="checkDetail(scope.row)"
-              type="warning"
-              icon="el-icon-edit"
-              circle
-            ></el-button>
-           
-          </template>
-        </el-table-column>
+        <el-table-column align="center" label="操作" >
+            <template slot-scope="scope" >
+              <el-button
+                @click="_EditDetail(scope.row)"
+                type="primary"
+                size="mini"
+                icon="el-icon-edit"
+                circle
+                v-if="scope.row.STATE=='1'||scope.row.STATE=='4'"
+              ></el-button>
+              <el-button
+                @click="_CheckDetail(scope.row)"
+                type="warning"
+                size="mini"
+                icon="el-icon-search"
+                circle
+                v-if="scope.row.STATE=='2'||scope.row.STATE=='3'"
+              ></el-button>
+            </template>
+          </el-table-column>
       </el-table>
-      <div style="margin:0 25%;" class="block">
+      </div>
+
+      <div style="margin:0 25%;margin-top:10px" class="block">
         <el-pagination
+          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
+          :page-sizes="[5, 10, 15, 20]"
           :page-size="limit"
-          layout="prev, pager, next, jumper"
+          layout="total,sizes, prev, pager, next, jumper"
           :total="count"
         ></el-pagination>
       </div>
     </el-card>
 
-    <el-dialog
-      title="银行汇款凭证单"
-      :visible.sync="payDetail"
-      :close-on-click-modal="false"
-      width="75%"
-    >
+    <el-dialog title="付款委托书" :visible.sync="payDetail" :close-on-click-modal="false" width="55%">
       <!-- 查看区 -->
-      <div v-show="EDITorCHECK" class="table-c">
-        <h2 style="text-align:center;">
-          银行汇款凭证单-[{{ tableData.state | transStatus }}]
-        </h2>
-        <h3>
-          建立时间：{{
-            tableData.createTs | datatrans
-          }}&nbsp;&nbsp;&nbsp;&nbsp;提交时间：{{
-            tableData.submitTs | datatrans
-          }}
-        </h3>
-        <h3 v-show="isBack">
-          退回时间：{{
-            tableData.sendbackTs | datatrans
-          }}&nbsp;&nbsp;&nbsp;&nbsp;退回原因：{{ tableData.sendbackReason }}
-        </h3>
-        <h3 v-show="isDelete">
-          作废时间：{{ tableData.cancelTs | datatrans }}
-        </h3>
-        <h3 v-show="isChuli">
-          处理人：{{
-            tableData.erpProcessOp
-          }}&nbsp;&nbsp;&nbsp;&nbsp;处理时间：{{
-            tableData.erpProcessTs | datatrans
-          }}
-        </h3>
+      <div v-show="isCheck" class="table-c">
+        <table width="100%" border="0px" cellspacing="0px" cellpadding="0">
+          <tr>
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="4">基本信息</td>
+          </tr>
+          <tr>
+            <td class="grayTD"  colspan="1" rowspan="1" style="width:15%;height:15px">流水号</td>
+            <td colspan="1" rowspan="1" style="width:35%;height:15px">{{submitForm.ID}}</td>
+            <td colspan="1" rowspan="1" class="grayTD" style="width:15%;height:15px">客户编码</td>
+            <td colspan="1" rowspan="1" style="width:35%;height:13px">{{submitForm.CUSTOMER_CODE}}</td>
+          </tr>
 
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="grayTD">流水号</td>
-            <td>{{ tableData.id }}</td>
-            <td class="grayTD">客户代码</td>
-            <td>{{ tableData.cid }}</td>
-            <td class="grayTD">客户名称</td>
-            <td>{{ tableData.cname }}</td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">付款总金额</td>
+            <td colspan="1" rowspan="1" style="height:15px">{{submitForm.SUM_MONEY}}</td>
+            <td colspan="1" rowspan="1" class="grayTD" style="height:15px">付款时间范围</td>
+            <td colspan="1" rowspan="1" style="height:15px">{{submitForm.TIME_SLOT}}</td>
           </tr>
+
           <tr>
-            <td class="tableCol" style="font-size:20px;" colspan="6">
-              付款信息
-            </td>
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="4">委托书明细</td>
           </tr>
           <tr>
-            <td class="grayTD" colspan="1">汇入银行</td>
-            <td colspan="2">{{ tableData.yulanBank }}</td>
-            <td class="grayTD" colspan="1" rowspan="6">付款凭证</td>
-            <td colspan="2" rowspan="6">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="点击放大图片"
-                placement="top"
-              >
-                <img @click="BIG" class="ISimg" :src="tableData.imgUrl" />
-              </el-tooltip>
-            </td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">行号</td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">受委托人姓名</td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">委托金额</td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">附件</td>
           </tr>
-          <tr>
-            <td class="grayTD" colspan="1">付款公司（人）</td>
-            <td colspan="2">{{ tableData.payerName }}</td>
-          </tr>
-          <tr>
-            <td class="grayTD" colspan="1">付款银行账号</td>
-            <td colspan="2">{{ tableData.payerAccount }}</td>
-          </tr>
-          <tr>
-            <td class="grayTD" colspan="1">付款金额</td>
-            <td colspan="2">{{ tableData.payAmount }}</td>
-          </tr>
-          <tr>
-            <td class="grayTD" colspan="1">付款日期</td>
-            <td colspan="2">{{ tableData.payDate | datatrans }}</td>
-          </tr>
-          <tr style="height:130px;">
-            <td class="grayTD" colspan="1">备注</td>
-            <td colspan="2">{{ tableData.memo }}</td>
-          </tr>
-        </table>
-      </div>
-      <!-- 编辑区 -->
-      <div v-show="!EDITorCHECK" class="table-c">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-          <tr class="tableCol" style="height:55px;">
-            <td style="font-size:20px;" colspan="6">银行汇款凭证单</td>
-          </tr>
-          <tr>
-            <td class="grayTD">流水号</td>
-            <td v-if="newORedit">{{ sumbit.id }}</td>
-            <td v-else>(提交后自动生成)</td>
-            <td class="grayTD">客户代码</td>
-            <td>{{ sumbit.cid }}</td>
-            <td class="grayTD">客户名称</td>
-            <td>{{ sumbit.cname }}</td>
-          </tr>
-          <tr>
-            <td class="tableCol" style="font-size:20px;" colspan="6">
-              汇款信息
-            </td>
-          </tr>
-          <tr>
-            <td class="grayTD" colspan="1">汇入银行</td>
-            <td colspan="2">
-              <el-select
-                v-model="sumbit.yulanBank"
-                placeholder="选择汇入玉兰账号所属银行"
-              >
-                <el-option
-                  v-for="item in bankArray"
-                  :key="item.label"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </td>
-            <td class="grayTD" colspan="1" :rowspan="ROWSPAN">付款凭证</td>
-            <td colspan="2" :rowspan="ROWSPAN">
-              <el-upload
-                class="avatar-uploader"
-                accept="image/png, image/jpg, image/jpeg"
-                action="http://14.29.223.114:10250/yulan-capital/upload/uploadPaymentBillImg.do"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
-              >
-                <img v-if="sumbit.imgUrl" :src="sumbit.imgUrl" class="avatar" />
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
-            </td>
-          </tr>
-          <tr>
-            <td class="grayTD" colspan="1">付款公司（人）</td>
-            <td colspan="2">
-              <el-input
-                @focus="showHistory()"
-                class="inputWidth"
-                v-model="sumbit.payerName"
-                placeholder="请输入付款公司（人）"
-              ></el-input>
-            </td>
-          </tr>
-          <tr v-show="showtheHistory">
-            <td colspan="3">
-              <span v-for="item of historyList" :key="item.index">
-                <el-button
-                  @click="writeHistory(item.PAYER_NAME, item.PAYER_ACCOUNT)"
-                  type="text"
-                  >付款公司（人）：{{
-                    item.PAYER_NAME
-                  }}&nbsp;&nbsp;&nbsp;&nbsp;付款银行账号：{{
-                    item.PAYER_ACCOUNT
-                  }}</el-button
+          
+          <tr v-for="(item,index) of submitDetailForm" :key="index" >
+            <td colspan="1" rowspan="1" style="height:15px">{{item.LINE_NO}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">{{item.NAME}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">{{item.MONEY}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">
+              <ul  class="el-upload-list el-upload-list--text" >
+              <li 
+                  v-for="(file, i) in item.fileList"
+                  :key="i"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
                 >
-                <br />
-              </span>
+                  <a class="el-upload-list__item-name" >
+                    <i class="el-icon-document" ></i>{{ file.name }}
+                  </a>
+                  <label style="display:block;position:absolute;top:0px;right:30px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载附件</a>
+                  </label>
+              </li>
+              </ul>
             </td>
+          </tr>
+
+          <tr >
+            <td class="grayTD"  colspan="4" rowspan="1"  style="font-size:20px;height:30px" >审核信息（退回）</td>
+          </tr>
+          <tr >
+            <td class="grayTD"  colspan="1" rowspan="1"  style="height:50px" >退回原因</td>
+            <td colspan="3" rowspan="1"  style="height:50px" >{{submitForm.RETURN_REASON}}</td>
+          </tr>
+        </table>
+      </div> 
+
+  
+      <!--编辑区 -->
+      <div v-show="isEdit" class="table-c" >
+       <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="4">基本信息</td>
           </tr>
           <tr>
-            <td class="grayTD" colspan="1">付款银行账号</td>
-            <td colspan="2">
-              <el-input
-                class="inputWidth"
-                v-model="sumbit.payerAccount"
-                oninput="value=value.replace(/[^\d]/g,'')"
-                placeholder="请输入付款银行账号"
-              ></el-input>
-            </td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="width:15%;height:15px">流水号</td>
+            <td colspan="1" rowspan="1" style="width:35%;height:15px">{{submitForm.ID}}</td>
+            <td colspan="1" rowspan="1" class="grayTD" style="width:15%;height:15px">客户编码</td>
+            <td colspan="1" rowspan="1" style="width:35%;height:13px">{{submitForm.CUSTOMER_CODE}}</td>
+          </tr>
+
+          <tr>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">付款总金额</td>
+            <td colspan="1" rowspan="1" style="height:15px">{{submitForm.SUM_MONEY}}</td>
+            <td colspan="1" rowspan="1" class="grayTD" style="height:15px">付款时间范围</td>
+            <td colspan="1" rowspan="1" style="height:15px">{{submitForm.TIME_SLOT}}</td>
+          </tr>
+
+          <tr>
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="4">委托书明细</td>
           </tr>
           <tr>
-            <td class="grayTD" colspan="1">付款金额</td>
-            <td colspan="2">
-              <currency-input
-                :customStyle="'width: 220px; height:40px;'"
-                placeholder="请输入付款金额"
-                v-model="sumbit.payAmount"
-              ></currency-input>
-            </td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">行号</td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">受委托人姓名</td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">委托金额</td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:15px">附件</td>
           </tr>
-          <tr>
-            <td class="grayTD" colspan="1">付款日期</td>
-            <td colspan="2">
-              <el-date-picker
-                v-model="sumbit.payDate"
-                type="date"
-                placeholder="请选择日期"
-                value-format="timestamp"
-              ></el-date-picker>
-            </td>
-          </tr>
-          <tr style="height:130px;">
-            <td class="grayTD" colspan="1">备注</td>
-            <td colspan="2">
-              <el-input
-                style="width:220px;margin:4px auto;"
-                type="textarea"
-                maxlength="200"
-                :autosize="{ minRows: 8, maxRow: 12 }"
-                resize="none"
-                v-model="sumbit.memo"
-                placeholder="请输入备注"
-              ></el-input>
+          
+          <tr v-for="(item,index) of submitDetailForm" :key="index" >
+            <td colspan="1" rowspan="1" style="height:15px">{{item.LINE_NO}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">{{item.NAME}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">{{item.MONEY}}</td>
+            <td colspan="2" rowspan="1" style="height:30px">
+                <div>
+                <el-upload
+                class="upload-de"
+                :action="Global.baseUrl + '/LANJU_STORE/UploadFiles'"
+                drag
+                multiple
+                :on-change="function(file,fileList){return  handleChange(file,fileList,index)}"
+                :on-remove="function(file,fileList){return  handleRemove(file,fileList,index)}"
+                :on-success="function(res,file,fileList){return  handleSuccess(res,file,fileList,index)}"
+                ref="upload"
+                :auto-upload="false"
+                :file-list="submitDetailForm[index].fileList"
+                :data="{ CID: CID, dateStamp: dateStamp }"
+              >
+                <i
+                  class="el-icon-upload2"
+                  style="margin-top:8px;"
+                >
+                <span style="font-size:15px;">上传附件</span>
+                </i>
+              </el-upload>
+              </div>
             </td>
           </tr>
         </table>
+       </div>
 
-        <div style="margin:0 auto; width:75px;">
-          <br />
-          <el-button v-if="newORedit" type="success" @click="submitEDIT"
-            >确 定</el-button
-          >
-          <el-button v-else type="success" @click="sumbitNEW">提 交</el-button>
-        </div>
-      </div>
-    </el-dialog>
+        <div style="text-align:center;margin-top:10px">           
+          <el-button type="success"  v-if="this.submitForm.STATUS!=1"  @click="_editSubmit()">确定</el-button>  
+        </div>    
 
-    <el-dialog width="650px" title="查看图片" :visible.sync="BigPic">
-      <div>
-        <img class="BIGimg" :src="tableData.imgUrl" />
       </div>
+
+      <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
+        <table width="90%" border="0px" cellspacing="0px" cellpadding="0">
+          <tr >
+             <td style="width:12%"><h4>创建时间：</h4></td>
+             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.DATE_CRE| datatransDetail }}</h4></td>
+             <td style="width:12%"><h4>确认时间：</h4></td>
+             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.DATE_AFFIRM| datatransDetail }}</h4></td>
+              <td style="width:12%"><h4>审核时间：</h4></td>
+             <td style="width:22%;margin-left:-30px;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
+          </tr>
+          <tr >
+             <td style="width:12%"><h4>创建人：</h4></td>
+             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.USER_CRE }}</h4></td>
+             <td style="width:12%"><h4>确认人：</h4></td>
+             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.USER_AFFIRM }}</h4></td>
+             <td style="width:12%"><h4>审核人：</h4></td>
+             <td style="width:22%;margin-left:-30px;"><h4>{{ submitForm.AUDITOR }}</h4></td>
+          </tr>
+          <tr >
+             <td style="width:12%"><h4>单据状态：</h4></td>
+             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+          </tr>
+        </table> 
+      </div>  
     </el-dialog>
   </div>
- </template>
+</template>
 
 <script>
-import {
+import { 
   GetRelativePay,
-  getPayBillContent,
-  changeStatus,
-  sumbitForm,
-  getHistory
-} from "@/api/bank";
-import { getCustomerInfo } from "@/api/orderListASP";
+  CheckDetailByID,
+  editByCustomer
+ } from "@/api/supplierASP";
+// import {
+//   UploadFiles,
+// } from "@/api/imageStoreASP";
+import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
-const Quest = "http://14.29.223.114:10250/yulan-capital";
 
 export default {
-  name: 'payDelegation',
-   data() {
+  name: "payDelegation",
+  data() {
     return {
-      chargeData: [],
-      ROWSPAN: 6,
-      BigPic: false,
-      showtheHistory: false,
-      historyList: [
-        {
-          PAYER_NAME: "测试", //汇款人名
-          PAYER_ACCOUNT: "45544521112565445" //汇款账号
-        },
-        {
-          PAYER_NAME: "测试3",
-          PAYER_ACCOUNT: "121212121"
-        },
-        {
-          PAYER_NAME: "测试4",
-          PAYER_ACCOUNT: "1212121"
-        }
-      ],
-      sqlpath: "", //保存图片相对路径
-      newORedit: false, //决定显示新建或者编辑
-      EDITorCHECK: false, //决定显示编辑或者查看
-      tableData: {
-        id: "PZ19071100003", //流水号
-        cid: "C01613", //公司id
-        cname: "测试—客户A", //客户名
-        createTs: 1562816972000, //创建时间
-        yulanBank: "工商银行", //汇款银行
-        payerName: "测试客户", //汇款人名
-        payAmount: 100, //汇款金额
-        payDate: 1562816972000, //汇款日期
-        imgFileName: "PZ19071100003-C01613.jpeg", //图片名
-        submitTs: 1562816911000, //提交时间
-        memo: "test", //备注
-        cancelTs: null, //作废日期
-        sendbackTs: null, //退回日期
-        sendbackReason: null, //退回理由
-        erpProcessTs: null, //处理日期
-        erpProcessOp: null, //处理人状态(SUBMITED（已提交）,PROCESED（已处理）,SENDBACK（退回）,CANCELED（作废）)
-        payerAccount: "45544521112565445", //汇款人银行账号
-        imgUrl:
-          "http://106.14.159.244:8080/upload/paymentBill-image/PZ19071100004-C01613.jpeg" //图片相对路径
-      },
-      sumbit: {
-        cid: "", //公司号
-        cname: "", //客户名
-        yulanBank: "", //汇款银行
-        payerName: "", //汇款人名
-        payAmount: "", //汇款金额
-        imgFileName: "", //文件名
-        memo: "", //备注
-        payerAccount: "", //账号
-        payDate: "", //汇款时间,
-        imgUrl: "" //相对路径
-      },
-      isDelete: false,
-      isChuli: false,
-      isBack: false,
+      dateStamp: "",
+      fileChange: false,
+      deleteFile: [],
+      subtractDeleteFile:[],//点击减号准备删除明细，预删除的文件集合
+      deleteIndex:[],//删除文件对应的明细的索引
+      btnDisable: false,
+      companyId: "",
+      CID: Cookies.get("cid"), //客户账号
+      CNAME: "", //客户名
+      beginTime: "", //查询的开始时间
+      finishTime: "", //查询的结束时间
+      SEARCHKEY: "", //搜索栏关键字
+      SELECT_STATUS: "全部状态", //存储下拉框的值
+      rowPlus:0,//兰居软装设计需求表中的户型编辑项添加数
+      isEdit: false, //编辑记录
+      isCheck: false, //查看记录
+      initRowspan:5,//基本信息中的初始行数
+      usedRowspan:5,//基本信息中的行数
+      fileListGM:[],//广美上传的文件集合
+      successCount:0,
+      allCount:0,
+      ServiceDetail:false,
       payDetail: false,
-      limit: 8,
-      count: 88,
+      limit: 10,
+      count: 0,
+      detailCount:0,//新增户型记录数
       currentPage: 1,
-      beginTime: "",
-      finishTime: "",
-      status: "",
-      options: [
+      statusArray: [
         {
           label: "全部状态",
-          value: ""
+          value: "0"
         },
         {
-          label: "已提交",
-          value: "SUBMITED"
+          label: "待客户确认",
+          value: "1"
         },
         {
-          label: "已处理",
-          value: "PROCESED"
+          label: "客户确认",
+          value: "2"
+        },
+        {
+          label: "通过",
+          value: "3"
         },
         {
           label: "退回",
-          value: "SENDBACK"
+          value: "4"
         },
-        {
-          label: "作废",
-          value: "CANCELED"
-        }
       ],
-      bankArray: [
+      typeArray: [
         {
-          label: "中国工商银行(8881)",
-          value: "中国工商银行(8881)"
+          label: "简装",
+          value: 1
         },
         {
-          label: "中国工商银行(9761)",
-          value: "中国工商银行(9761)"
+          label: "豪宅",
+          value: 2
         },
-        {
-          label: "中信银行",
-          value: "中信银行"
-        },
-        {
-          label: "中国邮政储蓄银行",
-          value: "中国邮政储蓄银行"
-        }
       ],
-      payData: []
+      payData: [],
+      submitForm:[],//查看或编辑的表头信息
+      submitDetailForm:[], //查看或编辑的明细信息
     };
   },
   created: function() {
-    this.chargeQuery();
-    this._getBankList();
-    this._getHistory();
+    this.refresh();
   },
   filters: {
     transStatus(value) {
       switch (value) {
-        case "SUBMITED":
-          return "已提交";
+        case "0":
+          return "全部状态";
           break;
-        case "PROCESED":
-          return "已处理";
+        case "1":
+          return "待客户确认";
           break;
-        case "SENDBACK":
+        case "2":
+          return "客户确认";
+          break;
+        case "3":
+          return "通过";
+          break;
+        case "4":
           return "退回";
-          break;
-        case "CANCELED":
-          return "作废";
           break;
       }
     },
     datatrans(value) {
       //时间戳转化大法
-      if (value == null) {
+      if (value == null || value == "9999/12/31 00:00:00") {
         return "";
       }
       let date = new Date(value);
@@ -508,303 +415,266 @@ export default {
       m = m < 10 ? "0" + m : m;
       let s = date.getSeconds();
       s = s < 10 ? "0" + s : s;
-      return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
-    }
-  },
-  watch: {
-    showtheHistory(val) {
-      if (val) {
-        this.ROWSPAN = 7;
-      } else {
-        this.ROWSPAN = 6;
+      return y + "-" + MM + "-" + d + " ";
+    },
+    datatransDetail(value) {
+      //时间戳转化大法
+      if (value == null || value == "9999/12/31 00:00:00") {
+        return "";
       }
-    }
+      let date = new Date(value);
+      let y = date.getFullYear();
+      let MM = date.getMonth() + 1;
+      MM = MM < 10 ? "0" + MM : MM;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      let h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      let m = date.getMinutes();
+      m = m < 10 ? "0" + m : m;
+      let s = date.getSeconds();
+      s = s < 10 ? "0" + s : s;
+      return y + "-" + MM + "-" + d + " " + h + ":" + m;
+    },
+    rateTrans(value) {
+      switch (value) {
+        case "1":
+          return "极差";
+        case "2":
+          return "失望";
+        case "3":
+          return "一般";
+        case "4":
+          return "满意";
+        case "5":
+          return "惊喜";
+      }
+    },
+    houseTrans(value){
+      switch (value) {
+        case  1:
+          return "简装";
+        case  2:
+          return "豪宅";
+      }
+    },
   },
   methods: {
-    chargeQuery() {
+    //模糊搜索
+    search() {
+      this.currentPage = 1;
+      this.refresh();
+    },
+    //根据所选页面条数显示数据
+    handleSizeChange(val) {
+      this.limit = val;
+      this.currentPage = 1;
+      this.refresh();
+    },
+    //翻页获取投诉信息
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.refresh();
+    },
+    //查询满足条件的该用户的委托书信息
+    refresh() {
       var data = {
-        cid: Cookies.get("cid"),
-        companyId: Cookies.get("companyId")
+        limit: this.limit,
+        page: this.currentPage,
+        po:"",
+        check_flag:1,//int类型
+        po_type:"",
+        customer:"",
+        current_id: "",
+        beginTime: this.beginTime,
+        finishTime: this.finishTime,
       };
-      getCustomerInfo(data).then(res => {
-        this.chargeData = res.data;
+      if (!data.beginTime) {
+        data.beginTime = "0001/1/1";
+      }
+      if (!data.finishTime) {
+        data.finishTime = "9999/12/31";
+      } else {
+        data.finishTime = data.finishTime + " 23:59:59";
+      }
+       GetRelativePay(data).then(res => {
+        this.count = res.count;
+        this.payData = res.data;
       });
     },
-    implentmentChange() {
-      if (this.tableData.IMPLEMENTTATION_FORM != 1) this.tableData.MEASURE = 0;
-    },
-    //焦点显示历史记录
-    showHistory() {
-      this.showtheHistory = true;
-    },
-    //填充历史记录
-    writeHistory(payerName, payerAccount) {
-      this.sumbit.payerName = payerName;
-      this.sumbit.payerAccount = payerAccount;
-      this.showtheHistory = false;
-    },
-    //确定新建
-    sumbitNEW() {
-      let url = Quest + "/PaymentBill/insertPaymentBill.do";
-      let data = this.sumbit;
-      this.sumbit.cid = Cookies.get("companyId");
-      //判断是否填完所有信息
-      if (
-        this.sumbit.yulanBank == "" ||
-        this.sumbit.payerName == "" ||
-        this.sumbit.payAmount == "" ||
-        this.sumbit.payerAccount == "" ||
-        this.sumbit.payDate == "" ||
-        this.sumbit.payDate == null
-      ) {
-        this.$alert("请完善信息", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      //判断是否上传图片
-      if (this.sumbit.imgFileName == "") {
-        this.$alert("请上传凭证", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      this.sumbit.imgUrl = this.sqlpath; //转换为相对地址
-      sumbitForm(url, data).then(res => {
-        if (res.code == 0) {
-          this.$alert("提交成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.currentPage = 1;
-          this._getBankList();
-          this.payDetail = false;
-        } else {
-          this.$alert("提交失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
+    //查看列表详情
+    _CheckDetail(val) {
+      this.submitDetailForm = [];
+      this.submitForm = val;
+      this.fileListGM=[];
+      let data = {
+        ID: val.ID
+      };
+      CheckDetailByID(data).then(res => {
+        if (res.count > 0) {
+          this.submitDetailForm = res.data;
+          this.detailCount = res.count;
         }
+        for (let j = 0; j < this.submitDetailForm.length; j++) {
+          var list = this.submitDetailForm[j].ATTACHMENT_FILE.split(";");
+          this.submitDetailForm[j].fileList = [];
+          for (var i = 0; i < list.length - 1; i++) {
+            var index = list[i].lastIndexOf("/");
+            var fileName = list[i].substr(index + 1);
+            this.submitDetailForm[j].fileList.push({
+              name: fileName,
+              url: list[i]
+            });
+          }
+        }
+        this.isEdit = false;
+        this.isCheck = true;
+        this.payDetail = true;
       });
     },
-    //编辑修改
-    submitEDIT() {
-      let url = Quest + "/PaymentBill/updatePayBill.do"; //创建
-      let data = this.sumbit;
-      this.sumbit.cid = Cookies.get("companyId");
-      //判断是否填完所有信息
-      if (
-        this.sumbit.yulanBank == "" ||
-        this.sumbit.payerName == "" ||
-        this.sumbit.payAmount == "" ||
-        this.sumbit.payerAccount == "" ||
-        this.sumbit.payDate == "" ||
-        this.sumbit.payDate == null
-      ) {
-        this.$alert("请完善信息", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
+    //编辑状态下查看列表详情
+    _EditDetail(val) {
+      this.submitDetailForm = [];
+      this.submitDetailForm.fileList = [];//可能有问题，lanju里是新增的时候向对象里添加该属性了
+      this.submitForm = val;
+      this.fileListGM=[];
+      this.deleteFile = [];
+      let data = {
+        ID: val.ID
+      };
+      CheckDetailByID(data).then(res => {
+        if (res.count > 0) {
+          this.submitDetailForm = res.data;
+          this.detailCount = res.count;
+        }
+        //将数据库里文件路径集合数据拆解，拆分成可以访问的路径
+        for (let j = 0; j < this.submitDetailForm.length; j++) {
+          var list = this.submitDetailForm[j].ATTACHMENT_FILE.split(";");
+          this.submitDetailForm[j].fileList=[];
+          for (var i = 0; i < list.length - 1; i++) {
+          var index = list[i].lastIndexOf("/");
+          var fileName = list[i].substr(index + 1);
+          this.submitDetailForm[j].fileList.push({
+          name: fileName,
+          url: list[i]
+          });
+          }
+        }
+        this.dateStamp = new Date().getTime();
+        this.isEdit = true;
+        this.isCheck = false;
+        this.payDetail = true;
+      });
+    },
+    //编辑列表详情修改
+    _editSubmit() {
+      if (this.fileChange) {
+        //文件发生改变，重新上传一次(仅选中修改后的文件，而不是所有文件效率会更高)
+        for (let i = 0; i < this.submitDetailForm.length; i++) {
+            this.$refs.upload[i].submit();
+            this.submitDetailForm[i].ATTACHMENT_FILE = "";
+            for (let j = 0; j < this.submitDetailForm[i].fileList.length; j++) {
+               this.submitDetailForm[i].ATTACHMENT_FILE +=
+                "/Files/payDelegation/" +
+               this.CID +
+               "/" +
+               this.dateStamp +
+                "/" +
+               this.submitDetailForm[i].fileList[j].name +
+                ";"; 
+              }
+          this.submitDetailForm[i].ATTACHMENT_FILE_FOLDER =
+        "/Files/payDelegation/" + this.CID + "/" + this.dateStamp;
+        }
+      } else {
+        if (this.deleteFile.length > 0) {
+          for (let i = 0; i < this.deleteFile.length; i++) {
+            this.submitDetailForm[this.deleteIndex[i]].ATTACHMENT_FILE="";
+            for (var j = 0; j < this.submitDetailForm[this.deleteIndex[i]].fileList.length; j++) {
+                this.submitDetailForm[this.deleteIndex[i]].ATTACHMENT_FILE += this.submitDetailForm[this.deleteIndex[i]].fileList[j].url + ";";
+            }
+          }
+        }
+        this.submitEDITANSYC();
       }
-      //判断是否上传图片
-      if (this.sumbit.imgFileName == "") {
-        this.$alert("请上传凭证", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
+    },
+    handleChange(file, fileList,index) {
+      console.log(index);
+      this.submitDetailForm[index].fileList = fileList;
+      this.fileChange = true;
+    },
+    handleRemove(file, fileList,index) {
+      this.submitDetailForm[index].fileList = fileList;
+      if ((file.status = "success")) {
+        this.deleteFile.push(file.url);
+        this.deleteIndex.push(index)
       }
-      this.sumbit.imgUrl = this.sqlpath;
-      this.sumbit.submitTs = null;
-      this.sumbit.cancelTs = null;
-      this.sumbit.createTs = null;
-      sumbitForm(url, data).then(res => {
+    },
+    handleSuccess(res, file, fileList,index) {
+      var flag=true;
+      for (let i = 0; i < this.submitDetailForm.length; i++) {
+         if(this.submitDetailForm[i].fileList.filter(item=>item.status == "uploading").length == 0 && this.submitDetailForm[i].fileList.filter(item=>item.status == "success").length == this.submitDetailForm[i].fileList.length)
+         {
+         }   
+         else{
+           flag=false;
+           break;
+         }
+      }
+      if (flag) {
+        if (this.isEdit) {
+          this.submitEDITANSYC();
+        } 
+      }
+    },
+    handleError(err, file, fileList) {
+      this.$refs.upload.clearFiles();
+      this.fileList = [];
+      this.dateStamp = new Date().getTime();
+      this.btnDisable = false;
+      this.$alert("文件上传失败", "提示", {
+        confirmButtonText: "确定",
+        type: "success"
+      });
+    },
+    submitEDITANSYC() {
+      //相当于同步，等提交成功后再执行
+      editByCustomer({model:this.submitForm,detailModels:this.submitDetailForm, attchmentChange: this.fileChange,deleteFile: this.deleteFile}).then(res => {
         if (res.code == 0) {
           this.$alert("修改成功", "提示", {
             confirmButtonText: "确定",
             type: "success"
           });
           this.currentPage = 1;
-          this._getBankList();
+          this.refresh();
           this.payDetail = false;
+          return;
         } else {
           this.$alert("修改失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
             type: "warning"
           });
+          return;
         }
       });
     },
-    //新建
-    newOne() {
-      this.EDITorCHECK = false;
-      this.payDetail = true;
-      this.newORedit = false;
-      this.sumbit = {
-        cid: Cookies.get("companyId"), //公司号
-        cname: this.chargeData.CUSTOMER_NAME, //客户名
-        yulanBank: "", //汇款银行
-        payerName: "", //汇款人名
-        payAmount: "", //汇款金额
-        imgFileName: "", //文件名
-        memo: "", //备注
-        payerAccount: "", //账号
-        payDate: "", //汇款时间,
-        imgUrl: "" //相对路径
-      };
+    downLoad(path) {
+      downLoadFile(
+        this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
+      );
     },
-    //编辑列表详情
-    editIt(tab) {
-      let url = Quest + "/PaymentBill/getPayBillContent.do";
-      let data = {
-        id: tab.id
-      };
-      getPayBillContent(url, data).then(res => {
-        this.sqlpath = res.data.imgUrl; //先保存一个
-        res.data.imgUrl = Head + res.data.imgUrl;
-        this.sumbit = res.data;
-        this.EDITorCHECK = false;
-        this.newORedit = true; //显示流水号 等编辑一类
-        this.payDetail = true;
-      });
-    },
-    //查看列表详情
-    checkDetail(tab) {
-      //判断是否为作废
-      if (tab.state == "CANCELED") {
-        this.isDelete = true;
-      } else {
-        this.isDelete = false;
-      }
-
-      if (tab.state == "PROCESED") {
-        this.isChuli = true;
-      } else {
-        this.isChuli = false;
-      }
-
-      if (tab.state == "SENDBACK") {
-        this.isBack = true;
-      } else {
-        this.isBack = false;
-      }
-      let url = Quest + "/PaymentBill/getPayBillContent.do";
-      let data = {
-        id: tab.id
-      };
-      getPayBillContent(url, data).then(res => {
-        res.data.imgUrl = Head + res.data.imgUrl;
-        this.tableData = res.data;
-        this.EDITorCHECK = true;
-        this.payDetail = true;
-      });
-    },
-    //作废列表详情
-    deleteDetail(tab) {
-      let url = Quest + "/PaymentBill/updatePayBillState.do";
-      let data = {
-        id: tab.id,
-        state: "CANCELED"
-      };
-      this.$confirm("确定作废该汇款凭证?", "提示", {
-        confirmButtonText: "是",
-        cancelButtonText: "否",
-        type: "warning"
-      })
-        .then(() => {
-          changeStatus(url, data).then(res => {
-            this._getBankList();
-            this.$alert("删除成功", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            });
-          });
-        })
-        .catch(() => {
-          console.log("还没删");
-        });
-    },
-    //搜索
-    searchBankList() {
-      this.currentPage = 1;
-      this.payData = [];
-      this._getBankList();
-    },
-    //获取银行列表
-    _getBankList() {
-      let url = Quest + "/PaymentBill/getPayBills.do";
-      if (this.beginTime == null) this.beginTime = "";
-      if (this.finishTime == null) this.finishTime = "";
-      let data = {
-        cid: Cookies.get("companyId"), //公司id
-        state: this.status, //状态状态(SUBMITED（已提交）,PROCESED（已处理）,SENDBACK（退回）,CANCELED（作废）)
-        beginTime: this.beginTime, //起始时间
-        finishTime: this.finishTime, //结束时间
-        limit: this.limit, //限制数
-        page: this.currentPage //页数
-      };
-      if (this.beginTime != "" || this.finishTime != "") {
-        data.beginTime = this.beginTime + "00:00:00";
-        data.finishTime = this.finishTime + "23:59:59";
-      }
-      GetRelativePay(url, data).then(res => {
-        this.count = res.count;
-        this.payData = res.data;
-      });
-    },
-    //隔行变色
-    tableRowClassName({ row, rowIndex }) {
-      if (rowIndex % 2 == 0) {
-        return "success-row";
-      }
-      return "";
-    },
-    //获取历史记录
-    _getHistory() {
-      let url = Quest + "/PaymentBill/getPayNameAndAccount.do";
-      let data = {
-        companyId: Cookies.get("companyId")
-      };
-      getHistory(url, data).then(res => {
-        this.historyList = res.data;
-      });
-    },
-    //放大图片
-    BIG() {
-      this.BigPic = true;
-    },
-    //翻页获取订单
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      this.payData = [];
-      this._getBankList();
-    },
-    handleAvatarSuccess(res, file) {
-      this.sumbit.imgUrl = URL.createObjectURL(file.raw);
-      if (res.code == 0) {
-        this.sqlpath = res.sqlpath;
-        this.sumbit.imgUrl = Head + res.sqlpath;
-        this.sumbit.imgFileName = res.fileName;
-      }
-    },
-    beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isLt2M) {
-        this.$message.error("上传图片大小不能超过 2MB!");
-      }
-      return isLt2M;
-    }
-  }
-
-
+    
+  },
 }
 </script>
 
-<style scoped>
+<style>
+.table_1 .el-table__row {
+  height: 6px;
+}
+</style>
+
+ <style scoped>
 .table-c table {
   border-right: 1px solid black;
   border-bottom: 1px solid black;
@@ -822,17 +692,40 @@ export default {
 .grayTD {
   background: rgb(241, 242, 243);
 }
+.headerStyle {
+  display: inline-block;
+  width: 100px;
+  font-weight: bold;
+}
+.timeRight {
+  font-size: 14px;
+  line-height: 30px;
+  display: inline-block;
+  margin-right: 20px;
+  font-weight: bold;
+}
+.timeLeft {
+  font-size: 14px;
+  line-height: 30px;
+  display: inline-block;
+}
 .ISimg {
-  width: 300px;
-  height: 300px;
+  width: 100px;
+  height: 100px;
   cursor: pointer;
 }
 .BIGimg {
-  width: 600px;
-  height: 600px;
+  width: 333px;
+  height: 333px;
 }
 .inputWidth {
   width: 220px;
+}
+.tbarStyle {
+  margin-bottom: 13px;
+}
+.statusCombobox {
+  margin-left: 10px;
 }
 </style>
 
@@ -854,14 +747,32 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 300px;
-  height: 300px;
-  line-height: 300px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
   text-align: center;
 }
 .avatar {
-  width: 300px;
-  height: 300px;
+  width: 30px;
+  height: 30px;
   display: block;
+}
+.inputStyle {
+  border: 0;
+  height: 100%;
+  width: 100%;
+  font-size: 16px;
+  text-align: center;
+}
+.inputStyleNew {
+  border: 0;
+  height: 100%;
+  width: 54%;
+  font-size: 16px;
+  text-align: center;
+}
+.upload-de .el-upload-dragger {
+  height: 30px;
+  width:200px;
 }
 </style>
