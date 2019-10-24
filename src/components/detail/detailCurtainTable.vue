@@ -51,7 +51,9 @@
                 <label>位置:</label>
                 <div class="messageInput" style="width: 100px;">
                   {{
-                    headerData.location === null ? "无" : headerData.location
+                    headerData.location === null || headerData.location === ""
+                      ? "无"
+                      : headerData.location
                   }}
                 </div>
               </div>
@@ -168,7 +170,7 @@
         </el-table-column>
         <el-table-column label="名称" header-align="center" width="140">
           <template slot-scope="scope">
-            <div v-if="scope.row.curtainItemName !== null">
+            <div v-if="scope.row.curtainItemName !== null && scope.row.curtainItemName !== ''">
               {{ scope.row.curtainItemName }}
             </div>
             <div v-else>{{ getTypeName(scope.row.itemType) }}</div>
@@ -810,7 +812,7 @@ export default {
         var _data_temp = [];
         _data.forEach(item => {
           item.dosage = Number(item.dosage);
-          if (item.curtainItemName === null) {
+          if (item.curtainItemName === null || item.curtainItemName === "") {
             item.curtainItemName = this.getTypeName(item.itemType);
           }
           if (item.note === null) item.note = "";
@@ -825,7 +827,7 @@ export default {
         var oldData_temp = [];
         this.oldData.forEach(item => {
           item.dosage = Number(item.dosage);
-          if (item.curtainItemName === null) {
+          if (item.curtainItemName === null || item.curtainItemName === "") {
             item.curtainItemName = this.getTypeName(item.itemType);
           }
           if (item.note === null) item.note = "";
@@ -867,7 +869,7 @@ export default {
       let _data = JSON.parse(JSON.stringify(this.data));
       let _deleteArr = [];
       for (let i = _data.length - 1; i >= 0; i--) {
-        if (!_data[i].choose || _data[i].item.itemNo === null) {
+        if (!_data[i].choose || _data[i].item.itemNo === null || _data[i].item.itemNo === "") {
           _deleteArr.unshift(_data[i].id);
           _data.splice(i, 1);
         }
@@ -1267,7 +1269,11 @@ export default {
         else if (status === 2) status = 5;
         else status = 3;
       }
-      if (data.itemType === "pjb" || data.productType === "LCB" || data.productType =="GY") {
+      if (
+        data.itemType === "pjb" ||
+        data.productType === "LCB" ||
+        data.productType == "GY"
+      ) {
         // if (data.itemNo !== this.allData.itemList[index].itemNo) status = 3;
         // else status = -1;
         status = -1;
@@ -1487,7 +1493,8 @@ export default {
         for (; j < _index[i]; j++) {
           if (
             _curtainData[j].choose === false ||
-            _curtainData[j].item.itemNo === null
+            _curtainData[j].item.itemNo === null ||
+            _curtainData[j].item.itemNo === ""
           ) {
             _deleteId.push(_curtainData[j].id);
             continue;

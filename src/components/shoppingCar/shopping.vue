@@ -3,13 +3,13 @@
     <el-card shadow="hover" class="clearfix">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="墙纸" name="wallPaper">
-          <ShoppingWallPaper :wallpaperData="wallpaperData"></ShoppingWallPaper>
+          <ShoppingWallPaper v-if="activeName =='wallPaper'" :wallpaperData="wallpaperData"></ShoppingWallPaper>
         </el-tab-pane>
         <el-tab-pane label="窗帘" name="curtain">
-          <ShoppingCurtain :curtainData="curtainData"></ShoppingCurtain>
+          <ShoppingCurtain v-if="activeName =='curtain'" :curtainData="curtainData"></ShoppingCurtain>
         </el-tab-pane>
         <el-tab-pane label="软装" name="softSuit">
-          <ShoppingSoftSuit :softsuitData="softsuitData"></ShoppingSoftSuit>
+          <ShoppingSoftSuit v-if="activeName =='softSuit'" :softsuitData="softsuitData"></ShoppingSoftSuit>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -21,6 +21,7 @@ import ShoppingWallPaper from "./shoppingWallPaper";
 import ShoppingCurtain from "./shoppingCurtain";
 import ShoppingSoftSuit from "./shoppingSoftSuit";
 import { getUserMarket } from "@/api/shop";
+import { GetCartItem } from "@/api/shopASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 import Cookies from "js-cookie";
@@ -46,8 +47,13 @@ export default {
       var tempData = await getUserMarket({
         CID: Cookies.get("cid")
       });
+      var temp = await GetCartItem({
+        cid: Cookies.get("cid"),
+        commodityType:'soft'
+      });
       this.allData = tempData.data.cartItems;
       console.log(tempData.data);
+      console.log(temp)
       this.wallpaperData = this.allData.wallpaper;
       this.curtainData = this.allData.curtain;
       this.softsuitData = this.allData.soft;
@@ -75,7 +81,7 @@ export default {
     }
   },
   created() {
-    this.init();
+    //this.init();
   }
 };
 </script>

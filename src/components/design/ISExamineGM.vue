@@ -140,7 +140,7 @@
               @click="checkDetail(scope.row)"
               type="success"
               icon="el-icon-search"
-              size="small"
+              size="mini"
               circle
             ></el-button>
           </template>

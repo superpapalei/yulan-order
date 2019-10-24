@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card shadow="hover">
-      <div>
+      <div style="margin-bottom:10px;">
         <el-date-picker
           type="date"
           format="yyyy-MM-dd"
@@ -31,7 +31,7 @@
           >查询</el-button
         >
         <el-button
-          style="float:right"
+          style="float:right;margin-right:20px;"
           size="medium"
           @click="newOne"
           type="primary"
@@ -68,7 +68,7 @@
         ></el-table-column>
         <el-table-column
           prop="payerAccount"
-          width="160"
+          width="180"
           label="付款账号"
           align="center"
         ></el-table-column>
@@ -102,6 +102,7 @@
               @click="editIt(scope.row)"
               type="primary"
               icon="el-icon-edit"
+              size="mini"
               circle
             ></el-button>
             <el-button
@@ -109,17 +110,18 @@
               @click="deleteDetail(scope.row)"
               type="danger"
               icon="el-icon-delete"
+              size="mini"
               circle
             ></el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin:0 25%;" class="block">
+      <div style="margin:0 30%;" class="block">
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
           :page-size="limit"
-          layout="prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="count"
         ></el-pagination>
       </div>

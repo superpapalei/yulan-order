@@ -131,7 +131,7 @@
                   @click="toDetail(scope.row, 'see')"
                   type="warning"
                   icon="el-icon-search"
-                  size="small"
+                  size="mini"
                 >
                 </el-button>
               </el-tooltip>
@@ -149,7 +149,7 @@
                   @click="returnBack(scope.row, 'back')"
                   type="info"
                   icon="el-icon-back"
-                  size="small"
+                  size="mini"
                 >
                 </el-button>
               </el-tooltip>
@@ -167,7 +167,7 @@
                   @click="toDetail(scope.row, 'edit')"
                   type="primary"
                   icon="el-icon-edit"
-                  size="small"
+                  size="mini"
                 >
                 </el-button>
               </el-tooltip>
@@ -186,7 +186,7 @@
                   @click="returnBack(scope.row, 'delete')"
                   type="danger"
                   icon="el-icon-delete"
-                  size="small"
+                  size="mini"
                 >
                 </el-button>
               </el-tooltip>
@@ -217,7 +217,7 @@
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
           :page-size="pageSize"
-          layout="prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="allNum"
         >
         </el-pagination>

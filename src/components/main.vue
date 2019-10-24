@@ -845,7 +845,13 @@ export default {
   width: 300px !important;
 }
 .el-card__header {
-  padding: 13px 20px !important;
+  padding: 10px 15px !important;
+}
+.el-card__body{
+  padding: 15px;
+}
+.el-dialog__body {
+  padding: 20px;
 }
 .el-menu-item-group__title {
   padding: 4px 0 !important;
