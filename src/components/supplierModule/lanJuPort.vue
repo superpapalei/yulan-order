@@ -345,47 +345,37 @@
         </div>
         <hr />
         <div style="width:100%">
-          <el-table :data="gridData" style="width:100%" max-height="400px">
-            <el-table-column type="index" :index="indexMethod">
-            </el-table-column>
-            <af-table-column
-              property="ITEM_NO"
-              label="物料号"
-            ></af-table-column>
-            <af-table-column
-              property="MGUIGE"
-              label="物料型号"
-            ></af-table-column>
-            <af-table-column property="MNAME" label="名称"></af-table-column>
-            <!--width="50" -->
-            <af-table-column property="GRADE" label="规格"></af-table-column>
-            <af-table-column
-              property="QTY_PUR"
-              label="数量"
-              width="60"
-            ></af-table-column>
-            <el-table-column label="含税单价" width="80">
-              <template slot-scope="scope">
-                <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              property="UNIT1"
-              label="单位"
-              width="50"
-            ></el-table-column>
-            <af-table-column
-              property="TOTAL_MONEY"
-              label="金额"
-              width="70"
-            ></af-table-column>
-            <el-table-column property="NOTE" label="备注"></el-table-column>
-            <el-table-column property="DATE_REQ" label="约定日期" width="100">
-              <template slot-scope="scope">
-                <span>{{ scope.row.DATE_REQ | datatrans }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="送货日期" width="120">
+              <el-table :data="gridData" 
+                        class="th-font10"
+                        cellpadding="0" 
+                        style="width:100%"
+                         :summary-method="getSummaries"
+                         show-summary 
+                        >
+                        <el-table-column
+                        width="16"
+                        type="index"
+                        label=" "
+                        :index="indexMethod">
+                        </el-table-column>
+                        <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
+                        <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
+                        <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
+                        <el-table-column property="GRADE" label="规格"  min-width="50"></el-table-column>
+                        <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
+                        <el-table-column label="含税单价" width="80">
+                          <template slot-scope="scope">
+                            <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
+                          </template>
+                        </el-table-column>
+                        <el-table-column property="UNIT1" label="单位"  min-width="40"></el-table-column>
+                        <el-table-column property="TOTAL_MONEY" label="金额"  min-width="80"> 
+                        </el-table-column>
+                        <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
+                        <el-table-column property="DATE_REQ" label="约定日期" width="100" >
+                          <template slot-scope="scope"> <span>{{ scope.row.DATE_REQ | datatrans }}</span> </template>
+                        </el-table-column>
+                         <el-table-column label="送货日期" width="120">
               <template slot-scope="scope">
                 <el-date-picker
                   v-model="scope.row.DATE_DELIVER"
@@ -403,83 +393,8 @@
                 <el-input v-model="scope.row.SUPPLY_NOTES" clearable></el-input>
               </template>
             </el-table-column>
-          </el-table>
-          <el-table
-                    :data="sumMoneyCol"
-                    :show-header="false"
-                       class="th-font"
-                    id="PURCHASEDETAILLISTTABLE"
-                    object_class="_Object:GridTable"
-                    object_hashcode="6"
-                    cellpadding="0"
-                    style="width:100%"
-                  >
-                    <el-table-column width="48">
-                    </el-table-column>
-                    <af-table-column
-                      property="name1"
-                      label="物料号"
-                    ></af-table-column>
-                    <af-table-column
-                      property="name1"
-                      label="物料型号"
-                    ></af-table-column>
-                    <af-table-column
-                      property="name1"
-                      label="名称"
-                    ></af-table-column>
-                    <!--width="50" -->
-                    <af-table-column
-                      property="name1"
-                      label="规格"
-                    ></af-table-column>
-                    <el-table-column
-                      property="name1"
-                      label="数量"
-                      width="60"
-                    ></el-table-column>
-                
-                    <el-table-column
-                      property="name7"
-                      label="总金额"
-                      width="120"
-                      align="center"
-                    ></el-table-column>
-                    <el-table-column
-                      property="TOTAL_MONEY"
-                      label="金额"
-                      width="70"
-                      align="right"
-                    > <template slot-scope="scope">
-                    {{scope.row.name8|numFilter}}
-                    </template></el-table-column>
-                    <el-table-column
-                      property="name1"
-                      label="备注"
-                    ></el-table-column>
-                    <el-table-column
-                      property="name1"
-                      label="约定日期"
-                      width="100"
-                    >
-                      <template slot-scope="scope">
-                        <span>{{ scope.row.DATE_REQ | datatrans }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      property="name1"
-                      label="送货日期"
-                      width="100"
-                    >
-                      <template slot-scope="scope">
-                        <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      property="name1"
-                      label="说明"
-                    ></el-table-column>
-          </el-table>
+                     </el-table>
+  
           <hr />
           <div style="margin-top:10px">
             <div style="margin-bottom:10px;width:100%" class="data_1">
@@ -901,6 +816,7 @@
                 <el-table
                     :data="item.tab2[index]"
                    :show-header="false"
+                   class="th-font10"
                     border
                     object_class="_Object:GridTable"
                     object_hashcode="6"
@@ -1242,29 +1158,33 @@
               <tr>
                 <td colspan="2">
                   
-             <el-table :data="gridData" 
+                <el-table :data="gridData" 
+                        class="th-font10"
                         cellpadding="0" 
                         style="width:100%"
                          :summary-method="getSummaries"
                          show-summary 
                         >
                         <el-table-column
+                        width="16"
                         type="index"
+                        label=" "
                         :index="indexMethod">
                         </el-table-column>
-                        <af-table-column property="ITEM_NO" label="物料号" ></af-table-column>
-                        <af-table-column property="MGUIGE" label="物料型号"></af-table-column>
-                        <af-table-column property="MNAME" label="名称" ></af-table-column>   <!--width="50" -->
-                        <af-table-column property="GRADE" label="规格" ></af-table-column>
-                        <el-table-column property="QTY_PUR" label="数量" width="60" ></el-table-column>
+                        <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
+                        <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
+                        <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
+                        <el-table-column property="GRADE" label="规格"  min-width="50"></el-table-column>
+                        <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
                         <el-table-column label="含税单价" width="80">
                           <template slot-scope="scope">
                             <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
                           </template>
                         </el-table-column>
-                        <el-table-column property="UNIT1" label="单位" width="50"></el-table-column>
-                        <el-table-column property="TOTAL_MONEY" label="金额" width="70"></el-table-column>
-                        <el-table-column property="NOTE" label="备注" ></el-table-column>
+                        <el-table-column property="UNIT1" label="单位"  min-width="40"></el-table-column>
+                        <el-table-column property="TOTAL_MONEY" label="金额"  min-width="80"> 
+                        </el-table-column>
+                        <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
                         <el-table-column property="DATE_REQ" label="约定日期" width="100" >
                           <template slot-scope="scope"> <span>{{ scope.row.DATE_REQ | datatrans }}</span> </template>
                         </el-table-column>
@@ -1273,7 +1193,8 @@
                             <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
                           </template>
                         </el-table-column>
-                        <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"></el-table-column> ></el-table>
+                        <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"  min-width="60"></el-table-column> >
+                     </el-table>
                   <div><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button> </div>
                 </td>
               </tr>
@@ -1284,11 +1205,17 @@
 
       <!-- 待确认页签 -->
       <div id="supplyCon">
-        <el-card shadow="hover">
+      
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="待确认" name="first" align="left">
               <div align="right">
                 <template>
+                  <el-button
+                  @click="OneStepCheck()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_3"
+                  >一键确认</el-button>
                   <el-select
                   class="el-input_inner"
                     v-model="selvalue"
@@ -1307,18 +1234,23 @@
                 </template>
               </div>
 
-              <el-table border :data="pur_headData" style="width: 100%" stripe>
-                <el-table-column type="index" :index="indexMethod">
+              <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
+                 <el-table-column
+                  type="selection"
+                  width="55"
+                  >
+               </el-table-column>
+                <el-table-column type="index"  label=" "  :index="indexMethod">
                 </el-table-column>
                 <el-table-column
                   prop="PUR_NO"
-                  width="140"
+                  width="100"
                   label="单号"
                   align="left"
                 ></el-table-column>
                 <el-table-column
                   prop="CUSTOMER_NAME"
-                  width="250"
+                  min-width="150"
                   label="客户名称"
                   align="left"
                 ></el-table-column>
@@ -1327,14 +1259,14 @@
                     <span>{{ scope.row.STATUS | pur_headStatus }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="产品类型" width="150" align="center">
+                <el-table-column label="产品类型" width="90" align="center">
                   <template slot-scope="scope">
                     <span>{{ getProductType(scope.row.ORDER_NO) }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
                   prop="DATE_PUR"
-                  width="120"
+                  width="100"
                   label="建立日期"
                   align="center"
                 >
@@ -1343,13 +1275,15 @@
                 </el-table-column>
                 <el-table-column
                   prop="NOTES"
-                  width="240"
+                  min-width="200"
+                  
                   label="备注"
                   align="left"
                 ></el-table-column>
                 <el-table-column
                   prop="LJ_SUGGESTION"
                   label="兰居备注"
+                  min-width="50"
                   align="left"
                 ></el-table-column>
                 <el-table-column label="" width="120" align="center">
@@ -1364,8 +1298,8 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
-<el-tab-pane label="已确认" name="second" align="left">
-              <div align="center">
+       <el-tab-pane label="已确认" name="second" align="left">
+              <div >
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
@@ -1412,34 +1346,33 @@
                   size="small"
                   style="margin-left:8px"
                   class="button_2"
-                  >搜索</el-button
-                >
+                  >搜索</el-button>
                 <el-button
                   @click="downLoadAll()"
                   size="small"
                   style="margin-left:8px"
                   class="button_1"
-                  >下载表头及明细</el-button
-                >
+                  >下载表头及明细</el-button>
               </div>
               <el-table
                 border
                 :data="pur_headData"
+                class="th-font14"
                 style="width: 100%"
                 cellpadding="0"
                 stripe
               >
-                <el-table-column type="index" :index="indexMethod">
+                <el-table-column   label=" "  type="index" :index="indexMethod">
                 </el-table-column>
                 <el-table-column
                   prop="PUR_NO"
-                  width="120"
+                  width="100"
                   label="单号"
                   align="left"
                 ></el-table-column>
                 <el-table-column
                   prop="CUSTOMER_NAME"
-                  width="250"
+                  min-width="150"
                   label="客户名称"
                   align="left"
                 ></el-table-column>
@@ -1449,14 +1382,14 @@
                       scope.row.STATUS | pur_headStatus
                     }}</span></template>
                 </el-table-column>
-                <el-table-column label="产品类型" width="150" align="center">
+                <el-table-column label="产品类型" width="90" align="center">
                   <template slot-scope="scope">
                     <span>{{ getProductType(scope.row.ORDER_NO) }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
                   fomate="yyyy-MM-dd"
-                  width="120"
+                  width="100"
                   label="建立日期"
                   align="center"
                 >
@@ -1466,13 +1399,14 @@
                 </el-table-column>
                 <el-table-column
                   prop="NOTES"
-                  width="260"
+                  min-width="200"
                   label="备注"
                   align="left"
                 ></el-table-column>
                 <el-table-column
                   prop="LJ_SUGGESTION"
                   label="兰居备注"
+                  min-width="50"
                   align="left"
                 ></el-table-column>
                 <el-table-column label="" width="120" align="center">
@@ -1500,7 +1434,8 @@
               ></el-pagination>
             </div>
           </el-tabs>
-        </el-card>
+          
+      
       </div>
     </el-card>
   </div>
@@ -1512,15 +1447,17 @@ import {
   GetRelativePo,
   SaveHeadNotes,
   Submit,
+  UpdateCheckFlagBatch,
   CreateExcel
 } from "@/api/supplierASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 
 export default {
-  name: "LanJuPort",
+  name: "supplyPort",
   data() {
     return {
+      multipleSelection:[],
       colName:[{
             name1:"位置",
             name2:"名称",
@@ -1610,6 +1547,39 @@ detailCol:[
     }
   },
   methods: {
+      //选择或输入条件后搜索
+    OneStepCheck() {
+      let arr_pur=[];
+      for(let i=0; i<this.multipleSelection.length;i++){
+        arr_pur.push(this.multipleSelection[i].PUR_NO);
+      }
+      var data={
+        arr_pur:arr_pur,
+      };
+      UpdateCheckFlagBatch(data).then(res => {
+          if (res.code == 0) {
+          this.$alert("批量确认成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.autoSearch();
+        } else {
+          this.$alert("批量确认失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        }
+      });
+      
+    },
+
+
+    
+
+     handleSelectionChange(val) {
+        this.multipleSelection = val;
+        console.log(val)
+      },
         getSummaries(param) {
         const { columns, data } = param;
         const sums = [];
@@ -1633,6 +1603,7 @@ detailCol:[
               }
             }, 0);
             sums[index];
+
           } 
         });
 
@@ -1968,6 +1939,21 @@ detailCol:[
           if (this.gridData[i].DATE_DELIVER == "9999/12/31 00:00:00") {
             this.gridData[i].DATE_DELIVER = "";
           }
+      
+      //将总金额保留两位小数
+      let value = Math.round(parseFloat(this.gridData[i].TOTAL_MONEY) * 100) / 100;
+      let s = value.toString().split(".");
+      if (s.length == 1) {
+        value = value.toString() + ".00";
+        this.gridData[i].TOTAL_MONEY= value;
+      }
+      if (s.length > 1) {
+        if (s[1].length < 2) {
+          value = value.toString() + "0";
+        }
+        this.gridData[i].TOTAL_MONEY= value;
+      }
+    
           //将所有位置列出来
           if (loc.indexOf(this.gridData[i].CL_PLACE_ID) == -1) {
             loc.push(this.gridData[i].CL_PLACE_ID);
@@ -2139,9 +2125,15 @@ detailCol:[
   font-size:10px;
   font-weight:bold;
 }
+.th-font10{
+  font-size:10px;
+}
 .th-font16{
   font-size:16px;
   font-weight:bold;
+}
+.th-font14{
+  font-size:12px;
 }
 .button_1 {
   width: 130px;
@@ -2153,6 +2145,14 @@ detailCol:[
 }
 .button_2 {
   width: 60px;
+  height: 40px;
+  background: #8bc34a;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  text-align: center;
+}
+.button_3 {
+  width: 80px;
   height: 40px;
   background: #8bc34a;
   margin-left: 10px;
