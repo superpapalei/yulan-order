@@ -151,6 +151,7 @@ import { mapState } from "vuex";
 import Cookies from "js-cookie";
 import { getCurtainMsg, getShopSingleCurtain } from "@/api/shopSearch";
 import { findItemActivity } from "@/api/findActivity";
+import { GetPromotionByItem } from "@/api/orderListASP";
 
 export default {
   name: "Curtain",
@@ -284,7 +285,9 @@ export default {
         .then(res => {
           //赋值给表格
           this.curtainData = res.data;
-          this.curtainData = this.curtainData.filter(item => item.saleId != 'C'&& item.saleId!= 'F')
+          this.curtainData = this.curtainData.filter(
+            item => item.saleId != "C" && item.saleId != "F"
+          );
           this.createCurtainMsg(this.curtainData);
           //获取总条数
           if (this.totalNumber !== this.curtainData[0].total) {
@@ -311,7 +314,9 @@ export default {
         .then(res => {
           //赋值给表格
           this.curtainData = res.data;
-          this.curtainData = this.curtainData.filter(item => item.saleId != 'C'&& item.saleId!= 'F')
+          this.curtainData = this.curtainData.filter(
+            item => item.saleId != "C" && item.saleId != "F"
+          );
           this.createCurtainMsg(this.curtainData);
           if (this.totalNumber !== this.curtainData[0].total) {
             this.totalNumber = this.curtainData[0].total;
@@ -328,6 +333,10 @@ export default {
       this.activityOptions = [];
       this.isActivity = [];
       for (let i = 0; i < data.length; i++) {
+        var defaultSel = {
+          pri: 0,
+          id: 0
+        };
         this.curtainMsg.push({
           itemNo: data[i].itemNo, //型号
           width: "", //宽
@@ -340,40 +349,54 @@ export default {
           activity: "", //活动
           groupType: "" //groupType
         });
-        await this.getProductActivity(data[i])
-          .then(res => {
-            if (res.length === 0) this.isActivity.push(true);
-            else this.isActivity.push(false);
-            let _obj = [];
-            for (var i = 0; i < res.length; i++) {
-              for (var j = 0; j < res[i].second.length; j++) {
-                var obj = {
-                  label:
-                    res[i].second[j].orderType +
-                    " " +
-                    res[i].second[j].orderName,
-                  value: res[i].second[j].pId
-                };
-                var obj1 = {
-                  pId: res[i].second[j].pId,
-                  groupType: res[i].second[j].groupType
-                };
-                let re = this.activityGroup.some(i => i.pId === obj1.pId);
-                if (re === false) this.activityGroup.push(obj1);
-                _obj.push(obj);
-              }
-            }
-            _obj.push({
-              label: "不参与活动",
-              value: null
-            });
-            this.activityOptions.push(_obj);
-          })
-          .catch(err => {
-            this.isActivity.push(true);
-            this.activityOptions.push([]);
-            console.log(err);
-          });
+        //await this.getProductActivity(data[i])
+        let res = await GetPromotionByItem(
+          {
+            cid: this.cid,
+            customerType: this.customerType,
+            itemNo: data[i].itemNo,
+            itemVersion: data[i].itemVersion,
+            productType: data[i].productType,
+            productBrand: data[i].productBrand
+          },
+          { loading: false }
+        );
+        if (res.data.length === 0) this.isActivity.push(true);
+        else this.isActivity.push(false);
+        let _obj = [];
+
+        for (var j = 0; j < res.data.length; j++) {
+          var obj = {
+            label: res.data[j].ORDER_TYPE + " " + res.data[j].ORDER_NAME,
+            value: res.data[j].P_ID
+          };
+          var obj1 = {
+            pId: res.data[j].P_ID,
+            groupType: res.data[j].GROUP_TYPE
+          };
+          if (res.data[j].PRIORITY != 0 && defaultSel.pri == 0) {
+            defaultSel.pri = res.data[j].PRIORITY;
+            defaultSel.id = res.data[j].P_ID;
+          } else if (
+            res.data[j].PRIORITY != 0 &&
+            defaultSel.pri > res.data[j].PRIORITY
+          ) {
+            defaultSel.pri = res.data[j].PRIORITY;
+            defaultSel.id = res.data[j].P_ID;
+          }
+          let re = this.activityGroup.some(i => i.pId === obj1.pId);
+          if (re === false) this.activityGroup.push(obj1);
+          _obj.push(obj);
+        }
+        _obj.push({
+          label: "不参与活动",
+          value: null
+        });
+        this.activityOptions.push(_obj);
+
+        if (defaultSel.pri != 0) {
+          this.curtainMsg[i].activity = defaultSel.id;
+        }
       }
     },
     //获取产品活动

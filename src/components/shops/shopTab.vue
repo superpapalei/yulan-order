@@ -176,6 +176,7 @@
 import { findItemActivity } from "@/api/findActivity";
 import { checkStore } from "@/api/searchStore";
 import { addShoppingCar } from "@/api/shop";
+import { GetPromotionByItem } from "@/api/orderListASP";
 import Axios from "axios";
 import Cookies from "js-cookie";
 
@@ -253,8 +254,9 @@ export default {
       var itemVersion = row.itemVersion ? row.itemVersion : "";
       var productType = row.productType ? row.productType : "";
       var productBrand = row.productBrand ? row.productBrand : "";
-      findItemActivity({
-        CID: this.cid,
+      //findItemActivity({
+      GetPromotionByItem({
+        cid: this.cid,
         customerType: this.customerType,
         itemNo: row.itemNo,
         itemVersion: itemVersion,
@@ -262,20 +264,34 @@ export default {
         productBrand: productBrand
       })
         .then(res => {
-          if (res.length === 0) {
+          if (res.data.length === 0) {
             this.disableFlag = true;
           } else {
             this.disableFlag = false;
           }
-          for (var i = 0; i < res.length; i++) {
-            for (var j = 0; j < res[i].second.length; j++) {
-              var obj = {
-                label:
-                  res[i].second[j].orderType + " " + res[i].second[j].orderName,
-                value: res[i].second[j].pId
-              };
-              this.activity.push(obj);
+          var defaultSel = {
+            pri: 0,
+            id: 0
+          };
+          for (var i = 0; i < res.data.length; i++) {
+            var obj = {
+              label: res.data[i].ORDER_TYPE + " " + res.data[i].ORDER_NAME,
+              value: res.data[i].P_ID
+            };
+            if (res.data[i].PRIORITY != 0 && defaultSel.pri == 0) {
+              defaultSel.pri = res.data[i].PRIORITY;
+              defaultSel.id = res.data[i].P_ID;
+            } else if (
+              res.data[i].PRIORITY != 0 &&
+              defaultSel.pri > res.data[i].PRIORITY
+            ) {
+              defaultSel.pri = res.data[i].PRIORITY;
+              defaultSel.id = res.data[i].P_ID;
             }
+            this.activity.push(obj);
+          }
+          if (defaultSel.pri != 0) {
+            this.seletedActivity = defaultSel.id;
           }
           this.activity.push({
             label: "不参与活动",

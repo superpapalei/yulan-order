@@ -129,17 +129,6 @@
                         : '此产品不参与活动'
                     "
                   >
-                    <!-- <el-option-group
-                                            v-for="group in activity"
-                                            :key="group.label"
-                                            :label="group.label">
-                                            <el-option
-                                                v-for="item in group.options"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                    </el-option-group>-->
                     <el-option
                       v-for="item in activity"
                       :label="item.label"
@@ -195,7 +184,7 @@ import { getShopsWallPaperMsg } from "@/api/shopSearch";
 import { getWallPaperStore, checkStore } from "@/api/searchStore";
 import { findItemActivity } from "@/api/findActivity";
 import { addShoppingCar } from "@/api/shop";
-import { getItemById } from "@/api/orderListASP";
+import { getItemById, GetPromotionByItem } from "@/api/orderListASP";
 import Vue from "vue";
 import Cookies from "js-cookie";
 
@@ -277,50 +266,7 @@ export default {
       return row.type;
     },
     //收起展开行-获取商品的活动
-    expandChange(row) {
-      /*
-            console.log(row);
-            this.clearMsg();
-            findItemActivity({
-                CID: this.cid,
-                customerType: this.customerType,
-                itemNo: row.type,
-                itemVersion: row.versionNumber
-            }).then(res =>{
-                console.log(res);
-                if(res.length === 0){
-                    this.disableFlag = true; 
-                }
-                else{
-                    this.disableFlag = false;
-                }
-                for(var i=0; i<res.length; i++){
-                    for(var j=0; j<res[i].second.length; j++){
-                        var obj = {
-                                label: res[i].second[j].orderType+' '+res[i].second[j].orderName,
-                                // value: res[i].second[j].orderType,
-                                value: res[i].second[j].pId
-                        }
-                        this.activity.push(obj);
-                    }
-                }
-                this.activity.push({
-                    label: '不参与活动',
-                    value: null
-                });
-                console.log(res);
-                console.log(this.activity);              
-            }).catch(err =>{
-                console.log(err);                
-            })
-            let temp = this.expands;
-            this.expands = [];
-            this.expands.push(row.type);
-            if(temp.length === 1 && temp[0] === row.type){     // 收起展开行
-                this.expands = [];
-            }
-            */
-    },
+    expandChange(row) {},
     //通过历史记录查询产品
     searchByHistory(name) {
       this.tableData = [];
@@ -375,8 +321,9 @@ export default {
           this.history = arr.reverse();
           storage.history.toLocaleString();
           this.clearMsg();
-          findItemActivity({
-            CID: this.cid,
+          //findItemActivity({
+          GetPromotionByItem({
+            cid: this.cid,
             customerType: this.customerType,
             itemNo: data.type,
             itemVersion: data.versionNumber,
@@ -384,22 +331,34 @@ export default {
             productBrand: data.brand
           })
             .then(res => {
-              if (res.length === 0) {
+              if (res.data.length === 0) {
                 this.disableFlag = true;
               } else {
                 this.disableFlag = false;
               }
-              for (var i = 0; i < res.length; i++) {
-                for (var j = 0; j < res[i].second.length; j++) {
-                  var obj = {
-                    label:
-                      res[i].second[j].orderType +
-                      " " +
-                      res[i].second[j].orderName,
-                    value: res[i].second[j].pId
-                  };
-                  this.activity.push(obj);
+              var defaultSel = {
+                pri: 0,
+                id: 0
+              };
+              for (var i = 0; i < res.data.length; i++) {
+                var obj = {
+                  label: res.data[i].ORDER_TYPE + " " + res.data[i].ORDER_NAME,
+                  value: res.data[i].P_ID
+                };
+                if (res.data[i].PRIORITY != 0 && defaultSel.pri == 0) {
+                  defaultSel.pri = res.data[i].PRIORITY;
+                  defaultSel.id = res.data[i].P_ID;
+                } else if (
+                  res.data[i].PRIORITY != 0 &&
+                  defaultSel.pri > res.data[i].PRIORITY
+                ) {
+                  defaultSel.pri = res.data[i].PRIORITY;
+                  defaultSel.id = res.data[i].P_ID;
                 }
+                this.activity.push(obj);
+              }
+              if (defaultSel.pri != 0) {
+                this.seletedActivity = defaultSel.id;
               }
               this.activity.push({
                 label: "不参与活动",
