@@ -1210,6 +1210,12 @@
             <el-tab-pane label="待确认" name="first" align="left">
               <div align="right">
                 <template>
+                  <el-button
+                  @click="OneStepCheck()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_3"
+                  >一键确认</el-button>
                   <el-select
                   class="el-input_inner"
                     v-model="selvalue"
@@ -1228,7 +1234,12 @@
                 </template>
               </div>
 
-              <el-table  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
+              <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
+                 <el-table-column
+                  type="selection"
+                  width="55"
+                  >
+               </el-table-column>
                 <el-table-column type="index"  label=" "  :index="indexMethod">
                 </el-table-column>
                 <el-table-column
@@ -1436,6 +1447,7 @@ import {
   GetRelativePo,
   SaveHeadNotes,
   Submit,
+  UpdateCheckFlagBatch,
   CreateExcel
 } from "@/api/supplierASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
@@ -1445,6 +1457,7 @@ export default {
   name: "supplyPort",
   data() {
     return {
+      multipleSelection:[],
       colName:[{
             name1:"位置",
             name2:"名称",
@@ -1534,6 +1547,39 @@ detailCol:[
     }
   },
   methods: {
+      //选择或输入条件后搜索
+    OneStepCheck() {
+      let arr_pur=[];
+      for(let i=0; i<this.multipleSelection.length;i++){
+        arr_pur.push(this.multipleSelection[i].PUR_NO);
+      }
+      var data={
+        arr_pur:arr_pur,
+      };
+      UpdateCheckFlagBatch(data).then(res => {
+          if (res.code == 0) {
+          this.$alert("批量确认成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.autoSearch();
+        } else {
+          this.$alert("批量确认失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        }
+      });
+      
+    },
+
+
+    
+
+     handleSelectionChange(val) {
+        this.multipleSelection = val;
+        console.log(val)
+      },
         getSummaries(param) {
         const { columns, data } = param;
         const sums = [];
@@ -2099,6 +2145,14 @@ detailCol:[
 }
 .button_2 {
   width: 60px;
+  height: 40px;
+  background: #8bc34a;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  text-align: center;
+}
+.button_3 {
+  width: 80px;
   height: 40px;
   background: #8bc34a;
   margin-left: 10px;

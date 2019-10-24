@@ -1165,6 +1165,7 @@
             <el-tab-pane label="待确认" name="first" align="left">
               <div align="right">
                 <template>
+                   
                   <el-select
                   class="el-input_inner"
                     v-model="selvalue"
@@ -1183,7 +1184,12 @@
                 </template>
               </div>
 
-              <el-table   class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
+              <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
+                 <el-table-column
+                  type="selection"
+                  width="55"
+                  >
+               </el-table-column>
                 <el-table-column type="index"  label=" "  :index="indexMethod">
                 </el-table-column>
                 <el-table-column
@@ -1470,6 +1476,10 @@ detailCol:[
     }
   },
   methods: {
+     handleSelectionChange(val) {
+        //this.multipleSelection = val;
+        console.log(val)
+      },
         getSummaries(param) {
         const { columns, data } = param;
         const sums = [];
