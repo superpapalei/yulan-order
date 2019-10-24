@@ -9,6 +9,7 @@
                         <div style="margin-bottom:10px"><h1>备注信息：{{ pur_headForm.NOTES}}</h1> </div>
                         <hr />
                         <div style="width:100%">
+
          <el-table
                     :data="colName"
                       :show-header="false"
@@ -21,7 +22,7 @@
                    >
                     <af-table-column
                       property="name1"
-                      width="160"
+                      width="120"
                       label="位置"
                     ></af-table-column>
                     <af-table-column
@@ -71,9 +72,9 @@
                   </el-table>
                   <div  >
                     <div v-for="(item, index) of items" :key="index">
-                  <!-- 循环因子 -->
+                  <!-- 已确认订单详情循环因子 -->
                   <el-card body-style="padding: 0px">
-                 <el-card     style="width:155px;float:left;"  body-style="padding: 5px" align="left">
+                 <el-card     style="width:118px;float:left;"  body-style="padding: 0px" align="left"   >
                   <div>
                      <template>
                         <div>
@@ -124,9 +125,7 @@
                       </template>
                   </div>
                  </el-card>
-                      <div style="width:159; float:left">
                      
-                    </div>
 
                 <el-table
                     :data="item.tab2[index]"
@@ -135,10 +134,9 @@
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
-                    style="width:866px; float:right"
+                    style="width:905px; float:right"
                     
                    >
-                    
                                 <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
                                 <el-table-column width="120" label="inner编码"> <template slot-scope="scope">{{scope.row.item_no}} </template> </el-table-column>
                                 <el-table-column label="inner名称"  header-align="center" width="150"><template slot-scope="scope">{{scope.row.mname}} </template></el-table-column>
@@ -152,7 +150,7 @@
 
                   </el-card>
                <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" border>
-                   <el-table-column label="预约" header-align="center" width="160" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
+                   <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
                     <!-- <el-table-column label="交货"  header-align="center" width="80"></el-table-column> -->
@@ -165,7 +163,7 @@
                     <el-table-column label="备注"  header-align="center" align="center"> </el-table-column>
                 </el-table>
 
-                 <!-- /循环因子 -->
+                 <!-- /已确认订单详情循环因子 -->
                  </div>
                  </div>
                   <el-table
@@ -176,11 +174,11 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font"
+                    class="th-font16"
                    >
                     <af-table-column
                       property="name1"
-                      width="160"
+                      width="120"
                       label="位置"
                     ></af-table-column>
                     <af-table-column
@@ -209,7 +207,7 @@
                       label="用量"
                       width="60"
                     ></el-table-column>
-                    <el-table-column property="name7" label="含税单价" width="100" align="center">
+                             <el-table-column property="name7" label="含税单价" width="100" align="center">
                     
                     </el-table-column>
        
@@ -413,7 +411,7 @@
                     </td>
                   </tr>
                   <tr> <td colspan="2">
-      <el-table
+  <el-table
                     :data="colName"
                       :show-header="false"
                     border
@@ -425,7 +423,7 @@
                    >
                     <af-table-column
                       property="name1"
-                      width="160"
+                      width="120"
                       label="位置"
                     ></af-table-column>
                     <af-table-column
@@ -475,9 +473,9 @@
                   </el-table>
                   <div  >
                     <div v-for="(item, index) of items" :key="index">
-                  <!-- 循环因子 -->
+                  <!-- 已确认订单详情循环因子 -->
                   <el-card body-style="padding: 0px">
-                 <el-card     style="width:155px;float:left;"  body-style="padding: 5px" align="left">
+                 <el-card     style="width:118px;float:left;"  body-style="padding: 0px" align="left"   >
                   <div>
                      <template>
                         <div>
@@ -528,9 +526,7 @@
                       </template>
                   </div>
                  </el-card>
-                      <div style="width:159; float:left">
                      
-                    </div>
 
                 <el-table
                     :data="item.tab2[index]"
@@ -539,10 +535,9 @@
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
-                    style="width:866px; float:right"
+                    style="width:905px; float:right"
                     
                    >
-                    
                                 <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
                                 <el-table-column width="120" label="inner编码"> <template slot-scope="scope">{{scope.row.item_no}} </template> </el-table-column>
                                 <el-table-column label="inner名称"  header-align="center" width="150"><template slot-scope="scope">{{scope.row.mname}} </template></el-table-column>
@@ -556,7 +551,7 @@
 
                   </el-card>
                <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" border>
-                   <el-table-column label="预约" header-align="center" width="160" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
+                   <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
                     <!-- <el-table-column label="交货"  header-align="center" width="80"></el-table-column> -->
@@ -569,7 +564,7 @@
                     <el-table-column label="备注"  header-align="center" align="center"> </el-table-column>
                 </el-table>
 
-                 <!-- /循环因子 -->
+                 <!-- /已确认订单详情循环因子 -->
                  </div>
                  </div>
                   <el-table
@@ -580,11 +575,11 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font"
+                    class="th-font16"
                    >
                     <af-table-column
                       property="name1"
-                      width="160"
+                      width="120"
                       label="位置"
                     ></af-table-column>
                     <af-table-column
@@ -613,12 +608,9 @@
                       label="用量"
                       width="60"
                     ></el-table-column>
-                      <el-table-column property="name7" label="含税单价" width="100" align="center">
-                    
+                             <el-table-column property="name7" label="含税单价" width="100" align="center">
                     </el-table-column>
-       
                     <el-table-column
-                  
                       label="金额"
                       width="80"
                       align="right"
@@ -1301,7 +1293,7 @@ detailCol:[
                 unit1: this.gridData[i].UNIT1,
                 price_taxin: this.gridData[i].PRICE_TAXIN,
                 total_money: this.gridData[i].TOTAL_MONEY,
-                product_note: this.gridData[i].PRODICT_NOTE,
+                product_note: this.gridData[i].PRODUCT_NOTE,
                 notes: this.gridData[i].NOTE
               };
               tabArr2.push(temObj2);
@@ -1433,6 +1425,14 @@ detailCol:[
   color: rgb(255, 255, 255);
   text-align: center
 }
+.th-font{
+  font-size:10px;
+  font-weight:bold;
+}
+.th-font16{
+  font-size:16px;
+  font-weight:bold;
+}
 .messageInput{
   margin: 3px;
     border: 1px solid #c3c3c3;
@@ -1462,6 +1462,7 @@ detailCol:[
 }
 .messageBox{
     padding: 3px 0;
+    font-size: 8px
 }
 .data_1 {
   font-size: 1.5em;
