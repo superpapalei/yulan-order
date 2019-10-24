@@ -1183,7 +1183,7 @@
                 </template>
               </div>
 
-              <el-table  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
+              <el-table   class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
                 <el-table-column type="index"  label=" "  :index="indexMethod">
                 </el-table-column>
                 <el-table-column
@@ -1215,6 +1215,7 @@
                 <el-table-column
                   prop="NOTES"
                   min-width="200"
+                  header-align="center"
                   label="备注"
                   align="left"
                 ></el-table-column>
@@ -1326,6 +1327,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column
+                header-align="center"
                   prop="NOTES"
                   min-width="200"
                   label="备注"

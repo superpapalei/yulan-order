@@ -1265,6 +1265,7 @@
                 <el-table-column
                   prop="NOTES"
                   min-width="200"
+                  
                   label="备注"
                   align="left"
                 ></el-table-column>
