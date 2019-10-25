@@ -39,8 +39,8 @@
             <el-table-column label="帘外包宽度(m)" width="120px">
               <template slot-scope="scope1">
                 <span v-if="scope1.row.outsourcingBoxExist === 1">{{
-                  (scope1.row.outsourcingBoxWidth !== null &&
-                  scope1.row.outsourcingBoxWidth !== 0)
+                  scope1.row.outsourcingBoxWidth !== null &&
+                  scope1.row.outsourcingBoxWidth !== 0
                     ? scope1.row.outsourcingBoxWidth
                     : "--"
                 }}</span>
@@ -52,7 +52,9 @@
             </el-table-column>
             <el-table-column label="位置">
               <template slot-scope="scope1">{{
-                (scope1.row.location === null|| scope1.row.location === "") ? "--" : scope1.row.location
+                scope1.row.location === null || scope1.row.location === ""
+                  ? "--"
+                  : scope1.row.location
               }}</template>
             </el-table-column>
             <el-table-column label="活动">
@@ -258,7 +260,7 @@ export default {
           activity: val
         });
         this.expands.push(val);
-        
+
         // for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
         //   for (
         //     let k = 0;
@@ -275,31 +277,31 @@ export default {
         //   }
         // }
         //总价赋值
-        for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
-          if (theData[i].curtainCartItems[j].price == 0) {
-            var totalPrice = 0;
-            for (
-              let k = 0;
-              k < theData[i].curtainCartItems[j].curtainLists.length;
-              k++
-            ) {
-              for (
-                let l = 0;
-                l <
-                theData[i].curtainCartItems[j].curtainLists[k]
-                  .curtainCommodities.length;
-                l++
-              ) {
-                totalPrice +=
-                  theData[i].curtainCartItems[j].curtainLists[k]
-                    .curtainCommodities[l].price *
-                  theData[i].curtainCartItems[j].curtainLists[k]
-                    .curtainCommodities[l].dosage;
-              }
-            }
-            theData[i].curtainCartItems[j].price = totalPrice;
-          }
-        }
+        // for (let j = 0; j < theData[i].curtainCartItems.length; j++) {
+        //   if (theData[i].curtainCartItems[j].price == 0) {
+        //     var totalPrice = 0;
+        //     for (
+        //       let k = 0;
+        //       k < theData[i].curtainCartItems[j].curtainLists.length;
+        //       k++
+        //     ) {
+        //       for (
+        //         let l = 0;
+        //         l <
+        //         theData[i].curtainCartItems[j].curtainLists[k]
+        //           .curtainCommodities.length;
+        //         l++
+        //       ) {
+        //         totalPrice +=
+        //           theData[i].curtainCartItems[j].curtainLists[k]
+        //             .curtainCommodities[l].price *
+        //           theData[i].curtainCartItems[j].curtainLists[k]
+        //             .curtainCommodities[l].dosage;
+        //       }
+        //     }
+        //     theData[i].curtainCartItems[j].price = totalPrice;
+        //   }
+        // }
       }
       this.shopsData = theData;
       //获取中文活动名
@@ -581,10 +583,9 @@ export default {
         this.multipleSelection[i].item.itemNo = this.multipleSelection[
           i
         ].modelNumber;
-        this.multipleSelection[i].item.itemNoSample =
-          (!_itemNoSample)
-            ? this.multipleSelection[i].modelNumber
-            : _itemNoSample;
+        this.multipleSelection[i].item.itemNoSample = !_itemNoSample
+          ? this.multipleSelection[i].modelNumber
+          : _itemNoSample;
         this.multipleSelection[i].item.itemVersion = _data.item.itemVersion;
         this.multipleSelection[i].item.groupType = "E";
         this.multipleSelection[i].id = _data.id;
@@ -621,11 +622,9 @@ export default {
         let _outHeightChoose = val[i].outsourcingBoxExist;
         let _wbh = val[i].outsourcingBoxWidth;
         let _order = {
-          flagFlType:
-            (!val[i].salPromotion) ? "" : val[i].salPromotion.falgFl, //新增活动字段
+          flagFlType: !val[i].salPromotion ? "" : val[i].salPromotion.falgFl, //新增活动字段
           itemNo: val[i].modelNumber, //型号
-          itemNoSample:
-           (!_itemNoSample)? val[i].modelNumber : _itemNoSample, //样本型号
+          itemNoSample: !_itemNoSample ? val[i].modelNumber : _itemNoSample, //样本型号
           partSendId: "0", //分批发货标志，0不可以，1可以
           productionVersion: _data.item.itemVersion, //产品版本
           //7.23新需求只要1个
@@ -717,7 +716,7 @@ export default {
   },
   created() {
     this.init();
-  },
+  }
   // watch: {
   //   curtainData(data) {
   //     this.shopsData = [];

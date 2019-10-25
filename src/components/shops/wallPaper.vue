@@ -284,92 +284,91 @@ export default {
       this.expands = [];
       getShopsWallPaperMsg(data)
         .then(res => {
-          getItemById({ itemNo: res.data.itemNo }).then(res => {
-            res.data.DECIMAL_PLACES == "1"
+          getItemById({ itemNo: res.data.itemNo }).then(res2 => {
+            res2.data.DECIMAL_PLACES == "1"
               ? (this.decimalNum = 1)
               : (this.decimalNum = 2);
-          });
-          this.tableData = [];
-          this.tableData.push({
-            type: res.data.itemNo, //型号
-            sample: res.data.oldItemNo, //样本型号
-            versionNumber: res.data.itemVersion, //版本
-            version: res.data.itemType.note, //名称
-            brand: res.data.productBrand, //品牌
-            productType: res.data.productType, //类型
-            unit: res.data.unit === "°ü" ? "包" : res.data.unit, //单位
-            itemFlag: res.data.itemFlag, //不知是啥
-            number: "", //数量
-            anotherNumber: "" //辅助数量
-          });
-          return this.tableData[0];
-        })
-        .then(data => {
-          let storage = window.localStorage;
-          let arr = [];
-          if (storage.history !== undefined && storage.history !== null) {
-            arr = storage.history.toLocaleString().split(",");
-          }
-          //记录去重
-          arr.push(this.searchKey.toUpperCase());
-          arr = [...new Set(arr)];
-          //只保留最新的8条记录
-          if (arr.length > 8) {
-            arr = arr.splice(arr.length - 8);
-          }
-          storage.history = arr;
-          this.history = arr.reverse();
-          storage.history.toLocaleString();
-          this.clearMsg();
-          //findItemActivity({
-          GetPromotionByItem({
-            cid: this.cid,
-            customerType: this.customerType,
-            itemNo: data.type,
-            itemVersion: data.versionNumber,
-            productType: data.productType,
-            productBrand: data.brand
-          })
-            .then(res => {
-              if (res.data.length === 0) {
-                this.disableFlag = true;
-              } else {
-                this.disableFlag = false;
-              }
-              var defaultSel = {
-                pri: 0,
-                id: 0
-              };
-              for (var i = 0; i < res.data.length; i++) {
-                var obj = {
-                  label: res.data[i].ORDER_TYPE + " " + res.data[i].ORDER_NAME,
-                  value: res.data[i].P_ID
-                };
-                if (res.data[i].PRIORITY != 0 && defaultSel.pri == 0) {
-                  defaultSel.pri = res.data[i].PRIORITY;
-                  defaultSel.id = res.data[i].P_ID;
-                } else if (
-                  res.data[i].PRIORITY != 0 &&
-                  defaultSel.pri > res.data[i].PRIORITY
-                ) {
-                  defaultSel.pri = res.data[i].PRIORITY;
-                  defaultSel.id = res.data[i].P_ID;
-                }
-                this.activity.push(obj);
-              }
-              if (defaultSel.pri != 0) {
-                this.seletedActivity = defaultSel.id;
-              }
-              this.activity.push({
-                label: "不参与活动",
-                value: null
-              });
-            })
-            .catch(err => {
-              console.log(err);
+
+            this.tableData = [];
+            this.tableData.push({
+              type: res.data.itemNo, //型号
+              sample: res.data.oldItemNo, //样本型号
+              versionNumber: res.data.itemVersion, //版本
+              version: res.data.itemType.note, //名称
+              brand: res.data.productBrand, //品牌
+              productType: res.data.productType, //类型
+              unit: res.data.unit === "°ü" ? "包" : res.data.unit, //单位
+              itemFlag: res.data.itemFlag, //不知是啥
+              number: "", //数量
+              anotherNumber: "" //辅助数量
             });
-          this.expands = [];
-          this.expands.push(data.type);
+            let storage = window.localStorage;
+            let arr = [];
+            if (storage.history !== undefined && storage.history !== null) {
+              arr = storage.history.toLocaleString().split(",");
+            }
+            //记录去重
+            arr.push(this.searchKey.toUpperCase());
+            arr = [...new Set(arr)];
+            //只保留最新的8条记录
+            if (arr.length > 8) {
+              arr = arr.splice(arr.length - 8);
+            }
+            storage.history = arr;
+            this.history = arr.reverse();
+            storage.history.toLocaleString();
+            this.clearMsg();
+            //findItemActivity({
+            GetPromotionByItem({
+              cid: this.cid,
+              customerType: this.customerType,
+              itemNo: res2.data.ITEM_NO,
+              itemVersion: res2.data.ITEM_VERSION,
+              productType: res2.data.PRODUCT_TYPE,
+              productBrand: res2.data.PRODUCT_BRAND
+            })
+              .then(res => {
+                if (res.data.length === 0) {
+                  this.disableFlag = true;
+                } else {
+                  this.disableFlag = false;
+                }
+                var defaultSel = {
+                  pri: 0,
+                  id: 0
+                };
+                for (var i = 0; i < res.data.length; i++) {
+                  var obj = {
+                    label:
+                      res.data[i].ORDER_TYPE + " " + res.data[i].ORDER_NAME,
+                    value: res.data[i].P_ID
+                  };
+                  if (res.data[i].PRIORITY != 0 && defaultSel.pri == 0) {
+                    defaultSel.pri = res.data[i].PRIORITY;
+                    defaultSel.id = res.data[i].P_ID;
+                  } else if (
+                    res.data[i].PRIORITY != 0 &&
+                    defaultSel.pri > res.data[i].PRIORITY
+                  ) {
+                    defaultSel.pri = res.data[i].PRIORITY;
+                    defaultSel.id = res.data[i].P_ID;
+                  }
+                  this.activity.push(obj);
+                }
+                if (defaultSel.pri != 0) {
+                  this.seletedActivity = defaultSel.id;
+                }
+                this.activity.push({
+                  label: "不参与活动",
+                  value: null
+                });
+              })
+              .catch(err => {
+                console.log(err);
+              });
+            this.expands = [];
+            this.expands.push(res.data.itemNo);
+          });
         })
         .catch(err => {
           this.tableData = [];

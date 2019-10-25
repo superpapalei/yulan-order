@@ -151,7 +151,7 @@ import { mapState } from "vuex";
 import Cookies from "js-cookie";
 import { getCurtainMsg, getShopSingleCurtain } from "@/api/shopSearch";
 import { findItemActivity } from "@/api/findActivity";
-import { GetPromotionByItem } from "@/api/orderListASP";
+import { getItemById, GetPromotionByItem } from "@/api/orderListASP";
 
 export default {
   name: "Curtain",
@@ -349,15 +349,19 @@ export default {
           activity: "", //活动
           groupType: "" //groupType
         });
+        let itemRes = await getItemById(
+          { itemNo: data[i].itemNo },
+          { loading: false }
+        );
         //await this.getProductActivity(data[i])
         let res = await GetPromotionByItem(
           {
             cid: this.cid,
             customerType: this.customerType,
-            itemNo: data[i].itemNo,
-            itemVersion: data[i].itemVersion,
-            productType: data[i].productType,
-            productBrand: data[i].productBrand
+            itemNo: itemRes.data.ITEM_NO,
+            itemVersion: itemRes.data.ITEM_VERSION,
+            productType: itemRes.data.PRODUCT_TYPE,
+            productBrand: itemRes.data.PRODUCT_BRAND
           },
           { loading: false }
         );

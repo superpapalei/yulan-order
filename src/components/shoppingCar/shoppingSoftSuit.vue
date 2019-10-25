@@ -671,7 +671,7 @@ export default {
         }
         if (
           this.customerType === "10" &&
-          this.multipleSelection[i].onlineSalesAmount === null|| this.multipleSelection[i].onlineSalesAmount == 0
+          (this.multipleSelection[i].onlineSalesAmount === null|| this.multipleSelection[i].onlineSalesAmount == 0)
         ) {
           arr.push(this.multipleSelection[i].item.itemNo);
         }

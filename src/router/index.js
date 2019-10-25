@@ -343,6 +343,14 @@ const router = new Router({
           name: 'payDelegationExamine',
           component: payDelegationExamine
         },
+        {
+          path: '/order/examineDetailNew',
+          name: 'examineDetailNew',
+          component: examineDetailNew,
+          meta: {
+            returnMain: true//该页面刷新回到主界面
+          }
+        },
       ]
     }
   ]
