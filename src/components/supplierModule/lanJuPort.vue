@@ -26,7 +26,7 @@
           <hr />
           <div style="width:100%">
 
- <el-table
+          <el-table
                     :data="colName"
                       :show-header="false"
                     border
@@ -90,10 +90,10 @@
                     <div v-for="(item, index) of items" :key="index">
                   <!-- 已确认订单详情循环因子 -->
                   <el-card body-style="padding: 0px">
-                 <el-card     style="width:116px;float:left;"  body-style="padding: 0px" align="left"   >
+                 <el-card     style="width:116px;float:left;"  body-style="padding: 3px" align="left"   >
                   <div>
                      <template>
-                        <div>
+                        <div class="messageBox1">
                           <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
                           {{
                             item.tab1[index].cl_place === null ||
@@ -146,6 +146,8 @@
                 <el-table
                     :data="item.tab2[index]"
                    :show-header="false"
+                   :span-method="function(col){ return arraySpanMethod(col,index)}"
+                   class="th-font10"
                     border
                     object_class="_Object:GridTable"
                     object_hashcode="6"
@@ -165,7 +167,7 @@
                   </el-table>
 
                   </el-card>
-               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" border>
+               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
                    <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
@@ -190,7 +192,7 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font16"
+                    class="th-font14-bold"
                    >
                     <af-table-column
                       property="name1"
@@ -247,9 +249,7 @@
                       label="备注"
                     ></el-table-column>
                   </el-table>
-            
-      
-          
+
             <hr />
             <div style="margin-top:10px">
               <div style="margin-bottom:10px;width:100%" class="data_1">
@@ -760,10 +760,10 @@
                     <div v-for="(item, index) of items" :key="index">
                   <!-- 已确认订单详情循环因子 -->
                   <el-card body-style="padding: 0px">
-                 <el-card     style="width:116px;float:left;"  body-style="padding: 0px" align="left"   >
+                 <el-card     style="width:116px;float:left;"  body-style="padding: 3px" align="left"   >
                   <div>
                      <template>
-                        <div>
+                        <div class="messageBox1">
                           <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
                           {{
                             item.tab1[index].cl_place === null ||
@@ -816,6 +816,7 @@
                 <el-table
                     :data="item.tab2[index]"
                    :show-header="false"
+                   :span-method="function(col){ return arraySpanMethod(col,index)}"
                    class="th-font10"
                     border
                     object_class="_Object:GridTable"
@@ -836,7 +837,7 @@
                   </el-table>
 
                   </el-card>
-               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" border>
+               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
                    <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
@@ -861,7 +862,7 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font16"
+                    class="th-font14-bold"
                    >
                     <af-table-column
                       property="name1"
@@ -1459,6 +1460,9 @@ export default {
   name: "supplyPort",
   data() {
     return {
+      arr_index: [],
+      arr_span: [],
+      arr_group:[],
       multipleSelection:[],
       colName:[{
             name1:"位置",
@@ -1549,6 +1553,26 @@ detailCol:[
     }
   },
   methods: {
+    
+
+
+
+    //合并行或列
+       arraySpanMethod({ row, column, rowIndex, columnIndex },index) {
+        if (columnIndex === 0) {//特别注意：查询出那列就合并那列，index别写成别的列
+        if(this.arr_index[index].indexOf(rowIndex)>-1 ){
+           var i=this.arr_index[index].indexOf(rowIndex);
+           return [this.arr_span[index][i], 1];
+          
+          
+      }
+       else return{
+              rowspan: 0,
+              colspan: 0
+          }
+       
+      } 
+      },
       //选择或输入条件后搜索
     OneStepCheck() {
       let arr_pur=[];
@@ -1580,7 +1604,6 @@ detailCol:[
 
      handleSelectionChange(val) {
         this.multipleSelection = val;
-        console.log(val)
       },
         getSummaries(param) {
         const { columns, data } = param;
@@ -1759,26 +1782,7 @@ detailCol:[
       this.po_type = this.selvalue;
       this.autoSearch();
     },
-    //大表合并方法 1-9列合并成1列。0列存表一
-    bigTableSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        return {
-          rowspan: 1,
-          colspan: 1
-        };
-      }
-      if (columnIndex === 1) {
-        return {
-          rowspan: 1,
-          colspan: 9
-        };
-      } else {
-        return {
-          rowspan: 0,
-          colspan: 0
-        };
-      }
-    },
+    
     //标签页切换
     handleClick(tab) {
       var tabName = tab.name;
@@ -2012,9 +2016,50 @@ detailCol:[
           tab2.push(tabArr2);
           let sumObj = { id: k, tab1: tab1, tab2: tab2, tab3: tab3 };
           this.items.push(sumObj);
+          // console.log(this.items);
+          // console.log(this.items[0].tab2);
         }
-
-
+        //对数据进行处理，便于排序
+        // k ,j  i 
+             this.arr_index.splice(0,this.arr_index.length);
+             this.arr_span.splice(0,this.arr_span.length);
+           console.log("this.items"); 
+         console.log(this.items);
+            for (let k=0;k<this.items.length;k++){
+                   let arr=this.items[k].tab2[k];
+                    console.log("arr");
+                     console.log(arr);
+                     let let_intSpana=[];
+                     let let_index=[];
+                   var intSpan=1;
+                   var intIndex=0;
+               for (let i=1;i<arr.length;i++){
+                if (arr[i].cl_name === arr[i - 1].cl_name ) {
+                  intSpan = intSpan + 1;//如果相同,该合并的rowSpan+1
+                  intIndex = i +1- intSpan;//row
+               }
+                 else if (arr[i].cl_name != arr[i - 1].cl_name  ) {
+                  let_index.push(intIndex);
+                  let_intSpana.push(intSpan);
+                  
+                  intSpan = 1;
+                  intIndex = i; 
+                }
+                 if (i==arr.length -1){
+                      let_index.push(intIndex);
+                  let_intSpana.push(intSpan);
+              }  
+        } 
+        this.arr_index.push(let_index);
+                this.arr_span.push(let_intSpana);
+            }
+           
+          //  console.log("this.arr_index"); 
+          // console.log(this.arr_index);
+          //   console.log("this.arr_span"); 
+          //  console.log(this.arr_span);
+          
+       
         //无效
         // for(let i=0;i<this.items.length;i++){
         //   for(let j=0;j<this.items[i].tab1.length;j++){
@@ -2137,6 +2182,10 @@ detailCol:[
 .th-font14{
   font-size:12px;
 }
+.th-font14-bold{
+  font-size:12px;
+  font-weight:bold;
+}
 .button_1 {
   width: 130px;
   height: 40px;
@@ -2203,16 +2252,20 @@ detailCol:[
   /* padding: 3px 6px 3px 6px; */
   min-width: 26px;
   border-radius: 4px;
-  color: gray;
+  color: rgb(0, 0, 255);
   display: inline-block;
 }
 .button_clolur {
   background: #8bc34a;
   color: rgb(255, 255, 255);
 }
+.messageBox1 {
+  padding: 3px 0;
+  font-size: 12px;
+}
 .messageBox {
   padding: 3px 0;
-  font-size: 8px;
+  font-size: 10px;
 }
 .data_1 {
   font-size: 1.5em;
