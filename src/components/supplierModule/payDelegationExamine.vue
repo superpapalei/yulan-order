@@ -44,7 +44,6 @@
          </el-input>
 
         <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
-        
       </div>
       
       <div style="margin-top:10px">
@@ -286,7 +285,8 @@
              <td style="width:8%"><h4>确认时间：</h4></td>
              <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.DATE_AFFIRM| datatransDetail }}</h4></td>
              <td style="width:8%"><h4>审核时间：</h4></td>
-             <td style="width:26%;margin-left:-30px;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
+             <td v-if="submitForm.STATE=='3'||submitForm.STATE=='4'" style="width:26%;margin-left:-30px;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
+             <td v-if="submitForm.STATE!='3'&& submitForm.STATE!='4'" style="width:26%;margin-left:-30px;"><h4></h4></td>
           </tr>
           <tr >
              <td style="width:8%"><h4>创建人：</h4></td>
@@ -294,11 +294,14 @@
              <td style="width:8%"><h4>确认人：</h4></td>
              <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.USER_AFFIRM }}</h4></td>
              <td style="width:8%"><h4>审核人：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.AUDITOR }}</h4></td>
+             <td v-if="submitForm.STATE=='3'||submitForm.STATE=='4'" style="width:26%;margin-left:-30px;"><h4>{{ submitForm.AUDITOR }}</h4></td>
+             <td v-if="submitForm.STATE!='3'&& submitForm.STATE!='4'" style="width:26%;margin-left:-30px;"><h4></h4></td>
           </tr>
           <tr >
              <td style="width:8%"><h4>单据状态：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td v-if="submitForm.STATE=='3'" style="width:25%;margin-left:-30px;color:green;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td v-if="submitForm.STATE=='4'" style="width:25%;margin-left:-30px;color:red;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td v-if="submitForm.STATE!='3'&&submitForm.STATE!='4'" style="width:25%;margin-left:-30px;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
           </tr>
         </table> 
       </div>  

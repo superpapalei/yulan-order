@@ -44,7 +44,7 @@
          </el-input>
 
         <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
-        
+        <el-button size="medium" type="primary" style="float:right"  @click="downLoad('/Files/template/test.jpg')" >下载委托书</el-button>   
       </div>
       
       <div style="margin-top:10px">
@@ -185,14 +185,6 @@
               </ul>
             </td>
           </tr>
-
-          <tr v-if="this.submitForm.STATE=='4'|this.submitForm.RETURN_REASON!=''">
-            <td class="grayTD"  colspan="4" rowspan="1"  style="font-size:20px;height:30px" >审核信息（退回）</td>
-          </tr>
-          <tr v-if="this.submitForm.STATE=='4'|this.submitForm.RETURN_REASON!=''">
-            <td class="grayTD"  colspan="1" rowspan="1"  style="height:50px" >退回原因</td>
-            <td colspan="3" rowspan="1"  style="height:50px" >{{submitForm.RETURN_REASON}}</td>
-          </tr>
         </table>
       </div> 
 
@@ -257,6 +249,14 @@
               </div>
             </td>
           </tr>
+
+          <tr v-if="this.submitForm.STATE=='4'">
+            <td class="grayTD"  colspan="4" rowspan="1"  style="font-size:20px;height:30px" >审核信息（退回）</td>
+          </tr>
+          <tr v-if="this.submitForm.STATE=='4'">
+            <td class="grayTD"  colspan="1" rowspan="1"  style="height:50px" >退回原因</td>
+            <td colspan="3" rowspan="1"  style="height:50px" >{{submitForm.RETURN_REASON}}</td>
+          </tr>
         </table>
        </div>
 
@@ -274,7 +274,8 @@
              <td style="width:8%"><h4>确认时间：</h4></td>
              <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.DATE_AFFIRM| datatransDetail }}</h4></td>
              <td style="width:8%"><h4>审核时间：</h4></td>
-             <td style="width:26%;margin-left:-30px;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
+             <td v-if="submitForm.STATE=='3'||submitForm.STATE=='4'" style="width:26%;margin-left:-30px;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
+             <td v-if="submitForm.STATE!='3'&& submitForm.STATE!='4'" style="width:26%;margin-left:-30px;"><h4></h4></td>
           </tr>
           <tr >
              <td style="width:8%"><h4>创建人：</h4></td>
@@ -282,7 +283,8 @@
              <td style="width:8%"><h4>确认人：</h4></td>
              <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.USER_AFFIRM }}</h4></td>
              <td style="width:8%"><h4>审核人：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.AUDITOR }}</h4></td>
+             <td v-if="submitForm.STATE=='3'||submitForm.STATE=='4'" style="width:26%;margin-left:-30px;"><h4>{{ submitForm.AUDITOR }}</h4></td>
+             <td v-if="submitForm.STATE!='3'&& submitForm.STATE!='4'" style="width:26%;margin-left:-30px;"><h4></h4></td>
           </tr>
           <tr >
              <td style="width:8%"><h4>单据状态：</h4></td>
