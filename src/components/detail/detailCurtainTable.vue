@@ -907,24 +907,6 @@ export default {
     },
     //点击更换编码名称
     getNewItemNo(data, index) {
-      // let _itemType = data.itemType;
-      // let _productType = data.productType;
-      // let status = (_productType === 'ML')?true:false;
-      // let status1 = (_productType === 'GY')?true:false;
-      // if(_itemType !== 'ls' && _itemType !== 'sha'){
-      //     this.$alert('该产品无法修改', '提示', {
-      //         confirmButtonText: '确定',
-      //         type: 'warning'
-      //     });
-      //     return;
-      // }
-      // if(status === false && status1 === false){
-      //     this.$alert('该产品无法修改', '提示', {
-      //         confirmButtonText: '确定',
-      //         type: 'warning'
-      //     });
-      //     return;
-      // }
       this.itemNo = "";
       this.searchKey = "";
       this.items = [];
@@ -1733,7 +1715,7 @@ export default {
   margin: 20px auto;
 }
 .messageBox > div {
-  padding: 10px 0;
+  padding: 5px 0;
 }
 .messageInput {
   border: 1px solid #c3c3c3;

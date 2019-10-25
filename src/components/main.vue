@@ -419,7 +419,7 @@ export default {
         document.getElementById("aside-logo").style.display = "block";
         document.getElementById("asideControll").innerHTML = "&#xe61e;";
       } else {
-        this.asideWidth = "65px";
+        this.asideWidth = "60px";
         document.getElementById("aside-logo").style.display = "none";
         document.getElementById("asideControll").innerHTML = "&#xe65f;";
       }

@@ -66,9 +66,439 @@
         :expand-row-keys="expands"
         :row-key="getRowKeys"
       >
-        <el-table-column width="0" type="expand">
-          <template>
-            ceshi
+        <el-table-column width="1" type="expand">
+          <template slot-scope="scope">
+            <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+            <!--  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-->
+            <div style="margin:10px;" class="curtainTable">
+              <el-table
+                style="width:100%;font-size:12px;"
+                border
+                :data="scope.row.curtains"
+                :span-method="
+                  function(col) {
+                    return cellMerge(col, scope.$index);
+                  }
+                "
+              >
+                <el-table-column
+                  width="130"
+                  header-align="center"
+                  label="商品信息"
+                >
+                  <template>
+                    <div class="messageBox">
+                      <div>
+                        <label>款号:</label>
+                        <div class="messageInput">
+                          {{ ruleForm.headerData.modelNumber }}
+                        </div>
+                      </div>
+                      <div>
+                        <label>成品宽:</label>
+                        <div class="messageInput">
+                          {{ ruleForm.headerData.width }}
+                        </div>
+                        m
+                      </div>
+                      <div>
+                        <label>成品高:</label>
+                        <div class="messageInput">
+                          {{ ruleForm.headerData.height }}
+                        </div>
+                        m
+                      </div>
+                      <div>
+                        <label>假帘高:</label>
+                        <div class="messageInput">
+                          {{ ruleForm.headerData.highJia }}
+                        </div>
+                        m
+                      </div>
+                      <div>
+                        <label>褶皱倍数:</label>
+                        <div class="messageInput">
+                          {{ ruleForm.headerData.drape }}
+                        </div>
+                      </div>
+                      <div>
+                        <label>帘头外包盒单边宽度:</label>
+                        <div
+                          v-if="
+                            ruleForm.headerData.outsourcingBoxExist === 1 &&
+                              ruleForm.headerData.outsourcingBoxWidth != 0
+                          "
+                          class="messageInput"
+                        >
+                          {{ ruleForm.headerData.outsourcingBoxWidth }}
+                        </div>
+                        <div v-else class="messageInput">无</div>
+                        m
+                      </div>
+                      <div>
+                        <label>位置:</label>
+                        <div class="messageInput" style="width: 70px;">
+                          {{
+                            ruleForm.headerData.location === null ||
+                            ruleForm.headerData.location === ""
+                              ? "无"
+                              : ruleForm.headerData.location
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="名称" header-align="center" width="60">
+                  <template slot-scope="scope">
+                    {{ getTypeName(scope.row.curtainPartName) }}
+                    <!-- <br> -->
+                    <span v-if="tableStatus !== 3">
+                      <!-- <el-checkbox @change="changeLink('lt',0)" v-if="scope.row.itemType === 'lt'" v-model="chooseBig[0]">
+                                <span v-if="chooseBig[0] == false" style="color: red;">×</span>
+                            </el-checkbox> -->
+                      <el-checkbox
+                        @change="changeLink('ls', 1)"
+                        v-if="scope.row.itemType === 'ls'"
+                        v-model="chooseBig[1]"
+                      >
+                        <span v-if="chooseBig[1] == false" style="color: red;"
+                          >×</span
+                        >
+                      </el-checkbox>
+                      <el-checkbox
+                        @change="changeLink('lspb', 2)"
+                        v-if="scope.row.itemType === 'lspb'"
+                        v-model="chooseBig[2]"
+                      >
+                        <span v-if="chooseBig[2] == false" style="color: red;"
+                          >×</span
+                        >
+                      </el-checkbox>
+                      <el-checkbox
+                        @change="changeLink('sha', 3)"
+                        v-if="scope.row.itemType === 'sha'"
+                        v-model="chooseBig[3]"
+                      >
+                        <span v-if="chooseBig[3] == false" style="color: red;"
+                          >×</span
+                        >
+                      </el-checkbox>
+                      <!-- <el-checkbox v-if="scope.row.itemType === 'pjb'" v-model="chooseBig[3]"></el-checkbox> -->
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="编码" header-align="center" width="125">
+                  <template slot-scope="scope">
+                    <div>
+                      <span v-if="tableStatus === 3">
+                        {{ scope.row.item.itemNo }}
+                      </span>
+                      <span
+                        v-else-if="
+                          scope.row.itemType === 'pjb' &&
+                            scope.row.changeFlag === 'Y'
+                        "
+                      >
+                        <el-select
+                          size="mini"
+                          v-model="scope.row.item.itemNo"
+                          placeholder="请选择"
+                          @change="changePJBUnit(scope.$index)"
+                        >
+                          <el-option
+                            v-for="item in part2"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          >
+                          </el-option>
+                        </el-select>
+                      </span>
+                      <span v-else-if="scope.row.changeFlag === 'Y'">
+                        <a
+                          class="uline"
+                          @click="getNewItemNo(scope.row, scope.$index)"
+                        >
+                          {{ scope.row.item.itemNo }}
+                        </a>
+                        <el-checkbox
+                          class="ml5"
+                          v-if="scope.row.deleteFlag === 'Y'"
+                          v-model="scope.row.choose"
+                          @change="changeLinkReverse(scope.row)"
+                        >
+                        </el-checkbox>
+                      </span>
+                      <span v-else>
+                        {{ scope.row.item.itemNo }}
+                        <el-checkbox
+                          class="ml5"
+                          v-if="scope.row.deleteFlag === 'Y'"
+                          v-model="scope.row.choose"
+                          @change="changeLinkReverse(scope.row)"
+                        >
+                        </el-checkbox>
+                      </span>
+                      <span
+                        v-if="
+                          bigToSmall(scope.row) == true && tableStatus !== 3
+                        "
+                        style="color: red;"
+                      >
+                        ×
+                      </span>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="名称" header-align="center" width="150">
+                  <template slot-scope="scope">
+                    <div
+                      v-if="
+                        scope.row.curtainItemName !== null &&
+                          scope.row.curtainItemName !== ''
+                      "
+                    >
+                      {{ scope.row.curtainItemName }}
+                    </div>
+                    <div v-else>{{ getTypeName(scope.row.itemType) }}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="规格:米/对"
+                  header-align="center"
+                  align="center"
+                  width="75"
+                >
+                  <template slot-scope="scope">
+                    {{
+                      scope.row.specification === 0 ||
+                      scope.row.specification === null
+                        ? "--"
+                        : scope.row.specification
+                    }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="面料属性"
+                  width="80"
+                  header-align="center"
+                  align="center"
+                >
+                  <template slot-scope="scope">
+                    <div
+                      v-if="
+                        scope.row.certainHeightWidth !== null &&
+                          scope.row.productType === 'ML'
+                      "
+                    >
+                      <el-select
+                        :disabled="tableStatus === 3"
+                        size="mini"
+                        v-model="scope.row.certainHeightWidth"
+                        placeholder="请选择"
+                        @change="changeDosageByFixtype(scope.$index)"
+                      >
+                        <el-option
+                          v-for="item in fixType"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div v-else></div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="用量"
+                  width="80"
+                  header-align="center"
+                  align="center"
+                >
+                  <template slot-scope="scope">
+                    <span v-if="tableStatus === 3">
+                      {{ scope.row.dosage | dosageFilter }}
+                      {{ scope.row.dosage === "" ? "" : scope.row.unit }}
+                    </span>
+                    <span v-else-if="customerType === '110'">
+                      <el-input
+                        v-if="scope.row.itemType != 'lt'"
+                        style="width: 75%;"
+                        size="mini"
+                        oninput="value=value.replace(/[^\d.]/g,'')
+                                .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                                .replace('.', '$#$').replace(/\./g, '')
+                                .replace('$#$', '.')
+                                .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 2)"
+                        v-model="scope.row.dosage"
+                      >
+                      </el-input>
+                      <el-input
+                        v-else
+                        style="width: 75%;"
+                        size="mini"
+                        oninput="value=value.replace(/[^\d.]/g,'')
+                                .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                                .replace('.', '$#$').replace(/\./g, '')
+                                .replace('$#$', '.')
+                                .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
+                        v-model="scope.row.dosage"
+                      >
+                      </el-input>
+                      {{ scope.row.dosage === "" ? "" : scope.row.unit }}
+                    </span>
+                    <span v-else-if="scope.row.itemType === 'lspb'">--</span>
+                    <span v-else-if="scope.row.modifyFlag === 'Y'">
+                      <el-input
+                        style="width: 75%;"
+                        size="mini"
+                        oninput="value=value.replace(/[^\d.]/g,'')
+                                .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                                .replace('.', '$#$').replace(/\./g, '')
+                                .replace('$#$', '.')
+                                .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 2)"
+                        v-model="scope.row.dosage"
+                      >
+                      </el-input>
+                      {{ scope.row.dosage === "" ? "" : scope.row.unit }}
+                    </span>
+                    <span v-else>
+                      {{ scope.row.dosage | dosageFilter }}
+                      {{ scope.row.dosage === "" ? "" : scope.row.unit }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="制造说明"
+                  width="110"
+                  header-align="center"
+                  align="center"
+                >
+                  <template slot-scope="scope">
+                    <div v-if="tableStatus === 3">
+                      {{ scope.row.manufacturingInstructions }}
+                    </div>
+                    <div v-else-if="scope.row.productType === 'XHB'"></div>
+                    <div v-else-if="scope.row.itemType === 'lt'">
+                      <el-select
+                        size="mini"
+                        v-model="scope.row.manufacturingInstructions"
+                        placeholder="--未选--"
+                      >
+                        <el-option
+                          v-for="item in part0"
+                          :key="item.value"
+                          :label="item.value"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div v-else-if="scope.row.itemType === 'lspb'">
+                      <el-select
+                        size="mini"
+                        v-model="scope.row.manufacturingInstructions"
+                        placeholder="--未选--"
+                      >
+                        <el-option
+                          v-for="item in part3"
+                          :key="item.value"
+                          :label="item.value"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div v-else-if="scope.row.productType === 'ML'">
+                      <el-select
+                        size="mini"
+                        v-model="scope.row.manufacturingInstructions"
+                        placeholder="--未选--"
+                      >
+                        <el-option
+                          v-for="item in part1"
+                          :key="item.value"
+                          :label="item.value"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <!-- <div v-if="part[scope.$index].length !== 0">
+                            <el-select size="mini" v-model="scope.row.creator" placeholder="--未选--">
+                                <el-option
+                                    v-for="item in part[scope.$index]"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div> -->
+                  </template>
+                </el-table-column>
+                <el-table-column label="说明" header-align="center" width="80">
+                  <template slot-scope="scope">
+                    <span style="color:red;">
+                      {{ scope.row.illustrate }}
+                      <!-- {{judgeTip(scope.row,scope.$index)}} -->
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="备注" header-align="center">
+                  <template slot-scope="scope">
+                    <el-input
+                      :autosize="{ maxRows: 6 }"
+                      :disabled="tableStatus === 3"
+                      type="textarea"
+                      v-model="scope.row.note"
+                      clearable
+                    >
+                    </el-input>
+                    {{ getRemark(scope.row) }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="兰居意见"
+                  header-align="center"
+                  v-if="tableStatus !== 0"
+                >
+                  <template slot-scope="scope">
+                    <el-input
+                      v-if="tableStatus === 1"
+                      type="textarea"
+                      :autosize="{ maxRows: 6 }"
+                      v-model="scope.row.suggestion"
+                      clearable
+                    >
+                    </el-input>
+                    <el-input
+                      v-else-if="tableStatus === 2 || tableStatus === 3"
+                      size="mini"
+                      disabled
+                      type="textarea"
+                      :autosize="{ maxRows: 6 }"
+                      v-model="scope.row.suggestion"
+                      clearable
+                    >
+                    </el-input>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="text-align: center;">
+                <el-input
+                  resize="none"
+                  type="textarea"
+                  :rows="3"
+                  :placeholder="'请输入第'+scope.row.LINE_NO+'副窗帘审核意见'"
+                  v-model="suggestionLJ[scope.$index]"
+                >
+                </el-input>
+              </div>
+            </div>
+            <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+            <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
           </template>
         </el-table-column>
         <el-table-column
@@ -122,11 +552,11 @@
             >
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           align="center"
           prop="checkStatus"
           label="明细状态"
-        ></el-table-column>
+        ></el-table-column> -->
       </el-table>
       <div style="float:right;margin-top:20px;height:80px;">
         <el-button
@@ -222,6 +652,17 @@ import {
   orderDetail,
   defeatChange
 } from "@/api/orderList";
+import {
+  getCurtainDetailMsg,
+  getGY,
+  changeDosageByNo,
+  addCurtainToCar,
+  changeItem,
+  changeItemBlur,
+  updateCurtain,
+  deleteTheGroup
+} from "@/api/curtain";
+import { GetDosageByNo } from "@/api/itemInfoASP";
 import { updateCurtainOrder, getOperationRecord } from "@/api/orderListASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -260,10 +701,86 @@ export default {
         ORDERBODY: []
       },
       expands: [],
-      tableStatus: "1",
+      tableStatus: 1,
       spanArr0: [],
       spanArr1: [],
-      spanArr2: []
+      spanArr2: [],
+      customerType: Cookies.get("customerType"), //客户类型
+      chooseBig: [true, true, true, true, true],
+      chooseIndex: -1,
+      dialogTableVisible: false,
+      dialogTitle: "", //弹出层标题
+      searchKey: "", //搜索的关键词
+      items: [], //可供选择的全部编码
+      currentPage: 1, //当前的页数
+      pageSize: 30, //每页的个数
+      totalNumber: 0, //全部编码的数量
+      chooseType: "", //选中的产品类型
+      itemNo: "", //选中的编码
+      data: [],
+      compareData: [], //对比数据
+      oldData: [], //保留最原始数据
+      fixType: [
+        {
+          value: 0,
+          label: "定高"
+        },
+        {
+          value: 1,
+          label: "定宽"
+        }
+      ],
+      //根据编号查询制造说明
+      partpart: [],
+      //帘头制造说明
+      part0: [
+        { value: "么术贴正车" },
+        { value: "么术贴反车" },
+        { value: "穿/挂杆款" },
+        { value: "特殊见备注" }
+      ],
+      //帘身、纱制造说明
+      part1: [{ value: "对开" }, { value: "单开" }, { value: "特殊开备注" }],
+      //帘身配布制造说明
+      part3: [
+        { value: "一个褶" },
+        { value: "一个半褶" },
+        { value: "二个褶" },
+        { value: "二个半褶" },
+        { value: "三个褶" },
+        { value: "三个半褶" }
+      ],
+      //配件编码
+      part2: [
+        { label: "GD920011:挂带", value: "GD920011" },
+        { label: "GD920012:挂带", value: "GD920012" },
+        { label: "GD920013:挂带", value: "GD920013" },
+        { label: "GD920041:挂带", value: "GD920041" },
+        { label: "GD920042:挂带", value: "GD920042" },
+        { label: "GD920061:挂带", value: "GD920061" },
+        { label: "GD920062:挂带", value: "GD920062" },
+        { label: "GD920063:挂带", value: "GD920063" },
+        { label: "GD920071:挂带", value: "GD920071" },
+        { label: "GD920072:挂带", value: "GD920072" },
+        { label: "GD920073:挂带", value: "GD920073" },
+        { label: "GD920101:挂带", value: "GD920101" },
+        { label: "GD920102:挂带", value: "GD920102" },
+        { label: "GD920103:挂带", value: "GD920103" },
+        { label: "GD920111:挂带", value: "GD920111" },
+        { label: "GD920112:挂带", value: "GD920112" },
+        { label: "GD920113:挂带", value: "GD920113" },
+        { label: "GD920121:挂带", value: "GD920121" },
+        { label: "GD920131:挂带", value: "GD920131" },
+        { label: "GD920141:挂带", value: "GD920141" },
+        { label: "PJB-006:绑带(赠送)", value: "PJB-006" },
+        { label: "PJB-001:挂带+侧钩(赠送)", value: "PJB-001" },
+        { label: "PJB-009-KAFEI:吊球+挂钩", value: "PJB-009-KAFEI" },
+        { label: "PJB-009-KAQI:吊球+挂钩", value: "PJB-009-KAQI" },
+        { label: "PJB-009-MIHUANG:吊球+挂钩", value: "PJB-009-MIHUANG" },
+        { label: "PJB-009-QIANHUI:吊球+挂钩", value: "PJB-009-QIANHUI" },
+        { label: "-未选择配件包-", value: null }
+      ],
+      suggestionLJ:[]
     };
   },
   components: {
@@ -481,35 +998,58 @@ export default {
       });
     },
     dealCurtainData() {
+      //配件包
+      this.part2 = [];
+      let _obj = {
+        limit: 999,
+        page: 1,
+        itemNO: "PJB"
+      };
+      changeItem(_obj)
+        .then(res => {
+          let _arr = [];
+          res.data.forEach(item => {
+            _arr.push({
+              label: `${item.itemNo}:${item.note}`,
+              value: item.itemNo,
+              unit: item.unit === "°ü" ? "包" : item.unit,
+              note: item.note
+            });
+          });
+          _arr.sort(function(a, b) {
+            return a.value > b.value ? 1 : -1; //升序
+          });
+          _arr.push({
+            label: "-未选择配件包-",
+            value: null,
+            unit: "",
+            note: ""
+          });
+          this.part2 = _arr;
+        })
+        .catch(err => {
+          this.part2 = [];
+        });
+      //循环处理多个窗帘
       for (let i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
         var data = this.ruleForm.ORDERBODY[i];
+        for (let cur = 0; cur < data.curtains.length; cur++) {
+          data.curtains[cur].choose = true;
+          data.curtains[cur].productType = data.curtains[cur].item.productType;
+          data.curtains[cur].itemType = data.curtains[cur].curtainPartName;
+          if (data.curtains[cur].unit === "°ü") {
+            data.curtains[cur].unit = "包";
+          }
+          data.curtains[cur].dosage =
+            Math.round(data.curtains[cur].dosage * 100) / 100;
+        }
         data.curtains.sort(function(a, b) {
           let rule = ["lt", "ls", "lspb", "sha", "pjb"];
           return rule.indexOf(a.itemType) - rule.indexOf(b.itemType);
         });
-        var span0 = [];
-        var span1 = [];
-        var pos = 0;
-        for (let i = 0; i < data.curtains.length; i++) {
-          if (i === 0) {
-            span0.push(data.curtains.length);
-            span1.push(1);
-            pos = 0;
-          } else {
-            span0.push(0);
-            // 判断当前元素与上一个元素是否相同
-            if (data.curtains[i].itemType === data.curtains[i - 1].itemType) {
-              span1[pos] += 1;
-              span1.push(0);
-            } else {
-              span1.push(1);
-              pos = i;
-            }
-          }
-        }
-        this.spanArr0.push(span0);
-        this.spanArr1.push(span1);
-
+        //合并单元格数据
+        this.getSpanArr(data.curtains);
+        //表头数据
         var headerDataTemp = [];
         headerDataTemp.quantity = data.QTY_REQUIRED;
         headerDataTemp.highJia = data.CURTAIN_HEIGHT2;
@@ -533,12 +1073,84 @@ export default {
         headerDataTemp.activityGroupType = ""; //
         headerDataTemp.activity = data.PROMOTION_TYPE;
         this.ruleForm.headerData = headerDataTemp;
+        //旧数据
+        this.data.push(JSON.parse(JSON.stringify(data.curtains)));
+        this.oldData.push(JSON.parse(JSON.stringify(data.curtains)));
+        this.compareData.push(JSON.parse(JSON.stringify(data.curtains)));
+
+        let obj = {
+          itemNO: headerDataTemp.modelNumber.toString(),
+          width: headerDataTemp.width.toString(),
+          height: headerDataTemp.height.toString(),
+          WBH: headerDataTemp.outsourcingBoxExist
+            ? headerDataTemp.outsourcingBoxWidth.toString()
+            : "0",
+          multiple: headerDataTemp.drape.toString(),
+          location: headerDataTemp.location
+        };
+        getCurtainDetailMsg(obj).then(async res => {
+          let _data = res.itemList;
+          for (let index = 0; index < this.compareData[i].length; index++) {
+            for (let j = 0; j < _data.length; j++) {
+              if (
+                Number(_data[j].itemMLGY.no) ===
+                Number(this.compareData[i][index].inlineNo)
+              ) {
+                this.compareData[i][index].item.itemNo = _data[j].itemNo;
+                let _comData = this.compareData[i][index];
+                if (
+                  _comData.certainHeightWidth !== null &&
+                  _comData.productType === "ML"
+                ) {
+                  let _itemObj = {
+                    itemType: _comData.productType,
+                    itemNO: data.curtains[index].item.itemNo,
+                    limit: 1,
+                    page: 1
+                  };
+                  let ress = await changeItemBlur(_itemObj);
+                  if (ress.data.length > 0) {
+                    this.compareData[i][index].certainHeightWidth =
+                      ress.data[0].fixType === "02" ? 0 : 1;
+                  }
+                }
+                break;
+              }
+            }
+          }
+        });
+        //
       }
     },
+    getSpanArr(msg) {
+      let data = msg;
+      var span0 = [];
+      var span1 = [];
+      var pos = 0;
+      for (let i = 0; i < data.length; i++) {
+        if (i === 0) {
+          span0.push(data.length);
+          span1.push(1);
+          pos = 0;
+        } else {
+          span0.push(0);
+          // 判断当前元素与上一个元素是否相同
+          if (data[i].itemType === data[i - 1].itemType) {
+            span1[pos] += 1;
+            span1.push(0);
+          } else {
+            span1.push(1);
+            pos = i;
+          }
+        }
+      }
+      this.spanArr0.push(span0);
+      this.spanArr1.push(span1);
+    },
     //通过数组合并行
-    cellMerge({ row, column, rowIndex, columnIndex }, lineNo) {
+    cellMerge({ row, column, rowIndex, columnIndex }, index) {
       if (columnIndex === 0) {
-        let _row = this.spanArr0[lineNo][rowIndex];
+        let _row = this.spanArr0[index][rowIndex];
         let _col = _row > 0 ? 1 : 0;
         return {
           rowspan: _row,
@@ -546,7 +1158,7 @@ export default {
         };
       }
       if (columnIndex === 1) {
-        let _row = this.spanArr1[lineNo][rowIndex];
+        let _row = this.spanArr1[index][rowIndex];
         let _col = _row > 0 ? 1 : 0;
         return {
           rowspan: _row,
@@ -577,6 +1189,596 @@ export default {
           };
         }
       }
+    },
+    changePJBUnit(index) {
+      let _data = this.data[index].item.itemNo;
+      this.part2.forEach(item => {
+        if (item.value === _data) {
+          this.data[index].unit = item.unit;
+          this.data[index].curtainItemName = item.note;
+          this.judgeTip(this.data[index], index);
+          return;
+        }
+      });
+    },
+    //大类和二类的联动
+    changeLink(type, index) {
+      for (let i = 0; i < this.data.length; i++) {
+        if (this.data[i].itemType === type) {
+          this.data[i].choose = this.chooseBig[index];
+        }
+      }
+    },
+    //大类和二类的反向联动
+    changeLinkReverse(data) {
+      let _index;
+      let _arr = this.getBigType(data.itemType);
+      let flag = true;
+      switch (data.itemType) {
+        case "lt":
+          _index = 0;
+          break;
+        case "ls":
+          _index = 1;
+          break;
+        case "lspb":
+          _index = 2;
+          break;
+        case "sha":
+          _index = 3;
+          break;
+        case "pjb":
+          _index = 4;
+          break;
+        default:
+          _index = -1;
+      }
+      /**
+       * 8.22新需求
+       * 帘头改为配件包的勾选方式
+       * 即取消双向绑定，帘头固定
+       */
+      if (_index >= 1 && _index <= 4) {
+        _arr.forEach(item => {
+          if (item.deleteFlag !== "Y" || item.choose === true) {
+            flag = false;
+          }
+        });
+        if (data.choose || flag) {
+          this.chooseBig[_index] = data.choose;
+        }
+      }
+    },
+    //获取某个大类的全部数据
+    getBigType(type) {
+      let arr = [];
+      this.data.forEach(item => {
+        if (item.itemType === type) {
+          arr.push(item);
+        }
+      });
+      return arr;
+    },
+    resolvePass() {
+      //已经修改后，二次确认
+      if (this.isModified === 1) {
+        this.$confirm("此窗帘已经修改了，依然确认通过吗？", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        })
+          .then(() => {
+            this.$emit("visible", false);
+            this.$emit("finalData", 1);
+            this.$emit("suggest", this.suggestionLJ);
+          })
+          .catch(() => {});
+      }
+      //非修改
+      else {
+        //同一过滤
+        let _data = JSON.parse(JSON.stringify(this.data));
+        var _data_temp = [];
+        _data.forEach(item => {
+          item.dosage = Number(item.dosage);
+          if (item.curtainItemName === null || item.curtainItemName === "") {
+            item.curtainItemName = this.getTypeName(item.itemType);
+          }
+          if (item.note === null) item.note = "";
+          if (item.suggestion === null) item.suggestion = "";
+          _data_temp.push(JSON.parse(JSON.stringify(item)));
+        });
+        //把不需要比对的备注和意见拿出来
+        _data_temp.forEach(item => {
+          item.note = "";
+          item.suggestion = "";
+        });
+        var oldData_temp = [];
+        this.oldData.forEach(item => {
+          item.dosage = Number(item.dosage);
+          if (item.curtainItemName === null || item.curtainItemName === "") {
+            item.curtainItemName = this.getTypeName(item.itemType);
+          }
+          if (item.note === null) item.note = "";
+          if (item.suggestion === null) item.suggestion = "";
+          oldData_temp.push(JSON.parse(JSON.stringify(item)));
+        });
+        //把不需要比对的备注和意见拿出来
+        oldData_temp.forEach(item => {
+          item.note = "";
+          item.suggestion = "";
+        });
+        //备注修改可以通过，同时保存备注
+        if (JSON.stringify(oldData_temp) !== JSON.stringify(_data_temp)) {
+          this.$confirm(
+            "您已经修改过此套窗帘，确认只会保存备注，依然确认通过吗？",
+            "提示",
+            {
+              confirmButtonText: "确定",
+              type: "info"
+            }
+          )
+            .then(() => {
+              this.$emit("visible", false);
+              this.$emit("finalData", _data, 1);
+              this.$emit("suggest", this.suggestionLJ);
+            })
+            .catch(() => {});
+        } else {
+          this.$emit("visible", false);
+          this.$emit("finalData", _data, 1);
+          this.$emit("suggest", this.suggestionLJ);
+        }
+      }
+    },
+    //确认修改
+    resolveModify() {
+      //返回过滤后的数据
+      //同时返回删除的配件的标识id
+      let _data = JSON.parse(JSON.stringify(this.data));
+      let _deleteArr = [];
+      for (let i = _data.length - 1; i >= 0; i--) {
+        if (
+          !_data[i].choose ||
+          _data[i].item.itemNo === null ||
+          _data[i].item.itemNo === ""
+        ) {
+          _deleteArr.unshift(_data[i].id);
+          _data.splice(i, 1);
+        }
+      }
+      if (_data.length === 0) {
+        this.$alert("请至少选择一款配件!", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      for (let i = 0; i < _data.length; i++) {
+        let item = _data[i];
+        if (
+          (item.manufacturingInstructions === "特殊见备注" ||
+            item.manufacturingInstructions === "特殊开备注") &&
+          (!item.note || item.note === "")
+        ) {
+          this.$alert(`请填写${item.manufacturingInstructions}的备注`, "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+          return;
+        }
+      }
+      this.$emit("visible", false);
+      this.$emit("finalData", _data);
+      this.$emit("suggest", this.suggestionLJ);
+      this.$emit("deleteArr", _deleteArr);
+    },
+    //取消修改
+    rejectModify() {
+      this.$emit("visible", false);
+      //this.$emit('finalData',null);
+    },
+    //点击更换编码名称
+    getNewItemNo(data, index) {
+      this.itemNo = "";
+      this.searchKey = "";
+      this.items = [];
+      this.dialogTableVisible = true;
+      this.dialogTitle = `【${this.getProductName(
+        data.productType
+      )}】类产品列表`;
+      this.chooseIndex = index;
+      this.chooseType = data.productType;
+      if (data.productType !== "GY") {
+        this.getAllItemNoData(1);
+      } else {
+        this.getTheGY(this.headerData.modelNumber);
+      }
+    },
+    //获取每页的条数
+    handleSizeChange(val) {},
+    //当前页改变时的操作
+    handleCurrentChange(val) {
+      if (this.searchKey === "") {
+        this.getAllItemNoData(0);
+      } else {
+        this.getSingleItemNoData(0);
+      }
+    },
+    //获取可修改的全部编码
+    getAllItemNoData(status) {
+      if (this.searchKey !== "") return;
+      //0为默认搜索，1为搜索时首页
+      if (status === 1) this.currentPage = 1;
+      let obj = {
+        itemNO: this.chooseType,
+        limit: this.pageSize,
+        page: this.currentPage
+      };
+      changeItem(obj)
+        .then(res => {
+          this.items = res.data;
+          this.totalNumber = res.data[0].total;
+        })
+        .catch(err => {
+          this.items = [];
+          this.currentPage = 1;
+          this.totalNumber = 0;
+        });
+    },
+    //获取模糊搜索的编码
+    getSingleItemNoData(status) {
+      //0为默认模糊搜索，1为模糊搜索时首页
+      if (this.searchKey === "") return;
+      if (status === 1) this.currentPage = 1;
+      let obj = {
+        itemType: this.chooseType,
+        itemNO: this.searchKey.toUpperCase(),
+        limit: this.pageSize,
+        page: this.currentPage
+      };
+      changeItemBlur(obj)
+        .then(res => {
+          this.items = res.data;
+          this.totalNumber = res.data[0].total;
+        })
+        .catch(err => {
+          this.items = [];
+          this.currentPage = 1;
+          this.totalNumber = 0;
+        });
+    },
+    //修改编码--影响用量
+    chooseItemNo() {
+      if (this.itemNo === "") {
+        this.$alert("请选择一个产品", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (this.chooseIndex < 0) {
+        this.dialogTableVisible = false;
+        return;
+      }
+      let _productType = this.data[this.chooseIndex].productType;
+      let status = _productType === "ML" ? true : false;
+      let status1 = _productType === "GY" ? true : false;
+      this.dialogTableVisible = false;
+      //修改对应的名称规格
+      let data = this.items.find(v => {
+        if (v.itemNo === this.itemNo) return v;
+      });
+      this.data[this.chooseIndex].curtainItemName = data.note;
+      this.data[this.chooseIndex].specification = data.fixGrade / 1000;
+      let theFixType;
+      if (this.data[this.chooseIndex].itemType === "lspb") {
+        this.data[this.chooseIndex].certainHeightWidth = null;
+        this.data[this.chooseIndex].item.itemNo = this.itemNo;
+        this.judgeTip(this.data[this.chooseIndex], this.chooseIndex);
+        return;
+      }
+      if (data.fixType === "01") {
+        theFixType = 1;
+      } else if (data.fixType === "02") {
+        theFixType = 0;
+      }
+      this.data[this.chooseIndex].certainHeightWidth = theFixType;
+      this.curtainData[this.chooseIndex].certainHeightWidth = theFixType;
+      this.compareData[this.chooseIndex].certainHeightWidth = theFixType;
+      if (!status1 && this.data[this.chooseIndex].itemType !== "lspb") {
+        //修改用量
+        let _headerData = this.headerData;
+        let index = this.chooseIndex;
+        let _outsourcingBoxWidth =
+          _headerData.outsourcingBoxExist === 0
+            ? "0"
+            : _headerData.outsourcingBoxWidth;
+        let _fixType = this.data[index].certainHeightWidth === 0 ? "02" : "01";
+        let obj = {
+          width: _headerData.width.toString(),
+          height: _headerData.height.toString(),
+          WBH:
+            _outsourcingBoxWidth === null
+              ? "0"
+              : _outsourcingBoxWidth.toString(),
+          multiple: _headerData.drape.toString(),
+          parentItemNo: _headerData.modelNumber,
+          itemNO: this.itemNo,
+          itemType: this.data[index].itemType,
+          fixType: _fixType
+        };
+        //changeDosageByNo(obj)
+        GetDosageByNo(obj)
+          .then(res => {
+            if (res.data.length == 0) {
+              this.$alert("用量获取失败", "提示", {
+                confirmButtonText: "好的",
+                type: "warning"
+              });
+              return;
+            }
+            let _data = this.data[this.chooseIndex];
+            let keys;
+            if (_data.itemType == "lt")
+              keys = Math.round(res.data[0].dosage * 100) / 100;
+            else keys = Math.round(res.data[0].dosage * 10) / 10;
+            //绣花边只需要修改自身，无需修改面料
+            if (_data.productType === "XHB") {
+              this.data[this.chooseIndex].dosage = keys;
+            }
+            //面料除了修改自身，还需修改所有其他的，除了LCB、XHB之外的所有，工艺继续做进一步判断
+            else if (_data.productType === "ML") {
+              this.updateDosage(_data.itemType, keys);
+            }
+            this.data[this.chooseIndex].item.itemNo = this.itemNo;
+            this.judgeTip(this.data[this.chooseIndex], this.chooseIndex);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else if (status1) {
+        this.data[this.chooseIndex].item.itemNo = this.itemNo;
+        this.judgeTip(this.data[this.chooseIndex], this.chooseIndex);
+        if (this.data[this.chooseIndex].item.itemNo === "GY-003") {
+          this.data[this.chooseIndex].dosage = this.curtainData[
+            this.chooseIndex
+          ].dosage;
+        } else {
+          for (let i = 0; i < this.data.length; i++) {
+            if (
+              this.data[i].itemType === this.data[this.chooseIndex].itemType &&
+              i !== this.chooseIndex
+            ) {
+              if (this.data[i].productType === "ML") {
+                this.data[this.chooseIndex].dosage = this.data[i].dosage;
+                break;
+              }
+            }
+          }
+        }
+      }
+    },
+    //修改风格
+    changeDosageByFixtype(index) {
+      let _headerData = this.headerData;
+      let _outsourcingBoxWidth =
+        _headerData.outsourcingBoxExist === 0
+          ? "0"
+          : _headerData.outsourcingBoxWidth;
+      let _fixType = this.data[index].certainHeightWidth === 0 ? "02" : "01";
+      let obj = {
+        width: _headerData.width.toString(),
+        height: _headerData.height.toString(),
+        WBH:
+          _outsourcingBoxWidth === null ? "0" : _outsourcingBoxWidth.toString(),
+        multiple: _headerData.drape.toString(),
+        parentItemNo: _headerData.modelNumber,
+        itemNO: this.data[index].item.itemNo,
+        itemType: this.data[index].itemType,
+        fixType: _fixType
+      };
+      //changeDosageByNo(obj)
+      GetDosageByNo(obj)
+        .then(res => {
+          if (res.data.length == 0) {
+            this.$alert("用量获取失败", "提示", {
+              confirmButtonText: "好的",
+              type: "warning"
+            });
+            return;
+          }
+          let _data = this.data[index];
+          let keys;
+          if (_data.itemType == "lt")
+            keys = Math.round(res.data[0].dosage * 100) / 100;
+          else keys = Math.round(res.data[0].dosage * 10) / 10;
+          //绣花边只需要修改自身，无需修改面料
+          if (_data.productType === "XHB") {
+            this.data[index].dosage = keys;
+          }
+          //面料除了修改自身，还需修改所有其他的，除了LCB、XHB之外的所有，工艺继续做进一步判断
+          else if (_data.productType === "ML") {
+            this.updateDosage(_data.itemType, keys);
+          }
+          this.judgeTip(this.data[index], index);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    //获取产品类别名称
+    getProductName(val) {
+      switch (val) {
+        case "PJB":
+          return "配件包/挂袋";
+        case "XHB":
+          return "绣花边";
+        case "ZX":
+          return "增项服务";
+        case "MLP":
+          return "面料(配布)";
+        case "CPL":
+          return "成品帘";
+        case "SSDX":
+          return "缩水定型";
+        case "LCB":
+          return "里衬布";
+        case "KS":
+          return "帘头";
+        case "ML":
+          return "面料(主布)";
+        case "GY":
+          return "工艺";
+        case "WBH":
+          return "外包盒";
+        default:
+          return "其它";
+      }
+    },
+    //获取窗帘大类名称
+    getTypeName(val) {
+      switch (val) {
+        case "lt":
+          return "帘头";
+        case "ls":
+          return "帘身";
+        case "lspb":
+          return "帘身配布";
+        case "sha":
+          return "纱";
+        case "pjb":
+          return "配件";
+        default:
+          return val;
+      }
+    },
+    //动态修改大类的全部用量
+    updateDosage(itemType, dosage) {
+      for (let i = 0; i < this.data.length; i++) {
+        let pType = this.curtainData[i].productType;
+        if (
+          this.curtainData[i].itemType === itemType &&
+          pType !== "LCB" &&
+          pType !== "XHB"
+        ) {
+          if (this.data[i].item.itemNo !== "GY-003") {
+            this.data[i].dosage = dosage;
+          } else {
+            this.data[i].dosage = this.curtainData[i].dosage;
+          }
+        }
+      }
+    },
+    //获取备注文字
+    getRemark(data) {
+      if (data.certainHeightWidth === 0) {
+        if (
+          data.specification < this.headerData.height &&
+          data.specification > 0
+        ) {
+          return "超高帘，用量待审核!!";
+        }
+      }
+      return "";
+    },
+    //通过编号获取工艺
+    getTheGY(itemNo) {
+      let data = {
+        itemNO: itemNo
+      };
+      this.currentPage = 1;
+      getGY(data)
+        .then(res => {
+          // let _items = [];
+          // for(let i = 0; i < res.itemList.length; i++){
+          //     _items.push({
+          //         itemNo: res.itemList[i]
+          //     });
+          // }
+          this.items = res.itemList;
+          this.totalNumber = res.itemList.length;
+        })
+        .catch(err => {
+          this.items = [];
+          this.totalNumber = 0;
+        });
+    },
+    //动态判断制造说明
+    judgeTip(data, index) {
+      let status = -1;
+      if (
+        data.certainHeightWidth === 0 &&
+        this.compareData[index].certainHeightWidth === 1
+      ) {
+        status = 1;
+      }
+      if (
+        data.certainHeightWidth === 1 &&
+        this.compareData[index].certainHeightWidth === 0
+      ) {
+        status = 2;
+      }
+      if (data.item.itemNo !== this.compareData[index].item.itemNo) {
+        if (status === 1) status = 4;
+        else if (status === 2) status = 5;
+        else status = 3;
+      }
+      if (
+        data.itemType === "pjb" ||
+        data.productType === "LCB" ||
+        data.productType == "GY"
+      ) {
+        // if (data.itemNo !== this.allData.itemList[index].itemNo) status = 3;
+        // else status = -1;
+        status = -1;
+      }
+      switch (status) {
+        case 1:
+          this.data[index].illustrate = "修改为定高";
+          break;
+        case 2:
+          this.data[index].illustrate = "修改为定宽";
+          break;
+        case 3:
+          this.data[index].illustrate = "非标配";
+          break;
+        case 4:
+          this.data[index].illustrate = "修改为定高，非标配";
+          break;
+        case 5:
+          this.data[index].illustrate = "修改为定宽，非标配";
+          break;
+        default:
+          this.data[index].illustrate = " ";
+      }
+      //return this.curtainData[index].tip;
+    },
+    bigToSmall: function(data) {
+      let index = -1;
+      switch (data.itemType) {
+        case "lt":
+          index = 0;
+          break;
+        case "ls":
+          index = 1;
+          break;
+        case "lspb":
+          index = 2;
+          break;
+        case "sha":
+          index = 3;
+          break;
+        case "pjb":
+          index = 4;
+        default:
+          index = -1;
+      }
+      if (index >= 0 && index <= 4) {
+        if (this.chooseBig[index] === false || !data.choose) {
+          return true;
+        }
+      }
+      return false;
     },
     //退回客户修改
     _back() {
@@ -695,10 +1897,7 @@ export default {
     },
     //隔行变色
     tableRowClassName({ row, rowIndex }) {
-      if (rowIndex % 2 == 0) {
-        return "success-row";
-      }
-      return "";
+      return "success-row";
     },
     ...mapMutations("navTabs", ["addTab"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"])
@@ -750,6 +1949,19 @@ export default {
   margin-right: 20px;
   font-weight: bold;
 }
+.messageBox > div {
+  padding: 5px 0;
+}
+.messageInput {
+  border: 1px solid #c3c3c3;
+  margin-right: 3px;
+  padding: 0 2px;
+  min-width: 40px;
+  border-radius: 4px;
+  color: gray;
+  display: inline-block;
+  line-height: 20px;
+}
 </style>
 <style>
 .el-table .success-row {
@@ -757,5 +1969,19 @@ export default {
 }
 .tableCard .el-icon-arrow-right:before {
   content: "";
+}
+.curtainTable .el-table td,
+.curtainTable .el-table th {
+  padding: 0 !important;
+}
+.curtainTable .el-table .cell {
+  padding: 0 5px;
+}
+.curtainTable .el-input__inner {
+  padding: 0 5px;
+  height: 24px;
+}
+.curtainTable .el-textarea__inner {
+  padding: 5px;
 }
 </style>
