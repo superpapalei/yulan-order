@@ -92,3 +92,12 @@ export function editByCustomer(data,config = {}) {
         return Promise.reject(err);
     })
 }
+
+//兰居审核付款委托书
+export function editSubmit(data, config = {}) {
+    return post('/PUR_HEAD/EditRecord', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
