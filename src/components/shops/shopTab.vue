@@ -98,6 +98,7 @@
           <el-form label-position="left" class="loading-area">
             <el-form-item label="活动：">
               <el-select
+                style="width:300px;"
                 :disabled="disableFlag"
                 v-model="seletedActivity"
                 :placeholder="
@@ -276,7 +277,7 @@ export default {
             };
             for (var i = 0; i < res.data.length; i++) {
               var obj = {
-                label: res.data[i].ORDER_TYPE + " " + res.data[i].ORDER_NAME,
+                label: res.data[i].ORDER_TYPE + " -- " + res.data[i].ORDER_NAME,
                 value: res.data[i].P_ID
               };
               if (res.data[i].PRIORITY != 0 && defaultSel.pri == 0) {

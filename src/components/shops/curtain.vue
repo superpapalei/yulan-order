@@ -27,7 +27,7 @@
           :data="curtainMsg"
           style="min-width: 750px; margin: 5px auto;"
         >
-          <el-table-column label="型号">
+          <el-table-column label="型号" width="120">
             <template slot-scope="scope">
               <div v-if="scope.row.wbhFlag === '1'">
                 {{ scope.row.itemNo }}
@@ -38,19 +38,19 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="宽度(m)">
+          <el-table-column label="宽度(m)" width="120">
             <template slot-scope="scope">
               <currency-input placeholder="0.00" v-model="scope.row.width">
               </currency-input>
             </template>
           </el-table-column>
-          <el-table-column label="高度(m)">
+          <el-table-column label="高度(m)" width="120">
             <template slot-scope="scope">
               <currency-input placeholder="0.00" v-model="scope.row.height">
               </currency-input>
             </template>
           </el-table-column>
-          <el-table-column label="帘外包宽度(m)" prop="fixGrade">
+          <el-table-column label="帘外包宽度(m)" prop="fixGrade" width="150">
             <template slot-scope="scope">
               <div v-if="scope.row.wbhFlag === '1'">
                 <el-checkbox v-model="scope.row.isWBH">
@@ -72,7 +72,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="褶皱倍数">
+          <el-table-column label="褶皱倍数" width="120">
             <template slot-scope="scope">
               <el-select
                 size="mini"
@@ -89,10 +89,10 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="位置">
+          <el-table-column label="位置" width="150">
             <template slot-scope="scope">
               <el-input
-                style="width:85px;"
+                style="width:120px;"
                 size="mini"
                 placeholder="选填"
                 v-model="scope.row.location"
@@ -100,9 +100,10 @@
               </el-input>
             </template>
           </el-table-column>
-          <el-table-column label="活动">
+          <el-table-column label="活动" width="280">
             <template slot-scope="scope">
               <el-select
+                style="width:250px"
                 size="mini"
                 :disabled="isActivity[scope.$index]"
                 v-model="scope.row.activity"
@@ -371,7 +372,7 @@ export default {
 
         for (var j = 0; j < res.data.length; j++) {
           var obj = {
-            label: res.data[j].ORDER_TYPE + " " + res.data[j].ORDER_NAME,
+            label: res.data[j].ORDER_TYPE + " -- " + res.data[j].ORDER_NAME,
             value: res.data[j].P_ID
           };
           var obj1 = {

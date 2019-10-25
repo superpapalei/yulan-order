@@ -368,7 +368,7 @@
           <el-button type="danger" @click="deleteIt(tableData.id)"
             >删 除</el-button
           >
-          <el-button type="success" @click="_changeStatus(tableData.abdrId)"
+          <el-button type="success" @click="_changeStatus(tableData.id)"
             >提 交</el-button
           >
         </div>
