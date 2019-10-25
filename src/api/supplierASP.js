@@ -101,3 +101,23 @@ export function editSubmit(data, config = {}) {
         return Promise.reject(err);
     })
 }
+
+
+//查询当前用户的付款委托书表头信息
+export function GetCurrentDelegation(data, config = {}) {
+    return post('/PUR_HEAD/GetCurrentDelegation', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+
+//查询所有用户的付款委托书表头信息
+export function GetAllDelegation(data, config = {}) {
+    return post('/PUR_HEAD/GetAllDelegation', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
