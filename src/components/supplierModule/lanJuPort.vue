@@ -484,6 +484,8 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >
+<div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
                   采购单
                 </td>
               </tr>
@@ -919,7 +921,7 @@
                       label="备注"
                     ></el-table-column>
                   </el-table>
-                    <div><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button> </div>
+                    
                 </td>
                 <!-- 明明细细 -->
               </tr>
@@ -946,16 +948,17 @@
                   colspan="2"
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
-                >
-                  采购单
+                >采购单
+                <div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
                 </td>
               </tr>
               <tr>
                 <td style="border-bottom:solid 3px gray;text-align:left">
                   订单状态
                   <span style="margin-left:font-weight:bold;">
-                    {{ pur_headForm.STATUS | pur_headStatus }}</span
-                  >
+                    {{ pur_headForm.STATUS | pur_headStatus }}</span>
+                    <div  style="position:fixed;z-index:1;top: 0.5px;padding-left: 15px;background-color: #FFFFFF"></div>
                 </td>
                 <td style="border-bottom:solid 3px gray;" align="right">
                   <span style="margin-left:font-weight:bold;">{{
@@ -1196,7 +1199,7 @@
                         </el-table-column>
                         <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"  min-width="60"></el-table-column> >
                      </el-table>
-                  <div><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button> </div>
+                  <!-- <div><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button> </div> -->
                 </td>
               </tr>
             </tbody>
@@ -1849,6 +1852,8 @@ detailCol:[
     returnMain() {
       this.checkY_Visible = false;
       this.checkX_Visible = false;
+      this.checkedY_Visible = false;
+      this.checkedX_Visible = false;
     },
     //确认之前要检查是否填好必要的信息
     SubmitVue() {
