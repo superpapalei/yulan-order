@@ -90,7 +90,7 @@
                     <div v-for="(item, index) of items" :key="index">
                   <!-- 已确认订单详情循环因子 -->
                   <el-card body-style="padding: 0px">
-                 <el-card     style="width:118px;float:left;"  body-style="padding: 0px" align="left"   >
+                 <el-card     style="width:116px;float:left;"  body-style="padding: 0px" align="left"   >
                   <div>
                      <template>
                         <div>
@@ -150,7 +150,7 @@
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
-                    style="width:905px; float:right"
+                    style="width:904px; float:right"
                     
                    >
                                 <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
@@ -738,7 +738,7 @@
                     <div v-for="(item, index) of items" :key="index">
                   <!-- 已确认订单详情循环因子 -->
                   <el-card body-style="padding: 0px">
-                 <el-card     style="width:118px;float:left;"  body-style="padding: 0px" align="left"   >
+                 <el-card     style="width:116px;float:left;"  body-style="padding: 0px" align="left"   >
                   <div>
                      <template>
                         <div>
@@ -799,7 +799,7 @@
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
-                    style="width:905px; float:right"
+                    style="width:904px; float:right"
                     
                    >
                                 <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
