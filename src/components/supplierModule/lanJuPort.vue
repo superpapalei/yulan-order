@@ -1942,19 +1942,19 @@ detailCol:[
             this.gridData[i].DATE_DELIVER = "";
           }
       
-      //将总金额保留两位小数
-      let value = Math.round(parseFloat(this.gridData[i].TOTAL_MONEY) * 100) / 100;
-      let s = value.toString().split(".");
-      if (s.length == 1) {
-        value = value.toString() + ".00";
-        this.gridData[i].TOTAL_MONEY= value;
-      }
-      if (s.length > 1) {
-        if (s[1].length < 2) {
-          value = value.toString() + "0";
-        }
-        this.gridData[i].TOTAL_MONEY= value;
-      }
+      // //将总金额保留两位小数
+      // let value = Math.round(parseFloat(this.gridData[i].TOTAL_MONEY) * 100) / 100;
+      // let s = value.toString().split(".");
+      // if (s.length == 1) {
+      //   value = value.toString() + ".00";
+      //   this.gridData[i].TOTAL_MONEY= value;
+      // }
+      // if (s.length > 1) {
+      //   if (s[1].length < 2) {
+      //     value = value.toString() + "0";
+      //   }
+      //   this.gridData[i].TOTAL_MONEY= value;
+      // }
     
           //将所有位置列出来
           if (loc.indexOf(this.gridData[i].CL_PLACE_ID) == -1) {
