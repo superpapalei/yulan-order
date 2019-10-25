@@ -1,4 +1,4 @@
-
+-<!--供应商的付款委托书界面-->
 <template>
   <div>
     <el-card shadow="hover">
@@ -59,9 +59,9 @@
           label="委托编号"
           align="center"
         ></el-table-column>
-        <el-table-column width="130" label="凭证时间" align="center">
+        <el-table-column width="130" label="提交时间" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.createTs | datatrans }}</span>
+            <span>{{ scope.row.DATE_CRE | datatrans }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -186,10 +186,10 @@
             </td>
           </tr>
 
-          <tr >
+          <tr v-if="this.submitForm.STATE=='4'|this.submitForm.RETURN_REASON!=''">
             <td class="grayTD"  colspan="4" rowspan="1"  style="font-size:20px;height:30px" >审核信息（退回）</td>
           </tr>
-          <tr >
+          <tr v-if="this.submitForm.STATE=='4'|this.submitForm.RETURN_REASON!=''">
             <td class="grayTD"  colspan="1" rowspan="1"  style="height:50px" >退回原因</td>
             <td colspan="3" rowspan="1"  style="height:50px" >{{submitForm.RETURN_REASON}}</td>
           </tr>
@@ -236,7 +236,7 @@
                 <div>
                 <el-upload
                 class="upload-de"
-                :action="Global.baseUrl + '/LANJU_STORE/UploadFiles'"
+                :action="Global.baseUrl + '/PUR_HEAD/UploadFiles'"
                 drag
                 multiple
                 :on-change="function(file,fileList){return  handleChange(file,fileList,index)}"
@@ -269,24 +269,24 @@
       <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
         <table width="90%" border="0px" cellspacing="0px" cellpadding="0">
           <tr >
-             <td style="width:12%"><h4>创建时间：</h4></td>
-             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.DATE_CRE| datatransDetail }}</h4></td>
-             <td style="width:12%"><h4>确认时间：</h4></td>
-             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.DATE_AFFIRM| datatransDetail }}</h4></td>
-              <td style="width:12%"><h4>审核时间：</h4></td>
-             <td style="width:22%;margin-left:-30px;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
+             <td style="width:8%"><h4>创建时间：</h4></td>
+             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.DATE_CRE| datatransDetail }}</h4></td>
+             <td style="width:8%"><h4>确认时间：</h4></td>
+             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.DATE_AFFIRM| datatransDetail }}</h4></td>
+             <td style="width:8%"><h4>审核时间：</h4></td>
+             <td style="width:26%;margin-left:-30px;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
           </tr>
           <tr >
-             <td style="width:12%"><h4>创建人：</h4></td>
-             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.USER_CRE }}</h4></td>
-             <td style="width:12%"><h4>确认人：</h4></td>
-             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.USER_AFFIRM }}</h4></td>
-             <td style="width:12%"><h4>审核人：</h4></td>
-             <td style="width:22%;margin-left:-30px;"><h4>{{ submitForm.AUDITOR }}</h4></td>
+             <td style="width:8%"><h4>创建人：</h4></td>
+             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.USER_CRE }}</h4></td>
+             <td style="width:8%"><h4>确认人：</h4></td>
+             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.USER_AFFIRM }}</h4></td>
+             <td style="width:8%"><h4>审核人：</h4></td>
+             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.AUDITOR }}</h4></td>
           </tr>
           <tr >
-             <td style="width:12%"><h4>单据状态：</h4></td>
-             <td style="width:21%;margin-left:-30px;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td style="width:8%"><h4>单据状态：</h4></td>
+             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
           </tr>
         </table> 
       </div>  
@@ -300,9 +300,6 @@ import {
   CheckDetailByID,
   editByCustomer
  } from "@/api/supplierASP";
-// import {
-//   UploadFiles,
-// } from "@/api/imageStoreASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
@@ -318,8 +315,8 @@ export default {
       deleteIndex:[],//删除文件对应的明细的索引
       btnDisable: false,
       companyId: "",
-      CID: Cookies.get("cid"), //客户账号
-      CNAME: "", //客户名
+      CID: Cookies.get("cid"), //账号
+      CNAME: Cookies.get("realName"), //账号名
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
       SEARCHKEY: "", //搜索栏关键字
@@ -638,6 +635,7 @@ export default {
       });
     },
     submitEDITANSYC() {
+      this.submitForm.USER_AFFIRM=this.CNAME;
       //相当于同步，等提交成功后再执行
       editByCustomer({model:this.submitForm,detailModels:this.submitDetailForm, attchmentChange: this.fileChange,deleteFile: this.deleteFile}).then(res => {
         if (res.code == 0) {
