@@ -59,14 +59,14 @@
           label="委托编号"
           align="center"
         ></el-table-column>
-        <el-table-column width="130" label="提交时间" align="center">
+        <el-table-column width="120" label="提交时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.DATE_CRE | datatrans }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="CUSTOMER_CODE"
-          width="120"
+          prop="CUSTOMER_NAME"
+          width="130"
           label="客户"
           align="center"
         ></el-table-column>
@@ -87,12 +87,12 @@
           width="120"
           align="center"
         ></el-table-column>
-        <el-table-column width="130" label="确认时间" align="center">
+        <el-table-column width="120" label="确认时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.DATE_AFFIRM | datatrans }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="120" label="确认人" align="center"  prop="USER_AFFIRM">
+        <el-table-column width="130" label="确认人" align="center"  prop="USER_AFFIRM">
         </el-table-column>
         <el-table-column  label="退回原因" width="295" align="center"  prop="RETURN_REASON">
         </el-table-column>
@@ -267,7 +267,7 @@
       </div>
 
       <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
-        <table width="90%" border="0px" cellspacing="0px" cellpadding="0">
+        <table width="100%" border="0px" cellspacing="0px" cellpadding="0">
           <tr >
              <td style="width:8%"><h4>创建时间：</h4></td>
              <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.DATE_CRE| datatransDetail }}</h4></td>
@@ -288,7 +288,9 @@
           </tr>
           <tr >
              <td style="width:8%"><h4>单据状态：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td v-if="submitForm.STATE=='3'" style="width:25%;margin-left:-30px;color:green;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td v-if="submitForm.STATE=='4'" style="width:25%;margin-left:-30px;color:red;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td v-if="submitForm.STATE!='3'&&submitForm.STATE!='4'" style="width:25%;margin-left:-30px;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
           </tr>
         </table> 
       </div>  
@@ -298,7 +300,7 @@
 
 <script>
 import { 
-  GetRelativePay,
+  GetCurrentDelegation,
   CheckDetailByID,
   editByCustomer
  } from "@/api/supplierASP";
@@ -322,7 +324,7 @@ export default {
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
       SEARCHKEY: "", //搜索栏关键字
-      SELECT_STATUS: "全部状态", //存储下拉框的值
+      SELECT_STATUS: "0", //存储下拉框的值
       rowPlus:0,//兰居软装设计需求表中的户型编辑项添加数
       isEdit: false, //编辑记录
       isCheck: false, //查看记录
@@ -478,15 +480,14 @@ export default {
     //查询满足条件的该用户的委托书信息
     refresh() {
       var data = {
+        companyId: Cookies.get("companyId"),
         limit: this.limit,
         page: this.currentPage,
-        po:"",
-        check_flag:1,//int类型
-        po_type:"",
-        customer:"",
-        current_id: "",
+        CID: Cookies.get("cid"),
         beginTime: this.beginTime,
         finishTime: this.finishTime,
+        STATUS: this.SELECT_STATUS,
+        SEARCHKEY: this.SEARCHKEY
       };
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";
@@ -496,7 +497,7 @@ export default {
       } else {
         data.finishTime = data.finishTime + " 23:59:59";
       }
-       GetRelativePay(data).then(res => {
+       GetCurrentDelegation(data).then(res => {
         this.count = res.count;
         this.payData = res.data;
       });
