@@ -44,7 +44,7 @@
          </el-input>
 
         <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
-        <el-button size="medium" type="primary" style="float:right"  @click="downLoad('/Files/template/test.jpg')" >下载委托书</el-button>   
+        <el-button size="medium" type="primary" style="float:right"  @click="downLoad('/Files/template/第三方付款委托书.docx')" >下载委托书</el-button>   
       </div>
       
       <div style="margin-top:10px">
