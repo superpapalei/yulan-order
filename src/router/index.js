@@ -44,7 +44,8 @@ import ISExamineMarket from '@/components/design/ISExamineMarket'
 import ISExamineGM from '@/components/design/ISExamineGM'
 import lanJuGMExamine from '@/components/design/lanJuGMExamine'
 import lanJuMarketExamine from '@/components/design/lanJuMarketExamine'
-import PayDelegation from '@/components/supplierModule/payDelegation'
+import payDelegation from '@/components/supplierModule/payDelegation'
+import payDelegationExamine from '@/components/supplierModule/payDelegationExamine'
 
 Vue.use(Router)
 
@@ -335,7 +336,12 @@ const router = new Router({
         {
           path: '/supplierModule/payDelegation',
           name: 'payDelegation',
-          component: PayDelegation
+          component: payDelegation
+        },
+        {
+          path: '/supplierModule/payDelegationExamine',
+          name: 'payDelegationExamine',
+          component: payDelegationExamine
         },
       ]
     }

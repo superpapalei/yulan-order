@@ -199,10 +199,10 @@
           <tr>
             <td class="grayTD" style="width:16%;height:15px">客户代码</td>
             <td v-if="isEdit" style="width:34%;height:15px" class="grayTD">{{submit.CUSTOMER_CODE}}</td>
-            <td v-else style="width:34%;height:15px" class="grayTD">(提交后自动生成)</td>
+            <td v-else style="width:34%;height:15px" class="grayTD">(系统带出)</td>
             <td class="grayTD" style="width:16%;height:15px">客户名称</td>
             <td v-if="isEdit" style="width:34%;height:15px" class="grayTD">{{submit.CUSTOMER_NAME}}</td>
-            <td v-else style="width:34%;height:15px" class="grayTD">(提交后自动生成)</td>
+            <td v-else style="width:34%;height:15px" class="grayTD">(系统带出)</td>
           </tr>
 
            <tr>
