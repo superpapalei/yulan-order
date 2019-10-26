@@ -12,21 +12,19 @@
       >
         <div style="width:100%">
           <div style="margin-bottom:10px">
-            <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
-            <span style="float:right">{{
-              pur_headForm.DATE_PUR | datatrans
-            }}</span>
+            <h3 align="center">广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h3>
+           
           </div>
           <div>
-            <h1>收货人：{{ pur_headForm.LINKMAN }}</h1>
+            <h4  style="font-weight:normal">收货人：{{ pur_headForm.LINKMAN }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期： {{pur_headForm.DATE_PUR | datatrans }}</h4>
           </div>
           <div style="margin-bottom:10px">
-            <h1>备注信息：{{ pur_headForm.NOTES }}</h1>
+            <h4 style="font-weight:normal">备注信息：{{ pur_headForm.NOTES }}</h4>
           </div>
           <hr />
           <div style="width:100%">
 
- <el-table
+          <el-table
                     :data="colName"
                       :show-header="false"
                     border
@@ -90,10 +88,10 @@
                     <div v-for="(item, index) of items" :key="index">
                   <!-- 已确认订单详情循环因子 -->
                   <el-card body-style="padding: 0px">
-                 <el-card     style="width:116px;float:left;"  body-style="padding: 0px" align="left"   >
+                 <el-card     style="width:116px;float:left;"  body-style="padding: 3px" align="left"   >
                   <div>
                      <template>
-                        <div>
+                        <div class="messageBox1">
                           <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
                           {{
                             item.tab1[index].cl_place === null ||
@@ -146,6 +144,8 @@
                 <el-table
                     :data="item.tab2[index]"
                    :show-header="false"
+                   :span-method="function(col){ return arraySpanMethod(col,index)}"
+                   class="th-font10"
                     border
                     object_class="_Object:GridTable"
                     object_hashcode="6"
@@ -165,7 +165,7 @@
                   </el-table>
 
                   </el-card>
-               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" border>
+               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
                    <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
@@ -190,7 +190,7 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font16"
+                    class="th-font14-bold"
                    >
                     <af-table-column
                       property="name1"
@@ -247,15 +247,14 @@
                       label="备注"
                     ></el-table-column>
                   </el-table>
-            
-      
-          
+
             <hr />
             <div style="margin-top:10px">
               <div style="margin-bottom:10px;width:100%" class="data_1">
                 <el-card style="min-height:100px">
-                  <div slot="header"><span>送货日期</span></div>
+                  
                   <div>
+                     <span>送货日期:</span>
                     <el-date-picker
                       v-model="date_deliver"
                       type="date"
@@ -284,12 +283,13 @@
                 class="data_1"
               >
                 <el-card style="min-height:100px">
-                  <div slot="header"><span>说明</span></div>
+                  
                   <div>
+                    <span>说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明:</span>
                     <el-input
                       v-model="supply_check_notes"
                       placeholder="说明:"
-                      style="width:30%;height:10px"
+                      style="width:39%;height:10px"
                       clearable
                     ></el-input>
                     <el-button
@@ -322,7 +322,7 @@
         </div>
       </el-dialog>
 
-      <!-- 非X开头确认采购单界面兰 -->
+<!-- 非X开头确认采购单界面兰 ==================================================================================-->
       <el-dialog
         :show-close="true"
         :visible.sync="checkY_Visible"
@@ -331,18 +331,16 @@
         width="1070px"
         top="8vh"
       >
-        <div style="margin-bottom:10px">
-          <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
-          <span style="float:right">{{
-            pur_headForm.DATE_PUR | datatrans
-          }}</span>
-        </div>
-        <div>
-          <h1>收货人：{{ pur_headForm.LINKMAN }}</h1>
-        </div>
-        <div style="margin-bottom:10px">
-          <h1>备注信息：{{ pur_headForm.NOTES }}</h1>
-        </div>
+        <div id="checkYPrint" style="margin-bottom:10px">
+          <h3 align="center">广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h3>
+           
+          </div>
+          <div>
+            <h4  style="font-weight:normal">收货人：{{ pur_headForm.LINKMAN }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期： {{pur_headForm.DATE_PUR | datatrans }}</h4>
+          </div>
+          <div style="margin-bottom:10px">
+            <h4 style="font-weight:normal">备注信息：{{ pur_headForm.NOTES }}</h4>
+          </div>
         <hr />
         <div style="width:100%">
               <el-table :data="gridData" 
@@ -399,29 +397,29 @@
           <div style="margin-top:10px">
             <div style="margin-bottom:10px;width:100%" class="data_1">
               <el-card style="min-height:100px">
-                <div slot="header"><span>送货日期</span></div>
-                <div>
-                  <el-date-picker
-                    v-model="date_deliver"
-                    type="date"
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd"
-                    placeholder="选择时间"
-                    style="width:15%"
-                  ></el-date-picker>
-                  <el-button
-                    style="width:16%"
-                    class="button_clolur"
-                    @click="Unitdeliver"
-                    >统一设置送货期</el-button
-                  >
-                  <el-button
-                    style="width:16%;margin-top:10px"
-                    class="button_clolur"
-                    @click="AllAccordPromise"
-                    >全部设为约定日期</el-button
-                  >
-                </div>
+                  <div>
+                     <span>送货日期:</span>
+                    <el-date-picker
+                      v-model="date_deliver"
+                      type="date"
+                      format="yyyy-MM-dd"
+                      value-format="yyyy-MM-dd"
+                      placeholder="选择时间"
+                      style="width:15%"
+                    ></el-date-picker>
+                    <el-button
+                      style="width:16%"
+                      class="button_clolur"
+                      @click="Unitdeliver"
+                      >统一设置送货期</el-button
+                    >
+                    <el-button
+                      style="width:16%;margin-top:10px"
+                      class="button_clolur"
+                      @click="AllAccordPromise"
+                      >全部设为约定日期</el-button
+                    >
+                  </div>
               </el-card>
             </div>
             <div
@@ -475,7 +473,7 @@
         width="1070px"
         top="8vh"
       >
-        <div style="width:100% ;margin:0 auto;">
+        <div   id="checkedXPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
               <tr>
@@ -484,6 +482,10 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >
+<div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<div  style="position:fixed;z-index:1;top: 260px;padding-left: 900px;"><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
+ 
                   采购单
                 </td>
               </tr>
@@ -665,8 +667,9 @@
                         收货人：
                         <td colsan="3" style="text-align:left"></td>
                       </tr>
+                  
                     
-                    
+                      
                     </tbody>
                   </table>
                 </td>
@@ -738,10 +741,10 @@
                     <div v-for="(item, index) of items" :key="index">
                   <!-- 已确认订单详情循环因子 -->
                   <el-card body-style="padding: 0px">
-                 <el-card     style="width:116px;float:left;"  body-style="padding: 0px" align="left"   >
+                 <el-card     style="width:116px;float:left;"  body-style="padding: 3px" align="left"   >
                   <div>
                      <template>
-                        <div>
+                        <div class="messageBox1">
                           <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
                           {{
                             item.tab1[index].cl_place === null ||
@@ -794,6 +797,7 @@
                 <el-table
                     :data="item.tab2[index]"
                    :show-header="false"
+                   :span-method="function(col){ return arraySpanMethod(col,index)}"
                    class="th-font10"
                     border
                     object_class="_Object:GridTable"
@@ -814,7 +818,7 @@
                   </el-table>
 
                   </el-card>
-               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" border>
+               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
                    <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
@@ -839,7 +843,7 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font16"
+                    class="th-font14-bold"
                    >
                     <af-table-column
                       property="name1"
@@ -896,7 +900,7 @@
                       label="备注"
                     ></el-table-column>
                   </el-table>
-                    <div><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button> </div>
+                    
                 </td>
                 <!-- 明明细细 -->
               </tr>
@@ -904,8 +908,7 @@
           </table>
         </div>
       </el-dialog>
-
-      <!-- 非X开头（窗帘）订单 已确认采购单详情界面 -->
+ <!-- 非X开头（窗帘）订单 已确认采购单详情界面 ==========================================================================-->
       <el-dialog
         id="checkedX"
         title=""
@@ -915,7 +918,7 @@
         width="1070px"
         top="8vh"
       >
-        <div style="width:100% ;margin:0 auto;">
+        <div  id="checkedYPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
               <tr>
@@ -923,16 +926,18 @@
                   colspan="2"
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
-                >
-                  采购单
+                >采购单
+                <div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
+<div  style="position:fixed;z-index:1;top: 260px;padding-left: 900px;"><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedYPrint')"></div></div>
                 </td>
               </tr>
               <tr>
                 <td style="border-bottom:solid 3px gray;text-align:left">
                   订单状态
                   <span style="margin-left:font-weight:bold;">
-                    {{ pur_headForm.STATUS | pur_headStatus }}</span
-                  >
+                    {{ pur_headForm.STATUS | pur_headStatus }}</span>
+                    <div  style="position:fixed;z-index:1;top: 0.5px;padding-left: 15px;background-color: #FFFFFF"></div>
                 </td>
                 <td style="border-bottom:solid 3px gray;" align="right">
                   <span style="margin-left:font-weight:bold;">{{
@@ -1106,6 +1111,8 @@
                         <td colsan="3" style="text-align:left"></td>
                       </tr>
                      
+                    
+                    
                     </tbody>
                   </table>
                 </td>
@@ -1150,7 +1157,7 @@
                         </el-table-column>
                         <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"  min-width="60"></el-table-column> >
                      </el-table>
-                  <div><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button> </div>
+                  <!-- <div><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button> </div> -->
                 </td>
               </tr>
             </tbody>
@@ -1158,14 +1165,20 @@
         </div>
       </el-dialog>
 
-      <!-- 待确认页签 -->
+   
       <div id="supplyCon">
-      
           <el-tabs v-model="activeName" @tab-click="handleClick">
+<!-- 待确认页签============================================================================================================== --> 
             <el-tab-pane label="待确认" name="first" align="left">
               <div align="right">
                 <template>
-                   
+                  <el-button
+                  v-if="false"
+                  @click="OneStepCheck()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_3"
+                  >一键确认</el-button>
                   <el-select
                   class="el-input_inner"
                     v-model="selvalue"
@@ -1186,6 +1199,7 @@
 
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
                  <el-table-column
+                  v-if="false" 
                   type="selection"
                   width="55"
                   >
@@ -1221,7 +1235,7 @@
                 <el-table-column
                   prop="NOTES"
                   min-width="200"
-                  header-align="center"
+                  
                   label="备注"
                   align="left"
                 ></el-table-column>
@@ -1238,6 +1252,8 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
+<!-- /待确认页签============================================================================================================== -->         
+<!-- 已确认页签============================================================================================================== -->
        <el-tab-pane label="已确认" name="second" align="left">
               <div >
                 <el-input
@@ -1293,6 +1309,12 @@
                   style="margin-left:8px"
                   class="button_1"
                   >下载表头及明细</el-button>
+                   <el-button
+                  @click="downLoadSal()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_1"
+                  >下载销售表单</el-button>
               </div>
               <el-table
                 border
@@ -1310,7 +1332,7 @@
                   label="单号"
                   align="left"
                 ></el-table-column>
-               
+            
                 <el-table-column label="状态" width="60" align="center">
                   <template slot-scope="scope"
                     ><span>{{
@@ -1333,26 +1355,123 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                header-align="center"
                   prop="NOTES"
                   min-width="200"
                   label="备注"
                   align="left"
                 ></el-table-column>
-              
+               
                 <el-table-column label="" width="120" align="center">
                   <template slot-scope="scope">
                     <button
-                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"
+                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"   
                       class="btn-style"
                     >
+                  
                       查看详情
                     </button>
                   </template>
                 </el-table-column>
               </el-table>
             </el-tab-pane>
-           
+<!-- /已确认页签============================================================================================================== -->
+<!-- 已取消页签============================================================================================================== -->
+       <el-tab-pane label="已取消" name="third" align="left">
+              <div >
+                <el-input
+                  @keyup.enter.native="SelectClick()"
+                  prefix-icon="el-icon-search"
+                  style="width:6%; min-width:200px;"
+                  placeholder=" 采购单号：（精确）"
+                  v-model="po"
+                >
+                </el-input>
+                <!-- <el-date-picker
+                  v-model="date1"
+                  @change="SelectClick"
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+                <span class="demonstration">至</span>
+                <el-date-picker
+                  v-model="date2"
+                  @change="SelectClick"
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                ></el-date-picker> -->
+               
+                <el-button
+                  @click="SelectClick()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_2"
+                  >搜索</el-button>
+                
+              </div>
+              <el-table
+                border
+                :data="pur_headData"
+                class="th-font14"
+                style="width: 100%"
+                cellpadding="0"
+                stripe
+              >
+                <el-table-column   label=" "  type="index" :index="indexMethod">
+                </el-table-column>
+                <el-table-column
+                  prop="PUR_NO"
+                  width="100"
+                  label="单号"
+                  align="left"
+                ></el-table-column>
+              
+                <el-table-column label="状态" width="60" align="center">
+                  <template slot-scope="scope"
+                    ><span>{{
+                      scope.row.STATUS | pur_headStatus
+                    }}</span></template>
+                </el-table-column>
+                <el-table-column label="产品类型" width="90" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ getProductType(scope.row.ORDER_NO) }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  fomate="yyyy-MM-dd"
+                  width="100"
+                  label="建立日期"
+                  align="center"
+                >
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="NOTES"
+                  min-width="200"
+                  label="备注"
+                  align="left"
+                ></el-table-column>
+               
+                <el-table-column label="" width="120" align="center">
+                  <template slot-scope="scope">
+                    <button
+                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"   
+                      class="btn-style"
+                    >
+                  
+                      查看详情
+                    </button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-tab-pane>
+<!-- /已取消页签============================================================================================================== -->
             <div style="margin:0 25%;" class="block">
               <el-pagination
                 @size-change="handleSizeChange"
@@ -1378,15 +1497,19 @@ import {
   GetRelativePo,
   SaveHeadNotes,
   Submit,
-  CreateExcel
+  UpdateCheckFlagBatch,
 } from "@/api/supplierASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 
 export default {
-  name: "supplyPort",
+  name: "lanJuPort",
   data() {
     return {
+      arr_index: [],
+      arr_span: [],
+      arr_group:[],
+      multipleSelection:[],
       colName:[{
             name1:"位置",
             name2:"名称",
@@ -1455,7 +1578,7 @@ detailCol:[
       pur_headForm: {},
       options: [
         { value: "all", label: "所有状态" },
-        { value: "cancel", label: "取消" },
+        // { value: "cancel", label: "取消" },
         { value: "efficient", label: "生效" },
         { value: "enforce", label: "执行" },
         { value: "fulfill", label: "完成" }
@@ -1476,9 +1599,65 @@ detailCol:[
     }
   },
   methods: {
+    
+
+
+    printRefund(id) {
+      printJS({
+        printable: id,
+        type: "html",
+        maxWidth: 1300,
+        headerStyle: "margin: -2px;",
+        targetStyles: ["*"]
+      });
+    },
+    //合并行或列
+       arraySpanMethod({ row, column, rowIndex, columnIndex },index) {
+        if (columnIndex === 0) {//特别注意：查询出那列就合并那列，index别写成别的列
+        if(this.arr_index[index].indexOf(rowIndex)>-1 ){
+           var i=this.arr_index[index].indexOf(rowIndex);
+           return [this.arr_span[index][i], 1];
+          
+          
+      }
+       else return{
+              rowspan: 0,
+              colspan: 0
+          }
+       
+      } 
+      },
+      //选择或输入条件后搜索
+    OneStepCheck() {
+      let arr_pur=[];
+      for(let i=0; i<this.multipleSelection.length;i++){
+        arr_pur.push(this.multipleSelection[i].PUR_NO);
+      }
+      var data={
+        arr_pur:arr_pur,
+      };
+      UpdateCheckFlagBatch(data).then(res => {
+          if (res.code == 0) {
+          this.$alert("批量确认成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.autoSearch();
+        } else {
+          this.$alert("批量确认失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        }
+      });
+      
+    },
+
+
+    
+
      handleSelectionChange(val) {
-        //this.multipleSelection = val;
-        console.log(val)
+        this.multipleSelection = val;
       },
         getSummaries(param) {
         const { columns, data } = param;
@@ -1567,6 +1746,7 @@ detailCol:[
         return "软装";      }
       else if (value.substring(0, 1) == "W") {
         return "墙纸配套类";      }
+        else return "手工单"
     },
 
     //获取当月第一天零时
@@ -1657,26 +1837,7 @@ detailCol:[
       this.po_type = this.selvalue;
       this.autoSearch();
     },
-    //大表合并方法 1-9列合并成1列。0列存表一
-    bigTableSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        return {
-          rowspan: 1,
-          colspan: 1
-        };
-      }
-      if (columnIndex === 1) {
-        return {
-          rowspan: 1,
-          colspan: 9
-        };
-      } else {
-        return {
-          rowspan: 0,
-          colspan: 0
-        };
-      }
-    },
+    
     //标签页切换
     handleClick(tab) {
       var tabName = tab.name;
@@ -1697,6 +1858,14 @@ detailCol:[
           this.po = "";
           this.date1 = this.getCurrentWeek();
           this.date2 = this.getTodayMaxTime();
+          break;
+        case "third":
+          this.check_flag = -99;
+          this.selvalue = "cancel";
+          this.po_type = "cancel";
+          this.po = "";
+          this.date1 = this.getLongAgao();
+          this.date2 = this.getLongLater();
           break;
       }
       this.autoSearch();
@@ -1743,6 +1912,8 @@ detailCol:[
     returnMain() {
       this.checkY_Visible = false;
       this.checkX_Visible = false;
+      this.checkedY_Visible = false;
+      this.checkedX_Visible = false;
     },
     //确认之前要检查是否填好必要的信息
     SubmitVue() {
@@ -1799,6 +1970,20 @@ detailCol:[
       });
     },
 
+       downLoadSal() {
+       var current_id= Cookies.get("cid");
+       var  customer= "";
+        var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
+       var   check_flag= this.check_flag;
+  var beginTime= this.datatransMethod(this.date1);
+      var  finishTime=this.datatransMethod(this.date2);  
+        var po= this.po;
+      
+      downLoadFile(
+          this.Global.baseUrl + `PUR_HEAD/SalExcel?current_id=${current_id}&customer=${customer}&po_type=${po_type}&check_flag=${check_flag}&beginTime=${beginTime}&finishTime=${finishTime}&po=${po}`
+      );
+    },
+
        downLoadX() {
       var PUR_NO = this.pur_headForm.PUR_NO;
       downLoadFile(
@@ -1840,19 +2025,19 @@ detailCol:[
             this.gridData[i].DATE_DELIVER = "";
           }
       
-      //将总金额保留两位小数
-      let value = Math.round(parseFloat(this.gridData[i].TOTAL_MONEY) * 100) / 100;
-      let s = value.toString().split(".");
-      if (s.length == 1) {
-        value = value.toString() + ".00";
-        this.gridData[i].TOTAL_MONEY= value;
-      }
-      if (s.length > 1) {
-        if (s[1].length < 2) {
-          value = value.toString() + "0";
-        }
-        this.gridData[i].TOTAL_MONEY= value;
-      }
+      // //将总金额保留两位小数
+      // let value = Math.round(parseFloat(this.gridData[i].TOTAL_MONEY) * 100) / 100;
+      // let s = value.toString().split(".");
+      // if (s.length == 1) {
+      //   value = value.toString() + ".00";
+      //   this.gridData[i].TOTAL_MONEY= value;
+      // }
+      // if (s.length > 1) {
+      //   if (s[1].length < 2) {
+      //     value = value.toString() + "0";
+      //   }
+      //   this.gridData[i].TOTAL_MONEY= value;
+      // }
     
           //将所有位置列出来
           if (loc.indexOf(this.gridData[i].CL_PLACE_ID) == -1) {
@@ -1910,9 +2095,50 @@ detailCol:[
           tab2.push(tabArr2);
           let sumObj = { id: k, tab1: tab1, tab2: tab2, tab3: tab3 };
           this.items.push(sumObj);
+          // console.log(this.items);
+          // console.log(this.items[0].tab2);
         }
-
-
+        //对数据进行处理，便于排序
+        // k ,j  i 
+             this.arr_index.splice(0,this.arr_index.length);
+             this.arr_span.splice(0,this.arr_span.length);
+           console.log("this.items"); 
+         console.log(this.items);
+            for (let k=0;k<this.items.length;k++){
+                   let arr=this.items[k].tab2[k];
+                    console.log("arr");
+                     console.log(arr);
+                     let let_intSpana=[];
+                     let let_index=[];
+                   var intSpan=1;
+                   var intIndex=0;
+               for (let i=1;i<arr.length;i++){
+                if (arr[i].cl_name === arr[i - 1].cl_name ) {
+                  intSpan = intSpan + 1;//如果相同,该合并的rowSpan+1
+                  intIndex = i +1- intSpan;//row
+               }
+                 else if (arr[i].cl_name != arr[i - 1].cl_name  ) {
+                  let_index.push(intIndex);
+                  let_intSpana.push(intSpan);
+                  
+                  intSpan = 1;
+                  intIndex = i; 
+                }
+                 if (i==arr.length -1){
+                      let_index.push(intIndex);
+                  let_intSpana.push(intSpan);
+              }  
+        } 
+        this.arr_index.push(let_index);
+                this.arr_span.push(let_intSpana);
+            }
+           
+          //  console.log("this.arr_index"); 
+          // console.log(this.arr_index);
+          //   console.log("this.arr_span"); 
+          //  console.log(this.arr_span);
+          
+       
         //无效
         // for(let i=0;i<this.items.length;i++){
         //   for(let j=0;j<this.items[i].tab1.length;j++){
@@ -2035,16 +2261,28 @@ detailCol:[
 .th-font14{
   font-size:12px;
 }
+.th-font14-bold{
+  font-size:12px;
+  font-weight:bold;
+}
 .button_1 {
-  width: 130px;
-  height: 40px;
+  width: 110px;
+  height: 30px;
   background: #8bc34a;
-  margin-left: 10px;
+
   color: rgb(255, 255, 255);
   text-align: center;
 }
 .button_2 {
   width: 60px;
+  height: 30px;
+  background: #8bc34a;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  text-align: center;
+}
+.button_3 {
+  width: 80px;
   height: 40px;
   background: #8bc34a;
   margin-left: 10px;
@@ -2093,16 +2331,20 @@ detailCol:[
   /* padding: 3px 6px 3px 6px; */
   min-width: 26px;
   border-radius: 4px;
-  color: gray;
+  color: rgb(0, 0, 255);
   display: inline-block;
 }
 .button_clolur {
   background: #8bc34a;
   color: rgb(255, 255, 255);
 }
+.messageBox1 {
+  padding: 3px 0;
+  font-size: 12px;
+}
 .messageBox {
   padding: 3px 0;
-  font-size: 8px;
+  font-size: 10px;
 }
 .data_1 {
   font-size: 1.5em;

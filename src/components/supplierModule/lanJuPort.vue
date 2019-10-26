@@ -12,16 +12,14 @@
       >
         <div style="width:100%">
           <div style="margin-bottom:10px">
-            <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
-            <span style="float:right">{{
-              pur_headForm.DATE_PUR | datatrans
-            }}</span>
+            <h3 align="center">广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h3>
+           
           </div>
           <div>
-            <h1>收货人：{{ pur_headForm.LINKMAN }}</h1>
+            <h4  style="font-weight:normal">收货人：{{ pur_headForm.LINKMAN }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期： {{pur_headForm.DATE_PUR | datatrans }}</h4>
           </div>
           <div style="margin-bottom:10px">
-            <h1>备注信息：{{ pur_headForm.NOTES }}</h1>
+            <h4 style="font-weight:normal">备注信息：{{ pur_headForm.NOTES }}</h4>
           </div>
           <hr />
           <div style="width:100%">
@@ -254,8 +252,9 @@
             <div style="margin-top:10px">
               <div style="margin-bottom:10px;width:100%" class="data_1">
                 <el-card style="min-height:100px">
-                  <div slot="header"><span>送货日期</span></div>
+                  
                   <div>
+                     <span>送货日期:</span>
                     <el-date-picker
                       v-model="date_deliver"
                       type="date"
@@ -284,12 +283,13 @@
                 class="data_1"
               >
                 <el-card style="min-height:100px">
-                  <div slot="header"><span>说明</span></div>
+                  
                   <div>
+                    <span>说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明:</span>
                     <el-input
                       v-model="supply_check_notes"
                       placeholder="说明:"
-                      style="width:30%;height:10px"
+                      style="width:39%;height:10px"
                       clearable
                     ></el-input>
                     <el-button
@@ -322,7 +322,7 @@
         </div>
       </el-dialog>
 
-      <!-- 非X开头确认采购单界面兰 -->
+<!-- 非X开头确认采购单界面兰 ==================================================================================-->
       <el-dialog
         :show-close="true"
         :visible.sync="checkY_Visible"
@@ -332,17 +332,15 @@
         top="8vh"
       >
         <div id="checkYPrint" style="margin-bottom:10px">
-          <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
-          <span style="float:right">{{
-            pur_headForm.DATE_PUR | datatrans
-          }}</span>
-        </div>
-        <div>
-          <h1>收货人：{{ pur_headForm.LINKMAN }}</h1>
-        </div>
-        <div style="margin-bottom:10px">
-          <h1>备注信息：{{ pur_headForm.NOTES }}</h1>
-        </div>
+          <h3 align="center">广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h3>
+           
+          </div>
+          <div>
+            <h4  style="font-weight:normal">收货人：{{ pur_headForm.LINKMAN }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期： {{pur_headForm.DATE_PUR | datatrans }}</h4>
+          </div>
+          <div style="margin-bottom:10px">
+            <h4 style="font-weight:normal">备注信息：{{ pur_headForm.NOTES }}</h4>
+          </div>
         <hr />
         <div style="width:100%">
               <el-table :data="gridData" 
@@ -399,29 +397,29 @@
           <div style="margin-top:10px">
             <div style="margin-bottom:10px;width:100%" class="data_1">
               <el-card style="min-height:100px">
-                <div slot="header"><span>送货日期</span></div>
-                <div>
-                  <el-date-picker
-                    v-model="date_deliver"
-                    type="date"
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd"
-                    placeholder="选择时间"
-                    style="width:15%"
-                  ></el-date-picker>
-                  <el-button
-                    style="width:16%"
-                    class="button_clolur"
-                    @click="Unitdeliver"
-                    >统一设置送货期</el-button
-                  >
-                  <el-button
-                    style="width:16%;margin-top:10px"
-                    class="button_clolur"
-                    @click="AllAccordPromise"
-                    >全部设为约定日期</el-button
-                  >
-                </div>
+                  <div>
+                     <span>送货日期:</span>
+                    <el-date-picker
+                      v-model="date_deliver"
+                      type="date"
+                      format="yyyy-MM-dd"
+                      value-format="yyyy-MM-dd"
+                      placeholder="选择时间"
+                      style="width:15%"
+                    ></el-date-picker>
+                    <el-button
+                      style="width:16%"
+                      class="button_clolur"
+                      @click="Unitdeliver"
+                      >统一设置送货期</el-button
+                    >
+                    <el-button
+                      style="width:16%;margin-top:10px"
+                      class="button_clolur"
+                      @click="AllAccordPromise"
+                      >全部设为约定日期</el-button
+                    >
+                  </div>
               </el-card>
             </div>
             <div
@@ -931,8 +929,7 @@
           </table>
         </div>
       </el-dialog>
-
-      <!-- 非X开头（窗帘）订单 已确认采购单详情界面 -->
+ <!-- 非X开头（窗帘）订单 已确认采购单详情界面 ==========================================================================-->
       <el-dialog
         id="checkedX"
         title=""
@@ -1210,10 +1207,10 @@
         </div>
       </el-dialog>
 
-      <!-- 待确认页签 -->
+   
       <div id="supplyCon">
-      
           <el-tabs v-model="activeName" @tab-click="handleClick">
+<!-- 待确认页签============================================================================================================== --> 
             <el-tab-pane label="待确认" name="first" align="left">
               <div align="right">
                 <template>
@@ -1307,6 +1304,8 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
+<!-- /待确认页签============================================================================================================== -->         
+<!-- 已确认页签============================================================================================================== -->
        <el-tab-pane label="已确认" name="second" align="left">
               <div >
                 <el-input
@@ -1427,16 +1426,124 @@
                 <el-table-column label="" width="120" align="center">
                   <template slot-scope="scope">
                     <button
-                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"
+                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"   
                       class="btn-style"
                     >
+                  
                       查看详情
                     </button>
                   </template>
                 </el-table-column>
               </el-table>
             </el-tab-pane>
-           
+<!-- /已确认页签============================================================================================================== -->
+<!-- 已取消页签============================================================================================================== -->
+       <el-tab-pane label="已取消" name="third" align="left">
+              <div >
+                <el-input
+                  @keyup.enter.native="SelectClick()"
+                  prefix-icon="el-icon-search"
+                  style="width:6%; min-width:200px;"
+                  placeholder=" 采购单号：（精确）"
+                  v-model="po"
+                >
+                </el-input>
+                <!-- <el-date-picker
+                  v-model="date1"
+                  @change="SelectClick"
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+                <span class="demonstration">至</span>
+                <el-date-picker
+                  v-model="date2"
+                  @change="SelectClick"
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                ></el-date-picker> -->
+               
+                <el-button
+                  @click="SelectClick()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_2"
+                  >搜索</el-button>
+                
+              </div>
+              <el-table
+                border
+                :data="pur_headData"
+                class="th-font14"
+                style="width: 100%"
+                cellpadding="0"
+                stripe
+              >
+                <el-table-column   label=" "  type="index" :index="indexMethod">
+                </el-table-column>
+                <el-table-column
+                  prop="PUR_NO"
+                  width="100"
+                  label="单号"
+                  align="left"
+                ></el-table-column>
+                <el-table-column
+                  prop="CUSTOMER_NAME"
+                  min-width="150"
+                  label="客户名称"
+                  align="left"
+                ></el-table-column>
+                <el-table-column label="状态" width="60" align="center">
+                  <template slot-scope="scope"
+                    ><span>{{
+                      scope.row.STATUS | pur_headStatus
+                    }}</span></template>
+                </el-table-column>
+                <el-table-column label="产品类型" width="90" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ getProductType(scope.row.ORDER_NO) }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  fomate="yyyy-MM-dd"
+                  width="100"
+                  label="建立日期"
+                  align="center"
+                >
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="NOTES"
+                  min-width="200"
+                  label="备注"
+                  align="left"
+                ></el-table-column>
+                <el-table-column
+                  prop="LJ_SUGGESTION"
+                  label="兰居备注"
+                  min-width="50"
+                  align="left"
+                ></el-table-column>
+                <el-table-column label="" width="120" align="center">
+                  <template slot-scope="scope">
+                    <button
+                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"   
+                      class="btn-style"
+                    >
+                  
+                      查看详情
+                    </button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-tab-pane>
+<!-- /已取消页签============================================================================================================== -->
             <div style="margin:0 25%;" class="block">
               <el-pagination
                 @size-change="handleSizeChange"
@@ -1468,7 +1575,7 @@ import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 
 export default {
-  name: "supplyPort",
+  name: "supplyJuPort",
   data() {
     return {
       arr_index: [],
@@ -1543,7 +1650,7 @@ detailCol:[
       pur_headForm: {},
       options: [
         { value: "all", label: "所有状态" },
-        { value: "cancel", label: "取消" },
+        // { value: "cancel", label: "取消" },
         { value: "efficient", label: "生效" },
         { value: "enforce", label: "执行" },
         { value: "fulfill", label: "完成" }
@@ -1711,6 +1818,7 @@ detailCol:[
         return "软装";      }
       else if (value.substring(0, 1) == "W") {
         return "墙纸配套类";      }
+        else return "手工单"
     },
 
     //获取当月第一天零时
@@ -1822,6 +1930,14 @@ detailCol:[
           this.po = "";
           this.date1 = this.getCurrentWeek();
           this.date2 = this.getTodayMaxTime();
+          break;
+        case "third":
+          this.check_flag = -99;
+          this.selvalue = "cancel";
+          this.po_type = "cancel";
+          this.po = "";
+          this.date1 = this.getLongAgao();
+          this.date2 = this.getLongLater();
           break;
       }
       this.autoSearch();
