@@ -12,7 +12,7 @@
       >
         <div style="width:100%">
           <div style="margin-bottom:10px">
-            <h3 align="center">广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h3>
+            <div align="center" class="th-font18"> <span  >广东玉兰集团股份有限公司采购单（<span class="th-font18color">{{ pur_headForm.PUR_NO }} </span>）</span></div>
            
           </div>
           <div>
@@ -251,10 +251,9 @@
             <hr />
             <div style="margin-top:10px">
               <div style="margin-bottom:10px;width:100%" class="data_1">
-                <el-card style="min-height:100px">
-                  
+                 <el-card style="min-height:100px">
                   <div>
-                     <span>送货日期:</span>
+                     <span class="th-font16">送货日期:</span>
                     <el-date-picker
                       v-model="date_deliver"
                       type="date"
@@ -276,16 +275,8 @@
                       >全部设为约定日期</el-button
                     >
                   </div>
-                </el-card>
-              </div>
-              <div
-                style="margin-bottom:10px;width:100%;margin-top:10px"
-                class="data_1"
-              >
-                <el-card style="min-height:100px">
-                  
-                  <div>
-                    <span>说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明:</span>
+                  <div style="margin-top:20px" >
+                    <span class="th-font16">  说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明:</span>
                     <el-input
                       v-model="supply_check_notes"
                       placeholder="说明:"
@@ -299,7 +290,7 @@
                       >保存说明
                     </el-button>
                   </div>
-                </el-card>
+              </el-card>
               </div>
             </div>
             <div>
@@ -332,7 +323,7 @@
         top="8vh"
       >
         <div id="checkYPrint" style="margin-bottom:10px">
-          <h3 align="center">广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h3>
+          <div align="center" class="th-font18"> <span  >广东玉兰集团股份有限公司采购单（<span class="th-font18color">{{ pur_headForm.PUR_NO }} </span>）</span></div>
            
           </div>
           <div>
@@ -398,7 +389,7 @@
             <div style="margin-bottom:10px;width:100%" class="data_1">
               <el-card style="min-height:100px">
                   <div>
-                     <span>送货日期:</span>
+                     <span class="th-font16">送货日期:</span>
                     <el-date-picker
                       v-model="date_deliver"
                       type="date"
@@ -420,30 +411,24 @@
                       >全部设为约定日期</el-button
                     >
                   </div>
+                  <div style="margin-top:20px" >
+                    <span class="th-font16">  说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明:</span>
+                    <el-input
+                      v-model="supply_check_notes"
+                      placeholder="说明:"
+                      style="width:39%;height:10px"
+                      clearable
+                    ></el-input>
+                    <el-button
+                      @click="SaveNotes()"
+                      style="width:10%;"
+                      class="button_clolur"
+                      >保存说明
+                    </el-button>
+                  </div>
               </el-card>
             </div>
-            <div
-              style="margin-bottom:10px;width:100%;margin-top:10px"
-              class="data_1"
-            >
-              <el-card style="min-height:100px">
-                <div slot="header"><span>说明</span></div>
-                <div>
-                  <el-input
-                    v-model="supply_check_notes"
-                    placeholder="说明:"
-                    style="width:30%;height:10px"
-                    clearable
-                  ></el-input>
-                  <el-button
-                    @click="SaveNotes()"
-                    style="width:10%;"
-                    class="button_clolur"
-                    >保存说明
-                  </el-button>
-                </div>
-              </el-card>
-            </div>
+           
           </div>
           <div>
             <el-button
@@ -2246,6 +2231,15 @@ detailCol:[
 <style scoped>
 .div-flex{
   display: flex;
+}
+.th-font18{
+  font-size:18px;
+  font-weight:bold;
+}
+.th-font18color{
+  font-size:18px;
+  font-weight:bold;
+  color: #0000FF;
 }
 .th-font{
   font-size:10px;
