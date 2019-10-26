@@ -194,7 +194,6 @@
 <script>
 import Cookies from "js-cookie";
 import { mapMutations, mapActions } from "vuex";
-import { mapState } from "vuex";
 import lodash from "lodash";
 import { getUserMarket, updateShoppingCar } from "@/api/shop";
 import {
@@ -203,8 +202,8 @@ import {
   getActivityByList,
   getGroupById
 } from "@/api/findActivity";
+import { GetCartItem } from "@/api/shopASP";
 import { deleteItems, deleteGroup } from "@/api/delete";
-import Axios from "axios";
 
 export default {
   name: "ShoppingSoftSuit",
@@ -246,11 +245,15 @@ export default {
       this.multipleSelection = [];
       this.expands = [];
       this.totalMoney = 0;
-      getUserMarket({
-        CID: this.cid
+      // getUserMarket({
+      //   CID: this.cid
+      // })
+      GetCartItem({
+        cid: Cookies.get("cid"),
+        commodityType: "soft"
       })
         .then(res => {
-          let theData = res.data.cartItems.soft;
+          let theData = res.data;
           this.dataDeal(theData);
         })
         .catch(err => {
@@ -267,41 +270,43 @@ export default {
         let cid = theData[i].cid;
         let value = theData[i].productGroupType;
         let value1 = theData[i].activityGroupType;
-        if (value === null || value === undefined) value = "无产品";
-        if (value1 === null || value1 === undefined) value1 = "Z";
+        if (!value || value === undefined) value = "无产品";
+        if (!value1 || value1 === undefined) value1 = "Z";
         let val = cid + "+" + value + "+" + value1;
         this.activityData.push({
           activity: val
         });
         this.expands.push(val);
       }
-      let obj = [];
-      let index = [];
-      for (var i = 0; i < theData.length; i++) {
-        for (var j = 0; j < theData[i].commodities.length; j++) {
-          if (
-            theData[i].commodities[j].activityId !== undefined &&
-            theData[i].commodities[j].activityId !== null
-          ) {
-            obj.push(theData[i].commodities[j].activityId);
-            index.push({
-              group: i,
-              item: j
-            });
-          }
-        }
-      }
-      getActivityByList(obj)
-        .then(res => {
-          for (var k = 0; k < index.length; k++) {
-            theData[index[k].group].commodities[index[k].item].activityName =
-              res[k];
-          }
-          this.shopsData = theData;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      this.shopsData = theData;
+      // let obj = [];
+      // let index = [];
+      // for (var i = 0; i < theData.length; i++) {
+      //   for (var j = 0; j < theData[i].commodities.length; j++) {
+      //     if (
+      //       theData[i].commodities[j].activityId !== undefined &&
+      //       theData[i].commodities[j].activityId !== null && 
+      //       theData[i].commodities[j].activityId !== ''
+      //     ) {
+      //       obj.push(theData[i].commodities[j].activityId);
+      //       index.push({
+      //         group: i,
+      //         item: j
+      //       });
+      //     }
+      //   }
+      // }
+      // getActivityByList(obj)
+      //   .then(res => {
+      //     for (var k = 0; k < index.length; k++) {
+      //       theData[index[k].group].commodities[index[k].item].activityName =
+      //         res[k];
+      //     }
+      //     this.shopsData = theData;
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
     },
     multipleTable(index) {
       var re = "multipleTable" + index;
@@ -666,7 +671,7 @@ export default {
         }
         if (
           this.customerType === "10" &&
-          this.multipleSelection[i].onlineSalesAmount === null
+          (this.multipleSelection[i].onlineSalesAmount === null|| this.multipleSelection[i].onlineSalesAmount == 0)
         ) {
           arr.push(this.multipleSelection[i].item.itemNo);
         }
@@ -713,20 +718,19 @@ export default {
     }
   },
   created() {
-    //this.init();
+    this.init();
   },
-  watch: {
-    softsuitData(data) {
-      this.shopsData = [];
-      this.activityData = [];
-      this.multipleSelection = [];
-      this.expands = [];
-      this.totalMoney = 0;
-      this.tempData = data;
-      if (this.tempData.length > 0) this.dataDeal(this.tempData);
-    }
-  },
-  computed: {}
+  // watch: {
+  //   softsuitData(data) {
+  //     this.shopsData = [];
+  //     this.activityData = [];
+  //     this.multipleSelection = [];
+  //     this.expands = [];
+  //     this.totalMoney = 0;
+  //     this.tempData = data;
+  //     if (this.tempData.length > 0) this.dataDeal(this.tempData);
+  //   }
+  // }
 };
 </script>
 

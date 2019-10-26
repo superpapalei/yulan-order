@@ -1213,7 +1213,7 @@ export default {
         }
         this.array[i].item_no = getPush[i].item.itemNo;
         //根据是选择数量还是长*宽
-        if (getPush[i].quantity == null) {
+        if (getPush[i].quantity == null || getPush[i].quantity == 0) {
           this.array[i].num = (getPush[i].height * getPush[i].width).toFixed(2);
           //this.array[i].prime_cost=(getPush[i].height*getPush[i].width).toFixed(2)*getPush[i].price;
           this.array[i].prime_cost = this.subtotal(

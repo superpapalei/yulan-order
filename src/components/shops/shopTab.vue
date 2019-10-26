@@ -98,6 +98,7 @@
           <el-form label-position="left" class="loading-area">
             <el-form-item label="活动：">
               <el-select
+                style="width:300px;"
                 :disabled="disableFlag"
                 v-model="seletedActivity"
                 :placeholder="
@@ -176,6 +177,7 @@
 import { findItemActivity } from "@/api/findActivity";
 import { checkStore } from "@/api/searchStore";
 import { addShoppingCar } from "@/api/shop";
+import { getItemById, GetPromotionByItem } from "@/api/orderListASP";
 import Axios from "axios";
 import Cookies from "js-cookie";
 
@@ -253,38 +255,55 @@ export default {
       var itemVersion = row.itemVersion ? row.itemVersion : "";
       var productType = row.productType ? row.productType : "";
       var productBrand = row.productBrand ? row.productBrand : "";
-      findItemActivity({
-        CID: this.cid,
-        customerType: this.customerType,
-        itemNo: row.itemNo,
-        itemVersion: itemVersion,
-        productType: productType,
-        productBrand: productBrand
-      })
-        .then(res => {
-          if (res.length === 0) {
-            this.disableFlag = true;
-          } else {
-            this.disableFlag = false;
-          }
-          for (var i = 0; i < res.length; i++) {
-            for (var j = 0; j < res[i].second.length; j++) {
+      getItemById({ itemNo: row.itemNo }).then(itemRes => {
+        //findItemActivity({
+        GetPromotionByItem({
+          cid: this.cid,
+          customerType: this.customerType,
+          itemNo: itemRes.data.ITEM_NO,
+          itemVersion: itemRes.data.ITEM_VERSION,
+          productType: itemRes.data.PRODUCT_TYPE,
+          productBrand: itemRes.data.PRODUCT_BRAND
+        })
+          .then(res => {
+            if (res.data.length === 0) {
+              this.disableFlag = true;
+            } else {
+              this.disableFlag = false;
+            }
+            var defaultSel = {
+              pri: 0,
+              id: 0
+            };
+            for (var i = 0; i < res.data.length; i++) {
               var obj = {
-                label:
-                  res[i].second[j].orderType + " " + res[i].second[j].orderName,
-                value: res[i].second[j].pId
+                label: res.data[i].ORDER_TYPE + " -- " + res.data[i].ORDER_NAME,
+                value: res.data[i].P_ID
               };
+              if (res.data[i].PRIORITY != 0 && defaultSel.pri == 0) {
+                defaultSel.pri = res.data[i].PRIORITY;
+                defaultSel.id = res.data[i].P_ID;
+              } else if (
+                res.data[i].PRIORITY != 0 &&
+                defaultSel.pri > res.data[i].PRIORITY
+              ) {
+                defaultSel.pri = res.data[i].PRIORITY;
+                defaultSel.id = res.data[i].P_ID;
+              }
               this.activity.push(obj);
             }
-          }
-          this.activity.push({
-            label: "不参与活动",
-            value: null
+            if (defaultSel.pri != 0) {
+              this.seletedActivity = defaultSel.id;
+            }
+            this.activity.push({
+              label: "不参与活动",
+              value: null
+            });
+          })
+          .catch(err => {
+            console.log(err);
           });
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      });
       let temp = this.expands;
       this.expands = [];
       this.expands.push(row.itemNo);
@@ -331,7 +350,7 @@ export default {
         });
         return;
       }
-      let storeMessage;
+      let storeMessage = "-1";
       if (this.seletedActivity === null || this.seletedActivity === undefined)
         this.seletedActivity = "";
       this.numberList[index].value = this.numberList[index].value.toString();

@@ -3,12 +3,12 @@ import Cookies from "js-cookie";
 
 //订单的url
 var baseUrl = 'http://localhost:49438/';//本地
-//var baseUrl = 'http://47.107.56.156:666/';//测试
+// var baseUrl = 'http://47.107.56.156:666/';//测试
 //var baseUrl = 'http://14.29.223.114:568/';//正式
 
 //下载中心的url
-//const fileCenterUrl = "http://47.107.56.156:1001/";//测试
-const fileCenterUrl="http://14.29.223.114:1001/";//正式
+const fileCenterUrl = "http://47.107.56.156:1001/";//测试
+//const fileCenterUrl="http://14.29.223.114:1001/";//正式
 export {
     fileCenterUrl,
     baseUrl

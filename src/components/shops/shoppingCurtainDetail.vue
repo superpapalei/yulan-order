@@ -1129,7 +1129,11 @@ export default {
         else if (status === 2) status = 5;
         else status = 3;
       }
-      if (data.itemType === "pjb" || data.productType === "LCB" || data.productType =="GY") {
+      if (
+        data.itemType === "pjb" ||
+        data.productType === "LCB" ||
+        data.productType == "GY"
+      ) {
         // if (data.itemNo !== this.allData.itemList[index].itemNo) status = 3;
         // else status = -1;
         status = -1;

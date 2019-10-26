@@ -60,6 +60,7 @@ export function tabsName(index) {
     case "order/examine":
       return "审核订单";
     case "order/examineDetail":
+    case "order/examineDetailNew":
       return "审核详情";
     case "order/checkExamine":
       return "订单详情";
@@ -91,12 +92,11 @@ export function tabsName(index) {
     case "design/lanJuGMExamine":
       return "兰居设计审核";
     case "design/lanJuMarketExamine":
-        return "兰居设计审核";
+      return "兰居设计审核";
     case "supplierModule/payDelegation":
       return "付款委托书";
-
-
-
+    case "supplierModule/payDelegationExamine":
+      return "付款委托书";
     default:
       return "xxx";
   }

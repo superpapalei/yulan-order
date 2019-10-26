@@ -23,28 +23,34 @@
           plain
           size="mini"
           class="r mr40"
-          @click.native="closeToTab({oldUrl:'detail/detailWallPaper',newUrl: 'shoppingCar/shopping?wallPaper'})"
-        >返回</el-button>
+          @click.native="
+            closeToTab({
+              oldUrl: 'detail/detailWallPaper',
+              newUrl: 'shoppingCar/shopping?wallPaper'
+            })
+          "
+          >返回</el-button
+        >
       </router-link>
       <div class="dib" style="border-bottom: 1px solid #ebeef5;">
         <p class="fstrong f16">商品信息：</p>
         <table id="messageRight">
           <tr>
             <td>型号：</td>
-            <td>{{data.item.itemNo}}</td>
+            <td>{{ data.item.itemNo }}</td>
           </tr>
           <tr></tr>
           <tr>
             <td>样本型号：</td>
-            <td>{{data.item.oldItemNo}}</td>
+            <td>{{ data.item.oldItemNo }}</td>
           </tr>
           <tr>
             <td>版本名称：</td>
-            <td>{{data.item.itemVersion}}</td>
+            <td>{{ data.item.itemVersion }}</td>
           </tr>
           <tr>
             <td>单位：</td>
-            <td>{{data.unit}}</td>
+            <td>{{ data.unit }}</td>
           </tr>
           <tr>
             <td>单价：</td>
@@ -58,7 +64,7 @@
                 ></currency-input>
               </span>
               <span v-else-if="isManager === '0'">***</span>
-              <span v-else>{{data.price}}</span>
+              <span v-else>{{ data.price }}</span>
             </td>
           </tr>
           <tr v-if="customerType === '10'">
@@ -87,7 +93,8 @@
                   :placeholder="'请输入宽度'"
                   :customStyle="'width: 100px;'"
                   :customClass="customClass"
-                ></currency-input>×
+                ></currency-input
+                >×
                 <currency-input
                   :decimalNum="decimalNum"
                   v-model="data.height"
@@ -113,7 +120,9 @@
               <el-select
                 :disabled="disableFlag"
                 v-model="data.activityId"
-                :placeholder="(disableFlag === false)?'请选择一个活动':'此产品不参与活动'"
+                :placeholder="
+                  disableFlag === false ? '请选择一个活动' : '此产品不参与活动'
+                "
               >
                 <el-option
                   v-for="item in activity"
@@ -124,8 +133,12 @@
               </el-select>
               <span
                 class="pl10 t-red"
-                v-if="(data.activityId === data.activityName) && !data.activityEffective"
-              >此活动已经过期，请重新选择</span>
+                v-if="
+                  data.activityId === data.activityName &&
+                    !data.activityEffective
+                "
+                >此活动已经过期，请重新选择</span
+              >
             </td>
           </tr>
           <tr>
@@ -136,7 +149,7 @@
                   resize="none"
                   type="textarea"
                   maxlength="200"
-                  :autosize="{ minRows: 3, maxRows: 6}"
+                  :autosize="{ minRows: 3, maxRows: 6 }"
                   v-model="data.note"
                 ></el-input>
                 <i
@@ -145,7 +158,9 @@
                                         right:10px;bottom:5px;"
                 ></i>
               </div>
-              <span style="margin-left:10px;">{{data.note?data.note.length:0}}/200</span>
+              <span style="margin-left:10px;"
+                >{{ data.note ? data.note.length : 0 }}/200</span
+              >
             </td>
           </tr>
         </table>
@@ -154,7 +169,9 @@
         <div style="text-align: left; margin-left: 125px;" class="mt20">
           <!-- <el-button type="success" class="mr20">一键购</el-button> -->
           <!-- <router-link to="/shoppingCar/shopping?wallPaper"> -->
-          <el-button type="danger" class="ml20" @click.native="update">保存至购物车</el-button>
+          <el-button type="danger" class="ml20" @click.native="update"
+            >保存至购物车</el-button
+          >
           <!-- </router-link> -->
         </div>
       </div>
@@ -192,8 +209,6 @@ export default {
   created() {
     if (this.getParams !== undefined) Cookies.set("wallPaper", this.getParams);
     this.data = JSON.parse(Cookies.get("wallPaper"));
-    console.log(Cookies.get("wallPaper"));
-    console.log(this.data);
     //获得小数位数
     getItemById({ itemNo: this.data.item.itemNo }).then(res => {
       res.data.DECIMAL_PLACES == "1"
@@ -231,7 +246,6 @@ export default {
         productBrand: this.data.item.productBrand
       })
         .then(res => {
-          console.log(res);
           if (res.length === 0 && this.data.activityEffective !== false) {
             this.disableFlag = true;
           } else {
@@ -249,9 +263,8 @@ export default {
           }
           this.activity.push({
             label: "不参与活动",
-            value: null
+            value: ""
           });
-          console.log(this.activity);
         })
         .catch(err => {
           console.log(err);
@@ -277,7 +290,6 @@ export default {
           })
             .then(() => {
               storeMessage = "0";
-              console.log(storeMessage);
               this.addToCar(row, storeMessage);
               return;
             })
@@ -296,14 +308,12 @@ export default {
           })
             .then(() => {
               storeMessage = "1";
-              console.log(storeMessage);
               this.addToCar(row, storeMessage);
               return;
             })
             .catch(action => {
               if (action === "cancel") {
                 storeMessage = "0";
-                console.log(storeMessage);
                 this.addToCar(row, storeMessage);
               }
               return;
@@ -320,7 +330,6 @@ export default {
           })
             .then(() => {
               storeMessage = "0";
-              console.log(storeMessage);
               this.addToCar(row, storeMessage);
               return;
             })
@@ -341,14 +350,20 @@ export default {
       if (storeMessage === undefined) return;
       if (
         this.data.width === null ||
+        this.data.width === 0 ||
         this.data.height === null ||
+        this.data.height === 0 ||
         this.data.width === undefined ||
         this.data.height === undefined
       ) {
         this.data.width = "";
         this.data.height = "";
       }
-      if (this.data.quantity === null || this.data.quantity === undefined)
+      if (
+        this.data.quantity === null ||
+        this.data.quantity === 0 ||
+        this.data.quantity === undefined
+      )
         this.data.quantity = "";
       let changeArr = [];
       let updateObj = {
@@ -382,7 +397,6 @@ export default {
       }
       Promise.all(changeArr)
         .then(res => {
-          console.log(res);
           let result = res[0];
           if (result.code === 0) {
             Cookies.set("wallPaper", this.data);
