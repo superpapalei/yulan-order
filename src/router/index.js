@@ -27,6 +27,7 @@ import checkOrder from '@/components/order/checkOrder'
 import shipment from '@/components/order/shipment'
 import examine from '@/components/order/examine'
 import ExamineDetail from '@/components/order/examineDetail'
+import examineDetailNew from '@/components/order/examineDetailNew'
 import checkExamine from '@/components/order/checkExamine'
 import myCoupon from '@/components/center/myCoupon'
 import DetailRefund from '@/components/detail/detailRefund'
@@ -44,7 +45,8 @@ import ISExamineMarket from '@/components/design/ISExamineMarket'
 import ISExamineGM from '@/components/design/ISExamineGM'
 import lanJuGMExamine from '@/components/design/lanJuGMExamine'
 import lanJuMarketExamine from '@/components/design/lanJuMarketExamine'
-import PayDelegation from '@/components/supplierModule/payDelegation'
+import payDelegation from '@/components/supplierModule/payDelegation'
+import payDelegationExamine from '@/components/supplierModule/payDelegationExamine'
 
 Vue.use(Router)
 
@@ -156,9 +158,6 @@ const router = new Router({
           path: '/shoppingCar/shopping',
           name: 'shopping',
           component: Shopping,
-          meta: {
-            returnMain: true//暂时用这个，该了后台再去掉
-          }
         },
         {
           path: '/detail/detailCurtain',
@@ -338,7 +337,20 @@ const router = new Router({
         {
           path: '/supplierModule/payDelegation',
           name: 'payDelegation',
-          component: PayDelegation
+          component: payDelegation
+        },
+        {
+          path: '/supplierModule/payDelegationExamine',
+          name: 'payDelegationExamine',
+          component: payDelegationExamine
+        },
+        {
+          path: '/order/examineDetailNew',
+          name: 'examineDetailNew',
+          component: examineDetailNew,
+          meta: {
+            returnMain: true//该页面刷新回到主界面
+          }
         },
       ]
     }

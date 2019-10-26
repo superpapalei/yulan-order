@@ -1,8 +1,8 @@
 <template>
   <div>
     <div>
-      <h1>累计使用金额:{{accMoney}}</h1>
-      <br>
+      <h1>累计使用金额:{{ accMoney }}</h1>
+      <br />
       <el-date-picker
         type="date"
         format="yyyy-MM-dd"
@@ -10,7 +10,8 @@
         placeholder="日期区间"
         v-model="date1"
         style="width:14%;"
-      ></el-date-picker>&nbsp;至
+      ></el-date-picker
+      >&nbsp;至
       <el-date-picker
         type="date"
         format="yyyy-MM-dd"
@@ -25,7 +26,9 @@
         v-model="find"
         style="width:300px;"
       >
-        <el-button @click="search()" slot="append" icon="el-icon-search">搜索</el-button>
+        <el-button @click="search()" slot="append" icon="el-icon-search"
+          >搜索</el-button
+        >
       </el-input>
     </div>
     <el-table
@@ -36,29 +39,41 @@
       style="width: 100%"
       :row-class-name="tableRowClassName"
     >
-      <el-table-column align="center" prop="ORDER_NO" label="订单号"></el-table-column>
-      <el-table-column align="center" prop="ITEM_NO" label="商品型号"></el-table-column>
+      <el-table-column
+        align="center"
+        prop="ORDER_NO"
+        label="订单号"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="ITEM_NO"
+        label="商品型号"
+      ></el-table-column>
       <el-table-column align="center" label="使用时间">
         <template slot-scope="scope1">
-          <span>{{scope1.row.DATE_USE |datatrans}}</span>
+          <span>{{ scope1.row.DATE_USE | datatrans }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="REBATE_MONEY" label="使用金额">
         <template slot-scope="scope1">
           <span v-if="isManager === '0'">***</span>
-          <span v-else>{{scope1.row.REBATE_MONEY}}</span>
+          <span v-else>{{ scope1.row.REBATE_MONEY }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="NOTES" label="备注"></el-table-column>
+      <el-table-column
+        align="center"
+        prop="NOTES"
+        label="备注"
+      ></el-table-column>
     </el-table>
     <div style="margin:0 25%;" class="block">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage"
-        :page-sizes="[10,20, 50, 100]"
+        :page-sizes="[10, 20, 50, 100]"
         :page-size="limit"
-        layout="total,sizes, prev, pager, next, jumper"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="count"
       ></el-pagination>
     </div>
@@ -68,7 +83,7 @@
 <script>
 import Cookies from "js-cookie";
 import { CouponUseRecord } from "@/api/orderList";
-import {getUseRecord,getTotalRecordSum} from "@/api/orderListASP";
+import { getUseRecord, getTotalRecordSum } from "@/api/orderListASP";
 
 export default {
   name: "useRecordDetail",
@@ -77,14 +92,14 @@ export default {
     return {
       isManager: Cookies.get("isManager"),
       useRecordData: [],
-      couponId: '',
+      couponId: "",
       date1: "",
       date2: "",
       find: "",
       limit: 20,
       count: this.useTable.count,
       currentPage: 1,
-      accMoney:0,
+      accMoney: 0
     };
   },
   methods: {
@@ -109,7 +124,7 @@ export default {
       //CouponUseRecord(url, data)
       getUseRecord(data).then(res => {
         this.useRecordData = res.data;
-        this.count =res.count;
+        this.count = res.count;
       });
     },
     search() {
@@ -145,8 +160,7 @@ export default {
               }
             }, 0);
             sums[index] = sums[index].toFixed(2);
-            if (this.isManager == "0")
-              sums[index] = "***";
+            if (this.isManager == "0") sums[index] = "***";
           } else {
             sums[index] = "";
           }
@@ -178,24 +192,24 @@ export default {
       m = m < 10 ? "0" + m : m;
       let s = date.getSeconds();
       s = s < 10 ? "0" + s : s;
-      return y + "-" + MM + "-" + d + " " + h + ':' + m + ':' + s;
+      return y + "-" + MM + "-" + d + " " + h + ":" + m + ":" + s;
     }
   },
-  activated(){
-    this.find ="";
-    this.date1 ="";
-    this.date2="";
+  activated() {
+    this.find = "";
+    this.date1 = "";
+    this.date2 = "";
     this.currentPage = 1;
     this.limit = 20;
     this.count = this.useTable.count;
     this.useRecordData = this.useTable;
     this.couponId = this.useTable.couponId;
-    var data ={
-      couponId:this.couponId
-    }
+    var data = {
+      couponId: this.couponId
+    };
     getTotalRecordSum(data).then(res => {
       this.accMoney = res.data;
-    })
-  },
+    });
+  }
 };
 </script>

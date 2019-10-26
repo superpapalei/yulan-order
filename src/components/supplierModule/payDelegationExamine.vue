@@ -1,4 +1,4 @@
--<!--供应商的付款委托书界面-->
+-<!--兰居的付款委托书界面-->
 <template>
   <div>
     <el-card shadow="hover">
@@ -44,7 +44,6 @@
          </el-input>
 
         <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
-        <el-button size="medium" type="primary" style="float:right"  @click="downLoad('/Files/template/第三方付款委托书.docx')" >下载委托书</el-button>   
       </div>
       
       <div style="margin-top:10px">
@@ -104,7 +103,7 @@
                 size="mini"
                 icon="el-icon-edit"
                 circle
-                v-if="scope.row.STATE=='1'||scope.row.STATE=='4'"
+                v-if="scope.row.STATE=='2'"
               ></el-button>
               <el-button
                 @click="_CheckDetail(scope.row)"
@@ -112,7 +111,7 @@
                 size="mini"
                 icon="el-icon-search"
                 circle
-                v-if="scope.row.STATE=='2'||scope.row.STATE=='3'"
+                v-if="scope.row.STATE!='2'"
               ></el-button>
             </template>
           </el-table-column>
@@ -185,6 +184,14 @@
               </ul>
             </td>
           </tr>
+
+          <tr v-if="this.submitForm.STATE=='4'">
+            <td class="grayTD"  colspan="4" rowspan="1"  style="font-size:20px;height:30px" >审核信息（退回）</td>
+          </tr>
+          <tr v-if="this.submitForm.STATE=='4'">
+            <td class="grayTD"  colspan="1" rowspan="1"  style="height:50px" >退回原因</td>
+            <td colspan="3" rowspan="1"  style="height:50px" >{{submitForm.RETURN_REASON}}</td>
+          </tr>
         </table>
       </div> 
 
@@ -224,45 +231,49 @@
             <td colspan="1" rowspan="1" style="height:15px">{{item.LINE_NO}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{item.NAME}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{item.MONEY}}</td>
-            <td colspan="2" rowspan="1" style="height:30px">
-                <div>
-                <el-upload
-                class="upload-de"
-                :action="Global.baseUrl + '/PUR_HEAD/UploadFiles'"
-                drag
-                multiple
-                :on-change="function(file,fileList){return  handleChange(file,fileList,index)}"
-                :on-remove="function(file,fileList){return  handleRemove(file,fileList,index)}"
-                :on-success="function(res,file,fileList){return  handleSuccess(res,file,fileList,index)}"
-                ref="upload"
-                :auto-upload="false"
-                :file-list="submitDetailForm[index].fileList"
-                :data="{ CID: CID, dateStamp: dateStamp }"
-              >
-                <i
-                  class="el-icon-upload2"
-                  style="margin-top:8px;"
+            <td colspan="1" rowspan="1" style="height:15px">
+              <ul  class="el-upload-list el-upload-list--text" >
+              <li 
+                  v-for="(file, i) in item.fileList"
+                  :key="i"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
                 >
-                <span style="font-size:15px;">上传附件</span>
-                </i>
-              </el-upload>
-              </div>
+                  <a class="el-upload-list__item-name" >
+                    <i class="el-icon-document" ></i>{{ file.name }}
+                  </a>
+                  <label style="display:block;position:absolute;top:0px;right:30px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载附件</a>
+                  </label>
+              </li>
+              </ul>
             </td>
           </tr>
 
-          <tr v-if="this.submitForm.STATE=='4'">
+          <tr v-if="this.submitForm.STATE=='2'">
             <td class="grayTD"  colspan="4" rowspan="1"  style="font-size:20px;height:30px" >审核信息（退回）</td>
           </tr>
-          <tr v-if="this.submitForm.STATE=='4'">
+          <tr v-if="this.submitForm.STATE=='2'">
             <td class="grayTD"  colspan="1" rowspan="1"  style="height:50px" >退回原因</td>
-            <td colspan="3" rowspan="1"  style="height:50px" >{{submitForm.RETURN_REASON}}</td>
+            <td colspan="3" rowspan="1"  style="height:50px" >
+            <el-input
+                v-model="submitForm.RETURN_REASON"
+                type="textarea"
+                maxlength="200"
+                placeholder="（请输入退回原因）"
+                clearable
+                class="inputStyle"
+              >
+              </el-input>
+            </td>
           </tr>
         </table>
        </div>
-
-        <div style="text-align:center;margin-top:10px">           
-          <el-button type="success"  v-if="this.submitForm.STATUS!=1"  @click="_editSubmit()">确定</el-button>  
-        </div>    
+        <br />      
+        <div style="text-align:center">
+        <el-button type="success"   @click="_editSubmit(3)" >通过</el-button>                    
+        <el-button type="danger"   @click="_editSubmit(4)" >退回</el-button>  
+        </div>     
 
       </div>
 
@@ -300,16 +311,17 @@
 
 <script>
 import { 
-  GetCurrentDelegation,
+  GetAllDelegation,
   CheckDetailByID,
-  editByCustomer
+  editByCustomer,
+  editSubmit
  } from "@/api/supplierASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 
 export default {
-  name: "payDelegation",
+  name: "payDelegationExamine",
   data() {
     return {
       dateStamp: "",
@@ -359,16 +371,6 @@ export default {
         {
           label: "退回",
           value: "4"
-        },
-      ],
-      typeArray: [
-        {
-          label: "简装",
-          value: 1
-        },
-        {
-          label: "豪宅",
-          value: 2
         },
       ],
       payData: [],
@@ -497,7 +499,7 @@ export default {
       } else {
         data.finishTime = data.finishTime + " 23:59:59";
       }
-       GetCurrentDelegation(data).then(res => {
+       GetAllDelegation(data).then(res => {
         this.count = res.count;
         this.payData = res.data;
       });
@@ -567,36 +569,25 @@ export default {
       });
     },
     //编辑列表详情修改
-    _editSubmit() {
-      if (this.fileChange) {
-        //文件发生改变，重新上传一次(仅选中修改后的文件，而不是所有文件效率会更高)
-        for (let i = 0; i < this.submitDetailForm.length; i++) {
-            this.$refs.upload[i].submit();
-            this.submitDetailForm[i].ATTACHMENT_FILE = "";
-            for (let j = 0; j < this.submitDetailForm[i].fileList.length; j++) {
-               this.submitDetailForm[i].ATTACHMENT_FILE +=
-                "/Files/payDelegation/" +
-               this.CID +
-               "/" +
-               this.dateStamp +
-                "/" +
-               this.submitDetailForm[i].fileList[j].name +
-                ";"; 
-              }
-          this.submitDetailForm[i].ATTACHMENT_FILE_FOLDER =
-        "/Files/payDelegation/" + this.CID + "/" + this.dateStamp;
+    _editSubmit(val) {
+      this.submitForm.STATE=val;
+      this.submitForm.AUDITOR=this.CNAME;
+      editSubmit(this.submitForm).then(res => {
+        if (res.code == 0) {
+          this.$alert("修改成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.currentPage = 1;
+          this.refresh();
+        } else {
+          this.$alert("修改失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
         }
-      } else {
-        if (this.deleteFile.length > 0) {
-          for (let i = 0; i < this.deleteFile.length; i++) {
-            this.submitDetailForm[this.deleteIndex[i]].ATTACHMENT_FILE="";
-            for (var j = 0; j < this.submitDetailForm[this.deleteIndex[i]].fileList.length; j++) {
-                this.submitDetailForm[this.deleteIndex[i]].ATTACHMENT_FILE += this.submitDetailForm[this.deleteIndex[i]].fileList[j].url + ";";
-            }
-          }
-        }
-        this.submitEDITANSYC();
-      }
+      });
+      this.payDetail = false;
     },
     handleChange(file, fileList,index) {
       console.log(index);
@@ -638,7 +629,6 @@ export default {
       });
     },
     submitEDITANSYC() {
-      this.submitForm.USER_AFFIRM=this.CNAME;
       //相当于同步，等提交成功后再执行
       editByCustomer({model:this.submitForm,detailModels:this.submitDetailForm, attchmentChange: this.fileChange,deleteFile: this.deleteFile}).then(res => {
         if (res.code == 0) {

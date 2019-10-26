@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card shadow="hover">
-      <div>
+      <div style="margin-bottom:10px;">
         <el-date-picker
           type="date"
           format="yyyy-MM-dd"
@@ -27,7 +27,7 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-button type="success" @click="search()" icon="el-icon-search"
+        <el-button type="success" @click="search()" icon="el-icon-search" size="medium"
           >查询</el-button
         >
       </div>
@@ -75,17 +75,17 @@
               @click="lookIt(scope.row)"
               type="warning"
               icon="el-icon-search"
-              size="small"
+              size="mini"
             ></el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin:0 25%;" class="block">
+      <div style="margin:0 35%;" class="block">
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
           :page-size="limit"
-          layout="prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="count"
         ></el-pagination>
       </div>

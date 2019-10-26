@@ -193,7 +193,7 @@
                   :disabled="scope.row.packDetailId == 0 ? true : false"
                   @click="shipmentDetail(scope.row)"
                   type="primary"
-                  size="small"
+                  size="mini"
                   >查看详情</el-button
                 >
                 <!-- :disabled="scope.row.packDetailId==0?true:false" -->

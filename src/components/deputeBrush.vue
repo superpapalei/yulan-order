@@ -59,6 +59,7 @@
               <el-button
                 @click="openDialog(scope1.row.ORDER_NO, scope1.row.STATUS_ID)"
                 type="text"
+                size="medium"
                 >{{ scope1.row.ORDER_NO }}</el-button
               >
             </template>

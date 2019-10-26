@@ -27,7 +27,7 @@
           :data="curtainMsg"
           style="min-width: 750px; margin: 5px auto;"
         >
-          <el-table-column label="型号">
+          <el-table-column label="型号" width="120">
             <template slot-scope="scope">
               <div v-if="scope.row.wbhFlag === '1'">
                 {{ scope.row.itemNo }}
@@ -38,19 +38,19 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="宽度(m)">
+          <el-table-column label="宽度(m)" width="120">
             <template slot-scope="scope">
               <currency-input placeholder="0.00" v-model="scope.row.width">
               </currency-input>
             </template>
           </el-table-column>
-          <el-table-column label="高度(m)">
+          <el-table-column label="高度(m)" width="120">
             <template slot-scope="scope">
               <currency-input placeholder="0.00" v-model="scope.row.height">
               </currency-input>
             </template>
           </el-table-column>
-          <el-table-column label="帘外包宽度(m)" prop="fixGrade">
+          <el-table-column label="帘外包宽度(m)" prop="fixGrade" width="150">
             <template slot-scope="scope">
               <div v-if="scope.row.wbhFlag === '1'">
                 <el-checkbox v-model="scope.row.isWBH">
@@ -72,7 +72,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="褶皱倍数">
+          <el-table-column label="褶皱倍数" width="120">
             <template slot-scope="scope">
               <el-select
                 size="mini"
@@ -89,10 +89,10 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="位置">
+          <el-table-column label="位置" width="150">
             <template slot-scope="scope">
               <el-input
-                style="width:85px;"
+                style="width:120px;"
                 size="mini"
                 placeholder="选填"
                 v-model="scope.row.location"
@@ -100,9 +100,10 @@
               </el-input>
             </template>
           </el-table-column>
-          <el-table-column label="活动">
+          <el-table-column label="活动" width="280">
             <template slot-scope="scope">
               <el-select
+                style="width:250px"
                 size="mini"
                 :disabled="isActivity[scope.$index]"
                 v-model="scope.row.activity"
@@ -136,7 +137,7 @@
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
           :page-size="pageSize"
-          layout="prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="totalNumber"
         >
         </el-pagination>
@@ -151,6 +152,7 @@ import { mapState } from "vuex";
 import Cookies from "js-cookie";
 import { getCurtainMsg, getShopSingleCurtain } from "@/api/shopSearch";
 import { findItemActivity } from "@/api/findActivity";
+import { getItemById, GetPromotionByItem } from "@/api/orderListASP";
 
 export default {
   name: "Curtain",
@@ -284,7 +286,9 @@ export default {
         .then(res => {
           //赋值给表格
           this.curtainData = res.data;
-          this.curtainData = this.curtainData.filter(item => item.saleId != 'C'&& item.saleId!= 'F')
+          this.curtainData = this.curtainData.filter(
+            item => item.saleId != "C" && item.saleId != "F"
+          );
           this.createCurtainMsg(this.curtainData);
           //获取总条数
           if (this.totalNumber !== this.curtainData[0].total) {
@@ -311,7 +315,9 @@ export default {
         .then(res => {
           //赋值给表格
           this.curtainData = res.data;
-          this.curtainData = this.curtainData.filter(item => item.saleId != 'C'&& item.saleId!= 'F')
+          this.curtainData = this.curtainData.filter(
+            item => item.saleId != "C" && item.saleId != "F"
+          );
           this.createCurtainMsg(this.curtainData);
           if (this.totalNumber !== this.curtainData[0].total) {
             this.totalNumber = this.curtainData[0].total;
@@ -328,6 +334,10 @@ export default {
       this.activityOptions = [];
       this.isActivity = [];
       for (let i = 0; i < data.length; i++) {
+        var defaultSel = {
+          pri: 0,
+          id: 0
+        };
         this.curtainMsg.push({
           itemNo: data[i].itemNo, //型号
           width: "", //宽
@@ -340,40 +350,58 @@ export default {
           activity: "", //活动
           groupType: "" //groupType
         });
-        await this.getProductActivity(data[i])
-          .then(res => {
-            if (res.length === 0) this.isActivity.push(true);
-            else this.isActivity.push(false);
-            let _obj = [];
-            for (var i = 0; i < res.length; i++) {
-              for (var j = 0; j < res[i].second.length; j++) {
-                var obj = {
-                  label:
-                    res[i].second[j].orderType +
-                    " " +
-                    res[i].second[j].orderName,
-                  value: res[i].second[j].pId
-                };
-                var obj1 = {
-                  pId: res[i].second[j].pId,
-                  groupType: res[i].second[j].groupType
-                };
-                let re = this.activityGroup.some(i => i.pId === obj1.pId);
-                if (re === false) this.activityGroup.push(obj1);
-                _obj.push(obj);
-              }
-            }
-            _obj.push({
-              label: "不参与活动",
-              value: null
-            });
-            this.activityOptions.push(_obj);
-          })
-          .catch(err => {
-            this.isActivity.push(true);
-            this.activityOptions.push([]);
-            console.log(err);
-          });
+        let itemRes = await getItemById(
+          { itemNo: data[i].itemNo },
+          { loading: false }
+        );
+        //await this.getProductActivity(data[i])
+        let res = await GetPromotionByItem(
+          {
+            cid: this.cid,
+            customerType: this.customerType,
+            itemNo: itemRes.data.ITEM_NO,
+            itemVersion: itemRes.data.ITEM_VERSION,
+            productType: itemRes.data.PRODUCT_TYPE,
+            productBrand: itemRes.data.PRODUCT_BRAND
+          },
+          { loading: false }
+        );
+        if (res.data.length === 0) this.isActivity.push(true);
+        else this.isActivity.push(false);
+        let _obj = [];
+
+        for (var j = 0; j < res.data.length; j++) {
+          var obj = {
+            label: res.data[j].ORDER_TYPE + " -- " + res.data[j].ORDER_NAME,
+            value: res.data[j].P_ID
+          };
+          var obj1 = {
+            pId: res.data[j].P_ID,
+            groupType: res.data[j].GROUP_TYPE
+          };
+          if (res.data[j].PRIORITY != 0 && defaultSel.pri == 0) {
+            defaultSel.pri = res.data[j].PRIORITY;
+            defaultSel.id = res.data[j].P_ID;
+          } else if (
+            res.data[j].PRIORITY != 0 &&
+            defaultSel.pri > res.data[j].PRIORITY
+          ) {
+            defaultSel.pri = res.data[j].PRIORITY;
+            defaultSel.id = res.data[j].P_ID;
+          }
+          let re = this.activityGroup.some(i => i.pId === obj1.pId);
+          if (re === false) this.activityGroup.push(obj1);
+          _obj.push(obj);
+        }
+        _obj.push({
+          label: "不参与活动",
+          value: null
+        });
+        this.activityOptions.push(_obj);
+
+        if (defaultSel.pri != 0) {
+          this.curtainMsg[i].activity = defaultSel.id;
+        }
       }
     },
     //获取产品活动
