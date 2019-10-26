@@ -14,10 +14,7 @@
         <h3 class="mt10 tc rel">
           客户确认书【{{ getNameByState(baseData.STATE) }}】
           <i
-            v-if="
-              baseData.STATE === 'APPROVED' ||
-                (baseData.STATE === 'CANCELED' && identity === 'USER')
-            "
+           
             class="icon-print el-icon-printer cpoi"
             @click="printRefund"
           ></i>

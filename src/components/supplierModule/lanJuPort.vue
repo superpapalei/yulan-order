@@ -331,7 +331,7 @@
         width="1070px"
         top="8vh"
       >
-        <div style="margin-bottom:10px">
+        <div id="checkYPrint" style="margin-bottom:10px">
           <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
           <span style="float:right">{{
             pur_headForm.DATE_PUR | datatrans
@@ -475,7 +475,7 @@
         width="1070px"
         top="8vh"
       >
-        <div style="width:100% ;margin:0 auto;">
+        <div   id="checkedXPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
               <tr>
@@ -486,6 +486,8 @@
                 >
 <div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
 <div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<div  style="position:fixed;z-index:1;top: 260px;padding-left: 900px;"><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
+ 
                   采购单
                 </td>
               </tr>
@@ -940,7 +942,7 @@
         width="1070px"
         top="8vh"
       >
-        <div style="width:100% ;margin:0 auto;">
+        <div  id="checkedYPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
               <tr>
@@ -951,6 +953,7 @@
                 >采购单
                 <div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
 <div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
+<div  style="position:fixed;z-index:1;top: 260px;padding-left: 900px;"><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedYPrint')"></div></div>
                 </td>
               </tr>
               <tr>
@@ -1359,6 +1362,12 @@
                   style="margin-left:8px"
                   class="button_1"
                   >下载表头及明细</el-button>
+                   <el-button
+                  @click="downLoadSal()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_1"
+                  >下载销售表单</el-button>
               </div>
               <el-table
                 border
@@ -1454,7 +1463,6 @@ import {
   SaveHeadNotes,
   Submit,
   UpdateCheckFlagBatch,
-  CreateExcel
 } from "@/api/supplierASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
@@ -1559,7 +1567,15 @@ detailCol:[
     
 
 
-
+    printRefund(id) {
+      printJS({
+        printable: id,
+        type: "html",
+        maxWidth: 1300,
+        headerStyle: "margin: -2px;",
+        targetStyles: ["*"]
+      });
+    },
     //合并行或列
        arraySpanMethod({ row, column, rowIndex, columnIndex },index) {
         if (columnIndex === 0) {//特别注意：查询出那列就合并那列，index别写成别的列
@@ -1910,6 +1926,20 @@ detailCol:[
       });
     },
 
+       downLoadSal() {
+       var current_id= Cookies.get("cid");
+       var  customer= "";
+        var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
+       var   check_flag= this.check_flag;
+  var beginTime= this.datatransMethod(this.date1);
+      var  finishTime=this.datatransMethod(this.date2);  
+        var po= this.po;
+      
+      downLoadFile(
+          this.Global.baseUrl + `PUR_HEAD/SalExcel?current_id=${current_id}&customer=${customer}&po_type=${po_type}&check_flag=${check_flag}&beginTime=${beginTime}&finishTime=${finishTime}&po=${po}`
+      );
+    },
+
        downLoadX() {
       var PUR_NO = this.pur_headForm.PUR_NO;
       downLoadFile(
@@ -2192,16 +2222,16 @@ detailCol:[
   font-weight:bold;
 }
 .button_1 {
-  width: 130px;
-  height: 40px;
+  width: 110px;
+  height: 30px;
   background: #8bc34a;
-  margin-left: 10px;
+
   color: rgb(255, 255, 255);
   text-align: center;
 }
 .button_2 {
   width: 60px;
-  height: 40px;
+  height: 30px;
   background: #8bc34a;
   margin-left: 10px;
   color: rgb(255, 255, 255);
