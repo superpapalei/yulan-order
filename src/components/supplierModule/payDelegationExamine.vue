@@ -12,7 +12,7 @@
           type="date"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          placeholder="查询开始日期"
+          placeholder="提交日期开始"
           v-model="beginTime"
           style="width:14%;"
         ></el-date-picker> --
@@ -20,7 +20,7 @@
           type="date"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          placeholder="查询截止日期"
+          placeholder="截止时间"
           v-model="finishTime"
           style="width:14%;"
         ></el-date-picker>
@@ -37,7 +37,7 @@
 
         <el-input
         @keyup.enter.native="search()"
-        placeholder="请输入关键字进行查询"
+        placeholder="请输入委托编号进行查询"
         v-model="SEARCHKEY"
         style="width:220px;margin-left:10px"
          >
@@ -80,12 +80,6 @@
               <span>{{ scope.row.STATE | transStatus }}</span>
             </template>
         </el-table-column>
-        <el-table-column
-          prop="USER_CRE"
-          label="创建人"
-          width="120"
-          align="center"
-        ></el-table-column>
         <el-table-column width="120" label="确认时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.DATE_AFFIRM | datatrans }}</span>
@@ -93,9 +87,9 @@
         </el-table-column>
         <el-table-column width="130" label="确认人" align="center"  prop="USER_AFFIRM">
         </el-table-column>
-        <el-table-column  label="退回原因" width="295" align="center"  prop="RETURN_REASON">
+        <el-table-column  label="退回原因" align="center"  prop="RETURN_REASON">
         </el-table-column>
-        <el-table-column align="center" label="操作" >
+        <el-table-column align="center" label="操作" width="90" >
             <template slot-scope="scope" >
               <el-button
                 @click="_EditDetail(scope.row)"
@@ -175,7 +169,13 @@
                   tabindex="0"
                 >
                   <a class="el-upload-list__item-name" >
-                    <i class="el-icon-document" ></i>{{ file.name }}
+                    <i class="el-icon-document" ></i>
+                    <el-link
+                         type="primary"
+                         size="mini"
+                         @click="showImage(file.url )"
+                      >{{ file.name  }}
+                    </el-link>
                   </a>
                   <label style="display:block;position:absolute;top:0px;right:30px;">
                     <a style="cursor:pointer;" @click="downLoad(file.url)">下载附件</a>
@@ -240,7 +240,13 @@
                   tabindex="0"
                 >
                   <a class="el-upload-list__item-name" >
-                    <i class="el-icon-document" ></i>{{ file.name }}
+                    <i class="el-icon-document" ></i>
+                      <el-link
+                         type="primary"
+                         size="mini"
+                         @click="showImage(file.url )"
+                      >{{ file.name  }}
+                      </el-link>
                   </a>
                   <label style="display:block;position:absolute;top:0px;right:30px;">
                     <a style="cursor:pointer;" @click="downLoad(file.url)">下载附件</a>
@@ -280,31 +286,43 @@
       <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
         <table width="100%" border="0px" cellspacing="0px" cellpadding="0">
           <tr >
-             <td style="width:8%"><h4>创建时间：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.DATE_CRE| datatransDetail }}</h4></td>
-             <td style="width:8%"><h4>确认时间：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.DATE_AFFIRM| datatransDetail }}</h4></td>
-             <td style="width:8%"><h4>审核时间：</h4></td>
-             <td v-if="submitForm.STATE=='3'||submitForm.STATE=='4'" style="width:26%;margin-left:-30px;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
-             <td v-if="submitForm.STATE!='3'&& submitForm.STATE!='4'" style="width:26%;margin-left:-30px;"><h4></h4></td>
+             <td style="width:12%"><h4>创建时间：</h4></td>
+             <td style="width:20%;"><h4>{{ submitForm.DATE_CRE| datatransDetail }}</h4></td>
+             <td style="width:12%"><h4>创建人：</h4></td>
+             <td style="width:30%;"><h4>{{ submitForm.USER_CRE }}</h4></td>
+             <td style="width:8%;"><h4></h4></td>
+             <td style="width:8%;"><h4></h4></td>
+          </tr>
+          <tr v-if="submitForm.USER_AFFIRM!=''">
+             <td style="width:12%"><h4>确认时间：</h4></td>
+             <td style="width:20%;"><h4>{{ submitForm.DATE_AFFIRM| datatransDetail }}</h4></td>
+             <td style="width:12%"><h4>确认人：</h4></td>
+             <td style="width:30%;"><h4>{{ submitForm.USER_AFFIRM }}</h4></td>
+             <td style="width:8%;"><h4></h4></td>
+             <td style="width:8%;"><h4></h4></td>
+          </tr>
+          <tr  v-if="submitForm.STATE=='3'||submitForm.STATE=='4'">
+             <td style="width:12%"><h4>审核时间：</h4></td>
+             <td style="width:20%;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
+             <td style="width:12%"><h4>审核人：</h4></td>
+             <td style="width:30%;"><h4>{{ submitForm.AUDITOR }}</h4></td>
+             <td style="width:8%;"><h4></h4></td>
+             <td style="width:8%;"><h4></h4></td>
           </tr>
           <tr >
-             <td style="width:8%"><h4>创建人：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.USER_CRE }}</h4></td>
-             <td style="width:8%"><h4>确认人：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.USER_AFFIRM }}</h4></td>
-             <td style="width:8%"><h4>审核人：</h4></td>
-             <td v-if="submitForm.STATE=='3'||submitForm.STATE=='4'" style="width:26%;margin-left:-30px;"><h4>{{ submitForm.AUDITOR }}</h4></td>
-             <td v-if="submitForm.STATE!='3'&& submitForm.STATE!='4'" style="width:26%;margin-left:-30px;"><h4></h4></td>
-          </tr>
-          <tr >
-             <td style="width:8%"><h4>单据状态：</h4></td>
-             <td v-if="submitForm.STATE=='3'" style="width:25%;margin-left:-30px;color:green;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
-             <td v-if="submitForm.STATE=='4'" style="width:25%;margin-left:-30px;color:red;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
-             <td v-if="submitForm.STATE!='3'&&submitForm.STATE!='4'" style="width:25%;margin-left:-30px;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td style="width:12%"><h4>单据状态：</h4></td>
+             <td v-if="submitForm.STATE=='3'" style="width:20%;color:green;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td v-if="submitForm.STATE=='4'" style="width:20%;color:red;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td v-if="submitForm.STATE!='3'&&submitForm.STATE!='4'" style="width:20%;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
           </tr>
         </table> 
       </div>  
+    </el-dialog>
+
+    <el-dialog width="500px" title="预览" :visible.sync="BigPic">
+      <div>
+        <img class="BIGimg" :src="imgUrl" />
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -324,6 +342,8 @@ export default {
   name: "payDelegationExamine",
   data() {
     return {
+      BigPic:false,
+      imgUrl: "",
       dateStamp: "",
       fileChange: false,
       deleteFile: [],
@@ -654,6 +674,13 @@ export default {
         this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     },
+    //显示图片
+    showImage(url) {
+      this.imgUrl = "";
+      //url只是部分路径，还需要一个头部（还需要全路径）
+      this.imgUrl=this.Global.baseUrl+url;
+      this.BigPic=true;
+    },
     
   },
 }
@@ -706,8 +733,8 @@ export default {
   cursor: pointer;
 }
 .BIGimg {
-  width: 333px;
-  height: 333px;
+  width: 450px;
+  height: 450px;
 }
 .inputWidth {
   width: 220px;
