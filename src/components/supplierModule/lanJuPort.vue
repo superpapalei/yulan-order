@@ -12,16 +12,14 @@
       >
         <div style="width:100%">
           <div style="margin-bottom:10px">
-            <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
-            <span style="float:right">{{
-              pur_headForm.DATE_PUR | datatrans
-            }}</span>
+            <div align="center" class="th-font18"> <span  >广东玉兰集团股份有限公司采购单（<span class="th-font18color">{{ pur_headForm.PUR_NO }} </span>）</span></div>
+           
           </div>
           <div>
-            <h1>收货人：{{ pur_headForm.LINKMAN }}</h1>
+            <h4  style="font-weight:normal">收货人：{{ pur_headForm.LINKMAN }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期： {{pur_headForm.DATE_PUR | datatrans }}</h4>
           </div>
           <div style="margin-bottom:10px">
-            <h1>备注信息：{{ pur_headForm.NOTES }}</h1>
+            <h4 style="font-weight:normal">备注信息：{{ pur_headForm.NOTES }}</h4>
           </div>
           <hr />
           <div style="width:100%">
@@ -254,8 +252,8 @@
             <div style="margin-top:10px">
               <div style="margin-bottom:10px;width:100%" class="data_1">
                 <el-card style="min-height:100px">
-                  <div slot="header"><span>送货日期</span></div>
                   <div>
+                     <span class="th-font16">送货日期:</span>
                     <el-date-picker
                       v-model="date_deliver"
                       type="date"
@@ -277,19 +275,12 @@
                       >全部设为约定日期</el-button
                     >
                   </div>
-                </el-card>
-              </div>
-              <div
-                style="margin-bottom:10px;width:100%;margin-top:10px"
-                class="data_1"
-              >
-                <el-card style="min-height:100px">
-                  <div slot="header"><span>说明</span></div>
-                  <div>
+                  <div style="margin-top:20px" >
+                    <span class="th-font16">  说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明:</span>
                     <el-input
                       v-model="supply_check_notes"
                       placeholder="说明:"
-                      style="width:30%;height:10px"
+                      style="width:39%;height:10px"
                       clearable
                     ></el-input>
                     <el-button
@@ -299,7 +290,7 @@
                       >保存说明
                     </el-button>
                   </div>
-                </el-card>
+              </el-card>
               </div>
             </div>
             <div>
@@ -322,7 +313,7 @@
         </div>
       </el-dialog>
 
-      <!-- 非X开头确认采购单界面兰 -->
+<!-- 非X开头确认采购单界面兰 ==================================================================================-->
       <el-dialog
         :show-close="true"
         :visible.sync="checkY_Visible"
@@ -331,18 +322,16 @@
         width="1070px"
         top="8vh"
       >
-        <div style="margin-bottom:10px">
-          <h1>广东玉兰集团股份有限公司采购单（{{ pur_headForm.PUR_NO }}）</h1>
-          <span style="float:right">{{
-            pur_headForm.DATE_PUR | datatrans
-          }}</span>
-        </div>
-        <div>
-          <h1>收货人：{{ pur_headForm.LINKMAN }}</h1>
-        </div>
-        <div style="margin-bottom:10px">
-          <h1>备注信息：{{ pur_headForm.NOTES }}</h1>
-        </div>
+        <div id="checkYPrint" style="margin-bottom:10px">
+ <div align="center" class="th-font18"> <span  >广东玉兰集团股份有限公司采购单（<span class="th-font18color">{{ pur_headForm.PUR_NO }} </span>）</span></div>
+           
+          </div>
+          <div>
+            <h4  style="font-weight:normal">收货人：{{ pur_headForm.LINKMAN }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期： {{pur_headForm.DATE_PUR | datatrans }}</h4>
+          </div>
+          <div style="margin-bottom:10px">
+            <h4 style="font-weight:normal">备注信息：{{ pur_headForm.NOTES }}</h4>
+          </div>
         <hr />
         <div style="width:100%">
               <el-table :data="gridData" 
@@ -398,52 +387,45 @@
           <hr />
           <div style="margin-top:10px">
             <div style="margin-bottom:10px;width:100%" class="data_1">
-              <el-card style="min-height:100px">
-                <div slot="header"><span>送货日期</span></div>
-                <div>
-                  <el-date-picker
-                    v-model="date_deliver"
-                    type="date"
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd"
-                    placeholder="选择时间"
-                    style="width:15%"
-                  ></el-date-picker>
-                  <el-button
-                    style="width:16%"
-                    class="button_clolur"
-                    @click="Unitdeliver"
-                    >统一设置送货期</el-button
-                  >
-                  <el-button
-                    style="width:16%;margin-top:10px"
-                    class="button_clolur"
-                    @click="AllAccordPromise"
-                    >全部设为约定日期</el-button
-                  >
-                </div>
-              </el-card>
-            </div>
-            <div
-              style="margin-bottom:10px;width:100%;margin-top:10px"
-              class="data_1"
-            >
-              <el-card style="min-height:100px">
-                <div slot="header"><span>说明</span></div>
-                <div>
-                  <el-input
-                    v-model="supply_check_notes"
-                    placeholder="说明:"
-                    style="width:30%;height:10px"
-                    clearable
-                  ></el-input>
-                  <el-button
-                    @click="SaveNotes()"
-                    style="width:10%;"
-                    class="button_clolur"
-                    >保存说明
-                  </el-button>
-                </div>
+             <el-card style="min-height:100px">
+                  <div>
+                     <span class="th-font16">送货日期:</span>
+                    <el-date-picker
+                      v-model="date_deliver"
+                      type="date"
+                      format="yyyy-MM-dd"
+                      value-format="yyyy-MM-dd"
+                      placeholder="选择时间"
+                      style="width:15%"
+                    ></el-date-picker>
+                    <el-button
+                      style="width:16%"
+                      class="button_clolur"
+                      @click="Unitdeliver"
+                      >统一设置送货期</el-button
+                    >
+                    <el-button
+                      style="width:16%;margin-top:10px"
+                      class="button_clolur"
+                      @click="AllAccordPromise"
+                      >全部设为约定日期</el-button
+                    >
+                  </div>
+                  <div style="margin-top:20px" >
+                    <span class="th-font16">  说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明:</span>
+                    <el-input
+                      v-model="supply_check_notes"
+                      placeholder="说明:"
+                      style="width:39%;height:10px"
+                      clearable
+                    ></el-input>
+                    <el-button
+                      @click="SaveNotes()"
+                      style="width:10%;"
+                      class="button_clolur"
+                      >保存说明
+                    </el-button>
+                  </div>
               </el-card>
             </div>
           </div>
@@ -475,7 +457,7 @@
         width="1070px"
         top="8vh"
       >
-        <div style="width:100% ;margin:0 auto;">
+        <div   id="checkedXPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
               <tr>
@@ -486,6 +468,8 @@
                 >
 <div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
 <div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<div  style="position:fixed;z-index:1;top: 260px;padding-left: 900px;"><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
+ 
                   采购单
                 </td>
               </tr>
@@ -929,8 +913,7 @@
           </table>
         </div>
       </el-dialog>
-
-      <!-- 非X开头（窗帘）订单 已确认采购单详情界面 -->
+ <!-- 非X开头（窗帘）订单 已确认采购单详情界面 ==========================================================================-->
       <el-dialog
         id="checkedX"
         title=""
@@ -940,7 +923,7 @@
         width="1070px"
         top="8vh"
       >
-        <div style="width:100% ;margin:0 auto;">
+        <div  id="checkedYPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
               <tr>
@@ -951,6 +934,7 @@
                 >采购单
                 <div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
 <div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
+<div  style="position:fixed;z-index:1;top: 260px;padding-left: 900px;"><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedYPrint')"></div></div>
                 </td>
               </tr>
               <tr>
@@ -1207,10 +1191,10 @@
         </div>
       </el-dialog>
 
-      <!-- 待确认页签 -->
+   
       <div id="supplyCon">
-      
           <el-tabs v-model="activeName" @tab-click="handleClick">
+<!-- 待确认页签============================================================================================================== --> 
             <el-tab-pane label="待确认" name="first" align="left">
               <div align="right">
                 <template>
@@ -1304,6 +1288,8 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
+<!-- /待确认页签============================================================================================================== -->         
+<!-- 已确认页签============================================================================================================== -->
        <el-tab-pane label="已确认" name="second" align="left">
               <div >
                 <el-input
@@ -1359,6 +1345,12 @@
                   style="margin-left:8px"
                   class="button_1"
                   >下载表头及明细</el-button>
+                   <el-button
+                  @click="downLoadSal()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_1"
+                  >下载销售表单</el-button>
               </div>
               <el-table
                 border
@@ -1418,16 +1410,124 @@
                 <el-table-column label="" width="120" align="center">
                   <template slot-scope="scope">
                     <button
-                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"
+                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"   
                       class="btn-style"
                     >
+                  
                       查看详情
                     </button>
                   </template>
                 </el-table-column>
               </el-table>
             </el-tab-pane>
-           
+<!-- /已确认页签============================================================================================================== -->
+<!-- 已取消页签============================================================================================================== -->
+       <el-tab-pane label="已取消" name="third" align="left">
+              <div >
+                <el-input
+                  @keyup.enter.native="SelectClick()"
+                  prefix-icon="el-icon-search"
+                  style="width:6%; min-width:200px;"
+                  placeholder=" 采购单号：（精确）"
+                  v-model="po"
+                >
+                </el-input>
+                <!-- <el-date-picker
+                  v-model="date1"
+                  @change="SelectClick"
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+                <span class="demonstration">至</span>
+                <el-date-picker
+                  v-model="date2"
+                  @change="SelectClick"
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                ></el-date-picker> -->
+               
+                <el-button
+                  @click="SelectClick()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_2"
+                  >搜索</el-button>
+                
+              </div>
+              <el-table
+                border
+                :data="pur_headData"
+                class="th-font14"
+                style="width: 100%"
+                cellpadding="0"
+                stripe
+              >
+                <el-table-column   label=" "  type="index" :index="indexMethod">
+                </el-table-column>
+                <el-table-column
+                  prop="PUR_NO"
+                  width="100"
+                  label="单号"
+                  align="left"
+                ></el-table-column>
+                <el-table-column
+                  prop="CUSTOMER_NAME"
+                  min-width="150"
+                  label="客户名称"
+                  align="left"
+                ></el-table-column>
+                <el-table-column label="状态" width="60" align="center">
+                  <template slot-scope="scope"
+                    ><span>{{
+                      scope.row.STATUS | pur_headStatus
+                    }}</span></template>
+                </el-table-column>
+                <el-table-column label="产品类型" width="90" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ getProductType(scope.row.ORDER_NO) }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  fomate="yyyy-MM-dd"
+                  width="100"
+                  label="建立日期"
+                  align="center"
+                >
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="NOTES"
+                  min-width="200"
+                  label="备注"
+                  align="left"
+                ></el-table-column>
+                <el-table-column
+                  prop="LJ_SUGGESTION"
+                  label="兰居备注"
+                  min-width="50"
+                  align="left"
+                ></el-table-column>
+                <el-table-column label="" width="120" align="center">
+                  <template slot-scope="scope">
+                    <button
+                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"   
+                      class="btn-style"
+                    >
+                  
+                      查看详情
+                    </button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-tab-pane>
+<!-- /已取消页签============================================================================================================== -->
             <div style="margin:0 25%;" class="block">
               <el-pagination
                 @size-change="handleSizeChange"
@@ -1454,13 +1554,12 @@ import {
   SaveHeadNotes,
   Submit,
   UpdateCheckFlagBatch,
-  CreateExcel
 } from "@/api/supplierASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import Cookies from "js-cookie";
 
 export default {
-  name: "supplyPort",
+  name: "supplyJuPort",
   data() {
     return {
       arr_index: [],
@@ -1535,7 +1634,7 @@ detailCol:[
       pur_headForm: {},
       options: [
         { value: "all", label: "所有状态" },
-        { value: "cancel", label: "取消" },
+        // { value: "cancel", label: "取消" },
         { value: "efficient", label: "生效" },
         { value: "enforce", label: "执行" },
         { value: "fulfill", label: "完成" }
@@ -1559,7 +1658,15 @@ detailCol:[
     
 
 
-
+    printRefund(id) {
+      printJS({
+        printable: id,
+        type: "html",
+        maxWidth: 1300,
+        headerStyle: "margin: -2px;",
+        targetStyles: ["*"]
+      });
+    },
     //合并行或列
        arraySpanMethod({ row, column, rowIndex, columnIndex },index) {
         if (columnIndex === 0) {//特别注意：查询出那列就合并那列，index别写成别的列
@@ -1695,6 +1802,7 @@ detailCol:[
         return "软装";      }
       else if (value.substring(0, 1) == "W") {
         return "墙纸配套类";      }
+        else return "手工单"
     },
 
     //获取当月第一天零时
@@ -1807,6 +1915,14 @@ detailCol:[
           this.date1 = this.getCurrentWeek();
           this.date2 = this.getTodayMaxTime();
           break;
+        case "third":
+          this.check_flag = -99;
+          this.selvalue = "cancel";
+          this.po_type = "cancel";
+          this.po = "";
+          this.date1 = this.getLongAgao();
+          this.date2 = this.getLongLater();
+          break;
       }
       this.autoSearch();
     },
@@ -1908,6 +2024,20 @@ detailCol:[
         this.count = res.count;
         this.pur_headData = res.data;
       });
+    },
+
+       downLoadSal() {
+       var current_id= Cookies.get("cid");
+       var  customer= "";
+        var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
+       var   check_flag= this.check_flag;
+  var beginTime= this.datatransMethod(this.date1);
+      var  finishTime=this.datatransMethod(this.date2);  
+        var po= this.po;
+      
+      downLoadFile(
+          this.Global.baseUrl + `PUR_HEAD/SalExcel?current_id=${current_id}&customer=${customer}&po_type=${po_type}&check_flag=${check_flag}&beginTime=${beginTime}&finishTime=${finishTime}&po=${po}`
+      );
     },
 
        downLoadX() {
@@ -2173,6 +2303,15 @@ detailCol:[
 .div-flex{
   display: flex;
 }
+.th-font18{
+  font-size:18px;
+  font-weight:bold;
+}
+.th-font18color{
+  font-size:18px;
+  font-weight:bold;
+  color: #0000FF;
+}
 .th-font{
   font-size:10px;
   font-weight:bold;
@@ -2192,16 +2331,16 @@ detailCol:[
   font-weight:bold;
 }
 .button_1 {
-  width: 130px;
-  height: 40px;
+  width: 110px;
+  height: 30px;
   background: #8bc34a;
-  margin-left: 10px;
+
   color: rgb(255, 255, 255);
   text-align: center;
 }
 .button_2 {
   width: 60px;
-  height: 40px;
+  height: 30px;
   background: #8bc34a;
   margin-left: 10px;
   color: rgb(255, 255, 255);

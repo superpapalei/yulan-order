@@ -66,6 +66,7 @@ export function CreateExcel(data, config = {}) {
 }
 
 
+
 //付款委托书查询表头
 export function GetRelativePay(data, config = {}) {
     return post('/PUR_HEAD/GetRelativePay', data, config).then((res) => {
@@ -121,3 +122,4 @@ export function GetAllDelegation(data, config = {}) {
         return Promise.reject(err);
     })
 }
+
