@@ -2018,12 +2018,15 @@ detailCol:[
         check_flag: this.check_flag,
         beginTime: this.date1,
         finishTime: this.date2,
-        po: this.po
+        po: this.po,
+        load
       };
       GetRelativePo(data).then(res => {
         this.count = res.count;
         this.pur_headData = res.data;
-      });
+      },
+       { loading: false } //传入参数控制页面是否loading
+      );
     },
 
        downLoadSal() {
