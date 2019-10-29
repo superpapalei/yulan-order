@@ -466,9 +466,11 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >
-<div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
-<div  style="position:fixed;z-index:1;top: 260px;padding-left: 900px;"><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
+<div class="fixDiv">
+<div style="margin:10px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<div style="margin:10px;"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<div style="margin:5px;" class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div>
+</div>
  
                   采购单
                 </td>
@@ -1291,7 +1293,7 @@
 <!-- /待确认页签============================================================================================================== -->         
 <!-- 已确认页签============================================================================================================== -->
        <el-tab-pane label="已确认" name="second" align="left">
-              <div >
+              <div  style="margin-bottom:10px;">
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
@@ -2019,7 +2021,6 @@ detailCol:[
         beginTime: this.date1,
         finishTime: this.date2,
         po: this.po,
-        load
       };
       GetRelativePo(data).then(res => {
         this.count = res.count;
@@ -2437,6 +2438,12 @@ td {
   margin: -1px 0 0 -1px;
   display: block;
 }
+.fixDiv{
+position:fixed;
+top: 200px;
+padding-left:900px;
+z-index:9999;
+}
 </style>
 <style>
 .zj-inputcss1{
@@ -2444,13 +2451,8 @@ td {
   width: 120px;
   border:3
 }
-.lanJuport .el-input_inner{
-  border:0px solid #dcdfe6;
-  border-top-width: 0px;
-  width: 120px;
-  height: 20px;
-  padding: 0 20px 20px 20px;
-  padding-left: 0px;
+.lanJuport .el-input__inner{
+  height: 35px;
 }
 
 .lanJuport .el-table td,
