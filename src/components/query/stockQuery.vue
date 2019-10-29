@@ -47,8 +47,8 @@
         </table>
 
         <!--  遍历表格 -->
-        <table>
-          <td class="dormitoryData" style="width:40%;min-width:510px">
+        <table style="width:100%">
+          <td class="dormitoryData" style="width:20%">
             <div class="BK_1">
               <el-table
                 ref="dormitoryTable"
@@ -57,47 +57,38 @@
                 stripe
                 class="table_2"
                 max-height="500"
+                style="width:100%"
                 @row-click="KC_CP_SC"
                 border
               >
                 <el-table-column
                   prop="ITEM_NO"
                   label="型号"
-                  width="250"
+                  width="150"
+                  
                   align="center"
                 ></el-table-column>
                 <el-table-column
                   prop="OLD_ITEM_NO"
                   label="版样型号"
-                  width="250"
+                  width="150"
+                  
                   align="center"
                 ></el-table-column>
               </el-table>
             </div>
-            <!-- 分页 -->
-            <div style="margin:0 25% 0 0;" class="block">
-              <el-pagination
-                :page-count="page_count"
-                @current-change="handleCurrentChange"
-                :current-page="currentPage"
-                :page-size="limit"
-                layout="prev, pager, next, jumper"
-                :total="count"
-              ></el-pagination>
-            </div>
+            
           </td>
-          <td>
-            <div class="BK_2" style="width:100%">
+          <td style="width:80%;max-width:760px;min-width:500px">
+            <div class="BK_2" style="width:96%">
               <el-card class="DETAIL_1">
                 <div slot="header" class="clearfix">
-                  <span class="CARD">库存信息：</span>
+                  <span class="CARD" >库存信息：</span>
                 </div>
                 <div style="height:182px;">
-                  <h1 v-show="stockInfo">
-                    <TR>
-                      <td colspan="6">
+                  <h1 v-show="stockInfo">      
                         <el-table
-                          width="100%"
+                          style="width:100%;max-width:950px"
                           :data="stockInfo_1"
                           max-height="200"
                         >
@@ -105,51 +96,56 @@
                             prop="NOTE"
                             label="仓库名称"
                             align="center"
-                            width="300"
+                            style="max-width:300"
+                            min-width="200px"
                           ></el-table-column>
                           <el-table-column
                             prop="BATCH_NO"
                             label="批号"
                             align="center"
-                            width="200"
+                            min-width="150px"
+                            style="max-width:200"
                           ></el-table-column>
                           <el-table-column
                             prop="AREA"
                             label="区"
                             align="center"
                             width="60"
+                            style="max-width:60"
                           ></el-table-column>
                           <el-table-column
                             prop="SEAT"
                             label="位"
                             align="center"
                             width="50"
+                           style="max-width:50"
                           ></el-table-column>
                           <el-table-column
                             prop="BOX"
                             label="箱"
                             align="center"
                             width="50"
+                            style="max-width:50"
                           ></el-table-column>
                           <el-table-column
                             prop="QTY_SUM"
                             label="可分配量"
                             align="center"
                             width="100"
+                            style="max-width:100"
                           ></el-table-column>
                         </el-table>
-                      </td>
-                    </TR>
+                      
                   </h1>
                   <span v-show="empty"> </span>
                 </div>
               </el-card>
 
-              <el-card class="DETAIL_2" style="min-height:270px">
+              <el-card class="DETAIL_2" style="min-height:254px">
                 <div slot="header" class="clearfix">
-                  <span class="CARD">产品信息：</span>
+                  <span class="CARD" >产品信息：</span>
                 </div>
-                <div style="max-height:270px;">
+                <div style="max-height:254px;">
                   <h1 v-show="stockInfo">
                     <table
                       width="100%"
@@ -159,71 +155,71 @@
                     >
                       <tr>
                         <td class="CPXXBJYS">型号</td>
-                        <td style="width:70px">{{ dormitory.ITEM_NO }}</td>
+                        <td style="min-width:110px">{{ dormitory.ITEM_NO }}</td>
                         <td class="CPXXBJYS">墙纸规格</td>
-                        <td width="85px">
+                        <td style="min-width:110px">
                           {{ dormitory.PRODUCT_PAPER_ID | transPaper }}
                         </td>
                         <td class="CPXXBJYS">毛重（kg）</td>
-                        <td width="50px">{{ dormitory.GROSS }}</td>
+                        <td style="min-width:110px">{{ dormitory.GROSS }}</td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">样版型号</td>
                         <td>{{ dormitory.OLD_ITEM_NO }}</td>
                         <td class="CPXXBJYS">墙纸基材</td>
-                        <td width="50px">{{ dormitory.PROPERTY_TYPE_NAME }}</td>
+                        <td >{{ dormitory.PROPERTY_TYPE_NAME }}</td>
                         <td class="CPXXBJYS">净重（kg）</td>
-                        <td width="50px">{{ dormitory.NET_WEIGHT }}</td>
+                        <td >{{ dormitory.NET_WEIGHT }}</td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">产品类别</td>
-                        <td width="50px">
+                        <td >
                           {{ dormitory.ITEM_TYPE_1 }}
                         </td>
                         <td class="CPXXBJYS">墙纸功能</td>
-                        <td width="50px">
+                        <td >
                           {{ dormitory.MARK_TYPE | transMark }}
                         </td>
                         <td class="CPXXBJYS">拼花</td>
-                        <td width="50px">{{ dormitory.DUIPIN_NOTE_1 }}</td>
+                        <td >{{ dormitory.DUIPIN_NOTE_1 }}</td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">品牌</td>
-                        <td width="50px">{{ dormitory.BRAND_NAME }}</td>
+                        <td >{{ dormitory.BRAND_NAME }}</td>
                         <td class="CPXXBJYS">长度（mm）</td>
-                        <td width="50px">{{ dormitory.LENGTH }}</td>
+                        <td >{{ dormitory.LENGTH }}</td>
                         <td class="CPXXBJYS">拼花尺寸</td>
-                        <td width="50px">{{ dormitory.DUIPIN_SIZE }}</td>
+                        <td >{{ dormitory.DUIPIN_SIZE }}</td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">最新版本号</td>
-                        <td width="50px">
+                        <td >
                           {{ dormitory.PRODUCTVERSION_NAME }}
                         </td>
                         <td class="CPXXBJYS">宽度（mm）</td>
-                        <td width="50px">{{ dormitory.WIDTH }}</td>
+                        <td >{{ dormitory.WIDTH }}</td>
                         <td class="CPXXBJYS">图案</td>
-                        <td width="50px">
+                        <td >
                           {{ dormitory.PATTERN | transPattern }}
                         </td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">自产代理</td>
-                        <td width="50px">{{ dormitory.GET_ID | transId }}</td>
+                        <td >{{ dormitory.GET_ID | transId }}</td>
                         <td class="CPXXBJYS">规格</td>
-                        <td width="50px">{{ dormitory.GRADE }}</td>
+                        <td >{{ dormitory.GRADE }}</td>
                         <td class="CPXXBJYS">颜色</td>
-                        <td width="50px">
+                        <td >
                           {{ dormitory.COLOUR | transColour }}
                         </td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">计量单位</td>
-                        <td width="50px">{{ dormitory.UNIT_NOTE_1 }}</td>
+                        <td >{{ dormitory.UNIT_NOTE_1 }}</td>
                         <td class="CPXXBJYS">纸箱规格</td>
-                        <td width="50px">{{ dormitory.BOX_TYPE }}</td>
+                        <td >{{ dormitory.BOX_TYPE }}</td>
                         <td class="CPXXBJYS">风格</td>
-                        <td width="50px">{{ dormitory.STYLE | transStyle }}</td>
+                        <td >{{ dormitory.STYLE | transStyle }}</td>
                       </tr>
                       <tr>
                         <td class="CPXXBJYS">备注</td>
@@ -236,8 +232,20 @@
               </el-card>
             </div>
           </td>
-        </table>
+        </table> 
+        <!-- 分页 -->
+            <div style="margin: 0 auto;margin-left:35%" class="block">
+              <el-pagination
+                :page-count="page_count"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-size="limit"
+                layout="prev, pager, next, jumper"
+                :total="count"
+              ></el-pagination>
+            </div>
       </div>
+     
     </el-card>
   </div>
 </template>
@@ -643,7 +651,9 @@ export default {
 }
 .CPXXBJYS {
   background: #d5ecb8;
-  width: 55px;
+  
+  width: 90px;
+  
 }
 .BK_1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
@@ -695,5 +705,6 @@ export default {
 
 td {
   text-align: center;
+  
 }
 </style>

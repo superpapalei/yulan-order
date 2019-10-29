@@ -720,6 +720,7 @@ export default {
                 confirmButtonText: "确定",
                 type: "success"
               });
+              this.releaseBadge("orderDeal");//刷新角标
               this.$root.$emit("refreshMoneyEvent"); //触发主页面刷新余额
               this.addTab("order/myOrder");
               this.closeTab("order/orderDetail");
@@ -776,6 +777,7 @@ export default {
       return "";
     },
     ...mapMutations("navTabs", ["addTab"]),
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"])
   }
 };

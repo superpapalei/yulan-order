@@ -1,5 +1,5 @@
 <template>
-  <div class="center">
+  <div class="center" @click="lastClick">
     <el-container class="page">
       <el-aside :width="asideWidth" style="overflow:hidden;background:white;">
         <el-scrollbar style="height:100%;">
@@ -20,32 +20,6 @@
               :key="item.SystemMenuID"
               :menuTreeItem="item"
             />
-            <!-- 有角标的另外加载 -->
-            <router-link to="/painting" tag="div">
-              <el-menu-item v-if="isContainAttr('painting')" index="painting">
-                <i class="iconfont icon-color">&#xe7fb;</i>
-                <span slot="title">委托喷绘书</span>
-                <el-badge
-                  v-if="getPainting > 0"
-                  class="mark r"
-                  :value="getPainting"
-                />
-              </el-menu-item>
-            </router-link>
-            <router-link to="/refundCompensation" tag="div">
-              <el-menu-item
-                v-if="isContainAttr('refundCompensation')"
-                index="refundCompensation"
-              >
-                <i class="iconfont icon-color">&#xe6ee;</i>
-                <span slot="title">退货赔偿</span>
-                <el-badge
-                  v-if="getRefund > 0 && identity === 'ECWEB'"
-                  class="mark r"
-                  :value="getRefund"
-                />
-              </el-menu-item>
-            </router-link>
           </el-menu>
         </el-scrollbar>
       </el-aside>
@@ -140,7 +114,11 @@
                   >
                 </transition>
               </span>
-              <span class="r f14 mr10" style="line-height:30px;color:red;">
+              <span
+                v-if="identity == 'ECWEB'"
+                class="r f14 mr10"
+                style="line-height:30px;color:red;"
+              >
                 <strong>
                   <i>{{ moneySituation }}</i>
                 </strong>
@@ -172,6 +150,7 @@
       :visible.sync="notificationVisible"
       width="1000px"
       top="5vh"
+      :title="newsTitle"
       center
     >
       <div v-html="newsHtmlData"></div>
@@ -257,9 +236,11 @@
 import { getUserMoney } from "@/api/user";
 import { getAllRefund } from "@/api/refund";
 import { getIconNumber } from "@/api/painting";
+import { checkBill } from "@/api/orderList";
 import { GetNewNotification, InserFlag } from "@/api/notificationASP";
 import { GetCustomerMustWriteStudy } from "@/api/studyASP";
 import { QueryWebMenuByUserId } from "@/api/webMenuASP";
+import { getAllOrders } from "@/api/orderListASP";
 import screenfull from "screenfull";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -278,6 +259,7 @@ export default {
   },
   data() {
     return {
+      lastClickTime: new Date().getTime(),
       cid: Cookies.get("cid"),
       isManager: Cookies.get("isManager"),
       customerType: Cookies.get("customerType"),
@@ -285,6 +267,7 @@ export default {
       identity: Cookies.get("identity"),
       newsIndex: 0, //当前滚动的公告
       newsTextArr: [], //最新公告集合
+      newsTitle: "",
       newsHtmlData: "", //所有需要显示的公告拼接
       notificationVisible: false,
       studySelectData: [],
@@ -381,6 +364,52 @@ export default {
         index: _refund.airbrushDesignerAssureList.length
       });
     },
+    //获取角标待处理订单
+    async OrderDealIcon() {
+      if (Cookies.get("identity") === "ECWEB") {
+        let order = await getAllOrders({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          cid: Cookies.get("cid"),
+          statusId: ["0", "5", "6", "21", "22"],
+          find: "",
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          orderType: ""
+        });
+        this.changeBadge({
+          name: "orderDeal",
+          index: order.count
+        });
+      }
+    },
+    //获取角标待确认对账单
+    async getStatementIcon() {
+      if (Cookies.get("identity") === "ECWEB") {
+        let url = "/customerBalance/getCustomerBalanceInfo.do";
+        let data = {
+          cid: Cookies.get("cid"),
+          limit: 9999,
+          page: 1
+        };
+        let statement = await checkBill(url, data);
+        if (statement.customerBalancePeriodList.length) {
+          var unDealNum = 0;
+          for (var i = 0; i < statement.customerBalancePeriodList.length; i++) {
+            if (
+              statement.customerBalancePeriodList[i].customerCheckState ==
+              "待确认"
+            )
+              unDealNum++;
+          }
+          this.changeBadge({
+            name: "statement",
+            index: unDealNum
+          });
+        }
+      }
+    },
     //获取用户余额情况
     async userMoney() {
       this.refreshMoneyClass = "el-icon-loading";
@@ -410,6 +439,9 @@ export default {
     },
     refreshUserMoney() {
       this.userMoney();
+    },
+    lastClick() {
+      this.lastClickTime = new Date().getTime();
     },
     //按钮样式--菜单展开收起
     changeAside() {
@@ -510,6 +542,10 @@ export default {
           for (var i = 0; i < this.newsTextArr.length; i++) {
             if (this.newsTextArr[i].showFlag == 1) {
               //将所有需要显示的公告拼接
+              this.newsHtmlData +=
+                "<div style='text-align:center;'><span style='font-size:18px;color:#303133;'>" +
+                this.newsTextArr[i].TITLE +
+                "</span></div><br />";
               this.newsHtmlData += this.newsTextArr[i].CONTENT + "<br /><br />";
               if (i != this.newsTextArr.length - 1)
                 this.newsHtmlData +=
@@ -523,6 +559,7 @@ export default {
       });
     },
     showNotification(item) {
+      this.newsTitle = item.TITLE;
       this.newsHtmlData = item.CONTENT;
       this.notificationVisible = true;
     },
@@ -572,12 +609,6 @@ export default {
   },
   computed: {
     ...mapState("navTabs", ["tabList", "menuTreeList", "menuTreeListFlatten"]),
-    getRefund() {
-      return this.$store.getters["badge/getRefund"];
-    },
-    getPainting() {
-      return this.$store.getters["badge/getPainting"];
-    },
     key() {
       return this.$route.name !== undefined ? this.$route.name : this.$route;
     },
@@ -625,6 +656,28 @@ export default {
         this.isFullscreen = false;
       }
     };
+    this.timeOutTimer = setInterval(() => {
+      var interval = 5 * 60 * 1000;
+      if (new Date().getTime() - this.lastClickTime >= interval) {
+        //5分钟不操作自动退出
+        this.$message.close();
+        clearInterval(this.timeOutTimer);
+        this.logout();
+      } else if (
+        new Date().getTime() - this.lastClickTime >=
+        interval - 10 * 1000
+      ) {
+        //10秒提醒
+        this.$message.close();
+        this.$message({
+          duration: 1000,
+          message: `长时间未操作，将在${Math.ceil(
+            (interval - (new Date().getTime() - this.lastClickTime)) / 1000
+          )}秒后自动退出(点击任意位置可继续操作)`,
+          type: "warning"
+        });
+      }
+    }, 1000);
   },
   beforeCreate() {
     if (Cookies.get("cid") === null || Cookies.get("cid") === undefined) {
@@ -645,6 +698,8 @@ export default {
     this.addTab(this.defaultUrl);
     this.addBadgeIcon();
     this.PaintingIcon();
+    this.OrderDealIcon();
+    this.getStatementIcon();
     document.onkeydown = function(event) {
       var key = window.event.keyCode;
       if (key == 27) {
@@ -663,6 +718,7 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.newsTimer);
+    clearInterval(this.timeOutTimer);
   },
   watch: {}
 };
@@ -775,6 +831,9 @@ export default {
   line-height: 50px;
   color: white;
 }
+.el-header ul {
+  margin: 0 10px;
+}
 .el-header ul:nth-child(1) i {
   font-size: 20px;
   margin: 0 10px;
@@ -847,7 +906,7 @@ export default {
 .el-card__header {
   padding: 10px 15px !important;
 }
-.el-card__body{
+.el-card__body {
   padding: 15px;
 }
 .el-dialog__body {

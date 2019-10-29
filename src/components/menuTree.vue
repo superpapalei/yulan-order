@@ -25,7 +25,7 @@
         "
         :class="menuTreeItem.ICON_CLASS"
       ></i>
-      <span>{{ menuTreeItem.MENU_NAME }}</span>
+      <span slot="title">{{ menuTreeItem.MENU_NAME }}</span>
     </template>
     <el-menu-item-group>
       <menuTree
@@ -41,13 +41,7 @@
     :to="'/' + menuTreeItem.MENU_LINK"
     tag="div"
   >
-    <el-menu-item
-      :index="menuTreeItem.MENU_LINK"
-      v-if="
-        menuTreeItem.MENU_LINK != 'painting' &&
-          menuTreeItem.MENU_LINK != 'refundCompensation'
-      "
-    >
+    <el-menu-item :index="menuTreeItem.MENU_LINK">
       <i
         v-if="
           menuTreeItem.ICON_CLASS != '' &&
@@ -64,7 +58,12 @@
         "
         :class="menuTreeItem.ICON_CLASS"
       ></i>
-      <span>{{ menuTreeItem.MENU_NAME }}</span>
+      <span slot="title">{{ menuTreeItem.MENU_NAME }}</span>
+      <el-badge
+        v-if="getAllBadge(menuTreeItem.MENU_LINK) > 0"
+        class="mark r"
+        :value="getAllBadge(menuTreeItem.MENU_LINK)"
+      ></el-badge>
     </el-menu-item>
   </router-link>
 </template>
@@ -76,6 +75,22 @@ export default {
     menuTreeItem: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    getAllBadge(value) {
+      switch (value) {
+        case "painting": //委托喷绘（用户）
+          return this.$store.state.badge.painting;
+        case "refundCompensation": //退货赔偿
+          return this.$store.state.badge.refund;
+        case "order/myOrder"://待处理订单
+          return this.$store.state.badge.orderDeal;
+        case "statement"://待确认对账单
+          return this.$store.state.badge.statement;  
+        default:
+          return 0;
+      }
     }
   }
 };
@@ -98,5 +113,8 @@ export default {
 .el-menu-item.is-active {
   background: #8bc34a;
   color: white;
+}
+.el-submenu .el-menu-item {
+  padding: 0 25px;
 }
 </style>

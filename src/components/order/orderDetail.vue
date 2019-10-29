@@ -1,6 +1,11 @@
 <template>
   <el-card class="centerCard">
-    <el-dialog title="窗帘详情" :visible.sync="detailVisible" width="1300px" top="5vh">
+    <el-dialog
+      title="窗帘详情"
+      :visible.sync="detailVisible"
+      width="1300px"
+      top="5vh"
+    >
       <keep-alive>
         <detailCurtainTable
           v-if="detailVisible"
@@ -15,83 +20,128 @@
     </el-dialog>
     <div slot="header">
       <span class="headSpan">订单详情</span>
-      <el-button @click="returnOrder" style="float:right;" size="small" type="success" plain>返回</el-button>
+      <el-button
+        @click="returnOrder"
+        style="float:right;"
+        size="small"
+        type="success"
+        plain
+        >返回</el-button
+      >
     </div>
     <el-card class="tableCard" shadow="hover">
       <div slot="header">
         <span class="zoomLeft">
           订单号：
-          <span class="zoomRight">{{ruleForm.ORDER_NO}}</span>
+          <span class="zoomRight">{{ ruleForm.ORDER_NO }}</span>
         </span>
         <span class="zoomLeft">
           经办人：
-          <span class="zoomRight">{{ruleForm.LINKPERSON}}</span>
+          <span class="zoomRight">{{ ruleForm.LINKPERSON }}</span>
         </span>
         <span class="zoomLeft">
           收货人：
-          <span class="zoomRight">{{ruleForm.WL_CONTACTS}}({{ruleForm.WL_TEL}})</span>
+          <span class="zoomRight"
+            >{{ ruleForm.WL_CONTACTS }}({{ ruleForm.WL_TEL }})</span
+          >
         </span>
         <br />
         <span class="zoomLeft">
           收货地址：
-          <span
-            class="zoomRight"
-          >{{ruleForm.RECIVER_AREA1}}{{ruleForm.RECIVER_AREA2}}{{ruleForm.RECIVER_AREA3}}{{ruleForm.POST_ADDRESS}}</span>
+          <span class="zoomRight"
+            >{{ ruleForm.RECIVER_AREA1 }}{{ ruleForm.RECIVER_AREA2
+            }}{{ ruleForm.RECIVER_AREA3 }}{{ ruleForm.POST_ADDRESS }}</span
+          >
         </span>
         <br />
         <span class="zoomLeft">
           备注：
-          <span class="zoomRight">{{ruleForm.NOTES}}</span>
+          <span class="zoomRight">{{ ruleForm.NOTES }}</span>
         </span>
         <br />
         <span class="zoomLeft">
           玉兰处理说明：
-          <span class="zoomRight">{{ruleForm.YULAN_NOTES}}</span>
+          <span class="zoomRight">{{ ruleForm.YULAN_NOTES }}</span>
         </span>
       </div>
-      <el-table :data="ruleForm.ORDERBODY" style="width: 100%" :row-class-name="tableRowClassName">
-        <el-table-column align="center" prop="ITEM_NO" label="型号"></el-table-column>
-        <el-table-column align="center" prop="NOTE" label="类型"></el-table-column>
+      <el-table
+        :data="ruleForm.ORDERBODY"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+      >
+        <el-table-column
+          align="center"
+          prop="ITEM_NO"
+          label="型号"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="NOTE"
+          label="类型"
+        ></el-table-column>
         <el-table-column align="center" label="经销单价">
           <template slot-scope="scope1">
             <span v-if="isManager === '0'">***</span>
-            <span v-else>{{scope1.row.UNIT_PRICE |priceFilter}}</span>
+            <span v-else>{{ scope1.row.UNIT_PRICE | priceFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="PROMOTION" align="center" label="活动类型"></el-table-column>
-        <el-table-column prop="PART_SEND_ID" align="center" :formatter="formatRole" label="发货说明"></el-table-column>
-        <el-table-column align="center" prop="QTY_REQUIRED" label="数量"></el-table-column>
+        <el-table-column
+          prop="PROMOTION"
+          align="center"
+          label="活动类型"
+        ></el-table-column>
+        <el-table-column
+          prop="PART_SEND_ID"
+          align="center"
+          :formatter="formatRole"
+          label="发货说明"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="QTY_REQUIRED"
+          label="数量"
+        ></el-table-column>
         <el-table-column align="center" label="折后金额">
           <template slot-scope="scope1">
             <span v-if="isManager === '0'">***</span>
-            <span v-else>{{scope1.row.PROMOTION_COST}}</span>
+            <span v-else>{{ scope1.row.PROMOTION_COST }}</span>
             <!-- <span v-else>{{scope1.row.PROMOTION_COST/scope1.row.QTY_REQUIRED |priceFilter}}</span> -->
           </template>
         </el-table-column>
         <el-table-column align="center" label="年返利使用金额">
           <template slot-scope="scope1">
             <span v-if="isManager === '0'">***</span>
-            <span v-else>{{scope1.row.BACK_Y}}</span>
+            <span v-else>{{ scope1.row.BACK_Y }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="BACK_M" align="center" label="月返利使用金额">
           <template slot-scope="scope1">
             <span v-if="isManager === '0'">***</span>
-            <span v-else>{{scope1.row.BACK_M}}</span>
+            <span v-else>{{ scope1.row.BACK_M }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="应付金额">
           <template slot-scope="scope1">
             <span v-if="isManager === '0'">***</span>
-            <span v-else>{{scope1.row.FINAL_COST}}</span>
+            <span v-else>{{ scope1.row.FINAL_COST }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="isX" align="center" label="详情">
           <template slot-scope="scope">
-            <el-button @click="openDialog(scope.row,scope.$index)" type="primary" size="small">查看详情</el-button>
+            <el-button
+              @click="openDialog(scope.row, scope.$index)"
+              type="primary"
+              size="small"
+              >查看详情</el-button
+            >
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="NOTES" label="备注" show-overflow-tooltip></el-table-column>
+        <el-table-column
+          align="center"
+          prop="NOTES"
+          label="备注"
+          show-overflow-tooltip
+        ></el-table-column>
       </el-table>
 
       <div v-show="payShow" style="float:right; margin-right:10%;height:100px;">
@@ -101,10 +151,14 @@
         </p>
         <p v-else>
           应付总金额：
-          <span style="color:tomato;font-weight:bold;">{{ruleForm.ALL_SPEND}}</span>
+          <span style="color:tomato;font-weight:bold;">{{
+            ruleForm.ALL_SPEND
+          }}</span>
         </p>
         <br />
-        <el-button @click="refreshPay()" size="medium" type="danger" plain>订单提交</el-button>
+        <el-button @click="refreshPay()" size="medium" type="danger" plain
+          >订单提交</el-button
+        >
       </div>
     </el-card>
   </el-card>
@@ -238,7 +292,6 @@ export default {
         companyId: Cookies.get("companyId")
       };
       queryCash(url, data).then(res => {
-        console.log(res);
         this.Initial_balance = res.data;
         console.log(this.Initial_balance);
       });
@@ -251,8 +304,6 @@ export default {
         order_no: Cookies.get("ORDER_NO")
       };
       orderDetail(url, data).then(res => {
-        console.log(res);
-        console.log(res.data.data[0]);
         this.ruleForm.ORDER_NO = Cookies.get("ORDER_NO");
         this.ruleForm = res.data.data[0];
       });
@@ -272,15 +323,28 @@ export default {
           type: "warning"
         });
       } else {
-        this.$alert("提交成功", "提示", {
-          confirmButtonText: "确定",
-          type: "success"
-        });
-        payAgain(url, data).then(res => {
-          console.log(res);
-          this.addTab("order/myOrder");
-          this.closeTab("order/orderDetail");
-        });
+        payAgain(url, data)
+          .then(res => {
+            var recordData = {
+              ORDER_NO: Cookies.get("ORDER_NO"),
+              OPERATION_PERSON: Cookies.get("cid"),
+              OPERATION_NAME: "重新提交"
+            };
+            InsertOperationRecord(recordData); //插入操作记录
+            this.$alert("提交成功", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.$root.$emit("refreshMoneyEvent"); //触发主页面刷新余额
+            this.addTab("order/myOrder");
+            this.closeTab("order/orderDetail");
+          })
+          .catch(res => {
+            this.$alert("操作失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+          });
       }
     },
     //隔行变色

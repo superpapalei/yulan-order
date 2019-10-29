@@ -466,11 +466,13 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >
+
       <div class="fixedDiv">
 <div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
 <div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
 <div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
  </div>
+
  
                   采购单
                 </td>
@@ -1330,7 +1332,9 @@
 <!-- /待确认页签============================================================================================================== -->         
 <!-- 已确认页签============================================================================================================== -->
        <el-tab-pane label="已确认" name="second" align="left">
-                  <div style="margin:5px">
+
+              <div  style="margin-bottom:10px;">
+
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
@@ -2504,6 +2508,12 @@ td {
   margin: -1px 0 0 -1px;
   display: block;
 }
+.fixDiv{
+position:fixed;
+top: 200px;
+padding-left:900px;
+z-index:9999;
+}
 </style>
 <style>
 .zj-inputcss1{
@@ -2512,10 +2522,12 @@ td {
   border:3
 }
 .lanJuport .el-input__inner{
+
   width: 160px;
   height: 30px;
   /* margin-left:0px;
   margin-right:0px; */
+
 }
 
 .lanJuport .el-table td,
