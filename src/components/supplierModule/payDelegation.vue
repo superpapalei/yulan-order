@@ -59,15 +59,16 @@
           label="委托编号"
           align="center"
         ></el-table-column>
-        <el-table-column width="120" label="提交时间" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.DATE_CRE | datatrans }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column
+          prop="TIME_SLOT"
+          width="200"
+          label="付款时间范围"
+          align="center"
+        ></el-table-column>
         <el-table-column
           prop="SUM_MONEY"
           width="100"
-          label="代付金额"
+          label="代付总金额"
           align="center"
         ></el-table-column>
         <el-table-column label="状态" align="center" width="120px">
@@ -79,8 +80,6 @@
           <template slot-scope="scope">
             <span>{{ scope.row.DATE_AFFIRM | datatrans }}</span>
           </template>
-        </el-table-column>
-        <el-table-column width="130" label="确认人" align="center"  prop="USER_AFFIRM">
         </el-table-column>
         <el-table-column  label="退回原因" align="center"  prop="RETURN_REASON">
         </el-table-column>

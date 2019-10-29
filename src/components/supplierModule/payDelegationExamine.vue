@@ -603,6 +603,14 @@ export default {
     },
     //编辑列表详情修改
     _editSubmit(val) {
+      //判断是否填写退回理由
+          if (this.submitForm.RETURN_REASON == ''&&val==4) {
+          this.$alert("请填写退回原因", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+          return;
+        }
       this.submitForm.STATE=val;
       this.submitForm.AUDITOR=this.CNAME;
       editSubmit(this.submitForm).then(res => {
