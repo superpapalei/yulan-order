@@ -701,32 +701,53 @@ export default {
     },
     //显示图片
     showImage(url) {
-      this.imgUrl = "";
-      //url只是部分路径，还需要一个头部（还需要全路径）
-      this.imgUrl=this.Global.baseUrl+url;
-      this.BigPic=true;
+      var list1=url.split('png');
+      var list2=url.split('jpg');
+      var list3=url.split('jpeg');
+      var list4=url.split('bmp');
+      if(list1.length>0||list2.length>0||list2.length>0||list2.length>0)
+      {
+          this.imgUrl = "";
+          //url只是部分路径，还需要一个头部（还需要全路径）
+          this.imgUrl=this.Global.baseUrl+url;
+          this.BigPic=true;
+      }
+      else{
+        return;
+      }
     },
+    //图片预览
     showMiniImage(event,url){
-        this.imgUrl=this.Global.baseUrl+url;
-        var clientWidth=document.body.clientWidth;
-        var clientHeight=document.body.clientHeight;
-        var curserX=event.x;
-        var curserY=event.y;
-        if(curserX+200+20<clientWidth)
-        {
-          this.picX=curserX+20+'px';
-        }
-        else{
-            this.picX=curserX-200-20+'px';
-        }
-        if(curserY+200+10<clientHeight)
-        {
-          this.picY=curserY+10+'px';
-        }
-        else{
+      var list1=url.split('png');
+      var list2=url.split('jpg');
+      var list3=url.split('jpeg');
+      var list4=url.split('bmp');
+      if(list1.length>0||list2.length>0||list2.length>0||list2.length>0)
+      {
+          this.imgUrl=this.Global.baseUrl+url;
+          var clientWidth=document.body.clientWidth;
+          var clientHeight=document.body.clientHeight;
+          var curserX=event.x;
+          var curserY=event.y;
+          if(curserX+200+20<clientWidth)
+          {
+             this.picX=curserX+20+'px';
+          }
+          else{
+             this.picX=curserX-200-20+'px';
+          }
+          if(curserY+200+10<clientHeight)
+          {
+             this.picY=curserY+10+'px';
+          }
+          else{
             this.picY=curserY-200-10+'px';
-        }
-        this.MiniPic=true;
+           }
+          this.MiniPic=true;
+      }
+      else{
+        return;
+      }
     }
   },
 }
