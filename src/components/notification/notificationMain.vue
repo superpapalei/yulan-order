@@ -47,6 +47,8 @@
       :visible.sync="detailVisible"
       width="1000px"
       top="5vh"
+      :title="detailTitle"
+      center
     >
       <div v-html="detailData"></div>
     </el-dialog>
@@ -66,6 +68,7 @@ export default {
       count: 1,
       currentPage: 1,
       detailVisible: false,
+      detailTitle:"",
       detailData: "",
       notiData: [
         {
@@ -125,6 +128,7 @@ export default {
       });
     },
     showDetail(item) {
+      this.detailTitle = item.TITLE;
       this.detailData = item.CONTENT;
       this.detailVisible = true;
     },

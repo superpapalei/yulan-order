@@ -176,6 +176,7 @@
       :visible.sync="notificationVisible"
       width="1000px"
       top="5vh"
+      :title="newsTitle"
       center
     >
       <div v-html="newsHtmlData"></div>
@@ -290,6 +291,7 @@ export default {
       identity: Cookies.get("identity"),
       newsIndex: 0, //当前滚动的公告
       newsTextArr: [], //最新公告集合
+      newsTitle: "",
       newsHtmlData: "", //所有需要显示的公告拼接
       notificationVisible: false,
       studySelectData: [],
@@ -518,6 +520,10 @@ export default {
           for (var i = 0; i < this.newsTextArr.length; i++) {
             if (this.newsTextArr[i].showFlag == 1) {
               //将所有需要显示的公告拼接
+              this.newsHtmlData +=
+                "<div style='text-align:center;'><span style='font-size:18px;color:#303133;'>" +
+                this.newsTextArr[i].TITLE +
+                "</span></div><br />";
               this.newsHtmlData += this.newsTextArr[i].CONTENT + "<br /><br />";
               if (i != this.newsTextArr.length - 1)
                 this.newsHtmlData +=
@@ -531,6 +537,7 @@ export default {
       });
     },
     showNotification(item) {
+      this.newsTitle = item.TITLE;
       this.newsHtmlData = item.CONTENT;
       this.notificationVisible = true;
     },
@@ -805,6 +812,9 @@ export default {
 .el-header i {
   line-height: 50px;
   color: white;
+}
+.el-header ul{
+  margin: 0 10px;
 }
 .el-header ul:nth-child(1) i {
   font-size: 20px;

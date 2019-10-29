@@ -176,6 +176,7 @@ export default {
   font-size: 1.65em;
   color: #333;
   font-weight: 400;
+  margin: 0;
 }
 .loginBar {
   width: 19em;
@@ -192,6 +193,7 @@ export default {
 .info p {
   padding: 0 0 10px 40px;
   text-align: left;
+  margin: 0;
 }
 .info img {
   margin: 8px 0;

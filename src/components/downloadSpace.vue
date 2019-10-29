@@ -45,7 +45,7 @@
       >
     </div>
     <el-table :data="fileData" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="35"></el-table-column>
+      <!-- <el-table-column type="selection" width="35"></el-table-column> -->
       <el-table-column label="文件名">
         <template slot-scope="scope">
           <span>
@@ -70,7 +70,6 @@
             size="mini"
             icon="el-icon-download"
             circle
-            plain
           ></el-button>
         </template>
       </el-table-column>
