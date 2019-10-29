@@ -2,7 +2,9 @@ import Vuex from 'vuex'
 
 const state = {
     painting: 0,        //委托喷绘角标
-    refund: 0           //退货赔偿角标
+    refund: 0,           //退货赔偿角标
+    orderDeal: 0,//待处理订单
+    statement :0,//对账单
 }
 
 const mutations = {

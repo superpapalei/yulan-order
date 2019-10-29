@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="stydyCenter">
     <header>
       <h2 class="studyTitle">{{ selectData.TITLE }}</h2>
     </header>
@@ -306,13 +306,13 @@ export default {
 
 <style scoped>
 .studyTitle {
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
   text-align: center;
   font-size: 30px;
   color: #555;
 }
 .studySubTitle {
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
   margin-left: 30px;
   margin-right: 30px;
   text-indent: 32px;
@@ -325,6 +325,7 @@ export default {
   border-bottom: 2px solid #ccc;
 }
 .questionTitle {
+  margin: 0;
   padding: 15px 20px;
   font-size: 20px;
   color: #555;
