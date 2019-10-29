@@ -140,15 +140,15 @@ export default {
       arr_span: [],
       arr_index0: [],
       arr_span0: [],
-      date1: "",
-      date2: "",
+      date1: this.getPastThreeMon(),
+      date2: new Date(),
       activeName: "third",
       po:"",
     };
   },
 
   created() {
-    this.date1=this.getCurrentWeek();
+    this.date1=getPastThreeMon();
      this.date2 = new Date();
     //this.autoSearch();
 
@@ -176,6 +176,25 @@ export default {
       s = s < 10 ? "0" + s : s;
       return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
     },
+    getEndtime(value){
+    var endTime=new Date(value);
+    endTime.setHours(23,59,59);
+    return endTime;
+    },
+     //获取最近半年时间
+    getPastThreeMon() {
+      var curDate=(new Date()).getTime();
+      var halfYear=90 *24*3600*1000;
+      var pastResult=curDate-halfYear;
+      var pastDate=new Date(pastResult);
+      var pastYear=pastDate.getFullYear();
+      var pastMonth=pastDate.getMonth()+1;
+      var pastDate=pastDate.getDate();
+     var strDay=pastYear+'-'+pastMonth+'-'+pastDate;
+      var date = new Date(strDay);
+      return date;
+    },
+
     //获取最近一周时间
      getCurrentWeek(){
       var date=new Date();
@@ -199,7 +218,7 @@ export default {
      var companyId=this.companyId;
       var cid=this.companyId;
       var beginTime= this.datatransMethod(this.date1);
-      var  finishTime=this.datatransMethod(this.date2);  
+      var  finishTime=getEndtime(this.datatransMethod(this.date2));  
       var po =this.po;
          downLoadFile(this.Global.baseUrl + `PUR_HEAD/transExcel?companyId=${companyId}&cid=${cid}&beginTime=${beginTime}&finishTime=${finishTime}&po=${po}`);
     },
@@ -261,7 +280,7 @@ export default {
         cid: Cookies.get("cid"),
         companyId: Cookies.get("companyId"),
         beginTime: this.date1,
-        finishTime: this.date2,
+        finishTime: this.getEndtime(this.date2),
         limit: this.limit,
         page: this.currentPage,
         current_id: Cookies.get("companyId"),

@@ -1868,6 +1868,11 @@ detailCol:[
       var date = new Date(strDay);
       return date;
     },
+     getEndtime(value){
+    var endTime=new Date(value);
+    endTime.setHours(23,59,59);
+    return endTime;
+    },
     //获取当月第一天零时
     getCurrentMonthFirst() {
       var date = new Date();
@@ -1885,7 +1890,7 @@ detailCol:[
     //获取截止时间一天中的最后时间
     getTodayMaxTime() {
       var date = new Date();
-      date.setHours(24, 0, 0);
+      date.setHours(23, 59, 59);
       return date;
     },
     //获取前500年时间
@@ -2080,7 +2085,7 @@ detailCol:[
         po_type: this.po_type, //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
         check_flag: this.check_flag,
         beginTime: this.date1,
-        finishTime: this.date2,
+        finishTime: this.getEndtime(this.date2),
         po: this.po,
       };
       GetRelativePo(data).then(res => {
@@ -2097,7 +2102,7 @@ detailCol:[
         var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
        var   check_flag= this.check_flag;
   var beginTime= this.datatransMethod(this.date1);
-      var  finishTime=this.datatransMethod(this.date2);  
+           finishTime: this.getEndtime(this.date2); 
         var po= this.po;
       
       downLoadFile(
@@ -2121,7 +2126,7 @@ detailCol:[
       var cid = this.companyId;
       var po = (this.po == null || this.po == "") ? "all" : this.po;
       var beginTime = this.datatransMethod(this.date1);
-      var finishTime = this.datatransMethod(this.date2);
+     var finishTime=this.getEndtime(this.date2);
       var po_type = (this.po_type == null || this.po_type == "") ? "all" : this.po_type;
       var selvalue = this.selvalue;
       downLoadFile(
