@@ -19,7 +19,7 @@
         <el-table-column align="center" width="150" label="操作">
           <template slot-scope="scope">
             <el-button
-              
+              :disabled="scope.row.completeStatus == 2"
               @click="editStudy(scope.row)"
               type="primary"
               size="mini"
