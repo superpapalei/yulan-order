@@ -1,9 +1,17 @@
 <template>
   <div>
     <el-card shadow="hover">
-      <div id="trans">
+      <div id="trans" class="lanJuport">
         <div class="block">
           <div class="first_1">
+              <el-input
+                  @keyup.enter.native="SelectClick()"
+                  prefix-icon="el-icon-search"
+                  style="width:6%; min-width:200px;padding:200"
+                  placeholder=" 原始单号:（精确）"
+                  v-model="po"
+                >
+                </el-input>
                <!-- 采购单号：（精确）
             <el-input
            @keyup.enter.native="SelectClick()"
@@ -30,8 +38,8 @@
             value-format="yyyy-MM-dd"
             placeholder="选择日期"
           ></el-date-picker>
-          <el-button :id="'test111'" @click="autoSearch()"  icon="el-icon-search" style="margin-left:8px" class="button_1">搜索</el-button>
-         <el-button @click="downLoadAll()" style="margin-left:8px" class="button_1">下载Excel</el-button>
+          <el-button :id="'test111'" @click="autoSearch()" size="small" icon="el-icon-search" style="margin-left:8px" class="button_2">搜索</el-button>
+         <el-button @click="downLoadAll()" size="small" style="margin-left:8px" class="button_2">下载Excel</el-button>
             </div>
             <hr>
           <el-table
@@ -123,6 +131,7 @@ export default {
     return {
       cid: Cookies.get("cid"),
       companyId: Cookies.get("companyId"),
+      // companyId: Cookies.get("cid"),
       currentPage: 1,
       limit: 15,
       count: 0,
@@ -245,22 +254,7 @@ export default {
       } 
     },
     
-      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (columnIndex === 0) {
-          if (rowIndex % 2 === 0) {
-            return {
-              rowspan: 2,
-              colspan: 1
-            };
-          } 
-          else {
-            return {
-              rowspan: 1,
-              colspan: 1
-            };
-          }
-        }
-      },
+ 
       //查询语句
       autoSearch() {
         var data = {
@@ -273,7 +267,7 @@ export default {
         current_id: Cookies.get("companyId"),
         supply_type: "",
         po_type: this.po_type ,//  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
-        po:"",
+        po:this.po,
       };
       //   if (!data.beginTime) {
       //   data.beginTime = "0001/1/1";
@@ -287,7 +281,7 @@ export default {
         this.count = res.count;
         this.tableData = res.data;
            this.mergeColumnIndex();
-           this.arraySpanMethod();
+         
       });
    
     },
@@ -353,5 +347,38 @@ export default {
   margin-left: 10px;
   color: rgb(255, 255, 255);
   text-align: center
+}
+.button_2 {
+  width: 80px;
+  height: 30px;
+  background: #8bc34a;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  text-align: center;
+}
+</style>
+<style>
+.zj-inputcss1{
+  margin: 3px;
+  width: 120px;
+  border:3
+}
+.lanJuport .el-input__inner{
+  width: 160px;
+  height: 30px;
+  /* margin-left:0px;
+  margin-right:0px; */
+}
+
+.lanJuport .el-table td,
+.lanJuport .el-table th {
+  padding: 3px 0 !important;
+}
+.fixedDiv {
+position:fixed;
+z-index:1;
+top: 200px;
+padding-left: 900px;
+z-index:99999
 }
 </style>
