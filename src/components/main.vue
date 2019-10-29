@@ -20,32 +20,6 @@
               :key="item.SystemMenuID"
               :menuTreeItem="item"
             />
-            <!-- 有角标的另外加载 -->
-            <router-link to="/painting" tag="div">
-              <el-menu-item v-if="isContainAttr('painting')" index="painting">
-                <i class="iconfont icon-color">&#xe7fb;</i>
-                <span slot="title">委托喷绘书</span>
-                <el-badge
-                  v-if="getPainting > 0"
-                  class="mark r"
-                  :value="getPainting"
-                />
-              </el-menu-item>
-            </router-link>
-            <router-link to="/refundCompensation" tag="div">
-              <el-menu-item
-                v-if="isContainAttr('refundCompensation')"
-                index="refundCompensation"
-              >
-                <i class="iconfont icon-color">&#xe6ee;</i>
-                <span slot="title">退货赔偿</span>
-                <el-badge
-                  v-if="getRefund > 0 && identity === 'ECWEB'"
-                  class="mark r"
-                  :value="getRefund"
-                />
-              </el-menu-item>
-            </router-link>
           </el-menu>
         </el-scrollbar>
       </el-aside>
@@ -262,9 +236,11 @@
 import { getUserMoney } from "@/api/user";
 import { getAllRefund } from "@/api/refund";
 import { getIconNumber } from "@/api/painting";
+import { checkBill } from "@/api/orderList";
 import { GetNewNotification, InserFlag } from "@/api/notificationASP";
 import { GetCustomerMustWriteStudy } from "@/api/studyASP";
 import { QueryWebMenuByUserId } from "@/api/webMenuASP";
+import { getAllOrders } from "@/api/orderListASP";
 import screenfull from "screenfull";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -387,6 +363,52 @@ export default {
         name: "painting",
         index: _refund.airbrushDesignerAssureList.length
       });
+    },
+    //获取角标待处理订单
+    async OrderDealIcon() {
+      if (Cookies.get("identity") === "ECWEB") {
+        let order = await getAllOrders({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          cid: Cookies.get("cid"),
+          statusId: ["0", "5", "6", "21", "22"],
+          find: "",
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          orderType: ""
+        });
+        this.changeBadge({
+          name: "orderDeal",
+          index: order.count
+        });
+      }
+    },
+    //获取角标待确认对账单
+    async getStatementIcon() {
+      if (Cookies.get("identity") === "ECWEB") {
+        let url = "/customerBalance/getCustomerBalanceInfo.do";
+        let data = {
+          cid: Cookies.get("cid"),
+          limit: 9999,
+          page: 1
+        };
+        let statement = await checkBill(url, data);
+        if (statement.customerBalancePeriodList.length) {
+          var unDealNum = 0;
+          for (var i = 0; i < statement.customerBalancePeriodList.length; i++) {
+            if (
+              statement.customerBalancePeriodList[i].customerCheckState ==
+              "待确认"
+            )
+              unDealNum++;
+          }
+          this.changeBadge({
+            name: "statement",
+            index: unDealNum
+          });
+        }
+      }
     },
     //获取用户余额情况
     async userMoney() {
@@ -587,12 +609,6 @@ export default {
   },
   computed: {
     ...mapState("navTabs", ["tabList", "menuTreeList", "menuTreeListFlatten"]),
-    getRefund() {
-      return this.$store.getters["badge/getRefund"];
-    },
-    getPainting() {
-      return this.$store.getters["badge/getPainting"];
-    },
     key() {
       return this.$route.name !== undefined ? this.$route.name : this.$route;
     },
@@ -682,6 +698,8 @@ export default {
     this.addTab(this.defaultUrl);
     this.addBadgeIcon();
     this.PaintingIcon();
+    this.OrderDealIcon();
+    this.getStatementIcon();
     document.onkeydown = function(event) {
       var key = window.event.keyCode;
       if (key == 27) {
@@ -813,7 +831,7 @@ export default {
   line-height: 50px;
   color: white;
 }
-.el-header ul{
+.el-header ul {
   margin: 0 10px;
 }
 .el-header ul:nth-child(1) i {

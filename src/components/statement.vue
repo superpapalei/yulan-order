@@ -312,7 +312,6 @@ import {
 } from "@/api/orderList";
 import { mapMutations, mapActions } from "vuex";
 import Cookies from "js-cookie";
-import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -386,22 +385,18 @@ export default {
       }
       this.startDate = startDate + " 00:00:00";
       this.endDate = endDate + " 23:59:59";
-      console.log(tab);
-      console.log(this.startDate, this.endDate);
       this.theBody = tab;
       this.getBillDetail();
       //this.detailVisible= true;
     },
     //翻页获取里面的对账单详情
     InnerCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.innerCurrentPage = val;
       this.tableDetail = [];
       this.getBillDetail();
     },
     //翻页获取外面的对账单
     outerCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.outerCurrentPage = val;
       this.tableData = [];
       this.getBill();
@@ -410,7 +405,6 @@ export default {
     changeStatus(status) {
       let decoration = "";
       let startDate = this.startDate.slice(0, 10);
-      console.log(startDate);
       if (status == 0) {
         decoration = "确认通过该对账明细表？";
         this.customerCheckState = OKIT;
@@ -433,13 +427,13 @@ export default {
       })
         .then(() => {
           userReturn(url, data).then(res => {
-            console.log(res);
             if (res.msg == "SUCCESS") {
               this.$alert("操作成功", "提示", {
                 confirmButtonText: "确定",
                 type: "success"
               });
               this.getBill();
+              this.releaseBadge("statement"); //刷新角标
               this.detailVisible = false;
               this.dialogFormVisible = false;
             } else {
@@ -482,7 +476,6 @@ export default {
         page: 1 //this.innerCurrentPage
       };
       billDetail(url, data).then(res => {
-        console.log(res);
         this.tableDetail = res.customerBalancePeriodDetailList;
         this.innercount = res.customerBalancePeriodDetailList.length
           ? res.customerBalancePeriodDetailList[0].total
@@ -556,6 +549,7 @@ export default {
       return "";
     },
     ...mapMutations("navTabs", ["addTab"]),
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"])
   },
   created: function() {
@@ -612,7 +606,6 @@ export default {
   background: rgb(241, 242, 243);
 }
 </style>
-
 
 <style>
 .el-table .success-row {
