@@ -91,46 +91,51 @@
                       <div>
                         <label>款号:</label>
                         <div class="messageInput">
-                          {{ ruleForm.headerData.modelNumber }}
+                          {{ ruleForm.headerData[scope.$index].modelNumber }}
                         </div>
                       </div>
                       <div>
                         <label>成品宽:</label>
                         <div class="messageInput">
-                          {{ ruleForm.headerData.width }}
+                          {{ ruleForm.headerData[scope.$index].width }}
                         </div>
                         m
                       </div>
                       <div>
                         <label>成品高:</label>
                         <div class="messageInput">
-                          {{ ruleForm.headerData.height }}
+                          {{ ruleForm.headerData[scope.$index].height }}
                         </div>
                         m
                       </div>
                       <div>
                         <label>假帘高:</label>
                         <div class="messageInput">
-                          {{ ruleForm.headerData.highJia }}
+                          {{ ruleForm.headerData[scope.$index].highJia }}
                         </div>
                         m
                       </div>
                       <div>
                         <label>褶皱倍数:</label>
                         <div class="messageInput">
-                          {{ ruleForm.headerData.drape }}
+                          {{ ruleForm.headerData[scope.$index].drape }}
                         </div>
                       </div>
                       <div>
                         <label>帘头外包盒单边宽度:</label>
                         <div
                           v-if="
-                            ruleForm.headerData.outsourcingBoxExist === 1 &&
-                              ruleForm.headerData.outsourcingBoxWidth != 0
+                            ruleForm.headerData[scope.$index]
+                              .outsourcingBoxExist === 1 &&
+                              ruleForm.headerData[scope.$index]
+                                .outsourcingBoxWidth != 0
                           "
                           class="messageInput"
                         >
-                          {{ ruleForm.headerData.outsourcingBoxWidth }}
+                          {{
+                            ruleForm.headerData[scope.$index]
+                              .outsourcingBoxWidth
+                          }}
                         </div>
                         <div v-else class="messageInput">无</div>
                         m
@@ -139,10 +144,11 @@
                         <label>位置:</label>
                         <div class="messageInput" style="width: 70px;">
                           {{
-                            ruleForm.headerData.location === null ||
-                            ruleForm.headerData.location === ""
+                            ruleForm.headerData[scope.$index].location ===
+                              null ||
+                            ruleForm.headerData[scope.$index].location === ""
                               ? "无"
-                              : ruleForm.headerData.location
+                              : ruleForm.headerData[scope.$index].location
                           }}
                         </div>
                       </div>
@@ -150,61 +156,63 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="名称" header-align="center" width="60">
-                  <template slot-scope="scope">
-                    {{ getTypeName(scope.row.curtainPartName) }}
+                  <template slot-scope="scope1">
+                    {{ getTypeName(scope1.row.curtainPartName) }}
                     <!-- <br> -->
                     <span v-if="tableStatus !== 3">
-                      <!-- <el-checkbox @change="changeLink('lt',0)" v-if="scope.row.itemType === 'lt'" v-model="chooseBig[0]">
-                                <span v-if="chooseBig[0] == false" style="color: red;">×</span>
-                            </el-checkbox> -->
                       <el-checkbox
-                        @change="changeLink('ls', 1)"
-                        v-if="scope.row.itemType === 'ls'"
-                        v-model="chooseBig[1]"
+                        @change="changeLink('ls', 1, scope.$index)"
+                        v-if="scope1.row.itemType === 'ls'"
+                        v-model="chooseBig[scope.$index][1]"
                       >
-                        <span v-if="chooseBig[1] == false" style="color: red;"
+                        <span
+                          v-if="chooseBig[scope.$index][1] == false"
+                          style="color: red;"
                           >×</span
                         >
                       </el-checkbox>
                       <el-checkbox
-                        @change="changeLink('lspb', 2)"
-                        v-if="scope.row.itemType === 'lspb'"
-                        v-model="chooseBig[2]"
+                        @change="changeLink('lspb', 2, scope.$index)"
+                        v-if="scope1.row.itemType === 'lspb'"
+                        v-model="chooseBig[scope.$index][2]"
                       >
-                        <span v-if="chooseBig[2] == false" style="color: red;"
+                        <span
+                          v-if="chooseBig[scope.$index][2] == false"
+                          style="color: red;"
                           >×</span
                         >
                       </el-checkbox>
                       <el-checkbox
-                        @change="changeLink('sha', 3)"
-                        v-if="scope.row.itemType === 'sha'"
-                        v-model="chooseBig[3]"
+                        @change="changeLink('sha', 3, scope.$index)"
+                        v-if="scope1.row.itemType === 'sha'"
+                        v-model="chooseBig[scope.$index][3]"
                       >
-                        <span v-if="chooseBig[3] == false" style="color: red;"
+                        <span
+                          v-if="chooseBig[scope.$index][3] == false"
+                          style="color: red;"
                           >×</span
                         >
                       </el-checkbox>
-                      <!-- <el-checkbox v-if="scope.row.itemType === 'pjb'" v-model="chooseBig[3]"></el-checkbox> -->
                     </span>
                   </template>
                 </el-table-column>
                 <el-table-column label="编码" header-align="center" width="125">
-                  <template slot-scope="scope">
+                  <template slot-scope="scope1">
                     <div>
                       <span v-if="tableStatus === 3">
-                        {{ scope.row.item.itemNo }}
+                        {{ scope1.row.item.itemNo }}
                       </span>
                       <span
                         v-else-if="
-                          scope.row.itemType === 'pjb' &&
-                            scope.row.changeFlag === 'Y'
+                          scope1.row.itemType === 'pjb' &&
+                            scope1.row.changeFlag === 'Y'
                         "
                       >
                         <el-select
                           size="mini"
-                          v-model="scope.row.item.itemNo"
+                          v-model="scope1.row.item.itemNo"
                           placeholder="请选择"
-                          @change="changePJBUnit(scope.$index)"
+                          @change="changePJBUnit(scope1.$index, scope.$index)"
                         >
                           <el-option
                             v-for="item in part2"
@@ -215,34 +223,52 @@
                           </el-option>
                         </el-select>
                       </span>
-                      <span v-else-if="scope.row.changeFlag === 'Y'">
+                      <span v-else-if="scope1.row.changeFlag === 'Y'">
                         <a
                           class="uline"
-                          @click="getNewItemNo(scope.row, scope.$index)"
+                          @click="
+                            getNewItemNo(
+                              scope1.row,
+                              scope1.$index,
+                              scope.$index
+                            )
+                          "
                         >
-                          {{ scope.row.item.itemNo }}
+                          {{ scope1.row.item.itemNo }}
                         </a>
                         <el-checkbox
                           class="ml5"
-                          v-if="scope.row.deleteFlag === 'Y'"
-                          v-model="scope.row.choose"
-                          @change="changeLinkReverse(scope.row)"
+                          v-if="scope1.row.deleteFlag === 'Y'"
+                          v-model="chooseSamll[scope.$index][scope1.$index]"
+                          @change="
+                            changeLinkReverse(
+                              scope1.row,
+                              scope1.$index,
+                              scope.$index
+                            )
+                          "
                         >
                         </el-checkbox>
                       </span>
                       <span v-else>
-                        {{ scope.row.item.itemNo }}
+                        {{ scope1.row.item.itemNo }}
                         <el-checkbox
                           class="ml5"
-                          v-if="scope.row.deleteFlag === 'Y'"
-                          v-model="scope.row.choose"
-                          @change="changeLinkReverse(scope.row)"
+                          v-if="scope1.row.deleteFlag === 'Y'"
+                          v-model="chooseSamll[scope.$index][scope1.$index]"
+                          @change="
+                            changeLinkReverse(
+                              scope1.row,
+                              scope1.$index,
+                              scope.$index
+                            )
+                          "
                         >
                         </el-checkbox>
                       </span>
                       <span
                         v-if="
-                          bigToSmall(scope.row) == true && tableStatus !== 3
+                          bigToSmall(scope1.row) == true && tableStatus !== 3
                         "
                         style="color: red;"
                       >
@@ -252,16 +278,16 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="名称" header-align="center" width="150">
-                  <template slot-scope="scope">
+                  <template slot-scope="scope1">
                     <div
                       v-if="
-                        scope.row.curtainItemName !== null &&
-                          scope.row.curtainItemName !== ''
+                        scope1.row.curtainItemName !== null &&
+                          scope1.row.curtainItemName !== ''
                       "
                     >
-                      {{ scope.row.curtainItemName }}
+                      {{ scope1.row.curtainItemName }}
                     </div>
-                    <div v-else>{{ getTypeName(scope.row.itemType) }}</div>
+                    <div v-else>{{ getTypeName(scope1.row.itemType) }}</div>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -270,12 +296,12 @@
                   align="center"
                   width="75"
                 >
-                  <template slot-scope="scope">
+                  <template slot-scope="scope1">
                     {{
-                      scope.row.specification === 0 ||
-                      scope.row.specification === null
+                      scope1.row.specification === 0 ||
+                      scope1.row.specification === null
                         ? "--"
-                        : scope.row.specification
+                        : scope1.row.specification
                     }}
                   </template>
                 </el-table-column>
@@ -285,19 +311,21 @@
                   header-align="center"
                   align="center"
                 >
-                  <template slot-scope="scope">
+                  <template slot-scope="scope1">
                     <div
                       v-if="
-                        scope.row.certainHeightWidth !== null &&
-                          scope.row.productType === 'ML'
+                        scope1.row.certainHeightWidth !== null &&
+                          scope1.row.productType === 'ML'
                       "
                     >
                       <el-select
                         :disabled="tableStatus === 3"
                         size="mini"
-                        v-model="scope.row.certainHeightWidth"
+                        v-model="scope1.row.certainHeightWidth"
                         placeholder="请选择"
-                        @change="changeDosageByFixtype(scope.$index)"
+                        @change="
+                          changeDosageByFixtype(scope1.$index, scope.$index)
+                        "
                       >
                         <el-option
                           v-for="item in fixType"
@@ -317,14 +345,14 @@
                   header-align="center"
                   align="center"
                 >
-                  <template slot-scope="scope">
+                  <template slot-scope="scope1">
                     <span v-if="tableStatus === 3">
-                      {{ scope.row.dosage | dosageFilter }}
-                      {{ scope.row.dosage === "" ? "" : scope.row.unit }}
+                      {{ scope1.row.dosage | dosageFilter }}
+                      {{ scope1.row.dosage === "" ? "" : scope1.row.unit }}
                     </span>
                     <span v-else-if="customerType === '110'">
                       <el-input
-                        v-if="scope.row.itemType != 'lt'"
+                        v-if="scope1.row.itemType != 'lt'"
                         style="width: 75%;"
                         size="mini"
                         oninput="value=value.replace(/[^\d.]/g,'')
@@ -332,7 +360,7 @@
                                 .replace('.', '$#$').replace(/\./g, '')
                                 .replace('$#$', '.')
                                 .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 2)"
-                        v-model="scope.row.dosage"
+                        v-model="scope1.row.dosage"
                       >
                       </el-input>
                       <el-input
@@ -344,13 +372,13 @@
                                 .replace('.', '$#$').replace(/\./g, '')
                                 .replace('$#$', '.')
                                 .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
-                        v-model="scope.row.dosage"
+                        v-model="scope1.row.dosage"
                       >
                       </el-input>
-                      {{ scope.row.dosage === "" ? "" : scope.row.unit }}
+                      {{ scope1.row.dosage === "" ? "" : scope1.row.unit }}
                     </span>
-                    <span v-else-if="scope.row.itemType === 'lspb'">--</span>
-                    <span v-else-if="scope.row.modifyFlag === 'Y'">
+                    <span v-else-if="scope1.row.itemType === 'lspb'">--</span>
+                    <span v-else-if="scope1.row.modifyFlag === 'Y'">
                       <el-input
                         style="width: 75%;"
                         size="mini"
@@ -359,14 +387,14 @@
                                 .replace('.', '$#$').replace(/\./g, '')
                                 .replace('$#$', '.')
                                 .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 2)"
-                        v-model="scope.row.dosage"
+                        v-model="scope1.row.dosage"
                       >
                       </el-input>
-                      {{ scope.row.dosage === "" ? "" : scope.row.unit }}
+                      {{ scope1.row.dosage === "" ? "" : scope1.row.unit }}
                     </span>
                     <span v-else>
-                      {{ scope.row.dosage | dosageFilter }}
-                      {{ scope.row.dosage === "" ? "" : scope.row.unit }}
+                      {{ scope1.row.dosage | dosageFilter }}
+                      {{ scope1.row.dosage === "" ? "" : scope1.row.unit }}
                     </span>
                   </template>
                 </el-table-column>
@@ -376,15 +404,15 @@
                   header-align="center"
                   align="center"
                 >
-                  <template slot-scope="scope">
+                  <template slot-scope="scope1">
                     <div v-if="tableStatus === 3">
-                      {{ scope.row.manufacturingInstructions }}
+                      {{ scope1.row.manufacturingInstructions }}
                     </div>
-                    <div v-else-if="scope.row.productType === 'XHB'"></div>
-                    <div v-else-if="scope.row.itemType === 'lt'">
+                    <div v-else-if="scope1.row.productType === 'XHB'"></div>
+                    <div v-else-if="scope1.row.itemType === 'lt'">
                       <el-select
                         size="mini"
-                        v-model="scope.row.manufacturingInstructions"
+                        v-model="scope1.row.manufacturingInstructions"
                         placeholder="--未选--"
                       >
                         <el-option
@@ -396,10 +424,10 @@
                         </el-option>
                       </el-select>
                     </div>
-                    <div v-else-if="scope.row.itemType === 'lspb'">
+                    <div v-else-if="scope1.row.itemType === 'lspb'">
                       <el-select
                         size="mini"
-                        v-model="scope.row.manufacturingInstructions"
+                        v-model="scope1.row.manufacturingInstructions"
                         placeholder="--未选--"
                       >
                         <el-option
@@ -411,10 +439,10 @@
                         </el-option>
                       </el-select>
                     </div>
-                    <div v-else-if="scope.row.productType === 'ML'">
+                    <div v-else-if="scope1.row.productType === 'ML'">
                       <el-select
                         size="mini"
-                        v-model="scope.row.manufacturingInstructions"
+                        v-model="scope1.row.manufacturingInstructions"
                         placeholder="--未选--"
                       >
                         <el-option
@@ -426,37 +454,27 @@
                         </el-option>
                       </el-select>
                     </div>
-                    <!-- <div v-if="part[scope.$index].length !== 0">
-                            <el-select size="mini" v-model="scope.row.creator" placeholder="--未选--">
-                                <el-option
-                                    v-for="item in part[scope.$index]"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div> -->
                   </template>
                 </el-table-column>
                 <el-table-column label="说明" header-align="center" width="80">
-                  <template slot-scope="scope">
+                  <template slot-scope="scope1">
                     <span style="color:red;">
-                      {{ scope.row.illustrate }}
+                      {{ scope1.row.illustrate }}
                       <!-- {{judgeTip(scope.row,scope.$index)}} -->
                     </span>
                   </template>
                 </el-table-column>
                 <el-table-column label="备注" header-align="center">
-                  <template slot-scope="scope">
+                  <template slot-scope="scope1">
                     <el-input
                       :autosize="{ maxRows: 6 }"
                       :disabled="tableStatus === 3"
                       type="textarea"
-                      v-model="scope.row.note"
+                      v-model="scope1.row.note"
                       clearable
                     >
                     </el-input>
-                    {{ getRemark(scope.row) }}
+                    {{ getRemark(scope1.row, scope.$index) }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -464,12 +482,12 @@
                   header-align="center"
                   v-if="tableStatus !== 0"
                 >
-                  <template slot-scope="scope">
+                  <template slot-scope="scope1">
                     <el-input
                       v-if="tableStatus === 1"
                       type="textarea"
                       :autosize="{ maxRows: 6 }"
-                      v-model="scope.row.suggestion"
+                      v-model="scope1.row.suggestion"
                       clearable
                     >
                     </el-input>
@@ -479,24 +497,112 @@
                       disabled
                       type="textarea"
                       :autosize="{ maxRows: 6 }"
-                      v-model="scope.row.suggestion"
+                      v-model="scope1.row.suggestion"
                       clearable
                     >
                     </el-input>
                   </template>
                 </el-table-column>
               </el-table>
-              <div style="text-align: center;">
+              <div style="text-align: center;" v-if="tableStatus === 1">
                 <el-input
                   resize="none"
                   type="textarea"
                   :rows="3"
-                  :placeholder="'请输入第'+scope.row.LINE_NO+'副窗帘审核意见'"
-                  v-model="suggestionLJ[scope.$index]"
+                  :placeholder="
+                    '请输入第' + scope.row.LINE_NO + '副窗帘审核意见'
+                  "
+                  v-model="scope.row.LJ_SUGGESTION"
                 >
                 </el-input>
               </div>
             </div>
+            <el-dialog
+              width="65%"
+              :append-to-body="true"
+              :visible.sync="dialogTableVisible"
+              :close-on-click-modal="false"
+              :close-on-press-escape="false"
+              :show-close="false"
+            >
+              <div slot="title">
+                <b>{{ dialogTitle }}</b>
+              </div>
+              <div v-if="items.length !== 0">
+                <el-input
+                  clearable
+                  size="small"
+                  class="ml10 mb10"
+                  v-if="
+                    allCurtaindata[chooseRowIndex][chooseIndex].productType !==
+                      'GY'
+                  "
+                  placeholder="输入商品型号查找"
+                  style="width:25%; min-width:220px;"
+                  v-model.trim="searchKey"
+                  @clear="getAllItemNoData(1)"
+                  @keyup.enter.native="getSingleItemNoData(1)"
+                >
+                  <div
+                    id="searchBtn"
+                    slot="append"
+                    style="cursor:pointer;"
+                    @click="getSingleItemNoData(1)"
+                  >
+                    搜索
+                  </div>
+                </el-input>
+                <br />
+                <el-radio
+                  border
+                  size="small"
+                  class="mt10 ml10"
+                  v-for="item in items"
+                  :value="item.itemNo"
+                  :key="item.itemNo"
+                  v-model="itemNo"
+                  :label="item.itemNo"
+                >
+                  <span v-if="chooseType === 'LCB' || chooseType === 'GY'">
+                    {{ item.itemNo + " " + item.note }}
+                  </span>
+                  <span v-else>{{ item.itemNo }}</span>
+                </el-radio>
+                <el-pagination
+                  v-if="
+                    allCurtaindata[chooseRowIndex][chooseIndex].productType !==
+                      'GY'
+                  "
+                  class="tc mt10"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :current-page.sync="currentPage"
+                  :page-size="pageSize"
+                  layout="prev, pager, next, jumper"
+                  :total="totalNumber"
+                >
+                </el-pagination>
+              </div>
+              <div v-else style="height: 200px;">
+                暂无数据
+              </div>
+              <footer class="mt20" style="text-align: center;">
+                <el-button
+                  class="mr10"
+                  type="success"
+                  @click="chooseItemNo"
+                  plain
+                  >确定</el-button
+                >
+                <el-button
+                  class="ml10"
+                  type="danger"
+                  @click="dialogTableVisible = false"
+                  plain
+                  >取消</el-button
+                >
+              </footer>
+            </el-dialog>
             <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
             <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
           </template>
@@ -559,25 +665,13 @@
         ></el-table-column> -->
       </el-table>
       <div style="float:right;margin-top:20px;height:80px;">
-        <el-button
-          :disabled="!passORback"
-          @click="LanjuChange()"
-          size="medium"
-          type="danger"
+        <el-button @click="LanjuChange()" size="medium" type="danger"
           >兰居修改</el-button
         >
-        <el-button
-          :disabled="!passORback"
-          size="medium"
-          type="warning"
-          @click="_back()"
+        <el-button size="medium" type="warning" @click="_back()"
           >退回修改</el-button
         >
-        <el-button
-          :disabled="passORnot"
-          @click="_pass()"
-          size="medium"
-          type="success"
+        <el-button @click="_pass()" size="medium" type="success"
           >通过审核</el-button
         >
       </div>
@@ -706,8 +800,10 @@ export default {
       spanArr1: [],
       spanArr2: [],
       customerType: Cookies.get("customerType"), //客户类型
-      chooseBig: [true, true, true, true, true],
+      chooseBig: [],
+      chooseSamll: [],
       chooseIndex: -1,
+      chooseRowIndex: -1,
       dialogTableVisible: false,
       dialogTitle: "", //弹出层标题
       searchKey: "", //搜索的关键词
@@ -717,7 +813,7 @@ export default {
       totalNumber: 0, //全部编码的数量
       chooseType: "", //选中的产品类型
       itemNo: "", //选中的编码
-      data: [],
+      allCurtaindata: [],
       compareData: [], //对比数据
       oldData: [], //保留最原始数据
       fixType: [
@@ -751,36 +847,8 @@ export default {
         { value: "三个半褶" }
       ],
       //配件编码
-      part2: [
-        { label: "GD920011:挂带", value: "GD920011" },
-        { label: "GD920012:挂带", value: "GD920012" },
-        { label: "GD920013:挂带", value: "GD920013" },
-        { label: "GD920041:挂带", value: "GD920041" },
-        { label: "GD920042:挂带", value: "GD920042" },
-        { label: "GD920061:挂带", value: "GD920061" },
-        { label: "GD920062:挂带", value: "GD920062" },
-        { label: "GD920063:挂带", value: "GD920063" },
-        { label: "GD920071:挂带", value: "GD920071" },
-        { label: "GD920072:挂带", value: "GD920072" },
-        { label: "GD920073:挂带", value: "GD920073" },
-        { label: "GD920101:挂带", value: "GD920101" },
-        { label: "GD920102:挂带", value: "GD920102" },
-        { label: "GD920103:挂带", value: "GD920103" },
-        { label: "GD920111:挂带", value: "GD920111" },
-        { label: "GD920112:挂带", value: "GD920112" },
-        { label: "GD920113:挂带", value: "GD920113" },
-        { label: "GD920121:挂带", value: "GD920121" },
-        { label: "GD920131:挂带", value: "GD920131" },
-        { label: "GD920141:挂带", value: "GD920141" },
-        { label: "PJB-006:绑带(赠送)", value: "PJB-006" },
-        { label: "PJB-001:挂带+侧钩(赠送)", value: "PJB-001" },
-        { label: "PJB-009-KAFEI:吊球+挂钩", value: "PJB-009-KAFEI" },
-        { label: "PJB-009-KAQI:吊球+挂钩", value: "PJB-009-KAQI" },
-        { label: "PJB-009-MIHUANG:吊球+挂钩", value: "PJB-009-MIHUANG" },
-        { label: "PJB-009-QIANHUI:吊球+挂钩", value: "PJB-009-QIANHUI" },
-        { label: "-未选择配件包-", value: null }
-      ],
-      suggestionLJ:[]
+      part2: [],
+      suggestionLJ: []
     };
   },
   components: {
@@ -937,44 +1005,6 @@ export default {
       this.headerData.activityGroupType = ""; //
       this.headerData.activity = tab.PROMOTION_TYPE;
     },
-    //兰居修改
-    LanjuChange() {
-      let url = "/order/updateCurtainOrder.do";
-      let data = {
-        cid: Cookies.get("cid"),
-        orderNo: this.orderNumber,
-        curtainStatusId: "2",
-        allCurtains: this.allCurtains,
-        ctmOrderDetails: this.ctmOrderDetails,
-        deleteIds: this.deleteIds
-      };
-      //defeatChange(url, data).then(res => {
-      updateCurtainOrder(data)
-        .then(res => {
-          if (res.code == 0) {
-            this.$alert("操作成功,已将该订单退回给用户进行确认", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            });
-            this.closeToTab({
-              oldUrl: "order/examineDetail",
-              newUrl: "order/examine"
-            });
-          } else {
-            this.$alert("操作失败，请稍后重试", "提示", {
-              confirmButtonText: "确定",
-              type: "warning"
-            });
-          }
-        })
-        .catch(res => {
-          this.$alert("操作失败:" + res.msg, "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-          console.log(res);
-        });
-    },
     getDetail() {
       let url = "/order/getOrderContent.do";
       let data = {
@@ -1030,11 +1060,14 @@ export default {
         .catch(err => {
           this.part2 = [];
         });
+      this.ruleForm.headerData = [];
       //循环处理多个窗帘
       for (let i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
         var data = this.ruleForm.ORDERBODY[i];
+        let smallChoose = [];
         for (let cur = 0; cur < data.curtains.length; cur++) {
           data.curtains[cur].choose = true;
+          smallChoose.push(true);
           data.curtains[cur].productType = data.curtains[cur].item.productType;
           data.curtains[cur].itemType = data.curtains[cur].curtainPartName;
           if (data.curtains[cur].unit === "°ü") {
@@ -1072,11 +1105,14 @@ export default {
         headerDataTemp.cartItemId = "";
         headerDataTemp.activityGroupType = ""; //
         headerDataTemp.activity = data.PROMOTION_TYPE;
-        this.ruleForm.headerData = headerDataTemp;
+        this.ruleForm.headerData.push(headerDataTemp);
         //旧数据
-        this.data.push(JSON.parse(JSON.stringify(data.curtains)));
+        this.allCurtaindata.push(data.curtains);
         this.oldData.push(JSON.parse(JSON.stringify(data.curtains)));
         this.compareData.push(JSON.parse(JSON.stringify(data.curtains)));
+
+        this.chooseBig.push([true, true, true, true, true]);
+        this.chooseSamll.push(smallChoose);
 
         let obj = {
           itemNO: headerDataTemp.modelNumber.toString(),
@@ -1190,29 +1226,35 @@ export default {
         }
       }
     },
-    changePJBUnit(index) {
-      let _data = this.data[index].item.itemNo;
+    changePJBUnit(index, rowIndex) {
+      let _data = this.allCurtaindata[rowIndex][index].item.itemNo;
       this.part2.forEach(item => {
         if (item.value === _data) {
-          this.data[index].unit = item.unit;
-          this.data[index].curtainItemName = item.note;
-          this.judgeTip(this.data[index], index);
+          this.allCurtaindata[rowIndex][index].unit = item.unit;
+          this.allCurtaindata[rowIndex][index].curtainItemName = item.note;
+          this.judgeTip(this.allCurtaindata[rowIndex][index], index, rowIndex);
           return;
         }
       });
     },
     //大类和二类的联动
-    changeLink(type, index) {
-      for (let i = 0; i < this.data.length; i++) {
-        if (this.data[i].itemType === type) {
-          this.data[i].choose = this.chooseBig[index];
+    changeLink(type, index, rowIndex) {
+      for (let i = 0; i < this.allCurtaindata[rowIndex].length; i++) {
+        if (this.allCurtaindata[rowIndex][i].itemType === type) {
+          this.allCurtaindata[rowIndex][i].choose = this.chooseBig[rowIndex][
+            index
+          ];
+          this.chooseSamll[rowIndex][i] = this.chooseBig[rowIndex][index];
         }
       }
     },
     //大类和二类的反向联动
-    changeLinkReverse(data) {
+    changeLinkReverse(data, index, rowIndex) {
+      this.allCurtaindata[rowIndex][index].choose = this.chooseSamll[rowIndex][
+        index
+      ];
       let _index;
-      let _arr = this.getBigType(data.itemType);
+      let _arr = this.getBigType(data.itemType, rowIndex);
       let flag = true;
       switch (data.itemType) {
         case "lt":
@@ -1245,14 +1287,14 @@ export default {
           }
         });
         if (data.choose || flag) {
-          this.chooseBig[_index] = data.choose;
+          this.chooseBig[rowIndex][_index] = data.choose;
         }
       }
     },
     //获取某个大类的全部数据
-    getBigType(type) {
+    getBigType(type, rowIndex) {
       let arr = [];
-      this.data.forEach(item => {
+      this.allCurtaindata[rowIndex].forEach(item => {
         if (item.itemType === type) {
           arr.push(item);
         }
@@ -1276,7 +1318,7 @@ export default {
       //非修改
       else {
         //同一过滤
-        let _data = JSON.parse(JSON.stringify(this.data));
+        let _data = JSON.parse(JSON.stringify(this.allCurtaindata));
         var _data_temp = [];
         _data.forEach(item => {
           item.dosage = Number(item.dosage);
@@ -1334,7 +1376,7 @@ export default {
     resolveModify() {
       //返回过滤后的数据
       //同时返回删除的配件的标识id
-      let _data = JSON.parse(JSON.stringify(this.data));
+      let _data = JSON.parse(JSON.stringify(this.allCurtaindata));
       let _deleteArr = [];
       for (let i = _data.length - 1; i >= 0; i--) {
         if (
@@ -1378,7 +1420,7 @@ export default {
       //this.$emit('finalData',null);
     },
     //点击更换编码名称
-    getNewItemNo(data, index) {
+    getNewItemNo(data, index, rowIndex) {
       this.itemNo = "";
       this.searchKey = "";
       this.items = [];
@@ -1387,11 +1429,12 @@ export default {
         data.productType
       )}】类产品列表`;
       this.chooseIndex = index;
+      this.chooseRowIndex = rowIndex;
       this.chooseType = data.productType;
       if (data.productType !== "GY") {
         this.getAllItemNoData(1);
       } else {
-        this.getTheGY(this.headerData.modelNumber);
+        this.getTheGY(this.ruleForm.headerData[rowIndex].modelNumber);
       }
     },
     //获取每页的条数
@@ -1460,7 +1503,9 @@ export default {
         this.dialogTableVisible = false;
         return;
       }
-      let _productType = this.data[this.chooseIndex].productType;
+      let _productType = this.allCurtaindata[this.chooseRowIndex][
+        this.chooseIndex
+      ].productType;
       let status = _productType === "ML" ? true : false;
       let status1 = _productType === "GY" ? true : false;
       this.dialogTableVisible = false;
@@ -1468,13 +1513,27 @@ export default {
       let data = this.items.find(v => {
         if (v.itemNo === this.itemNo) return v;
       });
-      this.data[this.chooseIndex].curtainItemName = data.note;
-      this.data[this.chooseIndex].specification = data.fixGrade / 1000;
+      this.allCurtaindata[this.chooseRowIndex][
+        this.chooseIndex
+      ].curtainItemName = data.note;
+      this.allCurtaindata[this.chooseRowIndex][this.chooseIndex].specification =
+        data.fixGrade / 1000;
       let theFixType;
-      if (this.data[this.chooseIndex].itemType === "lspb") {
-        this.data[this.chooseIndex].certainHeightWidth = null;
-        this.data[this.chooseIndex].item.itemNo = this.itemNo;
-        this.judgeTip(this.data[this.chooseIndex], this.chooseIndex);
+      if (
+        this.allCurtaindata[this.chooseRowIndex][this.chooseIndex].itemType ===
+        "lspb"
+      ) {
+        this.allCurtaindata[this.chooseRowIndex][
+          this.chooseIndex
+        ].certainHeightWidth = null;
+        this.allCurtaindata[this.chooseRowIndex][
+          this.chooseIndex
+        ].item.itemNo = this.itemNo;
+        this.judgeTip(
+          this.allCurtaindata[this.chooseRowIndex][this.chooseIndex],
+          this.chooseIndex,
+          this.chooseRowIndex
+        );
         return;
       }
       if (data.fixType === "01") {
@@ -1482,31 +1541,42 @@ export default {
       } else if (data.fixType === "02") {
         theFixType = 0;
       }
-      this.data[this.chooseIndex].certainHeightWidth = theFixType;
-      this.curtainData[this.chooseIndex].certainHeightWidth = theFixType;
-      this.compareData[this.chooseIndex].certainHeightWidth = theFixType;
-      if (!status1 && this.data[this.chooseIndex].itemType !== "lspb") {
+      this.allCurtaindata[this.chooseRowIndex][
+        this.chooseIndex
+      ].certainHeightWidth = theFixType;
+      // this.curtainData[this.chooseIndex].certainHeightWidth = theFixType;
+      this.compareData[this.chooseRowIndex][
+        this.chooseIndex
+      ].certainHeightWidth = theFixType;
+      let _headerData = this.ruleForm.headerData[this.chooseRowIndex];
+      let _outsourcingBoxWidth =
+        _headerData.outsourcingBoxExist === 0
+          ? "0"
+          : _headerData.outsourcingBoxWidth;
+      let _fixType =
+        this.allCurtaindata[this.chooseRowIndex][this.chooseIndex]
+          .certainHeightWidth === 0
+          ? "02"
+          : "01";
+      let obj = {
+        width: _headerData.width.toString(),
+        height: _headerData.height.toString(),
+        WBH:
+          _outsourcingBoxWidth === null ? "0" : _outsourcingBoxWidth.toString(),
+        multiple: _headerData.drape.toString(),
+        parentItemNo: _headerData.modelNumber,
+        itemNO: this.itemNo,
+        itemType: this.allCurtaindata[this.chooseRowIndex][this.chooseIndex]
+          .itemType,
+        fixType: _fixType
+      };
+      if (
+        !status1 &&
+        this.allCurtaindata[this.chooseRowIndex][this.chooseIndex].itemType !==
+          "lspb"
+      ) {
         //修改用量
-        let _headerData = this.headerData;
-        let index = this.chooseIndex;
-        let _outsourcingBoxWidth =
-          _headerData.outsourcingBoxExist === 0
-            ? "0"
-            : _headerData.outsourcingBoxWidth;
-        let _fixType = this.data[index].certainHeightWidth === 0 ? "02" : "01";
-        let obj = {
-          width: _headerData.width.toString(),
-          height: _headerData.height.toString(),
-          WBH:
-            _outsourcingBoxWidth === null
-              ? "0"
-              : _outsourcingBoxWidth.toString(),
-          multiple: _headerData.drape.toString(),
-          parentItemNo: _headerData.modelNumber,
-          itemNO: this.itemNo,
-          itemType: this.data[index].itemType,
-          fixType: _fixType
-        };
+
         //changeDosageByNo(obj)
         GetDosageByNo(obj)
           .then(res => {
@@ -1517,40 +1587,70 @@ export default {
               });
               return;
             }
-            let _data = this.data[this.chooseIndex];
+            let _data = this.allCurtaindata[this.chooseRowIndex][
+              this.chooseIndex
+            ];
             let keys;
             if (_data.itemType == "lt")
               keys = Math.round(res.data[0].dosage * 100) / 100;
             else keys = Math.round(res.data[0].dosage * 10) / 10;
             //绣花边只需要修改自身，无需修改面料
             if (_data.productType === "XHB") {
-              this.data[this.chooseIndex].dosage = keys;
+              this.allCurtaindata[this.chooseRowIndex][
+                this.chooseIndex
+              ].dosage = keys;
             }
             //面料除了修改自身，还需修改所有其他的，除了LCB、XHB之外的所有，工艺继续做进一步判断
             else if (_data.productType === "ML") {
-              this.updateDosage(_data.itemType, keys);
+              this.updateDosage(_data.itemType, keys, -1);
             }
-            this.data[this.chooseIndex].item.itemNo = this.itemNo;
-            this.judgeTip(this.data[this.chooseIndex], this.chooseIndex);
+            this.allCurtaindata[this.chooseRowIndex][
+              this.chooseIndex
+            ].item.itemNo = this.itemNo;
+            this.judgeTip(
+              this.allCurtaindata[this.chooseRowIndex][this.chooseIndex],
+              this.chooseIndex,
+              this.chooseRowIndex
+            );
           })
           .catch(err => {
             console.log(err);
           });
       } else if (status1) {
-        this.data[this.chooseIndex].item.itemNo = this.itemNo;
-        this.judgeTip(this.data[this.chooseIndex], this.chooseIndex);
-        if (this.data[this.chooseIndex].item.itemNo === "GY-003") {
-          this.data[this.chooseIndex].dosage = this.curtainData[
-            this.chooseIndex
-          ].dosage;
+        this.allCurtaindata[this.chooseRowIndex][
+          this.chooseIndex
+        ].item.itemNo = this.itemNo;
+        this.judgeTip(
+          this.allCurtaindata[this.chooseRowIndex][this.chooseIndex],
+          this.chooseIndex,
+          this.chooseRowIndex
+        );
+        if (
+          this.allCurtaindata[this.chooseRowIndex][this.chooseIndex].item
+            .itemNo === "GY-003"
+        ) {
+          GetDosageByNo(obj).then(res => {
+            this.allCurtaindata[this.chooseRowIndex][this.chooseIndex].dosage =
+              Math.round(res.data[0].dosage * 10) / 10;
+          });
         } else {
-          for (let i = 0; i < this.data.length; i++) {
+          for (
+            let i = 0;
+            i < this.allCurtaindata[this.chooseRowIndex].length;
+            i++
+          ) {
             if (
-              this.data[i].itemType === this.data[this.chooseIndex].itemType &&
+              this.allCurtaindata[this.chooseRowIndex][i].itemType ===
+                this.allCurtaindata[this.chooseRowIndex][this.chooseIndex]
+                  .itemType &&
               i !== this.chooseIndex
             ) {
-              if (this.data[i].productType === "ML") {
-                this.data[this.chooseIndex].dosage = this.data[i].dosage;
+              if (
+                this.allCurtaindata[this.chooseRowIndex][i].productType === "ML"
+              ) {
+                this.allCurtaindata[this.chooseRowIndex][
+                  this.chooseIndex
+                ].dosage = this.allCurtaindata[this.chooseRowIndex][i].dosage;
                 break;
               }
             }
@@ -1559,13 +1659,16 @@ export default {
       }
     },
     //修改风格
-    changeDosageByFixtype(index) {
-      let _headerData = this.headerData;
+    changeDosageByFixtype(index, rowIndex) {
+      let _headerData = this.ruleForm.headerData[rowIndex];
       let _outsourcingBoxWidth =
         _headerData.outsourcingBoxExist === 0
           ? "0"
           : _headerData.outsourcingBoxWidth;
-      let _fixType = this.data[index].certainHeightWidth === 0 ? "02" : "01";
+      let _fixType =
+        this.allCurtaindata[rowIndex][index].certainHeightWidth === 0
+          ? "02"
+          : "01";
       let obj = {
         width: _headerData.width.toString(),
         height: _headerData.height.toString(),
@@ -1573,8 +1676,8 @@ export default {
           _outsourcingBoxWidth === null ? "0" : _outsourcingBoxWidth.toString(),
         multiple: _headerData.drape.toString(),
         parentItemNo: _headerData.modelNumber,
-        itemNO: this.data[index].item.itemNo,
-        itemType: this.data[index].itemType,
+        itemNO: this.allCurtaindata[rowIndex][index].item.itemNo,
+        itemType: this.allCurtaindata[rowIndex][index].itemType,
         fixType: _fixType
       };
       //changeDosageByNo(obj)
@@ -1587,20 +1690,20 @@ export default {
             });
             return;
           }
-          let _data = this.data[index];
+          let _data = this.allCurtaindata[rowIndex][index];
           let keys;
           if (_data.itemType == "lt")
             keys = Math.round(res.data[0].dosage * 100) / 100;
           else keys = Math.round(res.data[0].dosage * 10) / 10;
           //绣花边只需要修改自身，无需修改面料
           if (_data.productType === "XHB") {
-            this.data[index].dosage = keys;
+            this.allCurtaindata[rowIndex][index].dosage = keys;
           }
           //面料除了修改自身，还需修改所有其他的，除了LCB、XHB之外的所有，工艺继续做进一步判断
           else if (_data.productType === "ML") {
-            this.updateDosage(_data.itemType, keys);
+            this.updateDosage(_data.itemType, keys, rowIndex);
           }
-          this.judgeTip(this.data[index], index);
+          this.judgeTip(this.allCurtaindata[rowIndex][index], index, rowIndex);
         })
         .catch(err => {
           console.log(err);
@@ -1653,27 +1756,39 @@ export default {
       }
     },
     //动态修改大类的全部用量
-    updateDosage(itemType, dosage) {
-      for (let i = 0; i < this.data.length; i++) {
-        let pType = this.curtainData[i].productType;
+    updateDosage(itemType, dosage, rowIndex) {
+      if (rowIndex > -1) {
+        this.chooseRowIndex = rowIndex;
+      }
+      for (
+        let i = 0;
+        i < this.allCurtaindata[this.chooseRowIndex].length;
+        i++
+      ) {
+        let pType = this.allCurtaindata[this.chooseRowIndex][i].productType;
         if (
-          this.curtainData[i].itemType === itemType &&
+          this.allCurtaindata[this.chooseRowIndex][i].itemType === itemType &&
           pType !== "LCB" &&
           pType !== "XHB"
         ) {
-          if (this.data[i].item.itemNo !== "GY-003") {
-            this.data[i].dosage = dosage;
+          if (
+            this.allCurtaindata[this.chooseRowIndex][i].item.itemNo !== "GY-003"
+          ) {
+            this.allCurtaindata[this.chooseRowIndex][i].dosage = dosage;
           } else {
-            this.data[i].dosage = this.curtainData[i].dosage;
+            // this.allCurtaindata[this.chooseRowIndex][
+            //   i
+            // ].dosage = this.allCurtaindata[this.chooseRowIndex][i].dosage;
           }
         }
       }
     },
     //获取备注文字
-    getRemark(data) {
+    getRemark(data, rowIndex) {
       if (data.certainHeightWidth === 0) {
         if (
-          data.specification < this.headerData.height &&
+          data.specification <
+            this.ruleForm.ORDERBODY[rowIndex].CURTAIN_HEIGHT &&
           data.specification > 0
         ) {
           return "超高帘，用量待审核!!";
@@ -1689,12 +1804,9 @@ export default {
       this.currentPage = 1;
       getGY(data)
         .then(res => {
-          // let _items = [];
-          // for(let i = 0; i < res.itemList.length; i++){
-          //     _items.push({
-          //         itemNo: res.itemList[i]
-          //     });
-          // }
+          res.itemList.sort(function(a, b) {
+            return a.itemNO > b.itemNO ? 1 : -1;
+          });
           this.items = res.itemList;
           this.totalNumber = res.itemList.length;
         })
@@ -1704,21 +1816,21 @@ export default {
         });
     },
     //动态判断制造说明
-    judgeTip(data, index) {
+    judgeTip(data, index, rowIndex) {
       let status = -1;
       if (
         data.certainHeightWidth === 0 &&
-        this.compareData[index].certainHeightWidth === 1
+        this.compareData[rowIndex][index].certainHeightWidth === 1
       ) {
         status = 1;
       }
       if (
         data.certainHeightWidth === 1 &&
-        this.compareData[index].certainHeightWidth === 0
+        this.compareData[rowIndex][index].certainHeightWidth === 0
       ) {
         status = 2;
       }
-      if (data.item.itemNo !== this.compareData[index].item.itemNo) {
+      if (data.item.itemNo !== this.compareData[rowIndex][index].item.itemNo) {
         if (status === 1) status = 4;
         else if (status === 2) status = 5;
         else status = 3;
@@ -1728,30 +1840,29 @@ export default {
         data.productType === "LCB" ||
         data.productType == "GY"
       ) {
-        // if (data.itemNo !== this.allData.itemList[index].itemNo) status = 3;
-        // else status = -1;
         status = -1;
       }
       switch (status) {
         case 1:
-          this.data[index].illustrate = "修改为定高";
+          this.allCurtaindata[rowIndex][index].illustrate = "修改为定高";
           break;
         case 2:
-          this.data[index].illustrate = "修改为定宽";
+          this.allCurtaindata[rowIndex][index].illustrate = "修改为定宽";
           break;
         case 3:
-          this.data[index].illustrate = "非标配";
+          this.allCurtaindata[rowIndex][index].illustrate = "非标配";
           break;
         case 4:
-          this.data[index].illustrate = "修改为定高，非标配";
+          this.allCurtaindata[rowIndex][index].illustrate =
+            "修改为定高，非标配";
           break;
         case 5:
-          this.data[index].illustrate = "修改为定宽，非标配";
+          this.allCurtaindata[rowIndex][index].illustrate =
+            "修改为定宽，非标配";
           break;
         default:
-          this.data[index].illustrate = " ";
+          this.allCurtaindata[rowIndex][index].illustrate = " ";
       }
-      //return this.curtainData[index].tip;
     },
     bigToSmall: function(data) {
       let index = -1;
@@ -1780,104 +1891,154 @@ export default {
       }
       return false;
     },
-    //退回客户修改
-    _back() {
+    getLJSuggest() {
+      for (var i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
+        var data = this.ruleForm.ORDERBODY[i];
+        let transData = {};
+        transData.lineNo = data.LINE_NO;
+        transData.orderNo = data.ORDER_NO;
+        transData.ljSuggestion = data.LJ_SUGGESTION;
+        this.ctmOrderDetails.push(transData);
+      }
+    },
+    //兰居修改
+    LanjuChange() {
+      this.getLJSuggest();
       let url = "/order/updateCurtainOrder.do";
       let data = {
         cid: Cookies.get("cid"),
         orderNo: this.orderNumber,
-        curtainStatusId: "1",
-        allCurtains: [],
-        ctmOrderDetails: this.ctmOrderDetails
+        curtainStatusId: "2",
+        //allCurtains: this.allCurtains,
+        allCurtains: this.allCurtaindata,
+        ctmOrderDetails: this.ctmOrderDetails,
+        deleteIds: this.deleteIds
       };
-      for (let j = 0; j < this.allCurtains.length; j++) {
-        let array = new Array();
-        for (let i = 0; i < this.allCurtains[j].length; i++) {
-          array[i] = new Object();
-          array[i].suggestion = this.allCurtains[j][i].suggestion;
-          array[i].lineNo = this.allCurtains[j][i].lineNo;
-          array[i].orderItemNumber = this.allCurtains[j][i].orderItemNumber;
-          array[i].orderNo = this.orderNumber;
-        }
-        data.allCurtains.push(array);
-      }
-      //defeatChange(url, data).then(res => {
-      updateCurtainOrder(data)
-        .then(res => {
-          if (res.code == 0) {
-            this.$alert("操作成功,已将该订单退回给用户修改", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            });
-            this.closeToTab({
-              oldUrl: "order/examineDetail",
-              newUrl: "order/examine"
-            });
-          } else {
-            this.$alert("操作失败，请稍后重试", "提示", {
-              confirmButtonText: "确定",
-              type: "warning"
-            });
-          }
-        })
-        .catch(res => {
-          this.$alert("操作失败:" + res.msg, "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-          console.log(res);
-        });
+      // //defeatChange(url, data).then(res => {
+      // updateCurtainOrder(data)
+      //   .then(res => {
+      //     if (res.code == 0) {
+      //       this.$alert("操作成功,已将该订单退回给用户进行确认", "提示", {
+      //         confirmButtonText: "确定",
+      //         type: "success"
+      //       });
+      //       this.closeToTab({
+      //         oldUrl: "order/examineDetail",
+      //         newUrl: "order/examine"
+      //       });
+      //     } else {
+      //       this.$alert("操作失败，请稍后重试", "提示", {
+      //         confirmButtonText: "确定",
+      //         type: "warning"
+      //       });
+      //     }
+      //   })
+      //   .catch(res => {
+      //     this.$alert("操作失败:" + res.msg, "提示", {
+      //       confirmButtonText: "确定",
+      //       type: "warning"
+      //     });
+      //     console.log(res);
+      //   });
+    },
+    //退回客户修改
+    _back() {
+      // let url = "/order/updateCurtainOrder.do";
+      // let data = {
+      //   cid: Cookies.get("cid"),
+      //   orderNo: this.orderNumber,
+      //   curtainStatusId: "1",
+      //   allCurtains: [],
+      //   ctmOrderDetails: this.ctmOrderDetails
+      // };
+      // for (let j = 0; j < this.allCurtains.length; j++) {
+      //   let array = new Array();
+      //   for (let i = 0; i < this.allCurtains[j].length; i++) {
+      //     array[i] = new Object();
+      //     array[i].suggestion = this.allCurtains[j][i].suggestion;
+      //     array[i].lineNo = this.allCurtains[j][i].lineNo;
+      //     array[i].orderItemNumber = this.allCurtains[j][i].orderItemNumber;
+      //     array[i].orderNo = this.orderNumber;
+      //   }
+      //   data.allCurtains.push(array);
+      // }
+      // //defeatChange(url, data).then(res => {
+      // updateCurtainOrder(data)
+      //   .then(res => {
+      //     if (res.code == 0) {
+      //       this.$alert("操作成功,已将该订单退回给用户修改", "提示", {
+      //         confirmButtonText: "确定",
+      //         type: "success"
+      //       });
+      //       this.closeToTab({
+      //         oldUrl: "order/examineDetail",
+      //         newUrl: "order/examine"
+      //       });
+      //     } else {
+      //       this.$alert("操作失败，请稍后重试", "提示", {
+      //         confirmButtonText: "确定",
+      //         type: "warning"
+      //       });
+      //     }
+      //   })
+      //   .catch(res => {
+      //     this.$alert("操作失败:" + res.msg, "提示", {
+      //       confirmButtonText: "确定",
+      //       type: "warning"
+      //     });
+      //     console.log(res);
+      //   });
     },
     //审核通过
     _pass() {
-      var url = "/order/updateCurOrderStatus.do";
-      var data = {
-        cid: Cookies.get("cid"),
-        orderNo: Cookies.get("ORDER_NO"),
-        curtainStatusId: "4",
-        allCurtains: [],
-        ctmOrderDetails: this.ctmOrderDetails
-      };
-      for (let j = 0; j < this.allCurtains.length; j++) {
-        let array = new Array();
-        for (let i = 0; i < this.allCurtains[j].length; i++) {
-          array[i] = new Object();
-          array[i].note = this.allCurtains[j][i].note;
-          array[i].suggestion = this.allCurtains[j][i].suggestion;
-          array[i].lineNo = this.allCurtains[j][i].lineNo;
-          array[i].orderItemNumber = this.allCurtains[j][i].orderItemNumber;
-          array[i].orderNo = this.orderNumber;
-        }
-        data.allCurtains.push(array);
-      }
-      //passExamine(url, data).then(res => {
-      updateCurtainOrder(data)
-        .then(res => {
-          if (res.code == 0) {
-            this.$alert("操作成功,该订单已通过审核", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            });
-            //this.addTab('order/examine');
-            this.closeToTab({
-              oldUrl: "order/examineDetail",
-              newUrl: "order/examine"
-            });
-            //跳转
-          } else {
-            this.$alert("操作失败，请稍后重试", "提示", {
-              confirmButtonText: "确定",
-              type: "warning"
-            });
-          }
-        })
-        .catch(res => {
-          this.$alert("操作失败:" + res.msg, "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-          console.log(res);
-        });
+      // var url = "/order/updateCurOrderStatus.do";
+      // var data = {
+      //   cid: Cookies.get("cid"),
+      //   orderNo: Cookies.get("ORDER_NO"),
+      //   curtainStatusId: "4",
+      //   allCurtains: [],
+      //   ctmOrderDetails: this.ctmOrderDetails
+      // };
+      // for (let j = 0; j < this.allCurtains.length; j++) {
+      //   let array = new Array();
+      //   for (let i = 0; i < this.allCurtains[j].length; i++) {
+      //     array[i] = new Object();
+      //     array[i].note = this.allCurtains[j][i].note;
+      //     array[i].suggestion = this.allCurtains[j][i].suggestion;
+      //     array[i].lineNo = this.allCurtains[j][i].lineNo;
+      //     array[i].orderItemNumber = this.allCurtains[j][i].orderItemNumber;
+      //     array[i].orderNo = this.orderNumber;
+      //   }
+      //   data.allCurtains.push(array);
+      // }
+      // //passExamine(url, data).then(res => {
+      // updateCurtainOrder(data)
+      //   .then(res => {
+      //     if (res.code == 0) {
+      //       this.$alert("操作成功,该订单已通过审核", "提示", {
+      //         confirmButtonText: "确定",
+      //         type: "success"
+      //       });
+      //       //this.addTab('order/examine');
+      //       this.closeToTab({
+      //         oldUrl: "order/examineDetail",
+      //         newUrl: "order/examine"
+      //       });
+      //       //跳转
+      //     } else {
+      //       this.$alert("操作失败，请稍后重试", "提示", {
+      //         confirmButtonText: "确定",
+      //         type: "warning"
+      //       });
+      //     }
+      //   })
+      //   .catch(res => {
+      //     this.$alert("操作失败:" + res.msg, "提示", {
+      //       confirmButtonText: "确定",
+      //       type: "warning"
+      //     });
+      //     console.log(res);
+      //   });
     },
     //监听状态
     listenStatus() {

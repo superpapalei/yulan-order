@@ -347,7 +347,6 @@ export default {
       if (realVal <= 0) {
         realVal = 0.0;
       }
-
       return realVal;
     }
   },

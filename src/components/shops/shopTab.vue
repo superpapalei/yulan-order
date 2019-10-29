@@ -119,8 +119,8 @@
                 <el-input
                   resize="none"
                   type="textarea"
-                  placeholder="请输入您的备注信息"
-                  maxlength="200"
+                  placeholder="请输入您的备注信息（50字内）"
+                  maxlength="50"
                   :autosize="{ minRows: 3, maxRows: 6 }"
                   v-model="remark"
                 >
@@ -133,7 +133,7 @@
                 </i>
               </div>
               <span style="margin-left:10px;"
-                >{{ remark ? remark.length : 0 }}/200</span
+                >{{ remark ? remark.length : 0 }}/50</span
               >
             </el-form-item>
             <el-form-item class="tc">
@@ -223,6 +223,21 @@ export default {
   //     },
   //     immediate:true,//关键
   // },
+  filters:{
+    calLength(str) {
+      var len = 0;
+      for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        //单字节加1
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+          len++;
+        } else {
+          len += 2;
+        }
+      }
+      return len;
+    }
+  },
   methods: {
     //给库存表格切换不同的颜色
     rowClass(row, index) {

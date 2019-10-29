@@ -1,5 +1,5 @@
 <template>
-  <div class="center">
+  <div class="center" @click="lastClick">
     <el-container class="page">
       <el-aside :width="asideWidth" style="overflow:hidden;background:white;">
         <el-scrollbar style="height:100%;">
@@ -140,7 +140,11 @@
                   >
                 </transition>
               </span>
-              <span class="r f14 mr10" style="line-height:30px;color:red;">
+              <span
+                v-if="identity == 'ECWEB'"
+                class="r f14 mr10"
+                style="line-height:30px;color:red;"
+              >
                 <strong>
                   <i>{{ moneySituation }}</i>
                 </strong>
@@ -278,6 +282,7 @@ export default {
   },
   data() {
     return {
+      lastClickTime: new Date().getTime(),
       cid: Cookies.get("cid"),
       isManager: Cookies.get("isManager"),
       customerType: Cookies.get("customerType"),
@@ -410,6 +415,9 @@ export default {
     },
     refreshUserMoney() {
       this.userMoney();
+    },
+    lastClick() {
+      this.lastClickTime = new Date().getTime();
     },
     //按钮样式--菜单展开收起
     changeAside() {
@@ -625,6 +633,28 @@ export default {
         this.isFullscreen = false;
       }
     };
+    this.timeOutTimer = setInterval(() => {
+      var interval = 5 * 60 * 1000;
+      if (new Date().getTime() - this.lastClickTime >= interval) {
+        //5分钟不操作自动退出
+        this.$message.close();
+        clearInterval(this.timeOutTimer);
+        this.logout();
+      } else if (
+        new Date().getTime() - this.lastClickTime >=
+        interval - 10 * 1000
+      ) {
+        //10秒提醒
+        this.$message.close();
+        this.$message({
+          duration: 1000,
+          message: `长时间未操作，将在${Math.ceil(
+            (interval - (new Date().getTime() - this.lastClickTime)) / 1000
+          )}秒后自动退出(点击任意位置可继续操作)`,
+          type: "warning"
+        });
+      }
+    }, 1000);
   },
   beforeCreate() {
     if (Cookies.get("cid") === null || Cookies.get("cid") === undefined) {
@@ -663,6 +693,7 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.newsTimer);
+    clearInterval(this.timeOutTimer);
   },
   watch: {}
 };
@@ -847,7 +878,7 @@ export default {
 .el-card__header {
   padding: 10px 15px !important;
 }
-.el-card__body{
+.el-card__body {
   padding: 15px;
 }
 .el-dialog__body {
