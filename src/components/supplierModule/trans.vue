@@ -148,7 +148,7 @@ export default {
   },
 
   created() {
-    this.date1=getPastThreeMon();
+    this.date1=this.getPastThreeMon();
      this.date2 = new Date();
     //this.autoSearch();
 
@@ -176,10 +176,11 @@ export default {
       s = s < 10 ? "0" + s : s;
       return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
     },
-    getEndtime(value){
+     getEndtime(value){
     var endTime=new Date(value);
     endTime.setHours(23,59,59);
-    return endTime;
+    var  date = this.datatransMethod(endTime);
+    return date;
     },
      //获取最近半年时间
     getPastThreeMon() {
@@ -218,7 +219,7 @@ export default {
      var companyId=this.companyId;
       var cid=this.companyId;
       var beginTime= this.datatransMethod(this.date1);
-      var  finishTime=getEndtime(this.datatransMethod(this.date2));  
+      var  finishTime=this.getEndtime(this.datatransMethod(this.date2));  
       var po =this.po;
          downLoadFile(this.Global.baseUrl + `PUR_HEAD/transExcel?companyId=${companyId}&cid=${cid}&beginTime=${beginTime}&finishTime=${finishTime}&po=${po}`);
     },
