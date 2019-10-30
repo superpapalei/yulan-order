@@ -252,8 +252,9 @@ import { GetAllCompensation } from "@/api/paymentASP";
 import { ChangePassword } from "@/api/webUserASP";
 import payDelegationVue from './supplierModule/payDelegation.vue';
 import { GetCurrentDelegation,GetAllDelegation } from "@/api/supplierASP";
-import { GetAllData,GetAllUserData } from "@/api/lanju";
+import {GetAllData,GetAllUserData } from "@/api/lanju";
 import {GetAllComplaint,GetAllUserComplaint} from "@/api/complaint";
+import {GetImageCustomer,GetAllData as GetImageAll} from "@/api/imageStoreASP";
 
 
 export default {
@@ -543,6 +544,63 @@ export default {
       this.changeBadge({
           name: "complaint2",
           index: complaint.count
+        });
+    },
+     //获取角标待处理的形象店设计单据（客户编辑）
+    async imageShopIcon() {
+      let imageShop1 = await GetImageCustomer({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS:4
+        });
+      let imageShop2 = await GetImageCustomer({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS:5
+        });
+      this.changeBadge({
+          name: "imageShop1",
+          index: imageShop1.count+imageShop2.count
+        });
+    },
+    //获取角标待处理的形象店设计单据（兰居审核）
+    async ISExamineMarketIcon() {
+      let imageShop1 = await GetImageAll({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS:1
+        });
+      this.changeBadge({
+          name: "imageShop2",
+          index: imageShop1.count
+        });
+    },
+    //获取角标待处理的形象店设计单据（广美审核）
+    async ISExamineGMIcon() {
+      let imageShop1 = await GetImageAll({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS:2
+        });
+      this.changeBadge({
+          name: "imageShop3",
+          index: imageShop1.count
         });
     },
     //获取用户余额情况
@@ -849,6 +907,9 @@ export default {
     this.lanJuGMExamineIcon();
     this.complaintIcon();
     this.complaintReplyIcon();
+    this.imageShopIcon();
+    this.ISExamineMarketIcon();
+    this.ISExamineGMIcon();
     document.onkeydown = function(event) {
       var key = window.event.keyCode;
       if (key == 27) {

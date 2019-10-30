@@ -102,6 +102,12 @@ export default {
           return this.$store.state.badge.complaint1; //物流投诉中可进行评价的单据个数（用户评价）
         case "complaintReply":
           return this.$store.state.badge.complaint2; //物流投诉中未处理的单据个数（公司处理）
+        case "design/imageShop":
+          return this.$store.state.badge.imageShop1; //形象店设计中可编辑的单据个数（客户）
+        case "design/ISExamineMarket":
+          return this.$store.state.badge.imageShop2; //形象店设计中可编辑的单据个数（兰居）
+        case "design/ISExamineGM":
+          return this.$store.state.badge.imageShop3; //形象店设计中可编辑的单据个数（广美）
         default:
           return 0;
       }

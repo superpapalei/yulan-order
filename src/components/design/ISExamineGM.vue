@@ -508,6 +508,7 @@
 import { GetPaymentById } from "@/api/paymentASP";
 import { GetAllData, UploadFiles, GMUpdateStatus } from "@/api/imageStoreASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
+import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 
@@ -748,6 +749,7 @@ export default {
       };
       GMUpdateStatus(data).then(res => {
         this.imageStoreDetail = false;
+        this.releaseBadge("imageShop3");//刷新角标
         this.getDetail();
         this.examineSuggestion = "";
       });
@@ -768,6 +770,7 @@ export default {
       };
       GMUpdateStatus(data).then(res => {
         this.imageStoreDetail = false;
+        this.releaseBadge("imageShop3");//刷新角标
         this.getDetail();
         this.examineSuggestion = "";
       });
@@ -805,7 +808,8 @@ export default {
         confirmButtonText: "确定",
         type: "success"
       });
-    }
+    },
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   }
 };
 </script>
