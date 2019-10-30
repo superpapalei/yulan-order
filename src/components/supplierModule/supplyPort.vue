@@ -1203,18 +1203,7 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-                <el-button
-                  @click="downLoadAll()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载表头及明细</el-button>
-                   <el-button
-                  @click="downLoadSal()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载销售表单</el-button>
+              
               </div>
 
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
@@ -1430,18 +1419,7 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-                <el-button
-                  @click="downLoadAll()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载表头及明细</el-button>
-                   <el-button
-                  @click="downLoadSal()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载销售表单</el-button>
+               
               </div>
               <el-table
                 border
@@ -1798,10 +1776,11 @@ detailCol:[
       var date = new Date(strDay);
       return date;
     },
-       getEndtime(value){
+      getEndtime(value){
     var endTime=new Date(value);
     endTime.setHours(23,59,59);
-    return endTime;
+    var  date = this.datatransMethod(endTime);
+    return date;
     },
     //获取当月第一天零时
     getCurrentMonthFirst() {
@@ -2029,10 +2008,10 @@ detailCol:[
        downLoadSal() {
        var current_id= Cookies.get("cid");
        var  customer= "";
-        var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
-       var   check_flag= this.check_flag;
-  var beginTime= this.datatransMethod(this.date1);
-          var finishTime= this.getEndtime(this.date2);
+       var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
+       var  check_flag= this.check_flag;
+      var beginTime= this.datatransMethod(this.date1);
+      var finishTime= this.getEndtime(this.date2);
         var po= this.po;
       
       downLoadFile(
@@ -2056,8 +2035,7 @@ detailCol:[
       var cid = this.companyId;
       var po = (this.po == null || this.po == "") ? "all" : this.po;
       var beginTime = this.datatransMethod(this.date1);
-   
-        var   finishTime= this.getEndtime(this.date2);
+      var finishTime= this.getEndtime(this.date2);
       var po_type = (this.po_type == null || this.po_type == "") ? "all" : this.po_type;
       var selvalue = this.selvalue;
       downLoadFile(
