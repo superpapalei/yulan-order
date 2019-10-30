@@ -1,5 +1,5 @@
 <template>
-  <div class="lanJuport">
+  <div >
     <el-card shadow="hover">
       <!-- X开头（窗帘）确认采购单界面 -->
       <el-dialog
@@ -260,7 +260,7 @@
                       format="yyyy-MM-dd"
                       value-format="yyyy-MM-dd"
                       placeholder="选择时间"
-                      style="width:15%"
+                      style="width:18%"
                     ></el-date-picker>
                     <el-button
                       style="width:16%"
@@ -280,7 +280,7 @@
                     <el-input
                       v-model="supply_check_notes"
                       placeholder="说明:"
-                      style="width:39%;height:10px"
+                      style="width:42%;height:10px"
                       clearable
                     ></el-input>
                     <el-button
@@ -396,7 +396,7 @@
                       format="yyyy-MM-dd"
                       value-format="yyyy-MM-dd"
                       placeholder="选择时间"
-                      style="width:15%"
+                      style="width:18%"
                     ></el-date-picker>
                     <el-button
                       style="width:16%"
@@ -416,7 +416,8 @@
                     <el-input
                       v-model="supply_check_notes"
                       placeholder="说明:"
-                      style="width:39%;height:10px"
+                 
+                      style="width:42%;height:10px"
                       clearable
                     ></el-input>
                     <el-button
@@ -1198,15 +1199,15 @@
       </el-dialog>
 
    
-      <div id="supplyCon">
+      <div class="lanJuport">
           <el-tabs v-model="activeName" @tab-click="handleClick">
-<!-- 待确认页签============================================================================================================== --> 
+  <!-- 待确认页签============================================================================================================== --> 
             <el-tab-pane label="待确认" name="first" align="left" >
-                    <div style="margin:5px">
+                     <div  style="margin-bottom:10px;">
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:6%; min-width:200px;padding:200"
+                  
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
@@ -1338,7 +1339,7 @@
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:6%; min-width:200px;padding:200"
+                
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
@@ -1466,11 +1467,11 @@
 <!-- /已确认页签============================================================================================================== -->
 <!-- 已取消页签============================================================================================================== -->
        <el-tab-pane label="已取消" name="third" align="left">
-                  <div style="margin:5px">
+            <div  style="margin-bottom:10px;">
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:6%; min-width:200px;padding:200"
+       
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
@@ -1581,6 +1582,7 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
+            
 <!-- /已取消页签============================================================================================================== -->
             <div style="margin:0 25%;" class="block">
               <el-pagination
@@ -2529,6 +2531,11 @@ z-index:9999;
   margin-right:0px; */
 
 }
+.lanJuport .el-input,
+.el-date-editor.el-input__inner {
+    width: 160px;
+}
+
 
 .lanJuport .el-table td,
 .lanJuport .el-table th {
