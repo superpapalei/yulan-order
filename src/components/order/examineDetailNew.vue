@@ -770,7 +770,7 @@ export default {
       deleteIds: [],
       BENarray: "",
       ljsuggestion: "",
-      allCurtains: [],
+      allCurtains: [], //存入数据库的数据
       headerData: {},
       curtainData: "",
       orderNumber: "",
@@ -813,7 +813,7 @@ export default {
       totalNumber: 0, //全部编码的数量
       chooseType: "", //选中的产品类型
       itemNo: "", //选中的编码
-      allCurtaindata: [],
+      allCurtaindata: [], //表中的窗帘数据
       compareData: [], //对比数据
       oldData: [], //保留最原始数据
       fixType: [
@@ -1126,27 +1126,42 @@ export default {
         };
         getCurtainDetailMsg(obj).then(async res => {
           let _data = res.itemList;
-          for (let index = 0; index < this.compareData[i].length; index++) {
+          let itemIndex = 0;
+          for (var i = 0; i < this.ruleForm.headerData.length; i++) {
+            if (
+              this.ruleForm.headerData[i].modelNumber ==
+              _data[0].itemMLGY.parentItemNo
+            ) {
+              itemIndex = 0;
+              break;
+            }
+          }
+          for (
+            let index = 0;
+            index < this.compareData[itemIndex].length;
+            index++
+          ) {
             for (let j = 0; j < _data.length; j++) {
               if (
                 Number(_data[j].itemMLGY.no) ===
-                Number(this.compareData[i][index].inlineNo)
+                Number(this.compareData[itemIndex][index].inlineNo)
               ) {
-                this.compareData[i][index].item.itemNo = _data[j].itemNo;
-                let _comData = this.compareData[i][index];
+                this.compareData[itemIndex][index].item.itemNo =
+                  _data[j].itemNo;
+                let _comData = this.compareData[itemIndex][index];
                 if (
                   _comData.certainHeightWidth !== null &&
                   _comData.productType === "ML"
                 ) {
                   let _itemObj = {
                     itemType: _comData.productType,
-                    itemNO: data.curtains[index].item.itemNo,
+                    itemNO: this.allCurtaindata[itemIndex][index].item.itemNo,
                     limit: 1,
                     page: 1
                   };
                   let ress = await changeItemBlur(_itemObj);
                   if (ress.data.length > 0) {
-                    this.compareData[i][index].certainHeightWidth =
+                    this.compareData[itemIndex][index].certainHeightWidth =
                       ress.data[0].fixType === "02" ? 0 : 1;
                   }
                 }
@@ -1155,7 +1170,6 @@ export default {
             }
           }
         });
-        //
       }
     },
     getSpanArr(msg) {
@@ -1901,144 +1915,191 @@ export default {
         this.ctmOrderDetails.push(transData);
       }
     },
+    getCurtainData() {
+      this.allCurtains = [];
+      this.deleteIds = [];
+      let _data = JSON.parse(JSON.stringify(this.allCurtaindata));
+      for (var i = 0; i < _data.length; i++) {
+        for (let j = _data[i].length - 1; j >= 0; j--) {
+          _data[i][j].itemId = _data[i][j].item.itemNo;
+          if (
+            !_data[i][j].choose ||
+            _data[i][j].item.itemNo === null ||
+            _data[i][j].item.itemNo === ""
+          ) {
+            this.deleteIds.unshift(_data[i][j].id);
+            _data[i].splice(j, 1);
+          }
+        }
+      }
+      this.allCurtains = _data;
+    },
     //兰居修改
     LanjuChange() {
       this.getLJSuggest();
+      this.getCurtainData();
+      for (var i = 0; i < this.allCurtains.length; i++) {
+        if (this.allCurtains[i].length == 0) {
+          this.$alert("请至少选择一款配件!", "提示", {
+            confirmButtonText: "好的",
+            type: "warning"
+          });
+          return;
+        } else {
+          for (let j = 0; j < this.allCurtains[i].length; j++) {
+            let item = this.allCurtains[i][j];
+            if (
+              (item.manufacturingInstructions === "特殊见备注" ||
+                item.manufacturingInstructions === "特殊开备注") &&
+              (!item.note || item.note === "")
+            ) {
+              this.$alert(`请填写特殊开的备注`, "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+              });
+              return;
+            }
+          }
+        }
+      }
       let url = "/order/updateCurtainOrder.do";
       let data = {
         cid: Cookies.get("cid"),
         orderNo: this.orderNumber,
         curtainStatusId: "2",
-        //allCurtains: this.allCurtains,
-        allCurtains: this.allCurtaindata,
+        allCurtains: this.allCurtains,
         ctmOrderDetails: this.ctmOrderDetails,
         deleteIds: this.deleteIds
       };
-      // //defeatChange(url, data).then(res => {
-      // updateCurtainOrder(data)
-      //   .then(res => {
-      //     if (res.code == 0) {
-      //       this.$alert("操作成功,已将该订单退回给用户进行确认", "提示", {
-      //         confirmButtonText: "确定",
-      //         type: "success"
-      //       });
-      //       this.closeToTab({
-      //         oldUrl: "order/examineDetail",
-      //         newUrl: "order/examine"
-      //       });
-      //     } else {
-      //       this.$alert("操作失败，请稍后重试", "提示", {
-      //         confirmButtonText: "确定",
-      //         type: "warning"
-      //       });
-      //     }
-      //   })
-      //   .catch(res => {
-      //     this.$alert("操作失败:" + res.msg, "提示", {
-      //       confirmButtonText: "确定",
-      //       type: "warning"
-      //     });
-      //     console.log(res);
-      //   });
+      //defeatChange(url, data).then(res => {
+      updateCurtainOrder(data)
+        .then(res => {
+          if (res.code == 0) {
+            this.$alert("操作成功,已将该订单退回给用户进行确认", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.closeToTab({
+              oldUrl: "order/examineDetailNew",
+              newUrl: "order/examine"
+            });
+          } else {
+            this.$alert("操作失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+          }
+        })
+        .catch(res => {
+          this.$alert("操作失败:" + res.msg, "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+          console.log(res);
+        });
     },
     //退回客户修改
     _back() {
-      // let url = "/order/updateCurtainOrder.do";
-      // let data = {
-      //   cid: Cookies.get("cid"),
-      //   orderNo: this.orderNumber,
-      //   curtainStatusId: "1",
-      //   allCurtains: [],
-      //   ctmOrderDetails: this.ctmOrderDetails
-      // };
-      // for (let j = 0; j < this.allCurtains.length; j++) {
-      //   let array = new Array();
-      //   for (let i = 0; i < this.allCurtains[j].length; i++) {
-      //     array[i] = new Object();
-      //     array[i].suggestion = this.allCurtains[j][i].suggestion;
-      //     array[i].lineNo = this.allCurtains[j][i].lineNo;
-      //     array[i].orderItemNumber = this.allCurtains[j][i].orderItemNumber;
-      //     array[i].orderNo = this.orderNumber;
-      //   }
-      //   data.allCurtains.push(array);
-      // }
-      // //defeatChange(url, data).then(res => {
-      // updateCurtainOrder(data)
-      //   .then(res => {
-      //     if (res.code == 0) {
-      //       this.$alert("操作成功,已将该订单退回给用户修改", "提示", {
-      //         confirmButtonText: "确定",
-      //         type: "success"
-      //       });
-      //       this.closeToTab({
-      //         oldUrl: "order/examineDetail",
-      //         newUrl: "order/examine"
-      //       });
-      //     } else {
-      //       this.$alert("操作失败，请稍后重试", "提示", {
-      //         confirmButtonText: "确定",
-      //         type: "warning"
-      //       });
-      //     }
-      //   })
-      //   .catch(res => {
-      //     this.$alert("操作失败:" + res.msg, "提示", {
-      //       confirmButtonText: "确定",
-      //       type: "warning"
-      //     });
-      //     console.log(res);
-      //   });
+      this.getLJSuggest();
+      this.getCurtainData();
+      let url = "/order/updateCurtainOrder.do";
+      let data = {
+        cid: Cookies.get("cid"),
+        orderNo: this.orderNumber,
+        curtainStatusId: "1",
+        allCurtains: [],
+        ctmOrderDetails: this.ctmOrderDetails
+      };
+      for (let j = 0; j < this.allCurtains.length; j++) {
+        let array = new Array();
+        for (let i = 0; i < this.allCurtains[j].length; i++) {
+          array[i] = new Object();
+          array[i].suggestion = this.allCurtains[j][i].suggestion;
+          array[i].lineNo = this.allCurtains[j][i].lineNo;
+          array[i].orderItemNumber = this.allCurtains[j][i].orderItemNumber;
+          array[i].orderNo = this.orderNumber;
+        }
+        data.allCurtains.push(array);
+      }
+      //defeatChange(url, data).then(res => {
+      updateCurtainOrder(data)
+        .then(res => {
+          if (res.code == 0) {
+            this.$alert("操作成功,已将该订单退回给用户修改", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.closeToTab({
+              oldUrl: "order/examineDetailNew",
+              newUrl: "order/examine"
+            });
+          } else {
+            this.$alert("操作失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+          }
+        })
+        .catch(res => {
+          this.$alert("操作失败:" + res.msg, "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+          console.log(res);
+        });
     },
     //审核通过
     _pass() {
-      // var url = "/order/updateCurOrderStatus.do";
-      // var data = {
-      //   cid: Cookies.get("cid"),
-      //   orderNo: Cookies.get("ORDER_NO"),
-      //   curtainStatusId: "4",
-      //   allCurtains: [],
-      //   ctmOrderDetails: this.ctmOrderDetails
-      // };
-      // for (let j = 0; j < this.allCurtains.length; j++) {
-      //   let array = new Array();
-      //   for (let i = 0; i < this.allCurtains[j].length; i++) {
-      //     array[i] = new Object();
-      //     array[i].note = this.allCurtains[j][i].note;
-      //     array[i].suggestion = this.allCurtains[j][i].suggestion;
-      //     array[i].lineNo = this.allCurtains[j][i].lineNo;
-      //     array[i].orderItemNumber = this.allCurtains[j][i].orderItemNumber;
-      //     array[i].orderNo = this.orderNumber;
-      //   }
-      //   data.allCurtains.push(array);
-      // }
-      // //passExamine(url, data).then(res => {
-      // updateCurtainOrder(data)
-      //   .then(res => {
-      //     if (res.code == 0) {
-      //       this.$alert("操作成功,该订单已通过审核", "提示", {
-      //         confirmButtonText: "确定",
-      //         type: "success"
-      //       });
-      //       //this.addTab('order/examine');
-      //       this.closeToTab({
-      //         oldUrl: "order/examineDetail",
-      //         newUrl: "order/examine"
-      //       });
-      //       //跳转
-      //     } else {
-      //       this.$alert("操作失败，请稍后重试", "提示", {
-      //         confirmButtonText: "确定",
-      //         type: "warning"
-      //       });
-      //     }
-      //   })
-      //   .catch(res => {
-      //     this.$alert("操作失败:" + res.msg, "提示", {
-      //       confirmButtonText: "确定",
-      //       type: "warning"
-      //     });
-      //     console.log(res);
-      //   });
+      this.getLJSuggest();
+      this.getCurtainData();
+      var url = "/order/updateCurOrderStatus.do";
+      var data = {
+        cid: Cookies.get("cid"),
+        orderNo: Cookies.get("ORDER_NO"),
+        curtainStatusId: "4",
+        allCurtains: [],
+        ctmOrderDetails: this.ctmOrderDetails
+      };
+      for (let j = 0; j < this.allCurtains.length; j++) {
+        let array = new Array();
+        for (let i = 0; i < this.allCurtains[j].length; i++) {
+          array[i] = new Object();
+          array[i].note = this.allCurtains[j][i].note;
+          array[i].suggestion = this.allCurtains[j][i].suggestion;
+          array[i].lineNo = this.allCurtains[j][i].lineNo;
+          array[i].orderItemNumber = this.allCurtains[j][i].orderItemNumber;
+          array[i].orderNo = this.orderNumber;
+        }
+        data.allCurtains.push(array);
+      }
+      //passExamine(url, data).then(res => {
+      updateCurtainOrder(data)
+        .then(res => {
+          if (res.code == 0) {
+            this.$alert("操作成功,该订单已通过审核", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            //this.addTab('order/examine');
+            this.closeToTab({
+              oldUrl: "order/examineDetailNew",
+              newUrl: "order/examine"
+            });
+            //跳转
+          } else {
+            this.$alert("操作失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+          }
+        })
+        .catch(res => {
+          this.$alert("操作失败:" + res.msg, "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+          console.log(res);
+        });
     },
     //监听状态
     listenStatus() {

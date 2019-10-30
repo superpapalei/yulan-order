@@ -656,6 +656,9 @@ export default {
         this.isFullscreen = false;
       }
     };
+    window.onkeydown =()=>{
+      this.lastClickTime = new Date().getTime();
+    }
     this.timeOutTimer = setInterval(() => {
       var interval = 5 * 60 * 1000;
       if (new Date().getTime() - this.lastClickTime >= interval) {
@@ -663,6 +666,10 @@ export default {
         this.$message.close();
         clearInterval(this.timeOutTimer);
         this.logout();
+        this.$alert("长时间未操作，自动退出", "提示", {
+            confirmButtonText: "确定",
+            type: "info"
+          });
       } else if (
         new Date().getTime() - this.lastClickTime >=
         interval - 10 * 1000

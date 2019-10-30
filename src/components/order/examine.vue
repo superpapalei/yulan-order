@@ -355,7 +355,7 @@ export default {
     toExamineDetail(val) {
       Cookies.set("ORDER_NO", val);
       //console.log(Cookies.get("ORDER_NO"));
-      this.addTab("order/examineDetail");
+      this.addTab("order/examineDetailNew");
     },
     toCheckExamine(val) {
       Cookies.set("ORDER_NO", val);
