@@ -123,3 +123,42 @@ export function GetAllDelegation(data, config = {}) {
     })
 }
 
+export function GetRelativeDelivery(data, config = {}) {
+    return post('/PUR_HEAD/GetRelativeDelivery', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+export function GetDeliveryDetail(data, config = {}) {
+    return post('/PUR_HEAD/GetDeliveryDetail', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+export function AddDelivery(data, config = {}) {
+    return post('/PUR_HEAD/AddDelivery', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+export function UpdateDelivery(data, config = {}) {
+    return post('/PUR_HEAD/UpdateDelivery', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+export function DeleteDelivery(data, config = {}) {
+    return post('/PUR_HEAD/DeleteDelivery', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
