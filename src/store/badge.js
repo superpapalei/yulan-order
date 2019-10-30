@@ -5,6 +5,12 @@ const state = {
     refund: 0,           //退货赔偿角标
     orderDeal: 0,//待处理订单
     statement :0,//对账单
+    payDelegation1:0,//付款委托书中待客户确定的及退回的单据个数（客户可处理）
+    payDelegation2:0,//付款委托书中客户确定的单据个数（可审核）
+    lanju1:0,//兰居设计中客户被退回的单据个数（客户可重新编辑提交）
+    lanju2:0,//兰居设计中市场部可审核的单据个数（单据状态为未审核）
+    lanju3:0,//兰居设计中广美可审核的单据个数（单据状态为市场部审核通过）、
+    complaint1:0,
 }
 
 const mutations = {

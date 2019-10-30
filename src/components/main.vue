@@ -250,6 +250,10 @@ import menuTree from "./menuTree";
 import studyContextDetail from "./studyContext/studyContextDetail";
 import { GetAllCompensation } from "@/api/paymentASP";
 import { ChangePassword } from "@/api/webUserASP";
+import payDelegationVue from './supplierModule/payDelegation.vue';
+import { GetCurrentDelegation,GetAllDelegation } from "@/api/supplierASP";
+import { GetAllData,GetAllUserData } from "@/api/lanju";
+
 
 export default {
   name: "Main",
@@ -409,6 +413,104 @@ export default {
           });
         }
       }
+    },
+    //获取角标待处理付款委托书（客户）
+    async payDelegationIcon1() {
+      let payDelegation1 = await GetCurrentDelegation({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS: '1'
+        });
+      let payDelegation2 = await GetCurrentDelegation({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS: '4'
+        });
+      this.changeBadge({
+          name: "payDelegation1",
+          index: payDelegation1.count+payDelegation2.count
+        });
+    },
+    //获取角标待处理付款委托书（公司审核）
+    async payDelegationIcon2() {
+      let payDelegation1 = await GetAllDelegation({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS: '2'
+        });
+        this.changeBadge({
+          name: "payDelegation2",
+          index: payDelegation1.count
+        });
+    },
+    //获取角标待处理的兰居设计单据（客户）
+    async lanjuIcon() {
+      let lanju1 = await GetAllData({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS:'2'
+        });
+      this.changeBadge({
+          name: "lanju1",
+          index: lanju1.count
+        });
+    },
+    //获取角标待处理的兰居设计单据（市场部）
+    async lanJuMarketExamineIcon() {
+      let lanju1 = await GetAllUserData({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS:'1'
+        });
+      this.changeBadge({
+          name: "lanju2",
+          index: lanju1.count
+        });
+    },
+    //获取角标待处理的兰居设计单据（广美）
+    async lanJuGMExamineIcon() {
+      let lanju1 = await GetAllUserData({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS:'3'
+        });
+      let lanju2 = await GetAllUserData({
+          companyId: Cookies.get("companyId"),
+          limit: 9999,
+          page: 1,
+          CID: Cookies.get("cid"),
+          beginTime: "0001/1/1",
+          finishTime: "9999/12/31",
+          STATUS:'5'
+        });
+      this.changeBadge({
+          name: "lanju3",
+          index: lanju1.count+lanju2.count
+        });
     },
     //获取用户余额情况
     async userMoney() {
@@ -700,6 +802,11 @@ export default {
     this.PaintingIcon();
     this.OrderDealIcon();
     this.getStatementIcon();
+    this.payDelegationIcon1();
+    this.payDelegationIcon2();
+    this.lanjuIcon();
+    this.lanJuMarketExamineIcon();
+    this.lanJuGMExamineIcon();
     document.onkeydown = function(event) {
       var key = window.event.keyCode;
       if (key == 27) {
