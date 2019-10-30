@@ -1,5 +1,5 @@
 <template>
-  <div class="lanJuport">
+  <div >
     <el-card shadow="hover">
       <!-- X开头（窗帘）确认采购单界面 -->
       <el-dialog
@@ -260,7 +260,7 @@
                       format="yyyy-MM-dd"
                       value-format="yyyy-MM-dd"
                       placeholder="选择时间"
-                      style="width:15%"
+                      style="width:18%"
                     ></el-date-picker>
                     <el-button
                       style="width:16%"
@@ -280,7 +280,7 @@
                     <el-input
                       v-model="supply_check_notes"
                       placeholder="说明:"
-                      style="width:39%;height:10px"
+                      style="width:42%;height:10px"
                       clearable
                     ></el-input>
                     <el-button
@@ -396,7 +396,7 @@
                       format="yyyy-MM-dd"
                       value-format="yyyy-MM-dd"
                       placeholder="选择时间"
-                      style="width:15%"
+                      style="width:18%"
                     ></el-date-picker>
                     <el-button
                       style="width:16%"
@@ -416,7 +416,7 @@
                     <el-input
                       v-model="supply_check_notes"
                       placeholder="说明:"
-                      style="width:39%;height:10px"
+                      style="width:42%;height:10px"
                       clearable
                     ></el-input>
                     <el-button
@@ -1151,15 +1151,15 @@
       </el-dialog>
 
    
-      <div id="supplyCon">
+      <div id="supplyCon" class="lanJuport">
           <el-tabs v-model="activeName" @tab-click="handleClick">
 <!-- 待确认页签============================================================================================================== --> 
             <el-tab-pane label="待确认" name="first" align="left" >
-                    <div style="margin:5px">
+                 <div  style="margin-bottom:10px;">
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:6%; min-width:200px;padding:200"
+               
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
@@ -1275,11 +1275,11 @@
 <!-- /待确认页签============================================================================================================== -->         
 <!-- 已确认页签============================================================================================================== -->
        <el-tab-pane label="已确认" name="second" align="left">
-                  <div style="margin:5px">
+                          <div  style="margin-bottom:10px;">
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:6%; min-width:200px;padding:200"
+             
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
@@ -1397,11 +1397,11 @@
 <!-- /已确认页签============================================================================================================== -->
 <!-- 已取消页签============================================================================================================== -->
        <el-tab-pane label="已取消" name="third" align="left">
-                  <div style="margin:5px">
+                      <div  style="margin-bottom:10px;">
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:6%; min-width:200px;padding:200"
+              
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
@@ -1460,12 +1460,7 @@
                   label="单号"
                   align="left"
                 ></el-table-column>
-                <el-table-column
-                  prop="CUSTOMER_NAME"
-                  min-width="150"
-                  label="客户名称"
-                  align="left"
-                ></el-table-column>
+               
                 <el-table-column label="状态" width="60" align="center">
                   <template slot-scope="scope"
                     ><span>{{
@@ -1802,6 +1797,11 @@ detailCol:[
      var strDay=pastYear+'-'+pastMonth+'-'+pastDate;
       var date = new Date(strDay);
       return date;
+    },
+       getEndtime(value){
+    var endTime=new Date(value);
+    endTime.setHours(23,59,59);
+    return endTime;
     },
     //获取当月第一天零时
     getCurrentMonthFirst() {
@@ -2447,6 +2447,10 @@ td {
   height: 30px;
   /* margin-left:0px;
   margin-right:0px; */
+}
+.lanJuport .el-input,
+.el-date-editor.el-input__inner {
+    width: 160px;
 }
 
 .lanJuport .el-table td,
