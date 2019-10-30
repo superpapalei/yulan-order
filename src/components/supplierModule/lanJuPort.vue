@@ -1251,18 +1251,7 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-                <el-button
-                  @click="downLoadAll()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载表头及明细</el-button>
-                   <el-button
-                  @click="downLoadSal()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载销售表单</el-button>
+               
               </div>
 
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
@@ -1500,18 +1489,7 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-                <el-button
-                  @click="downLoadAll()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载表头及明细</el-button>
-                   <el-button
-                  @click="downLoadSal()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载销售表单</el-button>
+            
               </div>
               <el-table
                 border
@@ -1877,7 +1855,8 @@ detailCol:[
      getEndtime(value){
     var endTime=new Date(value);
     endTime.setHours(23,59,59);
-    return endTime;
+    var  date = this.datatransMethod(endTime);
+    return date;
     },
     //获取当月第一天零时
     getCurrentMonthFirst() {
@@ -2108,7 +2087,7 @@ detailCol:[
         var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
        var   check_flag= this.check_flag;
   var beginTime= this.datatransMethod(this.date1);
-           finishTime: this.getEndtime(this.date2); 
+      var finishTime= this.getEndtime(this.date2);
         var po= this.po;
       
       downLoadFile(
