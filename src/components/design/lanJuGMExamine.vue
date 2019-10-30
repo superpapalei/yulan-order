@@ -371,25 +371,28 @@
       </div> 
 
 
-
       <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
-        <table width="90%" border="0px" cellspacing="0px" cellpadding="0">
-          <tr >
-             <td style="width:15%"><h4>提交时间：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.SUBMIT_DATE| datatransDetail }}</h4></td>
-             <td style="width:15%"><h4>单据状态：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.STATUS| transStatus }}</h4></td>
-             <td style="width:10%"><h4></h4></td>
-             <td style="width:10%;"><h4></h4></td>
+        <table width="100%" border="0px" cellspacing="0px" cellpadding="0">
+           <tr >
+             <td style="width:12%">提交时间：</td>
+             <td style="width:20%;">{{ submitForm.SUBMIT_DATE| datatransDetail }}</td>
+             <td style="width:12%">单据状态：</td>
+             <td v-if="submitForm.STATUS==3||submitForm.STATUS==5||submitForm.STATUS==6" style="width:30%;color:green;">{{ submitForm.STATUS| transStatus }}</td>
+             <td v-if="submitForm.STATUS==2||submitForm.STATUS==4" style="width:30%;color:red;">{{ submitForm.STATUS| transStatus  }}</td>
+             <td v-if="submitForm.STATUS==1" style="width:30%;">{{submitForm.STATUS| transStatus }}</td>
+             <td style="width:8%;"></td>
+             <td style="width:8%;"></td>
           </tr>
           <tr >
-            <td><h4>市场部审核时间：</h4></td>
-            <td><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
-            <td><h4>广美审核时间：</h4></td>
-            <td><h4>{{ submitForm.CHECK_TIME| datatransDetail }}</h4></td>
+             <td style="width:12%">市场部审核时间：</td>
+             <td style="width:20%;">{{ submitForm.AUDIT_TIME| datatransDetail }}</td>
+             <td style="width:12%">广美审核时间：</td>
+             <td style="width:30%;">{{ submitForm.CHECK_TIME| datatransDetail}}</td>
+             <td style="width:8%;"></td>
+             <td style="width:8%;"></td>
           </tr>
         </table> 
-      </div>  
+      </div> 
 
     </el-dialog>
   </div>
@@ -404,14 +407,16 @@ import {
   editSubmit
 } from "@/api/lanju";
 import { downLoadFile } from "@/common/js/downLoadFile";
+import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 export default {
   name: "lanJuGMExamine",
   data() {
     return {
-      companyId: "",
-      CID: "", //客户账号
-      CNAME: "", //客户名
+      companyId:Cookies.get("companyId"),//公司id      
+      CID:Cookies.get("cid"), //客户账号
+      CNAME:Cookies.get("realName"),//客户名
+      dateStamp:"",
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
       SEARCHKEY: "", //搜索栏关键字
@@ -758,8 +763,8 @@ export default {
           });
           }
           }
-         this.usedRowspan=this.initRowspan+this.detailCount-1;
-         console.log(this.usedRowspan);
+         this.usedRowspan=this.initRowspan+this.detailCount-1;    
+         this.dateStamp = new Date().getTime();   
          this.isAdd = false;
          this.isEdit = true;
          this.isCheck = false;
@@ -803,6 +808,10 @@ export default {
             type: "success"
           });
           this.currentPage = 1;
+          if(this.submitForm.STATUS==4)                
+          {
+              this.releaseBadge("lanju3");//刷新角标
+          }
           this.refresh();
         } else {
           this.$alert("修改失败，请稍后重试", "提示", {
@@ -866,13 +875,14 @@ export default {
       this.submitForm.GM_FILE_FOLDER =
         "/Files/LANJU_STORE/" + this.CID + "/" + this.dateStamp;
       this.submitForm.STATUS=6;
-      editSubmit(this.submitForm).then(res => {
+      editSubmit({model:this.submitForm,detailModels:this.submitDetailForm}).then(res => {
         if (res.code == 0) {
           this.$alert("修改成功", "提示", {
             confirmButtonText: "确定",
             type: "success"
           });
           this.currentPage = 1;
+          this.releaseBadge("lanju3");//刷新角标
           this.refresh();
         } else {
           this.$alert("修改失败，请稍后重试", "提示", {
@@ -934,7 +944,8 @@ export default {
       downLoadFile(
         this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
-    }
+    },
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   }
 };
 </script>

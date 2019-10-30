@@ -88,6 +88,20 @@ export default {
           return this.$store.state.badge.orderDeal;
         case "statement"://待确认对账单
           return this.$store.state.badge.statement;  
+        case "supplierModule/payDelegation":
+          return this.$store.state.badge.payDelegation1; //待编辑的付款委托书单据（客户）
+        case "supplierModule/payDelegationExamine":
+          return this.$store.state.badge.payDelegation2; //待编辑的付款委托书单据（公司）
+        case "design/lanJu":
+          return this.$store.state.badge.lanju1; //兰居设计中可编辑的已退回单据（客户）
+        case "design/lanJuMarketExamine":
+          return this.$store.state.badge.lanju2; //兰居设计中可审核的单据（市场部）
+        case "design/lanJuGMExamine":
+          return this.$store.state.badge.lanju3; //兰居设计中可审核的单据（广美）
+        case "complaint":
+          return this.$store.state.badge.complaint1; //物流投诉中可进行评价的单据个数（用户评价）
+        case "complaintReply":
+          return this.$store.state.badge.complaint2; //物流投诉中未处理的单据个数（公司处理）
         default:
           return 0;
       }

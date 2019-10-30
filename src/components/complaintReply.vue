@@ -251,21 +251,22 @@
       </div>
 
       <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
-        <table width="90%" border="0px" cellspacing="0px" cellpadding="0">
+        <table width="100%" border="0px" cellspacing="0px" cellpadding="0">
           <tr >
-             <td style="width:10%"><h4>提交时间：</h4></td>
-             <td style="width:20%;margin-left:-30px;"><h4>{{ tableData.SUBMITTS| datatransDetail }}</h4></td>
-              <td style="width:10%"><h4>处理人：</h4></td>
-             <td style="width:20%"><h4>{{ tableData.OPERATOR }}</h4></td>
+             <td style="width:10%">提交时间：</td>
+             <td style="width:20%;margin-left:-30px;">{{ tableData.SUBMITTS| datatransDetail }}</td>
+              <td style="width:10%">处理人：</td>
+             <td style="width:20%">{{ tableData.OPERATOR }}</td>
           </tr>
+
           <tr >
-             <td><h4>处理时间：</h4></td>
-             <td><h4>{{tableData.PROCESSTS| datatransDetail}}</h4></td>
-            <td><h4>评价时间：</h4></td>
-             <td><h4>{{ tableData.FEEDBACKTS| datatransDetail}}</h4></td>
+             <td>处理时间：</td>
+             <td>{{tableData.PROCESSTS| datatransDetail}}</td>
+            <td>评价时间：</td>
+             <td>{{ tableData.FEEDBACKTS| datatransDetail}}</td>
           </tr>
         </table>   
-        </div>
+      </div>
 
       
       <!-- 编辑区 -->
@@ -415,6 +416,7 @@ import {
   editSubmit,
   CheckDetailByID
 } from "@/api/complaint";
+import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 export default {
   name: "ComplaintReply",
@@ -663,6 +665,7 @@ export default {
             type: "success"
           });
           this.currentPage = 1;
+          this.releaseBadge("complaint2");//刷新角标
           this.refresh();
         } else {
           this.$alert("修改失败，请稍后重试", "提示", {
@@ -672,7 +675,9 @@ export default {
         }
       });
       this.complaintDetail = false;
-    }
+    },
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
+
   }
 };
 </script>

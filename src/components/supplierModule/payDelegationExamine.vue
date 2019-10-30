@@ -292,34 +292,34 @@
       <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
         <table width="100%" border="0px" cellspacing="0px" cellpadding="0">
           <tr >
-             <td style="width:12%"><h4>创建时间：</h4></td>
-             <td style="width:20%;"><h4>{{ submitForm.DATE_CRE| datatransDetail }}</h4></td>
-             <td style="width:12%"><h4>创建人：</h4></td>
-             <td style="width:30%;"><h4>{{ submitForm.USER_CRE }}</h4></td>
-             <td style="width:8%;"><h4></h4></td>
-             <td style="width:8%;"><h4></h4></td>
+             <td style="width:12%">创建时间：</td>
+             <td style="width:20%;">{{ submitForm.DATE_CRE| datatransDetail }}</td>
+             <td style="width:12%">创建人：</td>
+             <td style="width:30%;">{{ submitForm.USER_CRE }}</td>
+             <td style="width:8%;"></td>
+             <td style="width:8%;"></td>
           </tr>
           <tr v-if="submitForm.USER_AFFIRM!=''">
-             <td style="width:12%"><h4>确认时间：</h4></td>
-             <td style="width:20%;"><h4>{{ submitForm.DATE_AFFIRM| datatransDetail }}</h4></td>
-             <td style="width:12%"><h4>确认人：</h4></td>
-             <td style="width:30%;"><h4>{{ submitForm.USER_AFFIRM }}</h4></td>
-             <td style="width:8%;"><h4></h4></td>
-             <td style="width:8%;"><h4></h4></td>
+             <td style="width:12%">确认时间：</td>
+             <td style="width:20%;">{{ submitForm.DATE_AFFIRM| datatransDetail }}</td>
+             <td style="width:12%">确认人：</td>
+             <td style="width:30%;">{{ submitForm.USER_AFFIRM }}</td>
+             <td style="width:8%;"></td>
+             <td style="width:8%;"></td>
           </tr>
           <tr  v-if="submitForm.STATE=='3'||submitForm.STATE=='4'">
-             <td style="width:12%"><h4>审核时间：</h4></td>
-             <td style="width:20%;"><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
-             <td style="width:12%"><h4>审核人：</h4></td>
-             <td style="width:30%;"><h4>{{ submitForm.AUDITOR }}</h4></td>
-             <td style="width:8%;"><h4></h4></td>
-             <td style="width:8%;"><h4></h4></td>
+             <td style="width:12%">审核时间：</td>
+             <td style="width:20%;">{{ submitForm.AUDIT_TIME| datatransDetail }}</td>
+             <td style="width:12%">审核人：</td>
+             <td style="width:30%;">{{ submitForm.AUDITOR }}</td>
+             <td style="width:8%;"></td>
+             <td style="width:8%;"></td>
           </tr>
           <tr >
-             <td style="width:12%"><h4>单据状态：</h4></td>
-             <td v-if="submitForm.STATE=='3'" style="width:20%;color:green;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
-             <td v-if="submitForm.STATE=='4'" style="width:20%;color:red;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
-             <td v-if="submitForm.STATE!='3'&&submitForm.STATE!='4'" style="width:20%;"><h4>{{ submitForm.STATE|transStatus }}</h4></td>
+             <td style="width:12%">单据状态：</td>
+             <td v-if="submitForm.STATE=='3'" style="width:20%;color:green;">{{ submitForm.STATE|transStatus }}</td>
+             <td v-if="submitForm.STATE=='4'" style="width:20%;color:red;">{{ submitForm.STATE|transStatus }}</td>
+             <td v-if="submitForm.STATE!='3'&&submitForm.STATE!='4'" style="width:20%;">{{ submitForm.STATE|transStatus }}</td>
           </tr>
         </table> 
       </div>  
@@ -345,6 +345,7 @@ import {
   editSubmit
  } from "@/api/supplierASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
+import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 
@@ -603,6 +604,14 @@ export default {
     },
     //编辑列表详情修改
     _editSubmit(val) {
+      //判断是否填写退回理由
+      if (this.submitForm.RETURN_REASON == ''&&val==4) {
+          this.$alert("请填写退回原因", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+          return;
+      }
       this.submitForm.STATE=val;
       this.submitForm.AUDITOR=this.CNAME;
       editSubmit(this.submitForm).then(res => {
@@ -612,6 +621,7 @@ export default {
             type: "success"
           });
           this.currentPage = 1;
+          this.releaseBadge("payDelegation2");//刷新角标
           this.refresh();
         } else {
           this.$alert("修改失败，请稍后重试", "提示", {
@@ -736,7 +746,8 @@ export default {
       else{
         return;
       }
-    }
+    },
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   },
 }
 </script>
