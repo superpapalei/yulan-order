@@ -327,20 +327,24 @@
 
 
       <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
-        <table width="90%" border="0px" cellspacing="0px" cellpadding="0">
-          <tr >
-             <td style="width:15%"><h4>提交时间：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.SUBMIT_DATE| datatransDetail }}</h4></td>
-             <td style="width:15%"><h4>单据状态：</h4></td>
-             <td style="width:25%;margin-left:-30px;"><h4>{{ submitForm.STATUS| transStatus }}</h4></td>
-             <td style="width:10%"><h4></h4></td>
-             <td style="width:10%;"><h4></h4></td>
+        <table width="100%" border="0px" cellspacing="0px" cellpadding="0">
+           <tr >
+             <td style="width:12%">提交时间：</td>
+             <td style="width:20%;">{{ submitForm.SUBMIT_DATE| datatransDetail }}</td>
+             <td style="width:12%">单据状态：</td>
+             <td v-if="submitForm.STATUS==3||submitForm.STATUS==5||submitForm.STATUS==6" style="width:30%;color:green;">{{ submitForm.STATUS| transStatus }}</td>
+             <td v-if="submitForm.STATUS==2||submitForm.STATUS==4" style="width:30%;color:red;">{{ submitForm.STATUS| transStatus  }}</td>
+             <td v-if="submitForm.STATUS==1" style="width:30%;">{{submitForm.STATUS| transStatus }}</td>
+             <td style="width:8%;"></td>
+             <td style="width:8%;"></td>
           </tr>
           <tr >
-            <td><h4>市场部审核时间：</h4></td>
-            <td><h4>{{ submitForm.AUDIT_TIME| datatransDetail }}</h4></td>
-            <td><h4>广美审核时间：</h4></td>
-            <td><h4>{{ submitForm.CHECK_TIME| datatransDetail }}</h4></td>
+             <td style="width:12%">市场部审核时间：</td>
+             <td style="width:20%;">{{ submitForm.AUDIT_TIME| datatransDetail }}</td>
+             <td style="width:12%">广美审核时间：</td>
+             <td style="width:30%;">{{ submitForm.CHECK_TIME| datatransDetail}}</td>
+             <td style="width:8%;"></td>
+             <td style="width:8%;"></td>
           </tr>
         </table> 
       </div>  
@@ -358,6 +362,7 @@ import {
   editSubmit,
  } from "@/api/lanju";
 import { downLoadFile } from "@/common/js/downLoadFile";
+import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 export default {
   name: "lanJuMarketExamine",
@@ -737,6 +742,7 @@ export default {
             type: "success"
           });
           this.currentPage = 1;
+          this.releaseBadge("lanju2");//刷新角标 
           this.refresh();
         } else {
           this.$alert("修改失败，请稍后重试", "提示", {
@@ -775,6 +781,7 @@ export default {
         this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     },
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   }
 };
 </script>
