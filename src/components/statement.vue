@@ -74,10 +74,10 @@
           <div
             style="margin:0 auto; height:40px; width:100%;text-align:center;"
           >
-            <h2>广东玉兰集团股份有限公司对账单</h2>
+            <h2 style="margin:0;">广东玉兰集团股份有限公司对账单</h2>
           </div>
           <div style="margin:0 auto; width:100%;">
-            <h4 style="display:inline;">
+            <h4 style="display:inline;margin:0;">
               统计日期：{{ startDate | cutdate }}~{{ endDate | cutdate }}
             </h4>
             <el-button

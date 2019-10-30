@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="centerCard">
     <el-card shadow="hover">
       <div style="margin-bottom:10px;">
         <el-date-picker
@@ -135,7 +135,7 @@
     >
       <!-- 查看区 -->
       <div v-show="EDITorCHECK" class="table-c">
-        <h2 style="text-align:center;">
+        <h2 style="text-align:center;margin:0;">
           银行汇款凭证单-[{{ tableData.state | transStatus }}]
         </h2>
         <h3>
@@ -814,6 +814,9 @@ export default {
 </script>
 
 <style scoped>
+.centerCard h3{
+   margin: 0;
+}
 .table-c table {
   border-right: 1px solid black;
   border-bottom: 1px solid black;

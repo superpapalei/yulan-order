@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="centerCard">
     <el-card shadow="hover">
       <div id="tbar" class="tbarStyle">
         <el-date-picker
@@ -167,7 +167,7 @@
     >
       <!-- 编辑区 -->
       <div class="table-c">
-        <h2 style="text-align:center;margin-bottom:10px;">
+        <h2 style="text-align:center;margin:0 0 10px 0;">
           形象店建设申请表
         </h2>
         <h3 v-if="EDITorCHECK">
@@ -811,6 +811,9 @@ export default {
 </script>
 
 <style scoped>
+.centerCard h3{
+   margin: 0;
+}
 .table-c table {
   border-right: 1px solid black;
   border-bottom: 1px solid black;

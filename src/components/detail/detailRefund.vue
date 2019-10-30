@@ -11,7 +11,7 @@
           <span>创建人：{{ baseData.ERP_CREATORNAME }}</span>
           <span>建立时间：{{ toLocaleTime }}&emsp;</span>
         </section>
-        <h3 class="mt10 tc rel">
+        <h3 class="mt10 tc rel" style="margin:10px 0 0 0;">
           客户确认书【{{ getNameByState(baseData.STATE) }}】
           <i
            

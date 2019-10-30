@@ -1,6 +1,6 @@
 -<!--客户的兰居设计申请界面-->
 <template>
-  <div>
+  <div class="centerCard">
     <el-card shadow="hover">
 
       <div slot="header">
@@ -1154,6 +1154,9 @@ export default {
 </style>
 
  <style scoped>
+ .centerCard h4{
+   margin: 0;
+ }
 .table-c table {
   border-right: 1px solid black;
   border-bottom: 1px solid black;

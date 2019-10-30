@@ -143,8 +143,8 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr style="height:55px;">
             <td style="font-size:20px;" colspan="6">
-              <h3>广东玉兰集团股份有限公司</h3>
-              <h4>委托人来样喷绘确认表</h4>
+              <h3 style="margin:0;">广东玉兰集团股份有限公司</h3>
+              <h4 style="margin:0;">委托人来样喷绘确认表</h4>
             </td>
           </tr>
           <tr>
@@ -260,8 +260,8 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr style="height:55px;">
             <td style="font-size:20px;" colspan="6">
-              <h3>广东玉兰集团股份有限公司</h3>
-              <h4>委托人来样喷绘确认表</h4>
+              <h3 style="margin:0;">广东玉兰集团股份有限公司</h3>
+              <h4 style="margin:0;">委托人来样喷绘确认表</h4>
             </td>
           </tr>
           <tr>
