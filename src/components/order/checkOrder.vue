@@ -1595,6 +1595,9 @@ export default {
   margin: 0 auto;
   position: relative;
 }
+.centerCard p{
+  margin: 0;
+}
 .childCard {
   margin: 0 2%;
 }

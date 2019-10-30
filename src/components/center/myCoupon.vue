@@ -239,6 +239,9 @@ export default {
   margin: 0 auto;
   position: relative;
 }
+.centerCard p{
+  margin: 0;
+}
 .roundedRectangleF {
   display: inline-block;
   height: 30px;

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="centerCard">
     <el-card shadow="hover">
       <div style="margin-bottom:10px;">
         <el-date-picker
@@ -428,6 +428,9 @@ export default {
 </script>
 
 <style scoped>
+.centerCard p{
+  margin: 0;
+}
 .IMG {
   height: 170px;
   width: 170px;
