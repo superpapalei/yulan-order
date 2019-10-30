@@ -466,11 +466,13 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >
-<div class="fixDiv">
-<div style="margin:10px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<div style="margin:10px;"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
-<div style="margin:5px;" class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div>
-</div>
+
+      <div class="fixedDiv">
+<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
+ </div>
+
  
                   采购单
                 </td>
@@ -934,9 +936,11 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >采购单
-                <div  style="position:fixed;z-index:1;top: 200px;padding-left: 900px;"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<div  style="position:fixed;z-index:1;top: 300px;padding-left: 900px;"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
-<div  style="position:fixed;z-index:1;top: 260px;padding-left: 900px;"><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedYPrint')"></div></div>
+  <div class="fixedDiv">
+<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
+ </div>
                 </td>
               </tr>
               <tr>
@@ -1197,22 +1201,39 @@
       <div id="supplyCon">
           <el-tabs v-model="activeName" @tab-click="handleClick">
 <!-- 待确认页签============================================================================================================== --> 
-            <el-tab-pane label="待确认" name="first" align="left">
-              <div align="right">
+            <el-tab-pane label="待确认" name="first" align="left" >
+                    <div style="margin:5px">
+                <el-input
+                  @keyup.enter.native="SelectClick()"
+                  prefix-icon="el-icon-search"
+                  style="width:6%; min-width:200px;padding:200"
+                  placeholder=" 采购单号:（精确）"
+                  v-model="po"
+                >
+                </el-input>
+                <el-date-picker
+                  v-model="date1"
+           
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+                <span class="demonstration">至</span>
+                <el-date-picker
+                  v-model="date2"
+            
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                ></el-date-picker>
                 <template>
-                  <el-button
-                  v-if="false"
-                  @click="OneStepCheck()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_3"
-                  >一键确认</el-button>
                   <el-select
-                  class="el-input_inner"
                     v-model="selvalue"
                     @change="SelectClick"
-                    placeholder="所有状态"
-                    width="60px"
+                    placeholder="全部"
                   >
                     <el-option
                       v-for="item in options"
@@ -1223,6 +1244,24 @@
                     </el-option>
                   </el-select>
                 </template>
+                <el-button
+                  @click="SelectClick()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_2"
+                  >搜索</el-button>
+                <el-button
+                  @click="downLoadAll()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_1"
+                  >下载表头及明细</el-button>
+                   <el-button
+                  @click="downLoadSal()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_1"
+                  >下载销售表单</el-button>
               </div>
 
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
@@ -1293,18 +1332,20 @@
 <!-- /待确认页签============================================================================================================== -->         
 <!-- 已确认页签============================================================================================================== -->
        <el-tab-pane label="已确认" name="second" align="left">
+
               <div  style="margin-bottom:10px;">
+
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:6%; min-width:200px;"
-                  placeholder=" 采购单号：（精确）"
+                  style="width:6%; min-width:200px;padding:200"
+                  placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-                  @change="SelectClick"
+                
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1314,7 +1355,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-                  @change="SelectClick"
+           
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1425,18 +1466,18 @@
 <!-- /已确认页签============================================================================================================== -->
 <!-- 已取消页签============================================================================================================== -->
        <el-tab-pane label="已取消" name="third" align="left">
-              <div >
+                  <div style="margin:5px">
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:6%; min-width:200px;"
-                  placeholder=" 采购单号：（精确）"
+                  style="width:6%; min-width:200px;padding:200"
+                  placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
                 </el-input>
-                <!-- <el-date-picker
+                <el-date-picker
                   v-model="date1"
-                  @change="SelectClick"
+           
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1446,28 +1487,39 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-                  @change="SelectClick"
+                 
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
-                ></el-date-picker> -->
-               
+                ></el-date-picker>
                 <el-button
                   @click="SelectClick()"
                   size="small"
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-                
+                <el-button
+                  @click="downLoadAll()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_1"
+                  >下载表头及明细</el-button>
+                   <el-button
+                  @click="downLoadSal()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_1"
+                  >下载销售表单</el-button>
               </div>
               <el-table
                 border
                 :data="pur_headData"
                 class="th-font14"
-                style="width: 100%"
+                style="width: 100% margin:6px"
                 cellpadding="0"
                 stripe
+              
               >
                 <el-table-column   label=" "  type="index" :index="indexMethod">
                 </el-table-column>
@@ -1612,8 +1664,8 @@ detailCol:[
       sumMoney: 0,
       items: [],
       po: "",
-      date1: "0001/1/1",
-      date2: "9999/1/1",
+      date1: this.getPastHalfYear(),
+      date2: new Date(),
       now: new Date(),
       Month: new Date().getMonth() + 1,
       input: "",
@@ -1807,6 +1859,24 @@ detailCol:[
         else return "手工单"
     },
 
+ //获取最近半年时间
+    getPastHalfYear() {
+      var curDate=(new Date()).getTime();
+      var halfYear=365/2 *24*3600*1000;
+      var pastResult=curDate-halfYear;
+      var pastDate=new Date(pastResult);
+      var pastYear=pastDate.getFullYear();
+      var pastMonth=pastDate.getMonth()+1;
+      var pastDate=pastDate.getDate();
+     var strDay=pastYear+'-'+pastMonth+'-'+pastDate;
+      var date = new Date(strDay);
+      return date;
+    },
+     getEndtime(value){
+    var endTime=new Date(value);
+    endTime.setHours(23,59,59);
+    return endTime;
+    },
     //获取当月第一天零时
     getCurrentMonthFirst() {
       var date = new Date();
@@ -1824,7 +1894,7 @@ detailCol:[
     //获取截止时间一天中的最后时间
     getTodayMaxTime() {
       var date = new Date();
-      date.setHours(24, 0, 0);
+      date.setHours(23, 59, 59);
       return date;
     },
     //获取前500年时间
@@ -1906,8 +1976,8 @@ detailCol:[
           this.selvalue = "all";
           this.po_type = "all";
           this.po = "";
-          this.date1 = this.getLongAgao();
-          this.date2 = this.getLongLater();
+          this.date1 = this.getPastHalfYear();
+          this.date2 = this.getTodayMaxTime();
           break;
         case "second":
           this.check_flag = 1;
@@ -1922,8 +1992,8 @@ detailCol:[
           this.selvalue = "cancel";
           this.po_type = "cancel";
           this.po = "";
-          this.date1 = this.getLongAgao();
-          this.date2 = this.getLongLater();
+          this.date1 = this.getPastHalfYear();
+           this.date2 = this.getTodayMaxTime();
           break;
       }
       this.autoSearch();
@@ -2019,7 +2089,7 @@ detailCol:[
         po_type: this.po_type, //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
         check_flag: this.check_flag,
         beginTime: this.date1,
-        finishTime: this.date2,
+        finishTime: this.getEndtime(this.date2),
         po: this.po,
       };
       GetRelativePo(data).then(res => {
@@ -2036,7 +2106,7 @@ detailCol:[
         var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
        var   check_flag= this.check_flag;
   var beginTime= this.datatransMethod(this.date1);
-      var  finishTime=this.datatransMethod(this.date2);  
+           finishTime: this.getEndtime(this.date2); 
         var po= this.po;
       
       downLoadFile(
@@ -2060,7 +2130,7 @@ detailCol:[
       var cid = this.companyId;
       var po = (this.po == null || this.po == "") ? "all" : this.po;
       var beginTime = this.datatransMethod(this.date1);
-      var finishTime = this.datatransMethod(this.date2);
+     var finishTime=this.getEndtime(this.date2);
       var po_type = (this.po_type == null || this.po_type == "") ? "all" : this.po_type;
       var selvalue = this.selvalue;
       downLoadFile(
@@ -2452,11 +2522,23 @@ z-index:9999;
   border:3
 }
 .lanJuport .el-input__inner{
-  height: 35px;
+
+  width: 160px;
+  height: 30px;
+  /* margin-left:0px;
+  margin-right:0px; */
+
 }
 
 .lanJuport .el-table td,
 .lanJuport .el-table th {
   padding: 3px 0 !important;
+}
+.fixedDiv {
+position:fixed;
+z-index:1;
+top: 200px;
+padding-left: 900px;
+z-index:99999
 }
 </style>
