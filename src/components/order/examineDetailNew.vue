@@ -1080,6 +1080,7 @@ export default {
           let rule = ["lt", "ls", "lspb", "sha", "pjb"];
           return rule.indexOf(a.itemType) - rule.indexOf(b.itemType);
         });
+        if (data.LJ_SUGGESTION == " ") data.LJ_SUGGESTION = "";
         //合并单元格数据
         this.getSpanArr(data.curtains);
         //表头数据
@@ -1875,7 +1876,7 @@ export default {
             "修改为定宽，非标配";
           break;
         default:
-          this.allCurtaindata[rowIndex][index].illustrate = " ";
+          this.allCurtaindata[rowIndex][index].illustrate = "";
       }
     },
     bigToSmall: function(data) {
@@ -1934,6 +1935,47 @@ export default {
       }
       this.allCurtains = _data;
     },
+    contrastData() {
+      let _data = JSON.parse(JSON.stringify(this.allCurtains)); //修改后数据
+      let _old_data = JSON.parse(JSON.stringify(this.oldData)); //原始数据
+      var _data_temp = [];
+      _data.forEach(oneItem => {
+        oneItem.forEach(item => {
+          item.dosage = Number(item.dosage);
+          if (item.curtainItemName === null || item.curtainItemName === "") {
+            item.curtainItemName = this.getTypeName(item.itemType);
+          }
+          if (item.note === null) item.note = "";
+          if (item.suggestion === null) item.suggestion = "";
+          if (item.illustrate === null) item.illustrate = "";
+          _data_temp.push(JSON.parse(JSON.stringify(item)));
+        });
+      });
+      //把不需要比对的备注和意见拿出来
+      _data_temp.forEach(item => {
+        item.note = "";
+        item.suggestion = "";
+      });
+      var oldData_temp = [];
+      _old_data.forEach(oneItem => {
+        oneItem.forEach(item => {
+          item.dosage = Number(item.dosage);
+          if (item.curtainItemName === null || item.curtainItemName === "") {
+            item.curtainItemName = this.getTypeName(item.itemType);
+          }
+          if (item.note === null) item.note = "";
+          if (item.suggestion === null) item.suggestion = "";
+          if (item.illustrate === null) item.illustrate = "";
+          oldData_temp.push(JSON.parse(JSON.stringify(item)));
+        });
+      });
+      //把不需要比对的备注和意见拿出来
+      oldData_temp.forEach(item => {
+        item.note = "";
+        item.suggestion = "";
+      });
+      return JSON.stringify(oldData_temp) == JSON.stringify(_data_temp);
+    },
     //兰居修改
     LanjuChange() {
       this.getLJSuggest();
@@ -1971,6 +2013,31 @@ export default {
         ctmOrderDetails: this.ctmOrderDetails,
         deleteIds: this.deleteIds
       };
+      if (this.contrastData()) {
+        this.$confirm("所有窗帘未修改，依然兰居修改吗？", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        })
+          .then(() => {
+            this.LanjuChangeANYS(data);
+          })
+          .catch(() => {
+            return;
+          });
+      } else {
+        this.$confirm("确认兰居修改吗？", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        })
+          .then(() => {
+            this.LanjuChangeANYS(data);
+          })
+          .catch(() => {
+            return;
+          });
+      }
+    },
+    LanjuChangeANYS(data) {
       //defeatChange(url, data).then(res => {
       updateCurtainOrder(data)
         .then(res => {
@@ -2021,11 +2088,36 @@ export default {
         }
         data.allCurtains.push(array);
       }
+      if (!this.contrastData()) {
+        this.$confirm("有窗帘已经修改了，依然确认退回吗？", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        })
+          .then(() => {
+            this._backANSCYC(data);
+          })
+          .catch(() => {
+            return;
+          });
+      } else {
+        this.$confirm("确认退回吗？", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        })
+          .then(() => {
+            this._backANSCYC(data);
+          })
+          .catch(() => {
+            return;
+          });
+      }
+    },
+    _backANSCYC(data) {
       //defeatChange(url, data).then(res => {
       updateCurtainOrder(data)
         .then(res => {
           if (res.code == 0) {
-            this.$alert("操作成功,已将该订单退回给用户修改", "提示", {
+            this.$alert("操作成功,已将该订单退回给用户进行确认", "提示", {
               confirmButtonText: "确定",
               type: "success"
             });
@@ -2072,6 +2164,31 @@ export default {
         }
         data.allCurtains.push(array);
       }
+      if (!this.contrastData()) {
+        this.$confirm("有窗帘已经修改了，依然确认通过吗？", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        })
+          .then(() => {
+            this._passANSYC(data);
+          })
+          .catch(() => {
+            return;
+          });
+      } else {
+        this.$confirm("确认通过吗？", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        })
+          .then(() => {
+            this._passANSYC(data);
+          })
+          .catch(() => {
+            return;
+          });
+      }
+    },
+    _passANSYC(data) {
       //passExamine(url, data).then(res => {
       updateCurtainOrder(data)
         .then(res => {

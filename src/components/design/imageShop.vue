@@ -444,6 +444,7 @@
                 v-if="!EDITorCHECK"
                 class="upload-de"
                 :action="Global.baseUrl + '/IMAGE_STORE/UploadFiles'"
+                style="margin-top:10px;"
                 drag
                 multiple
                 :on-change="handleChange"
