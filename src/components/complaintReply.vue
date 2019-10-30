@@ -1,6 +1,6 @@
 <!--客户的投诉界面-->
 <template>
-  <div>
+  <div class="centerCard">
     <el-card shadow="hover">
       <div slot="header">
         <span class="fstrong f16">投诉反馈</span>
@@ -678,6 +678,9 @@ export default {
 </script>
 
 <style>
+.centerCard h4{
+  margin: 0;
+}
 .table_1 .el-table__row {
   height: 6px;
 }

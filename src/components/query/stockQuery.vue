@@ -645,6 +645,9 @@ export default {
 </script>
 
 <style scoped>
+#stockQuery h1{
+  margin:0;
+}
 .table_1 {
   border-collapse: collapse;
   border: 1px solid black;
