@@ -7,6 +7,13 @@ export function GetPoDetail(data, config = {}) {
         return Promise.reject(err);
     })
 }
+export function GetPoDetail_1(data, config = {}) {
+    return post('/PUR_HEAD/GetPoDetail_1', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
 export function GetRelativePo(data, config = {}) {
     return post('/PUR_HEAD/GetRelativePo', data, config).then((res) => {
         return Promise.resolve(res);
