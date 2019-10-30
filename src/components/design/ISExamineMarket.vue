@@ -442,6 +442,7 @@ import {
   MarketUpdateStatus
 } from "@/api/imageStoreASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
+import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 
@@ -644,6 +645,7 @@ export default {
       };
       MarketUpdateStatus(data).then(res => {
         this.imageStoreDetail = false;
+        this.releaseBadge("imageShop2");//刷新角标
         this.getDetail();
         this.examineSuggestion = "";
       });
@@ -664,6 +666,7 @@ export default {
       };
       MarketUpdateStatus(data).then(res => {
         this.imageStoreDetail = false;
+        this.releaseBadge("imageShop2");//刷新角标
         this.getDetail();
         this.examineSuggestion = "";
       });
@@ -681,7 +684,8 @@ export default {
     },
     handleChange(file, fileList) {
       this.fileList = fileList.slice(-3);
-    }
+    },
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   }
 };
 </script>

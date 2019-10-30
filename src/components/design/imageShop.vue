@@ -615,6 +615,7 @@ import {
 } from "@/api/imageStoreASP";
 import { getCustomerInfo } from "@/api/orderListASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
+import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 
@@ -930,6 +931,7 @@ export default {
           });
           this.fileList = [];
           this.currentPage = 1;
+          this.releaseBadge("imageShop1");//刷新角标
           this.getDetail();
           this.imageStoreDetail = false;
         })
@@ -979,6 +981,7 @@ export default {
               type: "success"
             });
             this.currentPage = 1;
+            this.releaseBadge("imageShop1");//刷新角标
             this.getDetail();
           });
         })
@@ -1106,7 +1109,8 @@ export default {
         confirmButtonText: "确定",
         type: "success"
       });
-    }
+    },
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   }
 };
 </script>
