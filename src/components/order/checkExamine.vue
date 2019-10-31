@@ -56,6 +56,10 @@
           收货地址：
           <span class="zoomRight">{{ ruleForm.ALL_ADDRESS }}</span>
         </span>
+        <span class="zoomLeft" v-if="ruleForm.PACKING_NOTE">
+          分包备注：
+          <span class="zoomRight">{{ ruleForm.PACKING_NOTE }}</span>
+        </span>
         <span class="zoomLeft">
           订单备注：
           <span class="zoomRight">{{ ruleForm.NOTES }}</span>
@@ -314,7 +318,8 @@ import {
 import {
   updateCurtainOrder,
   InsertOperationRecord,
-  getOperationRecord
+  getOperationRecord,
+  GetCtmOrder
 } from "@/api/orderListASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -655,9 +660,9 @@ export default {
         order_no: Cookies.get("ORDER_NO")
       };
       orderDetail(url, data).then(res => {
-        this.ruleForm.ORDER_NO = Cookies.get("ORDER_NO");
+        GetCtmOrder({orderNo: Cookies.get("ORDER_NO")}).then(res2=>{
         this.ruleForm = res.data.data[0];
-
+        this.ruleForm.PACKING_NOTE = res2.data.PACKING_NOTE;//先这样处理，后台换了后台就不需要了
         for (let i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
           this.ruleForm.ORDERBODY[i].checkStatus = "未修改";
         }
@@ -667,6 +672,7 @@ export default {
         getOperationRecord(recordData).then(res => {
           this.operationRecords = res.data;
         });
+        })
       });
     },
     //返回指定

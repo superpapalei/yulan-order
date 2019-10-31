@@ -167,6 +167,8 @@ export default {
       curtainMsg: [],
       //褶皱倍数选项
       options: [
+        { value: "1.8" },
+        { value: "1.9" },
         { value: "2.0" },
         { value: "2.1" },
         { value: "2.2" },

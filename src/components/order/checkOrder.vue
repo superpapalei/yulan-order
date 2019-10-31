@@ -269,6 +269,20 @@
         ></el-input>
         <span style="color:#ccc">{{ ctm_order.notes | calLength }}/140</span>
         <br />
+        <div v-if="packingShow">
+          <span>分包提示：<span style="color:red;">*</span></span>
+          <el-radio-group
+            v-model="ctm_order.packingNote"
+            style="margin-left:10px;"
+          >
+            <el-radio label="不分包">不分包</el-radio>
+            <el-radio label="同型号不分包，不同型号分包"
+              >同型号不分包，不同型号分包</el-radio
+            >
+            <el-radio label="全部分包">全部分包</el-radio>
+          </el-radio-group>
+        </div>
+        <br />
         <span>工程报备单号：</span>
         <el-input
           style="width:40%;"
@@ -532,7 +546,7 @@ export default {
           addressId: 1
         }
       ],
-
+      packingShow: false,
       formLabelWidth: "80px",
       addressAppear: "更多地址⇣",
       overflow: "",
@@ -1195,6 +1209,9 @@ export default {
     huodongjia() {
       let getPush = JSON.parse(sessionStorage.getItem("shopping"));
       this.product_group_tpye = getPush[0].item.groupType; //产品类别
+      if (this.product_group_tpye == "B" || this.product_group_tpye == "B1")
+        this.packingShow = true;
+      else this.packingShow = false;
       if (getPush[0].salPromotion != null) {
         this.arrearsFlag = getPush[0].salPromotion.arrearsFlag; //用于活动是否判断余额N/Y
       } else {
@@ -1207,7 +1224,10 @@ export default {
           this.array[i].pId = "";
         } else {
           this.array[i].pId = getPush[i].activityId;
-          if (this.activityArray.indexOf(getPush[i].activityId) == -1 && getPush[i].activityId)
+          if (
+            this.activityArray.indexOf(getPush[i].activityId) == -1 &&
+            getPush[i].activityId
+          )
             //活动集合
             this.activityArray.push(getPush[i].activityId);
         }
@@ -1430,6 +1450,23 @@ export default {
     },
     //提交结算
     payIt() {
+      if (
+        this.ctm_order.deliveryNotes == "" &&
+        this.ctm_order.deliveryType == 3
+      ) {
+        this.$alert("请填写指定的物流公司", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (this.packingShow && !this.ctm_order.packingNote) {
+        this.$alert("请选择分包提示", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
       var url = "/order/getResidemoney.do";
       var data = {
         cid: Cookies.get("cid"),
@@ -1457,16 +1494,6 @@ export default {
           ctm_orders: this.array2,
           cartItemIDs: deleteArray
         };
-        if (
-          this.ctm_order.deliveryNotes == "" &&
-          this.ctm_order.deliveryType == 3
-        ) {
-          this.$alert("请填写指定的物流公司", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-          return;
-        }
         //submitOrder(url2, data2)
         normalOrderSettlement(data2)
           .then(res => {
@@ -1595,7 +1622,7 @@ export default {
   margin: 0 auto;
   position: relative;
 }
-.centerCard p{
+.centerCard p {
   margin: 0;
 }
 .childCard {

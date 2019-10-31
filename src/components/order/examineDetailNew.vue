@@ -1012,7 +1012,6 @@ export default {
         order_no: Cookies.get("ORDER_NO")
       };
       orderDetail(url, data).then(res => {
-        this.ruleForm.ORDER_NO = Cookies.get("ORDER_NO");
         this.ruleForm = res.data.data[0];
         for (let i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
           this.ruleForm.ORDERBODY[i].checkStatus = "未修改";
