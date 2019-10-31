@@ -32,12 +32,12 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font"
+                    class="tb_font14_bold"
                    >
                     <af-table-column
                       property="name1"
                       width="120"
-                      label="位置"
+                      label="位置11"
                     ></af-table-column>
                     <af-table-column
                       property="name2"
@@ -92,13 +92,12 @@
                   <div>
                      <template>
                         <div class="messageBox1">
-                          <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
-                          {{
+                          <div class="tb_font14_bold"> {{ index + 1 }} &nbsp; {{
                             item.tab1[index].cl_place === null ||
                             item.tab1[index].cl_place == ""
                               ? "无"
                               : item.tab1[index].cl_place
-                          }}
+                          }}</div>
                         </div>
                         <div class="messageBox">
                           <div>
@@ -145,7 +144,7 @@
                     :data="item.tab2[index]"
                    :show-header="false"
                    :span-method="function(col){ return arraySpanMethod(col,index)}"
-                   class="th-font10"
+                   class="tb_font13"
                     border
                     object_class="_Object:GridTable"
                     object_hashcode="6"
@@ -165,7 +164,7 @@
                   </el-table>
 
                   </el-card>
-               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
+               <el-table class="tb_font12_bold" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
                    <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
@@ -190,7 +189,7 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font14-bold"
+                    class="tb_font14_bold"
                    >
                     <af-table-column
                       property="name1"
@@ -335,7 +334,7 @@
         <hr />
         <div style="width:100%">
               <el-table :data="gridData" 
-                        class="th-font10"
+                        class="tb_font13"
                         cellpadding="0" 
                         style="width:100%"
                          :summary-method="getSummaries"
@@ -416,6 +415,7 @@
                     <el-input
                       v-model="supply_check_notes"
                       placeholder="说明:"
+                 
                       style="width:42%;height:10px"
                       clearable
                     ></el-input>
@@ -466,11 +466,13 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >
+
       <div class="fixedDiv">
 <div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
 <div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
 <div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
  </div>
+
  
                   采购单
                 </td>
@@ -654,7 +656,7 @@
                         <td colsan="3" style="text-align:left"></td>
                       </tr>
                       
-                     
+                      
                     </tbody>
                   </table>
                 </td>
@@ -670,12 +672,12 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font"
+                    class="tb_font14_bold"
                    >
                     <af-table-column
                       property="name1"
                       width="120"
-                      label="位置"
+                      label="位置11"
                     ></af-table-column>
                     <af-table-column
                       property="name2"
@@ -730,13 +732,13 @@
                   <div>
                      <template>
                         <div class="messageBox1">
-                          <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
-                          {{
+                   
+                          <div class="tb_font14_bold"> {{ index + 1 }} &nbsp; {{
                             item.tab1[index].cl_place === null ||
                             item.tab1[index].cl_place == ""
                               ? "无"
                               : item.tab1[index].cl_place
-                          }}
+                          }}</div>
                         </div>
                         <div class="messageBox">
                           <div>
@@ -783,7 +785,7 @@
                     :data="item.tab2[index]"
                    :show-header="false"
                    :span-method="function(col){ return arraySpanMethod(col,index)}"
-                   class="th-font10"
+                   class="tb_font13"
                     border
                     object_class="_Object:GridTable"
                     object_hashcode="6"
@@ -803,7 +805,7 @@
                   </el-table>
 
                   </el-card>
-               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
+               <el-table class="tb_font12_bold" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
                    <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
@@ -828,7 +830,7 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font14-bold"
+                    class="tb_font14_bold"
                    >
                     <af-table-column
                       property="name1"
@@ -914,7 +916,7 @@
                 >采购单
   <div class="fixedDiv">
 <div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<div style="margin:20px"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
 <div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
  </div>
                 </td>
@@ -1097,7 +1099,7 @@
                         收货人：
                         <td colsan="3" style="text-align:left"></td>
                       </tr>
-                 
+                      
                     </tbody>
                   </table>
                 </td>
@@ -1106,7 +1108,7 @@
                 <td colspan="2">
                   
                 <el-table :data="gridData" 
-                        class="th-font10"
+                        class="tb_font13"
                         cellpadding="0" 
                         style="width:100%"
                          :summary-method="getSummaries"
@@ -1151,22 +1153,22 @@
       </el-dialog>
 
    
-      <div id="supplyCon" class="lanJuport">
+      <div class="lanJuport">
           <el-tabs v-model="activeName" @tab-click="handleClick">
-<!-- 待确认页签============================================================================================================== --> 
+  <!-- 待确认页签============================================================================================================== --> 
             <el-tab-pane label="待确认" name="first" align="left" >
-                 <div  style="margin-bottom:10px;">
+                     <div  style="margin-bottom:10px;">
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-               
+                  
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-      
+           
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1176,7 +1178,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-                 
+            
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1203,7 +1205,7 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-              
+               
               </div>
 
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
@@ -1248,7 +1250,7 @@
                   label="备注"
                   align="left"
                 ></el-table-column>
-             
+                
                 <el-table-column label="" width="120" align="center">
                   <template slot-scope="scope">
                     <button
@@ -1264,18 +1266,20 @@
 <!-- /待确认页签============================================================================================================== -->         
 <!-- 已确认页签============================================================================================================== -->
        <el-tab-pane label="已确认" name="second" align="left">
-                          <div  style="margin-bottom:10px;">
+
+              <div  style="margin-bottom:10px;">
+
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-             
+                
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-  
+                
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1285,7 +1289,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-          
+           
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1369,7 +1373,7 @@
                   label="备注"
                   align="left"
                 ></el-table-column>
-               
+              
                 <el-table-column label="" width="120" align="center">
                   <template slot-scope="scope">
                     <button
@@ -1386,18 +1390,18 @@
 <!-- /已确认页签============================================================================================================== -->
 <!-- 已取消页签============================================================================================================== -->
        <el-tab-pane label="已取消" name="third" align="left">
-                      <div  style="margin-bottom:10px;">
+            <div  style="margin-bottom:10px;">
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-              
+       
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-          
+           
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1407,7 +1411,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-               
+                 
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1419,7 +1423,7 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-               
+            
               </div>
               <el-table
                 border
@@ -1438,7 +1442,7 @@
                   label="单号"
                   align="left"
                 ></el-table-column>
-               
+                
                 <el-table-column label="状态" width="60" align="center">
                   <template slot-scope="scope"
                     ><span>{{
@@ -1466,12 +1470,7 @@
                   label="备注"
                   align="left"
                 ></el-table-column>
-                <el-table-column
-                  prop="LJ_SUGGESTION"
-                  label="兰居备注"
-                  min-width="50"
-                  align="left"
-                ></el-table-column>
+                
                 <el-table-column label="" width="120" align="center">
                   <template slot-scope="scope">
                     <button
@@ -1485,6 +1484,7 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
+            
 <!-- /已取消页签============================================================================================================== -->
             <div style="margin:0 25%;" class="block">
               <el-pagination
@@ -1568,7 +1568,7 @@ detailCol:[
       sumMoney: 0,
       items: [],
       po: "",
-      date1: this.getPastHalfYear(),
+      date1: this.getCurrentWeek(),
       date2: new Date(),
       now: new Date(),
       Month: new Date().getMonth() + 1,
@@ -1776,7 +1776,7 @@ detailCol:[
       var date = new Date(strDay);
       return date;
     },
-      getEndtime(value){
+     getEndtime(value){
     var endTime=new Date(value);
     endTime.setHours(23,59,59);
     var  date = this.datatransMethod(endTime);
@@ -1799,7 +1799,7 @@ detailCol:[
     //获取截止时间一天中的最后时间
     getTodayMaxTime() {
       var date = new Date();
-      date.setHours(24, 0, 0);
+      date.setHours(23, 59, 59);
       return date;
     },
     //获取前500年时间
@@ -1881,7 +1881,7 @@ detailCol:[
           this.selvalue = "all";
           this.po_type = "all";
           this.po = "";
-          this.date1 = this.getPastHalfYear();
+          this.date1 = this.getCurrentWeek();
           this.date2 = this.getTodayMaxTime();
           break;
         case "second":
@@ -1897,7 +1897,7 @@ detailCol:[
           this.selvalue = "cancel";
           this.po_type = "cancel";
           this.po = "";
-          this.date1 = this.getPastHalfYear();
+          this.date1 = this.getCurrentWeek();
            this.date2 = this.getTodayMaxTime();
           break;
       }
@@ -2008,9 +2008,9 @@ detailCol:[
        downLoadSal() {
        var current_id= Cookies.get("cid");
        var  customer= "";
-       var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
-       var  check_flag= this.check_flag;
-      var beginTime= this.datatransMethod(this.date1);
+        var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
+       var   check_flag= this.check_flag;
+  var beginTime= this.datatransMethod(this.date1);
       var finishTime= this.getEndtime(this.date2);
         var po= this.po;
       
@@ -2035,7 +2035,7 @@ detailCol:[
       var cid = this.companyId;
       var po = (this.po == null || this.po == "") ? "all" : this.po;
       var beginTime = this.datatransMethod(this.date1);
-      var finishTime= this.getEndtime(this.date2);
+     var finishTime=this.getEndtime(this.date2);
       var po_type = (this.po_type == null || this.po_type == "") ? "all" : this.po_type;
       var selvalue = this.selvalue;
       downLoadFile(
@@ -2291,12 +2291,16 @@ detailCol:[
   font-weight:bold;
   color: #0000FF;
 }
-.th-font{
-  font-size:10px;
+.tb_font14_bold{
+  font-size:14px;
   font-weight:bold;
 }
-.th-font10{
-  font-size:10px;
+.tb_font12_bold{
+  font-size:12px;
+  font-weight:bold;
+}
+.tb_font13{
+  font-size:13px;
 }
 .th-font16{
   font-size:16px;
@@ -2306,7 +2310,7 @@ detailCol:[
   font-size:12px;
 }
 .th-font14-bold{
-  font-size:12px;
+  font-size:14px;
   font-weight:bold;
 }
 .button_1 {
@@ -2384,11 +2388,11 @@ detailCol:[
 }
 .messageBox1 {
   padding: 3px 0;
-  font-size: 12px;
+  font-size: 13px;
 }
 .messageBox {
   padding: 3px 0;
-  font-size: 10px;
+  font-size: 13px;
 }
 .data_1 {
   font-size: 1.5em;
@@ -2413,6 +2417,12 @@ td {
   margin: -1px 0 0 -1px;
   display: block;
 }
+.fixDiv{
+position:fixed;
+top: 200px;
+padding-left:900px;
+z-index:9999;
+}
 </style>
 <style>
 .zj-inputcss1{
@@ -2421,15 +2431,18 @@ td {
   border:3
 }
 .lanJuport .el-input__inner{
+
   width: 160px;
   height: 30px;
   /* margin-left:0px;
   margin-right:0px; */
+
 }
 .lanJuport .el-input,
 .el-date-editor.el-input__inner {
     width: 160px;
 }
+
 
 .lanJuport .el-table td,
 .lanJuport .el-table th {

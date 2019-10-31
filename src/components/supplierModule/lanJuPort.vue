@@ -32,12 +32,12 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font"
+                    class="tb_font14_bold"
                    >
                     <af-table-column
                       property="name1"
                       width="120"
-                      label="位置"
+                      label="位置11"
                     ></af-table-column>
                     <af-table-column
                       property="name2"
@@ -92,13 +92,12 @@
                   <div>
                      <template>
                         <div class="messageBox1">
-                          <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
-                          {{
+                          <div class="tb_font14_bold"> {{ index + 1 }} &nbsp; {{
                             item.tab1[index].cl_place === null ||
                             item.tab1[index].cl_place == ""
                               ? "无"
                               : item.tab1[index].cl_place
-                          }}
+                          }}</div>
                         </div>
                         <div class="messageBox">
                           <div>
@@ -145,7 +144,7 @@
                     :data="item.tab2[index]"
                    :show-header="false"
                    :span-method="function(col){ return arraySpanMethod(col,index)}"
-                   class="th-font10"
+                   class="tb_font13"
                     border
                     object_class="_Object:GridTable"
                     object_hashcode="6"
@@ -165,7 +164,7 @@
                   </el-table>
 
                   </el-card>
-               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
+               <el-table class="tb_font12_bold" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
                    <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
@@ -190,7 +189,7 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font14-bold"
+                    class="tb_font14_bold"
                    >
                     <af-table-column
                       property="name1"
@@ -335,7 +334,7 @@
         <hr />
         <div style="width:100%">
               <el-table :data="gridData" 
-                        class="th-font10"
+                        class="tb_font13"
                         cellpadding="0" 
                         style="width:100%"
                          :summary-method="getSummaries"
@@ -695,12 +694,12 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font"
+                    class="tb_font14_bold"
                    >
                     <af-table-column
                       property="name1"
                       width="120"
-                      label="位置"
+                      label="位置11"
                     ></af-table-column>
                     <af-table-column
                       property="name2"
@@ -755,13 +754,13 @@
                   <div>
                      <template>
                         <div class="messageBox1">
-                          <label style="font-weight:bold">{{ index + 1 }} &nbsp; 位置：</label>
-                          {{
+                   
+                          <div class="tb_font14_bold"> {{ index + 1 }} &nbsp; {{
                             item.tab1[index].cl_place === null ||
                             item.tab1[index].cl_place == ""
                               ? "无"
                               : item.tab1[index].cl_place
-                          }}
+                          }}</div>
                         </div>
                         <div class="messageBox">
                           <div>
@@ -808,7 +807,7 @@
                     :data="item.tab2[index]"
                    :show-header="false"
                    :span-method="function(col){ return arraySpanMethod(col,index)}"
-                   class="th-font10"
+                   class="tb_font13"
                     border
                     object_class="_Object:GridTable"
                     object_hashcode="6"
@@ -828,7 +827,7 @@
                   </el-table>
 
                   </el-card>
-               <el-table class="th-font" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
+               <el-table class="tb_font12_bold" style="width:100%;" :show-header="false" :data="item.tab3[index]" >
                    <el-table-column label="预约" header-align="center" width="120" > <template slot-scope="scope"> {{scope.row.date_req}} </template></el-table-column>
                     <el-table-column label="交货"  header-align="center" width="200"><template slot-scope="scope"> {{scope.row.date_deliver}} </template></el-table-column>
                     <!-- <el-table-column label="编码" header-align="center" width="130"> </el-table-column> -->
@@ -853,7 +852,7 @@
                     object_hashcode="6"
                     cellpadding="0"
                     style="width:100%"
-                    class="th-font14-bold"
+                    class="tb_font14_bold"
                    >
                     <af-table-column
                       property="name1"
@@ -939,7 +938,7 @@
                 >采购单
   <div class="fixedDiv">
 <div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<div style="margin:20px"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
 <div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
  </div>
                 </td>
@@ -1154,7 +1153,7 @@
                 <td colspan="2">
                   
                 <el-table :data="gridData" 
-                        class="th-font10"
+                        class="tb_font13"
                         cellpadding="0" 
                         style="width:100%"
                          :summary-method="getSummaries"
@@ -1644,7 +1643,7 @@ detailCol:[
       sumMoney: 0,
       items: [],
       po: "",
-      date1: this.getPastHalfYear(),
+      date1: this.getCurrentWeek(),
       date2: new Date(),
       now: new Date(),
       Month: new Date().getMonth() + 1,
@@ -1957,7 +1956,7 @@ detailCol:[
           this.selvalue = "all";
           this.po_type = "all";
           this.po = "";
-          this.date1 = this.getPastHalfYear();
+          this.date1 = this.getCurrentWeek();
           this.date2 = this.getTodayMaxTime();
           break;
         case "second":
@@ -1973,7 +1972,7 @@ detailCol:[
           this.selvalue = "cancel";
           this.po_type = "cancel";
           this.po = "";
-          this.date1 = this.getPastHalfYear();
+          this.date1 = this.getCurrentWeek();
            this.date2 = this.getTodayMaxTime();
           break;
       }
@@ -2367,12 +2366,16 @@ detailCol:[
   font-weight:bold;
   color: #0000FF;
 }
-.th-font{
-  font-size:10px;
+.tb_font14_bold{
+  font-size:14px;
   font-weight:bold;
 }
-.th-font10{
-  font-size:10px;
+.tb_font12_bold{
+  font-size:12px;
+  font-weight:bold;
+}
+.tb_font13{
+  font-size:13px;
 }
 .th-font16{
   font-size:16px;
@@ -2382,7 +2385,7 @@ detailCol:[
   font-size:12px;
 }
 .th-font14-bold{
-  font-size:12px;
+  font-size:14px;
   font-weight:bold;
 }
 .button_1 {
@@ -2460,11 +2463,11 @@ detailCol:[
 }
 .messageBox1 {
   padding: 3px 0;
-  font-size: 12px;
+  font-size: 13px;
 }
 .messageBox {
   padding: 3px 0;
-  font-size: 10px;
+  font-size: 13px;
 }
 .data_1 {
   font-size: 1.5em;
