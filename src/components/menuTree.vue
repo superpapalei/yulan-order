@@ -84,10 +84,10 @@ export default {
           return this.$store.state.badge.painting;
         case "refundCompensation": //退货赔偿
           return this.$store.state.badge.refund;
-        case "order/myOrder"://待处理订单
+        case "order/myOrder": //待处理订单
           return this.$store.state.badge.orderDeal;
-        case "statement"://待确认对账单
-          return this.$store.state.badge.statement;  
+        case "statement": //待确认对账单
+          return this.$store.state.badge.statement;
         case "supplierModule/payDelegation":
           return this.$store.state.badge.payDelegation1; //待编辑的付款委托书单据（客户）
         case "supplierModule/payDelegationExamine":
@@ -117,12 +117,12 @@ export default {
 </script>
 
 <style scoped>
+.icon-color {
+  color: #303133;
+}
 .el-menu i {
   font-size: 18px;
   margin: 0 10px;
-}
-.icon-color {
-  color: #303133;
 }
 .el-menu-item-group span {
   margin-left: 20px;
@@ -130,11 +130,33 @@ export default {
 .el-icon-goods {
   color: #303133;
 }
+.el-menu-item {
+  padding: 0 10px;
+}
 .el-menu-item.is-active {
   background: #8bc34a;
   color: white;
 }
 .el-submenu .el-menu-item {
-  padding: 0 25px;
+  padding: 0 20px;
+}
+.el-menu-item,
+.el-submenu__title {
+  height: 45px !important;
+  line-height: 45px !important;
+}
+</style>
+<style>
+.el-menu-item-group__title {
+  padding: 4px 0 !important;
+}
+.el-menu-item,
+.el-submenu__title {
+  height: 45px !important;
+  line-height: 45px !important;
+}
+.el-submenu .el-menu-item {
+  height: 40px !important;
+  line-height: 40px !important;
 }
 </style>

@@ -1107,26 +1107,7 @@ export default {
   background: url("../assets/img/headerLogo.jpg") no-repeat;
   background-size: 42px 42px;
 }
-.el-menu {
-  text-align: left;
-}
-.el-menu i {
-  font-size: 18px;
-  margin: 0 10px;
-}
-.icon-color {
-  color: #303133;
-}
-.el-menu-item-group span {
-  margin-left: 20px;
-}
-.el-icon-goods {
-  color: #303133;
-}
-.el-menu-item.is-active {
-  background: #8bc34a;
-  color: white;
-}
+
 /*顶部导航样式*/
 .el-header {
   background: #8bc34a;
@@ -1223,18 +1204,6 @@ export default {
 }
 .el-dialog__body {
   padding: 20px;
-}
-.el-menu-item-group__title {
-  padding: 4px 0 !important;
-}
-.el-menu-item,
-.el-submenu__title {
-  height: 45px !important;
-  line-height: 45px !important;
-}
-.el-submenu .el-menu-item {
-  height: 40px !important;
-  line-height: 40px !important;
 }
 .el-table td,
 .el-table th {
