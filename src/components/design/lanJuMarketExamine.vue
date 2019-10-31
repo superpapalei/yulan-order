@@ -211,7 +211,7 @@
 
           <tr v-if="submitForm.STATUS==5||submitForm.STATUS==6">
             <td class="grayTD"  colspan="2" rowspan="1"  style="height:30px" >预计出图日期</td>
-            <td colspan="3" rowspan="1"  style="height:30px" >{{submitForm.EXPECTED_DRAW_DATE}}</td>
+            <td colspan="3" rowspan="1"  style="height:30px" >{{submitForm.EXPECTED_DRAW_DATE|datatrans}}</td>
             <td class="grayTD"  colspan="2" rowspan="1"  style="height:30px" >设计图附件</td>
             <td colspan="2" rowspan="1" style="height:30px">
               <ul  class="el-upload-list el-upload-list--text" >

@@ -98,7 +98,7 @@
             <td class="grayTD" colspan="1" style="height:16px">投诉类型</td>
             <td colspan="1" style="text-align:left;height:16px;">
               <el-select
-                style="height:16px%;width:100%;padding:0px 0px 0px 0px;"
+                style="height:16px;width:100%;padding:0px 0px 0px 0px;"
                 v-model="submit.TYPE"
                 filterable
                 placeholder="选择相应类型"
@@ -354,6 +354,16 @@ export default {
         });
         return;
       }
+      if (
+        this.submit.DAMAGED_QUANTITY ==0 || this.submit.LOSED_QUANTITY == 0
+      )
+      {
+        this.$alert("请输入相应的货物数量", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
       console.log(data);
       addSubmit(data).then(res => {
         if (res.code == 0) {
@@ -437,7 +447,7 @@ export default {
 }
 
 .shipmentCard .el-input__inner {
-    height: 22px;
+    height: 21px;
     width:100%;
     font-size: 16px;
     box-shadow: none;

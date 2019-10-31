@@ -1559,13 +1559,6 @@ export default {
   font-size: 16px;
   text-align: center;
 }
-.inputStyle_1 {
-  border: 0;
-  height: 100%;
-  width: 200px;
-  font-size: 16px;
-  text-align: left;
-}
 .inputStyleNew {
   border: 0;
   height: 100%;
