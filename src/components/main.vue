@@ -286,7 +286,7 @@ export default {
       studySelectData: [],
       studyVisible: false,
       asideStatus: false, //false:菜单栏处于展开状态； true：菜单栏处于收起状态
-      asideWidth: "190px",
+      asideWidth: "200px",
       defaultUrl: "",
       isFullscreen: false,
       adminText: "无新公告发布!",
@@ -695,7 +695,7 @@ export default {
     changeAside() {
       this.asideStatus = !this.asideStatus;
       if (this.asideStatus == false) {
-        this.asideWidth = "190px";
+        this.asideWidth = "200px";
         document.getElementById("aside-logo").style.display = "block";
         document.getElementById("asideControll").innerHTML = "&#xe61e;";
       } else {
