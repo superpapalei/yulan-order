@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="shipmentCard">
   <el-card class="centerCard">
     <div slot="header">
       <span class="headSpan">产品明细与提货信息</span>
@@ -95,33 +95,41 @@
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1" style="height:20px">投诉类型</td>
-            <td colspan="1" style="height:20px">
-              <select v-model="submit.TYPE" placeholder="选择相应类型" style="float:center;height:100%;width:100%">
-                <option
+            <td class="grayTD" colspan="1" style="height:16px">投诉类型</td>
+            <td colspan="1" style="text-align:left;height:16px;">
+              <el-select
+                style="height:16px%;width:100%;padding:0px 0px 0px 0px;"
+                v-model="submit.TYPE"
+                filterable
+                placeholder="选择相应类型"
+              >
+                <el-option
                   v-for="item in typeArray"
-                  :key="item.label"
+                  :key="item.value"
                   :label="item.label"
                   :value="item.value"
-                ></option>
-              </select>
+                >
+                </el-option>
+              </el-select>
             </td>
-            <td class="grayTD" colspan="1" style="height:20px">数量</td>
+            <td class="grayTD" colspan="1" style="height:16px">货物数量</td>
             <td v-if="submit.TYPE=='丢失'"  class="grayTD" colspan="1" style="height:20px">
-                <input
+                <el-input
                   v-model="submit.LOSED_QUANTITY"
-                  placeholder="（丢失的货物数量）"
+                  placeholder="（丢失数量）"
                   clearable
                   class="inputStyle">
+                </el-input>
             </td>
-             <td v-if="submit.TYPE=='破损'"  class="grayTD" colspan="1" style="height:20px">
-                <input
+             <td v-if="submit.TYPE=='破损'"  class="grayTD" colspan="1" style="height:16px">
+                <el-input
                   v-model="submit.DAMAGED_QUANTITY"
-                  placeholder="（破损的货物数量）"
+                  placeholder="（破损数量）"
                   clearable
                   class="inputStyle">
+                </el-input>
             </td>
-             <td v-else  class="grayTD" colspan="1" style="height:20px"> </td>
+             <td v-else  class="grayTD" colspan="1" style="height:16px"> </td>
           </tr>
 
           <tr>
@@ -381,7 +389,7 @@ export default {
 .table-c table td {
   border-left: 1px solid black;
   border-top: 1px solid black;
-  height: 45px;
+  height: 22px;
   text-align: center;
   font-size: 16px;
 }
@@ -426,5 +434,58 @@ export default {
 <style>
 .el-table .success-row {
   background: #f0f9eb;
+}
+
+.shipmentCard .el-input__inner {
+    height: 22px;
+    width:100%;
+    font-size: 16px;
+    box-shadow: none;
+    border: 1px solid #e9e9e9;
+    text-align: center;
+}
+ 
+.shipmentCard .el-input__inner:hover {
+    border-color: #e9e9e9;
+}
+ 
+.shipmentCard .el-input__inner:focus {
+    border-color: #42a5f5;
+    box-shadow: none;
+    transition-duration: .5s;
+}
+ 
+.shipmentCard .el-input__inner::-webkit-input-placeholder {
+    line-height: 20px;
+}
+ 
+.shipmentCard .el-input__inner, .el-checkbox__inner, .el-textarea__inner, .el-button {
+    border-radius: 0;
+}
+.shipmentCard .el-input__icon {
+    height: 100%;
+    width: 22px;
+    text-align: center;
+    line-height: 22px;
+}
+.shipmentCard .el-textarea__inner {
+    height:48px;
+    display: block;
+    resize: vertical;
+    padding: 1px 1px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: inherit;
+    background-image: none;
+    border: 1px solid
+    #DCDFE6;
+        border-top-color: rgb(220, 223, 230);
+        border-right-color: rgb(220, 223, 230);
+        border-bottom-color: rgb(220, 223, 230);
+        border-left-color: rgb(220, 223, 230);
+    border-radius: 4px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
 }
 </style>
