@@ -433,7 +433,6 @@ export default {
                 type: "success"
               });
               this.getBill();
-              this.releaseBadge("statement"); //刷新角标
               this.detailVisible = false;
               this.dialogFormVisible = false;
             } else {
@@ -462,7 +461,7 @@ export default {
         this.outercount = res.customerBalancePeriodList.length
           ? res.customerBalancePeriodList[0].total
           : 0;
-        //customerName customerAgent officeTel  fax
+        this.$root.$emit('refreshBadgeIcon','statement');
       });
     },
     //获取对账详情
@@ -549,7 +548,6 @@ export default {
       return "";
     },
     ...mapMutations("navTabs", ["addTab"]),
-    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"])
   },
   created: function() {

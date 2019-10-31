@@ -1,5 +1,5 @@
 <template>
-  <div class = "centerCard">
+  <div class="centerCard">
     <el-card shadow="hover">
       <div id="tbar" class="tbarStyle">
         <el-date-picker
@@ -8,7 +8,7 @@
           value-format="yyyy-MM-dd"
           placeholder="查询开始日期"
           v-model="beginTime"
-          style="width:14%;"
+          style="width:12%;"
         ></el-date-picker>
         --
         <el-date-picker
@@ -17,11 +17,11 @@
           value-format="yyyy-MM-dd"
           placeholder="查询截止日期"
           v-model="finishTime"
-          style="width:14%;"
+          style="width:12%;"
         ></el-date-picker>
         <el-select
           v-model="status"
-          style="margin-left: 10px"
+          style="margin-left: 10px;width:12%;"
           placeholder="全部状态"
         >
           <el-option
@@ -31,6 +31,14 @@
             :value="item.value"
           ></el-option>
         </el-select>
+        <el-input
+          @keyup.enter.native="search()"
+          placeholder="可搜索单号、申请人"
+          v-model="find"
+          style="width:200px;"
+          clearable
+        >
+        </el-input>
         <el-button
           size="medium"
           type="success"
@@ -46,7 +54,7 @@
         :row-class-name="tableRowClassName"
       >
         <el-table-column
-          width="120"
+          width="130"
           prop="ID"
           label="申请单号"
           align="center"
@@ -466,6 +474,7 @@ export default {
       imageStoreDetail: false,
       limit: 10,
       count: 0,
+      find: "",
       currentPage: 1,
       beginTime: "",
       finishTime: "",
@@ -592,6 +601,7 @@ export default {
     },
     getDetail() {
       let data = {
+        keywords: this.find.toUpperCase(),
         status: this.status, //
         beginTime: this.beginTime, //起始时间
         finishTime: this.finishTime, //结束时间
@@ -609,6 +619,7 @@ export default {
       GetAllData(data).then(res => {
         this.count = res.count;
         this.imageStoreData = res.data;
+        this.$root.$emit('refreshBadgeIcon','imageShop2');
       });
     },
     downLoad(path) {
@@ -645,7 +656,6 @@ export default {
       };
       MarketUpdateStatus(data).then(res => {
         this.imageStoreDetail = false;
-        this.releaseBadge("imageShop2");//刷新角标
         this.getDetail();
         this.examineSuggestion = "";
       });
@@ -666,7 +676,6 @@ export default {
       };
       MarketUpdateStatus(data).then(res => {
         this.imageStoreDetail = false;
-        this.releaseBadge("imageShop2");//刷新角标
         this.getDetail();
         this.examineSuggestion = "";
       });
@@ -685,13 +694,12 @@ export default {
     handleChange(file, fileList) {
       this.fileList = fileList.slice(-3);
     },
-    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   }
 };
 </script>
 
 <style scoped>
-.centerCard h3{
+.centerCard h3 {
   margin: 0;
 }
 .table-c table {

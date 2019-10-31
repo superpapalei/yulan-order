@@ -612,6 +612,7 @@ export default {
         this.count = res.count;
         this.data = [];
         this.data = res.data;
+        this.$root.$emit("refreshBadgeIcon", "orderDeal");
       });
     },
     //出货详情
@@ -728,9 +729,7 @@ export default {
             });
           //预留接口-删除订单
         })
-        .catch(() => {
-          console.log("还没删");
-        });
+        .catch(err => {});
     },
     copyCart(orderNo) {
       this.$confirm("是否是否退回数据到购物车？", "提示", {
@@ -791,7 +790,6 @@ export default {
                 type: "success"
               });
               this.refresh();
-              this.releaseBadge("orderDeal");//刷新角标
               this.$root.$emit("refreshMoneyEvent"); //触发主页面刷新余额
             })
             .catch(res => {
@@ -804,7 +802,6 @@ export default {
       });
     },
     ...mapMutations("navTabs", ["addTab"]),
-    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"]),
     //隔行变色
     tableRowClassName({ row, rowIndex }) {

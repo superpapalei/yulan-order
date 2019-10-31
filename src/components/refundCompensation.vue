@@ -303,19 +303,20 @@ export default {
     },
     //初始化角标
     async initBadge() {
-      //let _refund = await getAllRefund({
-      let _refund = await GetAllCompensation({
-        CID: this.cid,
-        page: 1,
-        number: 10000,
-        startDate: "0001/1/1",
-        endDate: "9999/12/31",
-        state: "CUSTOMERAFFIRM"
-      });
-      this.changeBadge({
-        name: "refund",
-        index: _refund.count
-      });
+      this.$root.$emit('refreshBadgeIcon','refund');
+      // //let _refund = await getAllRefund({
+      // let _refund = await GetAllCompensation({
+      //   CID: this.cid,
+      //   page: 1,
+      //   number: 10000,
+      //   startDate: "0001/1/1",
+      //   endDate: "9999/12/31",
+      //   state: "CUSTOMERAFFIRM"
+      // });
+      // this.changeBadge({
+      //   name: "refund",
+      //   index: _refund.count
+      // });
     },
     //按条件搜索
     searchRefund() {
@@ -361,7 +362,7 @@ export default {
       })
         .then(({ value }) => {
           let obj = {
-            CID: value
+            CID: value.toUpperCase()
           };
           getCustomerInfo({ companyId: value })
             .then(res => {

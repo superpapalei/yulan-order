@@ -137,6 +137,11 @@
               :label="item.label"
               :closable="item.closable"
             ></el-tab-pane>
+            <div v-if="activeTabName == 'main'">
+              <!-- <el-card>
+                我是主页
+              </el-card> -->
+            </div>
             <keep-alive>
               <router-view v-if="$route.meta.keepAlive === true" />
             </keep-alive>
@@ -250,12 +255,14 @@ import menuTree from "./menuTree";
 import studyContextDetail from "./studyContext/studyContextDetail";
 import { GetAllCompensation } from "@/api/paymentASP";
 import { ChangePassword } from "@/api/webUserASP";
-import payDelegationVue from './supplierModule/payDelegation.vue';
-import { GetCurrentDelegation,GetAllDelegation } from "@/api/supplierASP";
-import {GetAllData,GetAllUserData } from "@/api/lanju";
-import {GetAllComplaint,GetAllUserComplaint} from "@/api/complaint";
-import {GetImageCustomer,GetAllData as GetImageAll} from "@/api/imageStoreASP";
-
+import payDelegationVue from "./supplierModule/payDelegation.vue";
+import { GetCurrentDelegation, GetAllDelegation } from "@/api/supplierASP";
+import { GetAllData, GetAllUserData } from "@/api/lanju";
+import { GetAllComplaint, GetAllUserComplaint } from "@/api/complaint";
+import {
+  GetImageCustomer,
+  GetAllData as GetImageAll
+} from "@/api/imageStoreASP";
 
 export default {
   name: "Main",
@@ -341,14 +348,17 @@ export default {
     async addBadgeIcon() {
       if (Cookies.get("identity") === "ECWEB") {
         //let _refund = await getAllRefund({
-        let _refund = await GetAllCompensation({
-          CID: this.cid,
-          page: 1,
-          number: 10000,
-          startDate: "0001/1/1",
-          endDate: "9999/12/31",
-          state: "CUSTOMERAFFIRM"
-        });
+        let _refund = await GetAllCompensation(
+          {
+            CID: this.cid,
+            page: 1,
+            number: 10000,
+            startDate: "0001/1/1",
+            endDate: "9999/12/31",
+            state: "CUSTOMERAFFIRM"
+          },
+          { loading: false }
+        );
         this.changeBadge({
           name: "refund",
           index: _refund.count
@@ -357,14 +367,17 @@ export default {
     },
     //获取角标情况【委托】
     async PaintingIcon() {
-      let _refund = await getIconNumber({
-        cid: this.cid,
-        page: 1,
-        limit: 999,
-        startDate: "",
-        endDate: "",
-        state: "CUSTOMERAFFIRM"
-      });
+      let _refund = await getIconNumber(
+        {
+          cid: this.cid,
+          page: 1,
+          limit: 999,
+          startDate: "",
+          endDate: "",
+          state: "CUSTOMERAFFIRM"
+        },
+        { loading: false }
+      );
       this.changeBadge({
         name: "painting",
         index: _refund.airbrushDesignerAssureList.length
@@ -373,17 +386,20 @@ export default {
     //获取角标待处理订单
     async OrderDealIcon() {
       if (Cookies.get("identity") === "ECWEB") {
-        let order = await getAllOrders({
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          cid: Cookies.get("cid"),
-          statusId: ["0", "5", "6", "21", "22"],
-          find: "",
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          orderType: ""
-        });
+        let order = await getAllOrders(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            cid: Cookies.get("cid"),
+            statusId: ["0", "5", "6", "21", "22"],
+            find: "",
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            orderType: ""
+          },
+          { loading: false }
+        );
         this.changeBadge({
           name: "orderDeal",
           index: order.count
@@ -399,7 +415,7 @@ export default {
           limit: 9999,
           page: 1
         };
-        let statement = await checkBill(url, data);
+        let statement = await checkBill(url, data, { loading: false });
         if (statement.customerBalancePeriodList.length) {
           var unDealNum = 0;
           for (var i = 0; i < statement.customerBalancePeriodList.length; i++) {
@@ -418,190 +434,229 @@ export default {
     },
     //获取角标待处理付款委托书（客户）
     async payDelegationIcon1() {
-      let payDelegation1 = await GetCurrentDelegation({
+      let payDelegation1 = await GetCurrentDelegation(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS: '1'
-        });
-      let payDelegation2 = await GetCurrentDelegation({
+          STATUS: "1"
+        },
+        { loading: false }
+      );
+      let payDelegation2 = await GetCurrentDelegation(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS: '4'
-        });
+          STATUS: "4"
+        },
+        { loading: false }
+      );
       this.changeBadge({
-          name: "payDelegation1",
-          index: payDelegation1.count+payDelegation2.count
-        });
+        name: "payDelegation1",
+        index: payDelegation1.count + payDelegation2.count
+      });
     },
     //获取角标待处理付款委托书（公司审核）
     async payDelegationIcon2() {
-      let payDelegation1 = await GetAllDelegation({
+      let payDelegation1 = await GetAllDelegation(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS: '2'
-        });
-        this.changeBadge({
-          name: "payDelegation2",
-          index: payDelegation1.count
-        });
+          STATUS: "2"
+        },
+        { loading: false }
+      );
+      this.changeBadge({
+        name: "payDelegation2",
+        index: payDelegation1.count
+      });
     },
     //获取角标待处理的兰居设计单据（客户）
     async lanjuIcon() {
-      let lanju1 = await GetAllData({
+      let lanju1 = await GetAllData(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:'2'
-        });
+          STATUS: "2"
+        },
+        { loading: false }
+      );
       this.changeBadge({
-          name: "lanju1",
-          index: lanju1.count
-        });
+        name: "lanju1",
+        index: lanju1.count
+      });
     },
     //获取角标待处理的兰居设计单据（市场部）
     async lanJuMarketExamineIcon() {
-      let lanju1 = await GetAllUserData({
+      let lanju1 = await GetAllUserData(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:'1'
-        });
+          STATUS: "1"
+        },
+        { loading: false }
+      );
       this.changeBadge({
-          name: "lanju2",
-          index: lanju1.count
-        });
+        name: "lanju2",
+        index: lanju1.count
+      });
     },
     //获取角标待处理的兰居设计单据（广美）
     async lanJuGMExamineIcon() {
-      let lanju1 = await GetAllUserData({
+      let lanju1 = await GetAllUserData(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:'3'
-        });
-      let lanju2 = await GetAllUserData({
+          STATUS: "3"
+        },
+        { loading: false }
+      );
+      let lanju2 = await GetAllUserData(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:'5'
-        });
+          STATUS: "5"
+        },
+        { loading: false }
+      );
       this.changeBadge({
-          name: "lanju3",
-          index: lanju1.count+lanju2.count
-        });
+        name: "lanju3",
+        index: lanju1.count + lanju2.count
+      });
     },
     //获取角标待处理的物流投诉单据（客户评价）
     async complaintIcon() {
-      let complaint = await GetAllComplaint({
+      let complaint = await GetAllComplaint(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:2
-        });
+          STATUS: 2
+        },
+        { loading: false }
+      );
       this.changeBadge({
-          name: "complaint1",
-          index: complaint.count
-        });
+        name: "complaint1",
+        index: complaint.count
+      });
     },
     //获取角标待处理的物流投诉单据（公司处理反馈）
     async complaintReplyIcon() {
-      let complaint = await GetAllUserComplaint({
+      let complaint = await GetAllUserComplaint(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:1
-        });
+          STATUS: 1
+        },
+        { loading: false }
+      );
       this.changeBadge({
-          name: "complaint2",
-          index: complaint.count
-        });
+        name: "complaint2",
+        index: complaint.count
+      });
     },
-     //获取角标待处理的形象店设计单据（客户编辑）
+    //获取角标待处理的形象店设计单据（客户编辑）
     async imageShopIcon() {
-      let imageShop1 = await GetImageCustomer({
+      let imageShop1 = await GetImageCustomer(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:4
-        });
-      let imageShop2 = await GetImageCustomer({
+          STATUS: 4
+        },
+        { loading: false }
+      );
+      let imageShop2 = await GetImageCustomer(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:5
-        });
+          STATUS: 5
+        },
+        { loading: false }
+      );
       this.changeBadge({
-          name: "imageShop1",
-          index: imageShop1.count+imageShop2.count
-        });
+        name: "imageShop1",
+        index: imageShop1.count + imageShop2.count
+      });
     },
     //获取角标待处理的形象店设计单据（兰居审核）
     async ISExamineMarketIcon() {
-      let imageShop1 = await GetImageAll({
+      let imageShop1 = await GetImageAll(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:1
-        });
+          STATUS: 1
+        },
+        { loading: false }
+      );
       this.changeBadge({
-          name: "imageShop2",
-          index: imageShop1.count
-        });
+        name: "imageShop2",
+        index: imageShop1.count
+      });
     },
     //获取角标待处理的形象店设计单据（广美审核）
     async ISExamineGMIcon() {
-      let imageShop1 = await GetImageAll({
+      let imageShop1 = await GetImageAll(
+        {
           companyId: Cookies.get("companyId"),
           limit: 9999,
           page: 1,
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS:2
-        });
+          STATUS: 2
+        },
+        { loading: false }
+      );
       this.changeBadge({
-          name: "imageShop3",
-          index: imageShop1.count
-        });
+        name: "imageShop3",
+        index: imageShop1.count
+      });
     },
     //获取用户余额情况
     async userMoney() {
@@ -849,9 +904,9 @@ export default {
         this.isFullscreen = false;
       }
     };
-    window.onkeydown =()=>{
+    window.onkeydown = () => {
       this.lastClickTime = new Date().getTime();
-    }
+    };
     this.timeOutTimer = setInterval(() => {
       var interval = 5 * 60 * 1000;
       if (new Date().getTime() - this.lastClickTime >= interval) {
@@ -860,9 +915,9 @@ export default {
         clearInterval(this.timeOutTimer);
         this.logout();
         this.$alert("长时间未操作，自动退出", "提示", {
-            confirmButtonText: "确定",
-            type: "info"
-          });
+          confirmButtonText: "确定",
+          type: "info"
+        });
       } else if (
         new Date().getTime() - this.lastClickTime >=
         interval - 10 * 1000
@@ -910,6 +965,53 @@ export default {
     this.imageShopIcon();
     this.ISExamineMarketIcon();
     this.ISExamineGMIcon();
+    //触发角标刷新
+    this.$root.$on("refreshBadgeIcon", value => {
+      switch (value) {
+        case "painting":
+          this.PaintingIcon();
+          break;
+        case "refund":
+          this.addBadgeIcon();
+          break;
+        case "orderDeal":
+          this.OrderDealIcon();
+          break;
+        case "statement":
+          this.getStatementIcon();
+          break;
+        case "payDelegation1":
+          this.payDelegationIcon1();
+          break;
+        case "payDelegation2":
+          this.payDelegationIcon2();
+          break;
+        case "lanju1":
+          this.lanjuIcon();
+          break;
+        case "lanju2":
+          this.lanJuMarketExamineIcon();
+          break;
+        case "lanju3":
+          this.lanJuGMExamineIcon();
+          break;
+        case "complaint1":
+          this.complaintIcon();
+          break;
+        case "complaint2":
+          this.complaintReplyIcon();
+          break;
+        case "imageShop1":
+          this.imageShopIcon();
+          break;
+        case "imageShop2":
+          this.ISExamineMarketIcon();
+          break;
+        case "imageShop3":
+          this.ISExamineGMIcon();
+          break;
+      }
+    });
     document.onkeydown = function(event) {
       var key = window.event.keyCode;
       if (key == 27) {

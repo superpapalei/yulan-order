@@ -8,7 +8,7 @@
           value-format="yyyy-MM-dd"
           placeholder="查询开始日期"
           v-model="beginTime"
-          style="width:14%;"
+          style="width:12%;"
         ></el-date-picker>
         --
         <el-date-picker
@@ -17,11 +17,11 @@
           value-format="yyyy-MM-dd"
           placeholder="查询截止日期"
           v-model="finishTime"
-          style="width:14%;"
+          style="width:12%;"
         ></el-date-picker>
         <el-select
           v-model="status"
-          style="margin-left: 10px"
+          style="margin-left: 10px;width:12%;"
           placeholder="全部状态"
         >
           <el-option
@@ -53,7 +53,7 @@
         :row-class-name="tableRowClassName"
       >
         <el-table-column
-          width="120"
+          width="130"
           prop="ID"
           label="申请单号"
           align="center"
@@ -78,7 +78,7 @@
           prop="STORE_AREA"
           label="店面面积(m2)"
           align="center"
-          width="80"
+          width="110"
         ></el-table-column>
         <el-table-column
           prop="STORE_PLIE"
@@ -932,7 +932,6 @@ export default {
           });
           this.fileList = [];
           this.currentPage = 1;
-          this.releaseBadge("imageShop1");//刷新角标
           this.getDetail();
           this.imageStoreDetail = false;
         })
@@ -982,7 +981,6 @@ export default {
               type: "success"
             });
             this.currentPage = 1;
-            this.releaseBadge("imageShop1");//刷新角标
             this.getDetail();
           });
         })
@@ -1014,6 +1012,7 @@ export default {
       GetImageCustomer(data).then(res => {
         this.count = res.count;
         this.imageStoreData = res.data;
+        this.$root.$emit('refreshBadgeIcon','imageShop1');
       });
     },
     _getBankList() {
@@ -1111,7 +1110,6 @@ export default {
         type: "success"
       });
     },
-    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   }
 };
 </script>

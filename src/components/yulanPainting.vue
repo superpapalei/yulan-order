@@ -660,41 +660,48 @@ export default {
     _getWaterNumber() {
       let url = Quest + "/customer/getSingleCustomerInfo.do";
       let data = {
-        companyId: this.checkID,
+        companyId: this.checkID.toUpperCase(),
         erpCreator: Cookies.get("cid") //创建人
       };
       //getWaterNumber(url, data).then(res => {
-      InsertBrush(data).then(async res => {
-        this.abdrImage = [];
-        this.sumbit.abdrId = res.data.ID;
-        this.sumbit.createTs = res.data.CREATE_TS;
-        this.sumbit.erpCreator = Cookies.get("realName");
-        this.checkData.customerCode = res.data.CID;
-        this.checkData.shortName = res.data.CNAME;
-        this.checkData.officeTel = res.data.OFFICE_TEL;
-        this.checkData.customerAgent = res.data.CUSTOMER_AGENT;
+      InsertBrush(data)
+        .then(async res => {
+          this.abdrImage = [];
+          this.sumbit.abdrId = res.data.ID;
+          this.sumbit.createTs = res.data.CREATE_TS;
+          this.sumbit.erpCreator = Cookies.get("realName");
+          this.checkData.customerCode = res.data.CID;
+          this.checkData.shortName = res.data.CNAME;
+          this.checkData.officeTel = res.data.OFFICE_TEL;
+          this.checkData.customerAgent = res.data.CUSTOMER_AGENT;
 
-        this.PaintingDia = true; //大表格
-        this.checkDialog = false;
-        // if (res.code == 0) {
-        //   this.sumbit.abdrId = res.AirbrushDesignerAssure.id;
-        //   this.sumbit.createTs = res.AirbrushDesignerAssure.createTs;
-        //   this.sumbit.erpCreator = res.AirbrushDesignerAssure.realName;
+          this.PaintingDia = true; //大表格
+          this.checkDialog = false;
+          // if (res.code == 0) {
+          //   this.sumbit.abdrId = res.AirbrushDesignerAssure.id;
+          //   this.sumbit.createTs = res.AirbrushDesignerAssure.createTs;
+          //   this.sumbit.erpCreator = res.AirbrushDesignerAssure.realName;
 
-        //   this.checkData.customerCode = res.customerInfo.customerCode;
-        //   this.checkData.shortName = res.customerInfo.shortName;
-        //   this.checkData.officeTel = res.customerInfo.officeTel;
-        //   this.checkData.customerAgent = res.customerInfo.customerAgent;
+          //   this.checkData.customerCode = res.customerInfo.customerCode;
+          //   this.checkData.shortName = res.customerInfo.shortName;
+          //   this.checkData.officeTel = res.customerInfo.officeTel;
+          //   this.checkData.customerAgent = res.customerInfo.customerAgent;
 
-        //   this.PaintingDia = true; //大表格
-        //   this.checkDialog = false;
-        // } else {
-        //   this.$alert("查询失败，请稍后重试", "提示", {
-        //     confirmButtonText: "确定",
-        //     type: "warning"
-        //   });
-        // }
-      });
+          //   this.PaintingDia = true; //大表格
+          //   this.checkDialog = false;
+          // } else {
+          //   this.$alert("查询失败，请稍后重试", "提示", {
+          //     confirmButtonText: "确定",
+          //     type: "warning"
+          //   });
+          // }
+        })
+        .catch(err => {
+          this.$alert(err.msg, "提示", {
+            type: "warning",
+            confirmButtonText: "好的"
+          });
+        });
     },
     //获取喷绘列表
     _getList() {

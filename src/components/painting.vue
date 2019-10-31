@@ -318,22 +318,23 @@ export default {
     },
     //角标更新
     IconReflash() {
-      let IconNum = 0;
-      let data = {
-        cid: Cookies.get("cid"),
-        page: 1,
-        limit: 999,
-        startDate: "",
-        endDate: "",
-        state: "CUSTOMERAFFIRM"
-      };
-      getIconNumber(data).then(res => {
-        IconNum = res.airbrushDesignerAssureList.length;
-        this.changeBadge({
-          name: "painting",
-          index: IconNum
-        });
-      });
+      this.$root.$emit('refreshBadgeIcon','painting');
+      // let IconNum = 0;
+      // let data = {
+      //   cid: Cookies.get("cid"),
+      //   page: 1,
+      //   limit: 999,
+      //   startDate: "",
+      //   endDate: "",
+      //   state: "CUSTOMERAFFIRM"
+      // };
+      // getIconNumber(data).then(res => {
+      //   IconNum = res.airbrushDesignerAssureList.length;
+      //   this.changeBadge({
+      //     name: "painting",
+      //     index: IconNum
+      //   });
+      // });
     },
     //同意与否
     _changeStatus(YN) {
