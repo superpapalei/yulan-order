@@ -140,7 +140,7 @@ export default {
       arr_span: [],
       arr_index0: [],
       arr_span0: [],
-      date1: this.getPastThreeMon(),
+      date1: this.getCurrentWeek(),
       date2: new Date(),
       activeName: "third",
       po:"",
@@ -148,7 +148,7 @@ export default {
   },
 
   created() {
-    this.date1=this.getPastThreeMon();
+    this.date1=this.getCurrentWeek();
      this.date2 = new Date();
     //this.autoSearch();
 

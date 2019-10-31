@@ -356,7 +356,7 @@
                             <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
                           </template>
                         </el-table-column>
-                        <el-table-column property="UNIT1" label="单位"  min-width="40"></el-table-column>
+                        <el-table-column property="UNIT1" label="单位"  min-width="50"></el-table-column>
                         <el-table-column property="TOTAL_MONEY" label="金额"  min-width="80"> 
                         </el-table-column>
                         <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
@@ -1175,7 +1175,7 @@
                             <span>{{ scope.row.PRICE_TAXIN | numFilter }}</span>
                           </template>
                         </el-table-column>
-                        <el-table-column property="UNIT1" label="单位"  min-width="40"></el-table-column>
+                        <el-table-column property="UNIT1" label="单位"  min-width="50"></el-table-column>
                         <el-table-column property="TOTAL_MONEY" label="金额"  min-width="80"> 
                         </el-table-column>
                         <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
