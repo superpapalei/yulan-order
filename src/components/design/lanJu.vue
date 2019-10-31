@@ -365,7 +365,13 @@
                   v-model="submitDetailForm[index].HOUSING_AREA"
                   placeholder=""
                   clearable
-                  class="inputStyle">
+                  class="inputStyle"
+                  oninput="value=value.replace(/[^\d.]/g,'')
+                           .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                           .replace('.', '$#$').replace(/\./g, '')
+                           .replace('$#$', '.')
+                           .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
+                  >
             </td>
             <td colspan="2" rowspan="1" style="height:30px">
                   <input
