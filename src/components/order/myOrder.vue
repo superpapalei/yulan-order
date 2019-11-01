@@ -790,7 +790,7 @@ export default {
                 });
                 if (!res.data) {
                   this.$alert(
-                    `活动‘&${item.ORDERBODY[i].PROMOTION}$’不存在`,
+                    `活动‘&${item.ORDERBODY[i].PROMOTION}’不存在`,
                     "提示",
                     {
                       confirmButtonText: "确定",
@@ -799,9 +799,9 @@ export default {
                   );
                   return;
                 }
-                if (new Date(res.data.DATE_END) < new Date()) {
+                if (new Date(res.data.DATE_END) < new Date() || res.data.USE_ID == "0") {
                   this.$alert(
-                    `活动‘&${item.ORDERBODY[i].PROMOTION}$’已过期，请删除订单后重新下单`,
+                    `活动‘&${item.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
                     "提示",
                     {
                       confirmButtonText: "确定",

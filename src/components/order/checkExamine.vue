@@ -718,7 +718,6 @@ export default {
           );
         } else {
           if (this.ruleForm.STATUS_ID == 5 || this.ruleForm.STATUS_ID == 6) {
-            console.log(this.ruleForm)
             //欠款可提交判断活动和优惠券是否过期
             for (var i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
               if (this.ruleForm.ORDERBODY[i].PROMOTION_TYPE && this.ruleForm.ORDERBODY[i].PROMOTION_TYPE!=' ') {
@@ -728,7 +727,7 @@ export default {
                 });
                 if (!res.data) {
                   this.$alert(
-                    `活动‘&${this.ruleForm.ORDERBODY[i].PROMOTION}$’不存在`,
+                    `活动‘&${this.ruleForm.ORDERBODY[i].PROMOTION}’不存在`,
                     "提示",
                     {
                       confirmButtonText: "确定",
@@ -737,9 +736,9 @@ export default {
                   );
                   return;
                 }
-                if (new Date(res.data.DATE_END) < new Date()) {
+                if (new Date(res.data.DATE_END) < new Date() || res.data.USE_ID == "0") {
                   this.$alert(
-                    `活动‘&${this.ruleForm.ORDERBODY[i].PROMOTION}$’已过期，请删除订单后重新下单`,
+                    `活动‘&${this.ruleForm.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
                     "提示",
                     {
                       confirmButtonText: "确定",

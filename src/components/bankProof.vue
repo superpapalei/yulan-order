@@ -471,10 +471,6 @@ export default {
         {
           label: "中信银行",
           value: "中信银行"
-        },
-        {
-          label: "中国邮政储蓄银行",
-          value: "中国邮政储蓄银行"
         }
       ],
       bankData: []
