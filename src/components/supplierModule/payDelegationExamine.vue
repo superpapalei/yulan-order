@@ -4,7 +4,7 @@
     <el-card shadow="hover">
 
       <div slot="header">
-        <span class="fstrong f16">付款委托书</span>
+        <span class="fstrong f16">付款委托书（审核）</span>
       </div>
 
       <div id="tbar" class="tbarStyle">
@@ -169,7 +169,6 @@
                   tabindex="0"
                 >
                   <a class="el-upload-list__item-name" >
-                    <i class="el-icon-document" ></i>
                       <el-link
                          type="primary"
                          size="mini"
@@ -180,8 +179,8 @@
 
                       </el-link>
                   </a>
-                  <label style="display:block;position:absolute;top:0px;right:30px;">
-                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载附件</a>
+                  <label style="display:block;position:absolute;top:0px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
                   </label>
               </li>
               </ul>
@@ -243,7 +242,6 @@
                   tabindex="0"
                 >
                   <a class="el-upload-list__item-name" >
-                    <i class="el-icon-document" ></i>
                       <el-link
                          type="primary"
                          size="mini"
@@ -254,8 +252,8 @@
 
                       </el-link>
                   </a>
-                  <label style="display:block;position:absolute;top:0px;right:30px;">
-                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载附件</a>
+                  <label style="display:block;position:absolute;top:0px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
                   </label>
               </li>
               </ul>
@@ -268,15 +266,17 @@
           <tr v-if="this.submitForm.STATE=='2'">
             <td class="grayTD"  colspan="1" rowspan="1"  style="height:50px" >退回原因</td>
             <td colspan="3" rowspan="1"  style="height:50px" >
-            <el-input
+            <div class="selectCard">
+              <el-input
                 v-model="submitForm.RETURN_REASON"
                 type="textarea"
                 maxlength="200"
                 placeholder="（请输入退回原因）"
                 clearable
                 class="inputStyle"
-              >
+                >
               </el-input>
+            </div>
             </td>
           </tr>
         </table>
@@ -703,7 +703,7 @@ export default {
       var list2=url.split('jpg');
       var list3=url.split('jpeg');
       var list4=url.split('bmp');
-      if(list1.length>0||list2.length>0||list2.length>0||list2.length>0)
+      if(list1.length>1||list2.length>1||list3.length>1||list4.length>1)
       {
           this.imgUrl = "";
           //url只是部分路径，还需要一个头部（还需要全路径）
@@ -720,7 +720,7 @@ export default {
       var list2=url.split('jpg');
       var list3=url.split('jpeg');
       var list4=url.split('bmp');
-      if(list1.length>0||list2.length>0||list2.length>0||list2.length>0)
+      if(list1.length>1||list2.length>1||list3.length>1||list4.length>1)
       {
           this.imgUrl=this.Global.baseUrl+url;
           var clientWidth=document.body.clientWidth;
@@ -865,5 +865,25 @@ export default {
 .BIGimg2 {
   width: 200px;
   height: 200px;
+}
+.selectCard .el-textarea__inner {
+    height:49px;
+    display: block;
+    resize: vertical;
+    padding: 1px 1px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: inherit;
+    background-image: none;
+    border: 1px solid
+    #DCDFE6;
+        border-top-color: rgb(220, 223, 230);
+        border-right-color: rgb(220, 223, 230);
+        border-bottom-color: rgb(220, 223, 230);
+        border-left-color: rgb(220, 223, 230);
+    border-radius: 4px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
 }
 </style>
