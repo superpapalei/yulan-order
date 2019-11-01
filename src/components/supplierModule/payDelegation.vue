@@ -44,7 +44,7 @@
          </el-input>
 
         <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
-        <el-button size="medium" type="primary" style="float:right"  @click="downLoad('/Files/template/第三方付款委托书.docx')" >下载委托书</el-button>   
+        <el-button size="medium" type="primary" style="float:right"  @click="downLoad('/Files/template/第三方付款委托书.docx')" >下载委托书模板</el-button>   
       </div>
       
       <div style="margin-top:10px">
@@ -163,7 +163,6 @@
                   tabindex="0"
                 >
                   <a class="el-upload-list__item-name" >
-                    <i class="el-icon-document" ></i>
                       <el-link
                          type="primary"
                          size="mini"
@@ -174,8 +173,8 @@
 
                       </el-link>
                   </a>
-                  <label style="display:block;position:absolute;top:0px;right:30px;">
-                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载附件</a>
+                  <label style="display:block;position:absolute;top:0px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
                   </label>
               </li>
               </ul>
@@ -221,7 +220,7 @@
             <td colspan="1" rowspan="1" style="height:15px">{{item.NAME}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{item.MONEY}}</td>
             
-            <!-- el-upload的属性    :class="{disabled:function(){uploadDisabled(index)}}" -->
+            <!-- el-upload的属性    :class="{disabled:function(){uploadDisabled(index)}}" -->  
             <td colspan="2" rowspan="1" style="height:30px">
                 <div>
                 <el-upload
@@ -234,7 +233,7 @@
                 ref="upload"
                 :auto-upload="false"
                 :file-list="submitDetailForm[index].fileList"
-                :data="{ CID: CID, dateStamp: dateStamp }"
+                :data="{ CID: CID, dateStamp: dateStamp,ID:submitForm.ID,LINE_NO: item.LINE_NO}"
                 :limit=1
               >
                 <i
@@ -625,7 +624,10 @@ export default {
       }
     },
     handleChange(file, fileList,index) {
-      console.log(index);
+      var point = file.name.lastIndexOf('.');
+      var prefix= this.submitForm.ID+'-'+this.CID+'-'+ this.submitDetailForm[index].LINE_NO;
+      var fileName = prefix + file.name.substr(point);
+      file.name=fileName;
       this.submitDetailForm[index].fileList = fileList;
       this.fileChange = true;
     },
@@ -706,7 +708,7 @@ export default {
       var list2=url.split('jpg');
       var list3=url.split('jpeg');
       var list4=url.split('bmp');
-      if(list1.length>0||list2.length>0||list2.length>0||list2.length>0)
+      if(list1.length>1||list2.length>1||list3.length>1||list4.length>1)
       {
           this.imgUrl = "";
           //url只是部分路径，还需要一个头部（还需要全路径）
@@ -723,7 +725,7 @@ export default {
       var list2=url.split('jpg');
       var list3=url.split('jpeg');
       var list4=url.split('bmp');
-      if(list1.length>0||list2.length>0||list2.length>0||list2.length>0)
+      if(list1.length>1||list2.length>1||list3.length>1||list4.length>1)
       {
           this.imgUrl=this.Global.baseUrl+url;
           var clientWidth=document.body.clientWidth;
