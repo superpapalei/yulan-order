@@ -78,7 +78,7 @@
           prop="STORE_AREA"
           label="店面面积(m2)"
           align="center"
-          width="110"
+          width="70"
         ></el-table-column>
         <el-table-column
           prop="STORE_PLIE"
