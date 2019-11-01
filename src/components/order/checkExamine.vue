@@ -319,12 +319,15 @@ import {
   updateCurtainOrder,
   InsertOperationRecord,
   getOperationRecord,
-  GetCtmOrder
+  GetCtmOrder,
+  GetPromotionByType,
+  GetOrderUseRebate
 } from "@/api/orderListASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 import Cookies from "js-cookie";
 import DetailCurtainTable from "../detail/detailCurtainTable";
+import { async } from 'q';
 export default {
   name: "examineDatail",
   props: ["isShowButton"],
@@ -691,7 +694,7 @@ export default {
         companyId: Cookies.get("companyId")
       };
       //每次重新提交的时候判断一下余额
-      queryCash(url, data).then(res => {
+      queryCash(url, data).then(async res => {
         this.Initial_balance = res.data;
         var url2 = "/order/putAgainOrder.do";
         var data2 = {
@@ -714,6 +717,65 @@ export default {
             }
           );
         } else {
+          if (this.ruleForm.STATUS_ID == 5 || this.ruleForm.STATUS_ID == 6) {
+            console.log(this.ruleForm)
+            //欠款可提交判断活动和优惠券是否过期
+            for (var i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
+              if (this.ruleForm.ORDERBODY[i].PROMOTION_TYPE && this.ruleForm.ORDERBODY[i].PROMOTION_TYPE!=' ') {
+                var res = await GetPromotionByType({
+                  proType: this.ruleForm.ORDERBODY[i].PROMOTION_TYPE,
+                  cid: Cookies.get("cid")
+                });
+                if (!res.data) {
+                  this.$alert(
+                    `活动‘&${this.ruleForm.ORDERBODY[i].PROMOTION}$’不存在`,
+                    "提示",
+                    {
+                      confirmButtonText: "确定",
+                      type: "success"
+                    }
+                  );
+                  return;
+                }
+                if (new Date(res.data.DATE_END) < new Date()) {
+                  this.$alert(
+                    `活动‘&${this.ruleForm.ORDERBODY[i].PROMOTION}$’已过期，请删除订单后重新下单`,
+                    "提示",
+                    {
+                      confirmButtonText: "确定",
+                      type: "success"
+                    }
+                  );
+                  return;
+                }
+              }
+              if (
+                this.ruleForm.ORDERBODY[i].BACK_Y > 0 ||
+                this.ruleForm.ORDERBODY[i].BACK_M > 0
+              ) {
+                var res = await GetOrderUseRebate({
+                  orderNo: this.ruleForm.ORDERBODY[i].ORDER_NO,
+                  lineNo: this.ruleForm.ORDERBODY[i].LINE_NO
+                });
+                if (res.data.length == 0) {
+                  this.$alert(`优惠券不存在`, "提示", {
+                    confirmButtonText: "确定",
+                    type: "success"
+                  });
+                  return;
+                }
+                for (var j = 0; j < res.data.length; j++) {
+                  if (new Date(res.data[j].DATE_END) < new Date()) {
+                    this.$alert(`优惠券已过期，请删除订单后重新下单`, "提示", {
+                      confirmButtonText: "确定",
+                      type: "success"
+                    });
+                    return;
+                  }
+                }
+              }
+            }
+          }
           payAgain(url2, data2)
             .then(res => {
               var recordData = {
