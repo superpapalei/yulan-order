@@ -33,9 +33,9 @@
         </el-select>
         <el-input
           @keyup.enter.native="search()"
-          placeholder="可搜索单号、申请人"
+          placeholder="可搜索单号、申请人、实施形式"
           v-model="find"
-          style="width:200px;"
+          style="width:250px;"
           clearable
         >
         </el-input>

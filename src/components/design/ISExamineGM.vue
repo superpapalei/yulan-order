@@ -33,9 +33,9 @@
         </el-select>
         <el-input
           @keyup.enter.native="search()"
-          placeholder="可搜索单号、申请人"
+          placeholder="可搜索单号、申请人、实施形式"
           v-model="find"
-          style="width:200px;"
+          style="width:250px;"
           clearable
         >
         </el-input>
@@ -79,7 +79,7 @@
           prop="STORE_AREA"
           label="店面面积(m2)"
           align="center"
-          width="110"
+          width="70"
         ></el-table-column>
         <el-table-column
           prop="STORE_PLIE"
