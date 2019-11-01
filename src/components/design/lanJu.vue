@@ -214,7 +214,7 @@
 
           <tr v-if="submitForm.STATUS==5||submitForm.STATUS==6">
             <td class="grayTD"  colspan="2" rowspan="1"  style="height:30px" >预计出图日期</td>
-            <td colspan="3" rowspan="1"  style="height:30px" >{{submitForm.EXPECTED_DRAW_DATE}}</td>
+            <td colspan="3" rowspan="1"  style="height:30px" >{{submitForm.EXPECTED_DRAW_DATE|datatrans}}</td>
             <td class="grayTD"  colspan="2" rowspan="1"  style="height:30px" >设计图附件</td>
             <td colspan="2" rowspan="1" style="height:30px">
               <ul  class="el-upload-list el-upload-list--text" >
@@ -297,14 +297,22 @@
             </td>
             <td colspan="1" rowspan="1" class="grayTD" style="height:15px">楼盘定位</td>
             <td colspan="3" rowspan="1" style="height:15px">
-                <select v-model="submitForm.ESTATE_TYPE" placeholder="选择楼盘类型" style="float:center;height:100%;width:100%">
-                <option
+              <div class="selectCard">
+               <el-select
+                style="height:16px;width:100%;padding:0px 0px 0px 0px;"
+                v-model="submitForm.ESTATE_TYPE"
+                filterable
+                placeholder="选择楼盘类型"
+              >
+                <el-option
                   v-for="item in typeArray"
-                  :key="item.label"
+                  :key="item.value"
                   :label="item.label"
                   :value="item.value"
-                ></option>
-              </select>
+                >
+                </el-option>
+              </el-select>
+              </div>
             </td>
           </tr>
 
@@ -357,7 +365,13 @@
                   v-model="submitDetailForm[index].HOUSING_AREA"
                   placeholder=""
                   clearable
-                  class="inputStyle">
+                  class="inputStyle"
+                  oninput="value=value.replace(/[^\d.]/g,'')
+                           .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                           .replace('.', '$#$').replace(/\./g, '')
+                           .replace('$#$', '.')
+                           .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
+                  >
             </td>
             <td colspan="2" rowspan="1" style="height:30px">
                   <input
@@ -377,7 +391,7 @@
                 <div>
                 <el-upload
                 class="upload-de"
-                :action="Global.baseUrl + '/LANJU_STORE/UploadFiles'"
+                :action="Global.baseUrl + '/Lanju/UploadFiles'"
                 drag
                 multiple
                 :on-change="function(file,fileList){return  handleChange(file,fileList,index)}"
@@ -1247,8 +1261,8 @@ export default {
 }
 .inputStyle {
   border: 0;
-  height: 100%;
-  width: 100%;
+  height: 95%;
+  width: 95%;
   font-size: 16px;
   text-align: center;
 }
@@ -1262,5 +1276,19 @@ export default {
 .upload-de .el-upload-dragger {
   height: 30px;
   width:200px;
+}
+.selectCard .el-input__inner {
+    height: 21px;
+    width:100%;
+    font-size: 16px;
+    box-shadow: none;
+    border: 1px solid #e9e9e9;
+    text-align: center;
+}
+.selectCard .el-input__icon {
+    height: 100%;
+    width: 22px;
+    text-align: center;
+    line-height: 22px;
 }
 </style>

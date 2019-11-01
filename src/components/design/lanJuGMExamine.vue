@@ -211,7 +211,7 @@
 
           <tr v-if="submitForm.STATUS==5||submitForm.STATUS==6">
             <td class="grayTD"  colspan="2" rowspan="1"  style="height:30px" >预计出图日期</td>
-            <td colspan="3" rowspan="1"  style="height:30px" >{{submitForm.EXPECTED_DRAW_DATE}}</td>
+            <td colspan="3" rowspan="1"  style="height:30px" >{{submitForm.EXPECTED_DRAW_DATE|datatrans}}</td>
             <td class="grayTD"  colspan="2" rowspan="1"  style="height:30px" >设计图附件</td>
             <td colspan="2" rowspan="1" style="height:30px">
               <ul  class="el-upload-list el-upload-list--text" >
@@ -328,13 +328,13 @@
                   style="width:60%;"
                   ></el-date-picker>
             </td> 
-            <td  v-if="submitForm.STATUS==5" colspan="3" rowspan="1" style="height:30px">{{submitForm.EXPECTED_DRAW_DATE}}</td>
+            <td  v-if="submitForm.STATUS==5" colspan="3" rowspan="1" style="height:30px">{{ submitForm.EXPECTED_DRAW_DATE | datatrans }}</td>
             <td class="grayTD"  colspan="2" rowspan="1"  style="height:30px" >设计图附件</td>
             <td colspan="2" rowspan="1" style="height:30px" v-if="submitForm.STATUS==5">
                 <div>
                   <el-upload
                      class="upload-de"
-                     :action="Global.baseUrl + '/LANJU_STORE/UploadFiles'"
+                     :action="Global.baseUrl + '/Lanju/UploadFiles'"
                      drag
                      multiple
                      :on-change="handleChange"
@@ -620,7 +620,7 @@ export default {
         PAY_NOTE: "",
         PAY_DETAIL: "",
         MEMO: "",
-        EXPECTED_DRAW_DATE: "",
+        EXPECTED_DRAW_DATE: "9999/12/31",
         SUBMIT_DATE: "",
         STATUS: 1
       },
@@ -747,8 +747,10 @@ export default {
             this.detailCount=res.count;
             this.submitForm.CUSTOMER_AGENT = this.submitDetailForm[0].CUSTOMER_AGENT;
             this.submitForm.OFFICE_TEL= this.submitDetailForm[0].OFFICE_TEL;
-            this.submitForm.EXPECTED_DRAW_DATE= "";
-
+            if(this.submitForm.STATUS==3)
+            {
+                this.submitForm.EXPECTED_DRAW_DATE= "";
+            }
           }
           //将数据库里文件路径集合数据拆解，拆分成可以访问的路径
           for (let j = 0; j < this.submitDetailForm.length; j++) {

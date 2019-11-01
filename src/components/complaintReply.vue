@@ -768,4 +768,24 @@ export default {
   font-size: 16px;
   text-align: center;
 }
+.table-c .el-textarea__inner {
+    height:34px;
+    display: block;
+    resize: vertical;
+    padding: 1px 1px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: inherit;
+    background-image: none;
+    border: 1px solid
+    #DCDFE6;
+        border-top-color: rgb(220, 223, 230);
+        border-right-color: rgb(220, 223, 230);
+        border-bottom-color: rgb(220, 223, 230);
+        border-left-color: rgb(220, 223, 230);
+    border-radius: 4px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+}
 </style>
