@@ -1643,7 +1643,7 @@ detailCol:[
       sumMoney: 0,
       items: [],
       po: "",
-      date1: this.getCurrentWeek(),
+      date1: this.getPastMonth(),
       date2: new Date(),
       now: new Date(),
       Month: new Date().getMonth() + 1,
@@ -1871,6 +1871,13 @@ detailCol:[
       date.setHours(0, 0, 0);
       return date;
     },
+     //获取最近三十天时间
+    getPastMonth() {
+      var date = new Date();
+      date.setDate(date.getDate() - 30);
+      date.setHours(0, 0, 0);
+      return date;
+    },
     //获取截止时间一天中的最后时间
     getTodayMaxTime() {
       var date = new Date();
@@ -1956,7 +1963,7 @@ detailCol:[
           this.selvalue = "all";
           this.po_type = "all";
           this.po = "";
-          this.date1 = this.getCurrentWeek();
+          this.date1 = this.getPastMonth();
           this.date2 = this.getTodayMaxTime();
           break;
         case "second":
