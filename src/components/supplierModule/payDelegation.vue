@@ -593,6 +593,16 @@ export default {
     },
     //编辑列表详情修改
     _editSubmit() {
+      //提交前判断每个明细是否上传附件
+      for (let i = 0; i < this.submitDetailForm.length; i++) {
+          if (this.submitDetailForm[i].fileList.length == 0) {
+            this.$alert("每个明细都必须上传一个附件", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+          return;
+        }
+      }
       if (this.fileChange) {
         //文件发生改变，重新上传一次(仅选中修改后的文件，而不是所有文件效率会更高)
         for (let i = 0; i < this.submitDetailForm.length; i++) {
@@ -667,15 +677,6 @@ export default {
     },
     submitEDITANSYC() {
       this.submitForm.USER_AFFIRM=this.CNAME;
-      for (let i = 0; i < this.submitDetailForm.length; i++) {
-            if (this.submitDetailForm[i].fileList.length == 0) {
-          this.$alert("每个明细都必须上传一个附件", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-          return;
-        }
-      }
       //相当于同步，等提交成功后再执行
       editByCustomer({model:this.submitForm,detailModels:this.submitDetailForm, attchmentChange: this.fileChange,deleteFile: this.deleteFile}).then(res => {
         if (res.code == 0) {
