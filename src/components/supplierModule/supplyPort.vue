@@ -1208,7 +1208,7 @@
                
               </div>
 
-              <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" stripe>
+              <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" highlight-current-row>
                  <el-table-column
                   v-if="false" 
                   type="selection"
@@ -1335,7 +1335,7 @@
                 class="th-font14"
                 style="width: 100%"
                 cellpadding="0"
-                stripe
+                highlight-current-row
               >
                 <el-table-column   label=" "  type="index" :index="indexMethod">
                 </el-table-column>
@@ -1431,7 +1431,7 @@
                 class="th-font14"
                 style="width: 100% margin:6px"
                 cellpadding="0"
-                stripe
+                highlight-current-row
               
               >
                 <el-table-column   label=" "  type="index" :index="indexMethod">
