@@ -272,12 +272,15 @@ import {
   getAllOrders,
   InsertOperationRecord,
   cancelOrderNew,
-  copyCartItem
+  copyCartItem,
+  GetPromotionByType,
+  GetOrderUseRebate
 } from "@/api/orderListASP";
 import { cancelOrder, payAgain, queryCash } from "@/api/orderList";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 import Cookies from "js-cookie";
+import { async } from "q";
 export default {
   name: "MyOrder",
   data() {
@@ -526,7 +529,7 @@ export default {
         transCookies[i].height = item.ORDERBODY[i].CURTAIN_HEIGHT;
         transCookies[i].orderNumber = item.ORDER_NO;
         transCookies[i].lineNo = item.ORDERBODY[i].LINE_NO;
-        transCookies[i].activityId = item.ORDERBODY[i].PROMOTION_TYPE;
+        transCookies[i].activityId = item.ORDERBODY[i].curtains[0].activityId;
         transCookies[i].quantity = item.ORDERBODY[i].QTY_REQUIRED;
         transCookies[i].price = item.ORDERBODY[i].UNIT_PRICE;
         transCookies[i].splitShipment = item.ORDERBODY[i].PART_SEND_ID;
@@ -757,7 +760,7 @@ export default {
         companyId: Cookies.get("companyId")
       };
       //每次重新提交的时候判断一下余额
-      queryCash(url, data).then(res => {
+      queryCash(url, data).then(async res => {
         this.Initial_balance = res.data;
         var url2 = "/order/putAgainOrder.do";
         var data2 = {
@@ -777,6 +780,64 @@ export default {
             }
           );
         } else {
+          if (item.STATUS_ID == 5 || item.STATUS_ID == 6) {
+            //欠款可提交判断活动和优惠券是否过期
+            for (var i = 0; i < item.ORDERBODY.length; i++) {
+              if (item.ORDERBODY[i].PROMOTION_TYPE) {
+                var res = await GetPromotionByType({
+                  proType: item.ORDERBODY[i].PROMOTION_TYPE,
+                  cid: Cookies.get("cid")
+                });
+                if (!res.data) {
+                  this.$alert(
+                    `活动‘&${item.ORDERBODY[i].PROMOTION}’不存在`,
+                    "提示",
+                    {
+                      confirmButtonText: "确定",
+                      type: "success"
+                    }
+                  );
+                  return;
+                }
+                if (new Date(res.data.DATE_END) < new Date() || res.data.USE_ID == "0") {
+                  this.$alert(
+                    `活动‘&${item.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
+                    "提示",
+                    {
+                      confirmButtonText: "确定",
+                      type: "success"
+                    }
+                  );
+                  return;
+                }
+              }
+              if (
+                item.ORDERBODY[i].BACK_Y > 0 ||
+                item.ORDERBODY[i].BACK_M > 0
+              ) {
+                var res = await GetOrderUseRebate({
+                  orderNo: item.ORDERBODY[i].ORDER_NO,
+                  lineNo: item.ORDERBODY[i].LINE_NO
+                });
+                if (res.data.length == 0) {
+                  this.$alert(`优惠券不存在`, "提示", {
+                    confirmButtonText: "确定",
+                    type: "success"
+                  });
+                  return;
+                }
+                for (var j = 0; j < res.data.length; j++) {
+                  if (new Date(res.data[j].DATE_END) < new Date()) {
+                    this.$alert(`优惠券已过期，请删除订单后重新下单`, "提示", {
+                      confirmButtonText: "确定",
+                      type: "success"
+                    });
+                    return;
+                  }
+                }
+              }
+            }
+          }
           payAgain(url2, data2)
             .then(res => {
               var recordData = {

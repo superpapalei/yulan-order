@@ -79,10 +79,7 @@
           <el-button
             :id="'cardBtnCheck' + item.ORDER_NO"
             style="float: right;margin-right:10px;"
-            v-if="
-              (item.CURTAIN_STATUS_ID == '0' && item.STATUS_ID == '1') ||
-                item.CURTAIN_STATUS_ID == '3'
-            "
+           
             @click="toExamineDetail(item.ORDER_NO)"
             size="mini"
             type="success"

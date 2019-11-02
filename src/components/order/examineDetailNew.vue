@@ -648,7 +648,7 @@
           prop="NOTES"
           label="备注"
         ></el-table-column>
-        <el-table-column align="center" label="详情">
+        <!-- <el-table-column align="center" label="详情">
           <template slot-scope="scope">
             <el-button
               @click="openDialog(scope.row, scope.$index)"
@@ -657,7 +657,7 @@
               >查看详情</el-button
             >
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- <el-table-column
           align="center"
           prop="checkStatus"

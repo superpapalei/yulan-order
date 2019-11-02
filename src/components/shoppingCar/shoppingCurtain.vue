@@ -457,22 +457,12 @@ export default {
                 confirmButtonText: "确定",
                 type: "success"
               });
-              let multipleTable = "multipleTable" + _index;
-              if (this.$refs[multipleTable].data.length === 1) {
-                this.deleteTable(_index);
-              } else {
-                let num = this.shopsData[_index].curtainCartItems.indexOf(data);
-                this.shopsData[_index].curtainCartItems.splice(num, 1);
-              }
-              this.$refs[multipleTable].clearSelection();
+              this.init();
             })
             .catch(err => {
               this.$alert("发生错误，删除失败", "提示", {
                 confirmButtonText: "确定",
                 type: "warning"
-              }).then(() => {
-                let multipleTable = "multipleTable" + _index;
-                this.$refs[multipleTable].clearSelection();
               });
             });
         })
@@ -494,33 +484,16 @@ export default {
           }
           deleteTheGroup(obj)
             .then(res => {
-              let multipleTable = "multipleTable" + _index;
-              if (
-                this.multipleSelection.length ===
-                this.$refs[multipleTable].data.length
-              ) {
-                this.deleteTable(_index);
-              } else {
-                for (let i = 0; i < this.multipleSelection.length; i++) {
-                  let num = this.shopsData[_index].curtainCartItems.indexOf(
-                    this.multipleSelection[i]
-                  );
-                  this.shopsData[_index].curtainCartItems.splice(num, 1);
-                }
-              }
-              this.$refs[multipleTable].clearSelection();
               this.$alert("删除成功", "提示", {
                 confirmButtonText: "确定",
                 type: "success"
               });
+              this.init();
             })
             .catch(err => {
               this.$alert("发生错误，删除失败", "提示", {
                 confirmButtonText: "确定",
                 type: "warning"
-              }).then(() => {
-                let multipleTable = "multipleTable" + _index;
-                this.$refs[multipleTable].clearSelection();
               });
             });
         })
