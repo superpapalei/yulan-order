@@ -1197,7 +1197,7 @@ export default {
         }${this.ctm_order.postAddress}`;
         if (this.data[0].addressId == 0) {
           this.ctm_order.postAddressModified = "0";
-          console.log("默认地址");
+          //console.log("默认地址");
           this.ctm_order.allAddress = this.data[0].postAddress;
         } else {
           this.ctm_order.postAddressModified = "1";

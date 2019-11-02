@@ -457,7 +457,7 @@ export default {
         transCookies[i].height = item.ORDERBODY[i].CURTAIN_HEIGHT;
         transCookies[i].orderNumber = item.ORDER_NO;
         transCookies[i].lineNo = item.ORDERBODY[i].LINE_NO;
-        transCookies[i].activityId = item.ORDERBODY[i].PROMOTION_TYPE;
+        transCookies[i].activityId = item.ORDERBODY[i].curtains[0].activityId;
         transCookies[i].quantity = item.ORDERBODY[i].QTY_REQUIRED;
         transCookies[i].price = item.ORDERBODY[i].UNIT_PRICE;
         transCookies[i].splitShipment = item.ORDERBODY[i].PART_SEND_ID;
