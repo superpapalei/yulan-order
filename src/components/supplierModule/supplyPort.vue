@@ -1316,18 +1316,7 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-                <el-button
-                  @click="downLoadAll()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载表头及明细</el-button>
-                   <el-button
-                  @click="downLoadSal()"
-                  size="small"
-                  style="margin-left:8px"
-                  class="button_1"
-                  >下载销售表单</el-button>
+                
               </div>
               <el-table
                 border
