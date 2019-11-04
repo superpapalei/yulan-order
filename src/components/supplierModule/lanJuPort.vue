@@ -149,7 +149,7 @@
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
-                    style="width:904px; float:right"
+                    style="width:903px; float:right"
                     
                    >
                                 <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
@@ -814,7 +814,7 @@
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
-                    style="width:904px; float:right"
+                    style="width:903px; float:right"
                     
                    >
                                 <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
