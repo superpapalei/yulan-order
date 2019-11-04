@@ -653,7 +653,9 @@
                       </tr>
                       <tr>
                         收货人：
-                        <td colsan="3" style="text-align:left"></td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.LINKMAN }}
+                        </td>
                       </tr>
                       
                       
@@ -1097,7 +1099,10 @@
                       </tr>
                       <tr>
                         收货人：
-                        <td colsan="3" style="text-align:left"></td>
+                        <td colsan="3" style="text-align:left">
+                         {{pur_headForm.LINKMAN }}
+                        
+                        </td>
                       </tr>
                       
                     </tbody>
