@@ -331,42 +331,42 @@ export default {
   background-size: cover;
 }
 .android-mini {
-  background: url("../assets/img//format/Android.png") no-repeat;
+  background: url("../assets/img/format/Android.png") no-repeat;
 }
 .excel-mini {
-  background: url("../assets/img//format/Excel.png") no-repeat;
+  background: url("../assets/img/format/Excel.png") no-repeat;
 }
 .exe-mini {
-  background: url("../assets/img//format/EXE.png") no-repeat;
+  background: url("../assets/img/format/EXE.png") no-repeat;
 }
 .folder-mini {
-  background: url("../assets/img//format/Folder.png") no-repeat;
+  background: url("../assets/img/format/Folder.png") no-repeat;
 }
 .pdf-mini {
-  background: url("../assets/img//format/PDF.png") no-repeat;
+  background: url("../assets/img/format/PDF.png") no-repeat;
 }
 .picture-mini {
-  background: url("../assets/img//format/Picture.png") no-repeat;
+  background: url("../assets/img/format/Picture.png") no-repeat;
 }
 .ppt-mini {
-  background: url("../assets/img//format/PPT.png") no-repeat;
+  background: url("../assets/img/format/PPT.png") no-repeat;
 }
 .text-mini {
-  background: url("../assets/img//format/TEXT.png") no-repeat;
+  background: url("../assets/img/format/TEXT.png") no-repeat;
 }
 .unknow-mini {
-  background: url("../assets/img//format/UnKnow.png") no-repeat;
+  background: url("../assets/img/format/UnKnow.png") no-repeat;
 }
 .video-mini {
-  background: url("../assets/img//format/Video.png") no-repeat;
+  background: url("../assets/img/format/Video.png") no-repeat;
 }
 .web-mini {
-  background: url("../assets/img//format/Web.png") no-repeat;
+  background: url("../assets/img/format/Web.png") no-repeat;
 }
 .word-mini {
-  background: url("../assets/img//format/Word.png") no-repeat;
+  background: url("../assets/img/format/Word.png") no-repeat;
 }
 .zip-mini {
-  background: url("../assets/img//format/ZIP.png") no-repeat;
+  background: url("../assets/img/format/ZIP.png") no-repeat;
 }
 </style>

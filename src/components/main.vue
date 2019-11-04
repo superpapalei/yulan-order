@@ -137,15 +137,56 @@
               :label="item.label"
               :closable="item.closable"
             ></el-tab-pane>
-            <div v-if="activeTabName == 'main'">
-              <!-- <el-card>
-                我是主页
-              </el-card> -->
+            <div class="backTop" style="max-height:590px;overflow:auto;">
+              <div v-if="activeTabName == 'main'">
+                <el-card>
+                  <div style="height:550px;overflow:auto;">
+                    <div style="width:300px;" v-if="hotSaleData.length">
+                      <h2 style="text-align:center;">热销榜</h2>
+                      <div>
+                        <table style="margin:0 auto;">
+                          <tr v-for="(item, index) in hotSaleData" :key="index">
+                            <td style="height:30px;">
+                              <span
+                                class="numIndex hot-index-normal"
+                                :class="{
+                                  'hot-index1': index == 0,
+                                  'hot-index2': index == 1,
+                                  'hot-index3': index == 2
+                                }"
+                                >{{ index + 1 }}</span
+                              >
+                              <a
+                                class="hoverAlink"
+                                title="点击前往下单"
+                                @click="selectHot(item.ITEM_NO)"
+                                >{{ item.ITEM_NO }}</a
+                              >
+                              <img
+                                src="../assets/img/img/search-hot.gif"
+                                v-if="index == 0 || index == 1 || index == 2"
+                              />
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </el-card>
+              </div>
+              <keep-alive>
+                <router-view v-if="$route.meta.keepAlive === true" />
+              </keep-alive>
+              <router-view v-if="$route.meta.keepAlive !== true" />
             </div>
-            <keep-alive>
-              <router-view v-if="$route.meta.keepAlive === true" />
-            </keep-alive>
-            <router-view v-if="$route.meta.keepAlive !== true" />
+            <el-backtop target=".backTop" :right="30"
+              ><div
+                style="{height: 100%;width: 100%;background-color: #f2f5f6;box-shadow: 0 0 6px rgba(0,0,0, .12);
+                        text-align: center;line-height: 40px;color: #1989fa;}"
+              >
+                UP
+              </div></el-backtop
+            >
           </el-tabs>
         </el-main>
       </el-container>
@@ -246,6 +287,7 @@ import { GetNewNotification, InserFlag } from "@/api/notificationASP";
 import { GetCustomerMustWriteStudy } from "@/api/studyASP";
 import { QueryWebMenuByUserId } from "@/api/webMenuASP";
 import { getAllOrders } from "@/api/orderListASP";
+import { GetHotSales, GetItemDetailById } from "@/api/itemInfoASP";
 import screenfull from "screenfull";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -337,7 +379,8 @@ export default {
             trigger: "change"
           }
         ]
-      }
+      },
+      hotSaleData: []
     };
   },
   methods: {
@@ -756,6 +799,15 @@ export default {
       }).then(res => {
         if (res.data.children.length > 0) {
           this.setMenuTreeList(res.data.children);
+          if (res.data.children.length == 1) {
+            if (
+              res.data.children[0].MENU_TYPE == "menu" &&
+              (!res.data.children[0].children ||
+                res.data.children[0].children.length == 0)
+            ) {
+              this.addTab(res.data.children[0].MENU_LINK);
+            }
+          }
         } else {
           this.$alert("没有菜单权限，请联系管理员配置", "提示", {
             confirmButtonText: "确定",
@@ -851,6 +903,61 @@ export default {
                 type: "success"
               });
             });
+        }
+      });
+    },
+    getHotSale() {
+      this.hotSaleData = [];
+      GetHotSales().then(res => {
+        this.hotSaleData = res.data;
+      });
+    },
+    selectHot(itemNo) {
+      GetItemDetailById({ itemNo: itemNo }, { loading: false }).then(res => {
+        if (res.data) {
+          switch (res.data[0].PRODUCT_TYPE) {
+            case "KS": //窗帘
+              this.addTab("shops/curtain");
+              this.$router.push({
+                name: "curtain",
+                params: {
+                  selectNo: itemNo
+                }
+              });
+              break;
+            case "ML":
+            case "XHB":
+            case "PJB":
+            case "BZ":
+            case "GH":
+            case "TC":
+            case "other":
+              this.addTab("shops/softSuit");
+              Cookies.set("activeNameSoftSuit", res.data[0].PRODUCT_TYPE);
+              this.$router.push({
+                name: "softSuit",
+                params: {
+                  selectNo: itemNo,
+                  selectType: res.data[0].PRODUCT_TYPE
+                }
+              });
+              break;
+            default:
+              if (
+                res.data[0].PRO_TYPE == "qiang" ||
+                res.data[0].PRO_TYPE == "support" ||
+                res.data[0].PRO_TYPE == "other"
+              ) {
+                this.addTab("shops/wallPaper");
+                this.$router.push({
+                  name: "wallPaper",
+                  params: {
+                    selectNo: itemNo
+                  }
+                });
+              }
+              break;
+          }
         }
       });
     }
@@ -950,7 +1057,7 @@ export default {
     this.userMoney(); //获得用户余额
     this.getPath();
     this.addTab("main");
-    this.addTab(this.defaultUrl);
+    this.addTab(this.defaultUrl); //刷新之后添加的
     this.addBadgeIcon();
     this.PaintingIcon();
     this.OrderDealIcon();
@@ -1027,6 +1134,7 @@ export default {
     //获得最新公告
     if (this.customerType != "110") this.getNews();
     this.getStudy();
+    //this.getHotSale();//获得热销榜
   },
   beforeDestroy() {
     clearInterval(this.newsTimer);
@@ -1181,6 +1289,34 @@ export default {
 }
 .slide-leave-to {
   opacity: 0;
+}
+.numIndex {
+  display: inline-block;
+  padding: 1px 0;
+  color: #fff;
+  width: 14px;
+  line-height: 100%;
+  font-size: 12px;
+  text-align: center;
+  margin-right: 5px;
+}
+.hot-index1 {
+  background-color: #f54545 !important;
+}
+.hot-index2 {
+  background-color: #ff8547 !important;
+}
+.hot-index3 {
+  background-color: #ffac38 !important;
+}
+.hot-index-normal {
+  background-color: #8eb9f5;
+}
+.hoverAlink {
+  cursor: pointer;
+}
+hoverAlink:hover {
+  text-decoration: underline !important;
 }
 </style>
 

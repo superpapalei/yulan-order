@@ -208,7 +208,7 @@ export default {
       ],
       currentPage: 1, //当前的页数
       pageSize: 10, //每页的个数
-      totalNumber: 0 //总条数
+      totalNumber: 0, //总条数
     };
   },
   components: {
@@ -421,12 +421,21 @@ export default {
       this.currentPage = 1;
       Cookies.set("activeNameSoftSuit", tab.name);
       this._getShopsAllSoftSuitMsg(0);
+    },
+    init() {
+      if (this.searchKey === "") {
+        this._getShopsAllSoftSuitMsg(0);
+      } else {
+        this.currentPage = 1;
+        this.searchSoftSuit(1);
+      }
     }
   },
   computed: {
     //获取当前的标签页选项
     activeName: {
       get() {
+        console.log(Cookies.get("activeNameSoftSuit"))
         if (Cookies.get("activeNameSoftSuit") === undefined) {
           Cookies.set("activeNameSoftSuit", "ML");
           this.chooseTab = Cookies.get("activeNameSoftSuit");
@@ -442,7 +451,18 @@ export default {
   created() {
     if (Cookies.get("activeNameSoftSuit") !== undefined) {
       this.chooseTab = Cookies.get("activeNameSoftSuit");
-      this._getShopsAllSoftSuitMsg(0);
+      this.init();
+    }
+  },
+  activated(){
+    var selectNo = this.$route.params.selectNo;
+    var selectType = this.$route.params.selectType;
+    if(selectNo && selectType){
+      this.searchKey = selectNo;
+    }
+    if (Cookies.get("activeNameSoftSuit") !== undefined) {
+      this.chooseTab = Cookies.get("activeNameSoftSuit");
+      this.init();
     }
   }
 };

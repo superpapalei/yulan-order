@@ -1,7 +1,7 @@
 <template>
 <div class="shipmentCard">
   <el-card class="centerCard">
-    <div slot="header">
+    <!-- <div slot="header">
       <span class="headSpan">产品明细与提货信息</span>
       <el-button
         @click="addTab('order/myOrder')"
@@ -10,7 +10,7 @@
         type="success"
         plain
       >返回</el-button>
-    </div>
+    </div> -->
     <el-card class="tableCard" shadow="hover">
       <div slot="header">
         <p class="zoomLeft">
