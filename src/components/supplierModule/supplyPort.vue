@@ -149,7 +149,7 @@
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
-                    style="width:904px; float:right"
+                    style="width:903px; float:right"
                     
                    >
                                 <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
@@ -318,7 +318,7 @@
         :visible.sync="checkY_Visible"
         :close-on-click-modal="false"
         disabled="true"
-        width="1070px"
+        width="1170px"
         top="8vh"
       >
         <div id="checkYPrint" style="margin-bottom:10px">
@@ -348,8 +348,9 @@
                         </el-table-column>
                         <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
                         <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
+                          <el-table-column property="BD_ITEM_NO" label="壁达型号" min-width="100"></el-table-column>
                         <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
-                        <el-table-column property="GRADE" label="规格"  min-width="50"></el-table-column>
+                        <el-table-column property="GRADE" label="规格"  min-width="60"></el-table-column>
                         <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
                         <el-table-column label="含税单价" width="80">
                           <template slot-scope="scope">
@@ -653,7 +654,9 @@
                       </tr>
                       <tr>
                         收货人：
-                        <td colsan="3" style="text-align:left"></td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.LINKMAN }}
+                        </td>
                       </tr>
                       
                       
@@ -790,7 +793,7 @@
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
-                    style="width:904px; float:right"
+                    style="width:903px; float:right"
                     
                    >
                                 <el-table-column  width="80" label="inner名称"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
@@ -902,7 +905,7 @@
         :visible.sync="checkedY_Visible"
         :show-close="true"
         :close-on-click-modal="false"
-        width="1070px"
+        width="1170px"
         top="8vh"
       >
         <div  id="checkedYPrint" style="width:100% ;margin:0 auto;">
@@ -1097,7 +1100,10 @@
                       </tr>
                       <tr>
                         收货人：
-                        <td colsan="3" style="text-align:left"></td>
+                        <td colsan="3" style="text-align:left">
+                         {{pur_headForm.LINKMAN }}
+                        
+                        </td>
                       </tr>
                       
                     </tbody>
@@ -1122,8 +1128,9 @@
                         </el-table-column>
                         <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
                         <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
+                        <el-table-column property="BD_ITEM_NO" label="壁达型号" min-width="100"></el-table-column>
                         <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
-                        <el-table-column property="GRADE" label="规格"  min-width="50"></el-table-column>
+                        <el-table-column property="GRADE" label="规格"  min-width="60"></el-table-column>
                         <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
                         <el-table-column label="含税单价" width="80">
                           <template slot-scope="scope">
@@ -1666,11 +1673,11 @@ detailCol:[
         const { columns, data } = param;
         const sums = [];
         columns.forEach((column, index) => {
-          if (index === 7) {
+          if (index === 8) {
             sums[index] = '汇总';
             return;
           }
-           if (index === 3||index === 4||index === 5||index === 9||index === 12) {
+           if (index === 4||index === 5||index === 6||index === 10||index === 13) {
             sums[index] = '';
             return;
           }
