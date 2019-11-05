@@ -1,7 +1,7 @@
 <template>
   <div >
     <el-card shadow="hover">
-      
+
       <!-- X开头（窗帘）确认采购单界面 -->
       <el-dialog
         :show-close="true"
@@ -1299,8 +1299,8 @@
                   size="small"
                   style="margin-left:8px"
                   class="button_3"
-                
-                  >一键确认</el-button>
+                disabled
+                  >批量确认</el-button>
               </div>
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" highlight-current-row>
                  <el-table-column
