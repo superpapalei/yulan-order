@@ -268,7 +268,7 @@
             width="110px"
           ></el-table-column>
           <el-table-column
-            prop="WEIGHT1"
+            prop="GRADE"
             label="规格/型号"
             align="center"
             width="110px"
@@ -371,7 +371,7 @@
 
         <hr />
         <el-table
-          :data="DetailData"
+          :data="DetailData_1"
           border
           highlight-current-row
           style="width: 100%;font-weight:normal;font-size:12px"
@@ -389,9 +389,9 @@
             align="center"
             width="180px"
           ></el-table-column>
-          <el-table-column label="发货数量" align="center" width="150px">
+          <el-table-column label="发货数量" align="center" width="155px">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.INVOICE_QTY" clearable ></el-input>
+              <el-input-number v-model= "scope.row.INVOICE_QTY" size="mini" controls-position="right" :min="0" :max="scope.row.max_qty"></el-input-number>
             </template>
           </el-table-column>
           <el-table-column
@@ -407,7 +407,7 @@
             width="150px"
           ></el-table-column>
           <el-table-column
-            prop="WEIGHT1"
+            prop="GRADE"
             label="规格/型号"
             align="center"
             width="150px"
@@ -643,13 +643,13 @@
           style="width: 100%;font-weight:normal;font-size:12px"
           class="table_1"
         >
-          <el-table-column type="index" width="50px" label="序号" align="center">
+          <el-table-column type="index"  width="45px" label="序号" align="center">
           </el-table-column>
           <el-table-column
             prop="PUR_NO"
             label="采购单号"
             align="center"
-            width="110px"
+            width="100px"
           ></el-table-column>
           <el-table-column
             prop="ITEM_NO"
@@ -667,11 +667,11 @@
             prop="GRADE"
             label="规格"
             align="center"
-            width="110px"
+            width="90px"
           ></el-table-column>
-          <el-table-column label="数量" align="center" width="100px">
+          <el-table-column label="数量" align="center" width="155px">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.INVOICE_QTY" clearable ></el-input>
+              <el-input-number v-model= "scope.row.INVOICE_QTY" size="mini" controls-position="right" :min="0" :max="scope.row.max_qty"></el-input-number>
             </template>
           </el-table-column>
           <el-table-column
@@ -736,6 +736,7 @@ export default {
   name: "DeliveryList",
   data() {
     return {
+      max_qty:[],
       editData: [],
       submit: {
         INVOICE_STATUS: "",
@@ -933,6 +934,7 @@ export default {
         this.multipleSelection_2[i] = {
           ITEM_NO: this.multipleSelection_1[i].ITEM_NO,
           INVOICE_QTY: this.multipleSelection_1[i].QTY_PUR,
+          max_qty:this.multipleSelection_1[i].QTY_PUR,
           //PRICE :this.multipleSelection_1[i].PRICE1,
           MONEY1: this.multipleSelection_1[i].TOTAL_MONEY,
           //this.multipleSelection.MONEY_TAX =val.MONEY_TAX;
@@ -951,9 +953,9 @@ export default {
           QTY:this.multipleSelection_1[i].QTY,
           DATE_REG:this.multipleSelection_1[i].DATE_REG,
           DATE_DELIVER:this.multipleSelection_1[i].DATE_DELIVER,
-
         };
         this.$set(this.multipleSelection_2, i, this.multipleSelection_2[i]);
+        
       }
     },
     //采购单搜索
@@ -1155,6 +1157,30 @@ export default {
       };
       GetDeliveryDetail(data_1).then(res => {
         this.DetailData = res.data;
+        for (var i = 0; i < this.DetailData.length; i++) {
+        this.DetailData_1[i] = {
+          ITEM_NO: this.DetailData[i].ITEM_NO,//物料编码
+          INVOICE_QTY: this.DetailData[i].INVOICE_QTY,//数量
+          max_qty:this.DetailData[i].INVOICE_QTY,//最大数量
+          INVOICE_ID:this.DetailData[i].INVOICE_ID,
+          MONEY1: this.DetailData[i].MONEY1,          
+          PRICE_TAXIN: this.DetailData[i].PRICE_TAXIN,
+          TOTAL_AMOUNT: this.DetailData[i].TOTAL_AMOUNT,
+          UNIT1: this.DetailData[i].UNIT1,         
+          NAMEE: this.DetailData[i].NAMEE,//名称
+          GRADE: this.DetailData[i].GRADE,//品牌
+          NOTE: this.DetailData[i].NOTE,//备注
+          PUR_ID: this.DetailData[i].PUR_ID,
+          PUR_NO: this.DetailData[i].PUR_NO,
+          PRODUCT_NOTE:this.DetailData[i].PRODUCT_NOTE,
+          QTY:this.DetailData[i].QTY,
+          DATE_REG:this.DetailData[i].DATE_REG,
+          DATE_DELIVER:this.DetailData[i].DATE_DELIVER,
+        };
+        this.$set(this.DetailData_1, i, this.DetailData_1[i]);
+        
+      }
+        
       });
     },
     //删除
@@ -1176,7 +1202,7 @@ export default {
       }
       UpdateDelivery({
         headForm: this.submit,
-        gridData: this.DetailData,
+        gridData: this.DetailData_1,
         cid: Cookies.get("companyId")
       }).then(res => {
         if (res.code == "0") {
