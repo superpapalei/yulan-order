@@ -638,6 +638,13 @@ export default {
     this.tableData = [];
     this.history = this.localHistory();
   },
+  activated(){
+    var selectNo = this.$route.params.selectNo;
+    if(selectNo) {
+       this.searchKey = selectNo;
+       this._getShopsWallPaperMsg();
+     }
+  },
   computed: {
     getNum(index) {
       if (typeof data !== "number") return "";

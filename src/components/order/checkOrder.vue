@@ -269,7 +269,7 @@
         ></el-input>
         <span style="color:#ccc">{{ ctm_order.notes | calLength }}/140</span>
         <br />
-        <div v-if="packingShow">
+        <!-- <div v-if="packingShow">
           <span>分包提示：<span style="color:red;">*</span></span>
           <el-radio-group
             v-model="ctm_order.packingNote"
@@ -282,7 +282,7 @@
             <el-radio label="全部分包">全部分包</el-radio>
           </el-radio-group>
         </div>
-        <br />
+        <br /> -->
         <span>工程报备单号：</span>
         <el-input
           style="width:40%;"
@@ -1460,13 +1460,13 @@ export default {
         });
         return;
       }
-      if (this.packingShow && !this.ctm_order.packingNote) {
-        this.$alert("请选择分包提示", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
+      // if (this.packingShow && !this.ctm_order.packingNote) {
+      //   this.$alert("请选择分包提示", "提示", {
+      //     confirmButtonText: "确定",
+      //     type: "warning"
+      //   });
+      //   return;
+      // }
       var url = "/order/getResidemoney.do";
       var data = {
         cid: Cookies.get("cid"),

@@ -219,8 +219,6 @@
             <td colspan="1" rowspan="1" style="height:15px">{{item.LINE_NO}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{item.NAME}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{item.MONEY}}</td>
-            
-            <!-- el-upload的属性    :class="{disabled:function(){uploadDisabled(index)}}" -->  
             <td colspan="2" rowspan="1" style="height:30px">
                 <div>
                 <el-upload
@@ -242,7 +240,7 @@
                 >
                 <span style="font-size:15px;">上传附件</span>
                 </i>
-                <div slot="tip" class="el-upload__tip" style="margin-top:-1px;">只能上传一个文件</div>
+                <div slot="tip" class="el-upload__tip" style="margin-top:-1px;">只能上传一张图片</div>
               </el-upload>
               </div>
             </td>
@@ -348,6 +346,7 @@ export default {
       rowPlus:0,//兰居软装设计需求表中的户型编辑项添加数
       isEdit: false, //编辑记录
       isCheck: false, //查看记录
+      isPicture:true,//上传的文件是否为图片
       initRowspan:5,//基本信息中的初始行数
       usedRowspan:5,//基本信息中的行数
       fileListGM:[],//广美上传的文件集合
@@ -593,6 +592,14 @@ export default {
     },
     //编辑列表详情修改
     _editSubmit() {
+      if(this.isPicture==false)
+      {
+            this.$alert("提交失败，附件仅能上传图片", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+            });
+            return ;
+      }
       //提交前判断每个明细是否上传附件
       for (let i = 0; i < this.submitDetailForm.length; i++) {
           if (this.submitDetailForm[i].fileList.length == 0) {
@@ -634,12 +641,30 @@ export default {
       }
     },
     handleChange(file, fileList,index) {
+      this.isPicture=true;
       var point = file.name.lastIndexOf('.');
       var prefix= this.submitForm.ID+'-'+this.CID+'-'+ this.submitDetailForm[index].LINE_NO;
-      var fileName = prefix + file.name.substr(point);
-      file.name=fileName;
-      this.submitDetailForm[index].fileList = fileList;
-      this.fileChange = true;
+      var suffix=file.name.substr(point);
+      var list1=suffix.split('png');
+      var list2=suffix.split('jpg');
+      var list3=suffix.split('jpeg');
+      var list4=suffix.split('bmp');
+      if(list1.length>1||list2.length>1||list3.length>1||list4.length>1)
+      {
+          var fileName = prefix + suffix;
+          file.name=fileName;
+          this.submitDetailForm[index].fileList = fileList;
+          this.fileChange = true;
+      }
+      else{
+            this.isPicture=false;
+            this.submitDetailForm[index].fileList=[];
+            this.$alert("请上传图片，否则无法成功提交", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+            });
+            return ;
+      }
     },
     handleRemove(file, fileList,index) {
       this.submitDetailForm[index].fileList = fileList;
@@ -703,6 +728,13 @@ export default {
         this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     },
+    // beforeAvatarUpload(file) {
+    //     this.isPicture = (file.type === 'jpeg'||file.type === 'jpg'||file.type === 'bmp'||file.type === 'png');
+    //     if (!this.isPicture) {
+    //       this.$message.error('抱歉，附件仅能上传图片');
+    //     }
+    //     return this.isPicture;
+    // },
     //显示图片
     showImage(url) {
       var list1=url.split('png');
