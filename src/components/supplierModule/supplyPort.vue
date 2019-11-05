@@ -1276,6 +1276,7 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
+                    
                
               </div>
 
@@ -1387,7 +1388,12 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-                
+                 <el-button
+                  @click="downLoadSal()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_1"
+                  >下载销售表单</el-button>
               </div>
               <el-table
                 border
@@ -2076,12 +2082,12 @@ detailCol:[
        var  customer= "";
         var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
        var   check_flag= this.check_flag;
-  var beginTime= this.datatransMethod(this.date1);
+       var beginTime= this.datatransMethod(this.date1);
       var finishTime= this.getEndtime(this.date2);
         var po= this.po;
       
       downLoadFile(
-          this.Global.baseUrl + `PUR_HEAD/SalExcel?current_id=${current_id}&customer=${customer}&po_type=${po_type}&check_flag=${check_flag}&beginTime=${beginTime}&finishTime=${finishTime}&po=${po}`
+          this.Global.baseUrl + `PUR_HEAD/SalExcel_1?current_id=${current_id}&customer=${customer}&po_type=${po_type}&check_flag=${check_flag}&beginTime=${beginTime}&finishTime=${finishTime}&po=${po}`
       );
     },
 
@@ -2518,7 +2524,7 @@ z-index:9999;
 position:fixed;
 z-index:1;
 top: 200px;
-padding-left: 900px;
+right:250px;
 z-index:99999
 }
 </style>

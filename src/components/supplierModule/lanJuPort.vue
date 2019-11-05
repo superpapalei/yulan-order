@@ -1,7 +1,33 @@
 <template>
   <div >
     <el-card shadow="hover">
-
+      <el-dialog  
+        :show-close="true"
+        :visible.sync="batchTip_Visible"
+        :close-on-click-modal="false"
+        width="400px"
+       
+        top="20vh">
+        <div>
+             <div  class="th-font16" align="center" >请确定批量送货日期:</div>
+          <el-card >
+                    <el-date-picker
+                      v-model="batchdate_deliver"
+                      type="date"
+                      format="yyyy-MM-dd"
+                      value-format="yyyy-MM-dd"
+                      placeholder="选择时间"
+                      style="width:40%"
+                    ></el-date-picker>
+                   
+                       <el-button
+                      style="width:40% align:right"
+                      class="button_4"
+                      @click="BatchSure"
+                      >确认</el-button>
+                      </el-card>
+        </div>
+      </el-dialog>
       <!-- X开头（窗帘）确认采购单界面 -->
       <el-dialog
         :show-close="true"
@@ -685,12 +711,7 @@
                         </td>
                       </tr>
                      
-                      <tr>
-                        收货人：
-                        <td colsan="3" style="text-align:left">
-                               {{pur_headForm.LINKMAN }}
-                        </td>
-                      </tr>
+                      
                       <!-- <div style="border:1px solid #999;padding:2px;width:400px"> -->
                    
  </tbody>
@@ -959,11 +980,11 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >采购单
-  <div class="fixedDiv">
+  <div class="fixedDiv"  >
 <div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
 <div style="margin:20px"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
 <div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
- </div>
+  </div>
                 </td>
               </tr>
               <tr>
@@ -1143,12 +1164,7 @@
                           {{ pur_headForm.ORDER_MAN }}
                         </td>
                       </tr>
-                      <tr>
-                        收货人：
-                        <td colsan="3" style="text-align:left">
-                               {{pur_headForm.LINKMAN }}
-                        </td>
-                      </tr>
+                     
                       
                     </tbody>
                   </table>
@@ -1294,13 +1310,12 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-               <el-button
+               <!-- <el-button
                   @click="OneStepCheck()"
                   size="small"
                   style="margin-left:8px"
                   class="button_3"
-                disabled
-                  >批量确认</el-button>
+                  >批量确认</el-button> -->
               </div>
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" highlight-current-row>
                  <el-table-column
@@ -1701,6 +1716,8 @@ detailCol:[
       input: "",
       selvalue: "all",
       date_deliver: "",
+      batchdate_deliver:"",
+      batchTip_Visible:false,
       checkX_Visible: false,
       checkY_Visible: false,
       checkedX_Visible: false,
@@ -1769,16 +1786,32 @@ detailCol:[
       },
       //选择或输入条件后搜索
     OneStepCheck() {
-      let arr_pur=[];
+      if(arr_pur.length==0){
+        this.$alert("未选定任何项！", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+      }
+      else {
+        this.batchTip_Visible=true;
+      }
+    },
+   BatchSure(){
+      if (this.batchdate_deliver == "") {
+        this.$alert("请选择一个统一的时间！", "提示", {
+          confirmButtonText: "好的",
+          type: "warning"
+        });
+        return;
+      }
+     else{
+       let arr_pur=[];
       for(let i=0; i<this.multipleSelection.length;i++){
         arr_pur.push(this.multipleSelection[i].PUR_NO);
       }
-      if(arr_pur.length==0){
-        return "未选定任何项！"
-      }
-      else {
       var data={
-        arr_pur:arr_pur,
+       arr_pur:arr_pur,
+       batchdate_deliver:this.batchdate_deliver
       };
       UpdateCheckFlagBatch(data).then(res => {
           if (res.code == 0) {
@@ -1786,6 +1819,7 @@ detailCol:[
             confirmButtonText: "确定",
             type: "success"
           });
+          this.batchTip_Visible=false;
           this.autoSearch();
         } else {
           this.$alert("批量确认失败，请稍后重试", "提示", {
@@ -1795,8 +1829,9 @@ detailCol:[
         }
       });
       }
-    },
-
+   
+     
+},
 
     
 
@@ -2301,12 +2336,12 @@ detailCol:[
         // k ,j  i 
              this.arr_index.splice(0,this.arr_index.length);
              this.arr_span.splice(0,this.arr_span.length);
-           console.log("this.items"); 
-         console.log(this.items);
+          //  console.log("this.items"); 
+        //  console.log(this.items);
             for (let k=0;k<this.items.length;k++){
                    let arr=this.items[k].tab2[k];
-                    console.log("arr");
-                     console.log(arr);
+                    // console.log("arr");
+                    //  console.log(arr);
                      let let_intSpana=[];
                      let let_index=[];
                    var intSpan=1;
@@ -2505,6 +2540,14 @@ detailCol:[
   color: rgb(255, 255, 255);
   text-align: center;
 }
+.button_4 {
+  width: 120px;
+ 
+  background: #e6a23c;
+  margin-left: 20px;
+  color: rgb(255, 255, 255);
+  text-align: center;
+}
 .btn-style {
   font: 12px Arial;
   height: 24px;
@@ -2551,6 +2594,10 @@ detailCol:[
   display: inline-block;
 }
 .button_clolur {
+  background: #8bc34a;
+  color: rgb(255, 255, 255);
+}
+.button_yellowclolur {
   background: #8bc34a;
   color: rgb(255, 255, 255);
 }
@@ -2617,10 +2664,14 @@ z-index:9999;
   padding: 3px 0 !important;
 }
 .fixedDiv {
+  
 position:fixed;
+border:1px;
+border-color:#000;
 z-index:1;
 top: 200px;
-padding-left: 900px;
-z-index:99999
+right:250px;
+/* padding-left: 900px; */
+z-index:9999
 }
 </style>
