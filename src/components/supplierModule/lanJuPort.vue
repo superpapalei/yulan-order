@@ -337,8 +337,6 @@
                         class="tb_font13"
                         cellpadding="0" 
                         style="width:100%"
-                         :summary-method="getSummaries"
-                         show-summary 
                         >
                         <el-table-column
                         width="16"
@@ -357,7 +355,10 @@
                           </template>
                         </el-table-column>
                         <el-table-column property="UNIT1" label="单位"  min-width="50"></el-table-column>
-                        <el-table-column property="TOTAL_MONEY" label="金额"  min-width="80"> 
+                         <el-table-column  label="金额"   min-width="80"> 
+                           <template slot-scope="scope">
+                            <span>{{ scope.row.TOTAL_MONEY | numFilter }}</span>
+                          </template>
                         </el-table-column>
                         <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
                         <el-table-column property="DATE_REQ" label="约定日期" width="100" >
@@ -381,6 +382,34 @@
                 <el-input v-model="scope.row.SUPPLY_NOTES" clearable></el-input>
               </template>
             </el-table-column>
+                     </el-table>
+                        <el-table 
+                       :data="sumMoneyCol"
+                       :show-header="false"
+                        class="tb_font13"
+                        cellpadding="0" 
+                        style="width:100%"
+                        >
+                        <el-table-column
+                        width="16"
+                        property="ITEM_NO"
+                        label=" "
+                       >
+                        </el-table-column>
+                        <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
+                        <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
+                        <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
+                        <el-table-column property="GRADE" label="规格"  min-width="50"></el-table-column>
+                        <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
+                        <el-table-column label="含税单价" width="80"></el-table-column>
+                        <el-table-column property="UNIT1" label="单位"  min-width="50">汇总 </el-table-column>
+                       <el-table-column    label="金额" align="right"  min-width="80" > <template slot-scope="scope">
+                            <span>{{ scope.row.name8 | numFilter }}</span>
+                          </template></el-table-column>
+                        <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
+                        <el-table-column property="DATE_REQ" label="约定日期" width="100" ></el-table-column>
+                        <el-table-column property="DATE_DELIVER" label="送货日期" width="120"> </el-table-column>
+                        <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"  min-width="100"></el-table-column> >
                      </el-table>
   
           <hr />
@@ -595,7 +624,10 @@
 
                       <tr>
                         合同号：
-                        <td colsan="3" style="text-align:left"></td>
+                      
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.CONTRACT_NO }}
+                        </td>
                       </tr>
                       <tr>
                         供应商：
@@ -651,38 +683,26 @@
                           {{ pur_headForm.ORDER_MAN }}
                         </td>
                       </tr>
+                     
                       <tr>
                         收货人：
                         <td colsan="3" style="text-align:left">
                                {{pur_headForm.LINKMAN }}
                         </td>
                       </tr>
-                      <tr>
-                        客户名称：
-                        <td colsan="3" style="text-align:left">
-                          {{ pur_headForm.CUSTOMER_NAME }}
-                        </td>
-                      </tr>
-                      <tr>
-                        联系人：
-                        <td colsan="3" style="text-align:left">
-                          {{ pur_headForm.LINKMAN }}
-                        </td>
-                      </tr>
-                      <tr>
-                        联系电话：
-                        <td colsan="4" style="text-align:left">
-                          {{ pur_headForm.LINKTEL }}
-                        </td>
-                      </tr>
-                      <tr>
-                        发货地址：
-                        <td colsan="4" style="text-align:left">
-                          {{ pur_headForm.POST_ADDRESS }}
-                        </td>
-                      </tr>
-                    </tbody>
+                      <!-- <div style="border:1px solid #999;padding:2px;width:400px"> -->
+                   
+ </tbody>
                   </table>
+       <table class="customerInfo" style="text-align:right" >
+                    <tbody>
+                      <tr>  客户名称： <td colsan="3" style="text-align:left">{{ pur_headForm.CUSTOMER_NAME }}</td> </tr>
+                      <tr> 联系人： <td colsan="3" style="text-align:left"> {{ pur_headForm.LINKMAN }} </td> </tr>
+                      <tr> 联系电话：<td colsan="4" style="text-align:left"> {{ pur_headForm.LINKTEL }}</td> </tr>
+                      <tr>发货地址：<td colsan="4" style="text-align:left"> {{ pur_headForm.POST_ADDRESS }} </td></tr>
+                     </tbody>
+                  </table>
+    
                 </td>
               </tr>
               <tr>
@@ -1063,7 +1083,10 @@
 
                       <tr>
                         合同号：
-                        <td colsan="3" style="text-align:left"></td>
+                     
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.CONTRACT_NO }}
+                        </td>
                       </tr>
                       <tr>
                         供应商：
@@ -1125,32 +1148,19 @@
                                {{pur_headForm.LINKMAN }}
                         </td>
                       </tr>
-                      <tr>
-                        客户名称：
-                        <td colsan="3" style="text-align:left">
-                          {{ pur_headForm.CUSTOMER_NAME }}
-                        </td>
-                      </tr>
-                      <tr>
-                        联系人：
-                        <td colsan="3" style="text-align:left">
-                          {{ pur_headForm.LINKMAN }}
-                        </td>
-                      </tr>
-                      <tr>
-                        联系电话：
-                        <td colsan="4" style="text-align:left">
-                          {{ pur_headForm.LINKTEL }}
-                        </td>
-                      </tr>
-                      <tr>
-                        发货地址：
-                        <td colsan="4" style="text-align:left">
-                          {{ pur_headForm.POST_ADDRESS }}
-                        </td>
-                      </tr>
+                      
                     </tbody>
                   </table>
+                      
+                        <table class="customerInfo" style="text-align:right" >
+                    <tbody>
+                      <tr>  客户名称： <td colsan="3" style="text-align:left">{{ pur_headForm.CUSTOMER_NAME }}</td> </tr>
+                      <tr> 联系人： <td colsan="3" style="text-align:left"> {{ pur_headForm.LINKMAN }} </td> </tr>
+                      <tr> 联系电话：<td colsan="4" style="text-align:left"> {{ pur_headForm.LINKTEL }}</td> </tr>
+                      <tr>发货地址：<td colsan="4" style="text-align:left"> {{ pur_headForm.POST_ADDRESS }} </td></tr>
+                     </tbody>
+                  </table>
+                      
                 </td>
               </tr>
               <tr>
@@ -1160,8 +1170,6 @@
                         class="tb_font13"
                         cellpadding="0" 
                         style="width:100%"
-                         :summary-method="getSummaries"
-                         show-summary 
                         >
                         <el-table-column
                         width="16"
@@ -1180,7 +1188,10 @@
                           </template>
                         </el-table-column>
                         <el-table-column property="UNIT1" label="单位"  min-width="50"></el-table-column>
-                        <el-table-column property="TOTAL_MONEY" label="金额"  min-width="80"> 
+                         <el-table-column  label="金额"  min-width="80"> 
+                           <template slot-scope="scope">
+                            <span>{{ scope.row.TOTAL_MONEY | numFilter }}</span>
+                          </template>
                         </el-table-column>
                         <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
                         <el-table-column property="DATE_REQ" label="约定日期" width="100" >
@@ -1191,6 +1202,34 @@
                             <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
                           </template>
                         </el-table-column>
+                        <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"  min-width="60"></el-table-column> >
+                     </el-table>
+                       <el-table 
+                       :data="sumMoneyCol"
+                       :show-header="false"
+                        class="tb_font13"
+                        cellpadding="0" 
+                        style="width:100%"
+                        >
+                        <el-table-column
+                        width="16"
+                        property="ITEM_NO"
+                        label=" "
+                       >
+                        </el-table-column>
+                        <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
+                        <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
+                        <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
+                        <el-table-column property="GRADE" label="规格"  min-width="50"></el-table-column>
+                        <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
+                        <el-table-column label="含税单价" width="80"></el-table-column>
+                        <el-table-column property="UNIT1" label="单位"  min-width="50">汇总</el-table-column>
+                       <el-table-column    label="金额"  min-width="80"> <template slot-scope="scope">
+                            <span>{{ scope.row.name8 | numFilter }}</span>
+                          </template></el-table-column>
+                        <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
+                        <el-table-column property="DATE_REQ" label="约定日期" width="100" ></el-table-column>
+                        <el-table-column property="DATE_DELIVER" label="送货日期" width="100"> </el-table-column>
                         <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"  min-width="60"></el-table-column> >
                      </el-table>
                   <!-- <div><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button> </div> -->
@@ -1254,12 +1293,15 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-               
+               <el-button
+                  @click="OneStepCheck()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_3"
+                  >一键确认</el-button>
               </div>
-
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" highlight-current-row>
                  <el-table-column
-                  v-if="false" 
                   type="selection"
                   width="55"
                   >
@@ -1387,15 +1429,18 @@
                   style="margin-left:8px"
                   class="button_1"
                   >下载销售表单</el-button>
+                  
               </div>
               <el-table
                 border
+                @selection-change="handleSelectionChange" 
                 :data="pur_headData"
                 class="th-font14"
                 style="width: 100%"
                 cellpadding="0"
                 highlight-current-row
               >
+              
                 <el-table-column   label=" "  type="index" :index="indexMethod">
                 </el-table-column>
                 <el-table-column
@@ -1855,9 +1900,36 @@ detailCol:[
       var date = new Date(strDay);
       return date;
     },
+    getBegintime(value){
+     var startTime=null;
+       if (value == null || value == "") {
+         startTime=new Date();
+        let longtime=100*365*24*3600*1000;
+        startTime-=longtime;
+           startTime=new Date(startTime);
+            startTime.setHours(0,0,0);
+      }
+      else{
+         startTime=new Date(value);
+        startTime.setHours(0,0,0);
+      }
+    var  date = this.datatransMethod(startTime);
+    return date;
+    },
+
      getEndtime(value){
-    var endTime=new Date(value);
-    endTime.setHours(23,59,59);
+     var endTime=null;
+       if (value == null || value == "") {
+         endTime=new Date();
+        let longtime=100*365*24*3600*1000;
+        endTime+=longtime;
+            endTime=new Date(endTime);
+            endTime.setHours(23,59,59);
+      }
+      else{
+         endTime=new Date(value);
+        endTime.setHours(23,59,59);
+      }
     var  date = this.datatransMethod(endTime);
     return date;
     },
@@ -2079,7 +2151,7 @@ detailCol:[
         customer: "",
         po_type: this.po_type, //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
         check_flag: this.check_flag,
-        beginTime: this.date1,
+        beginTime:  this.getBegintime(this.date1),
         finishTime: this.getEndtime(this.date2),
         po: this.po,
       };
@@ -2096,7 +2168,7 @@ detailCol:[
        var  customer= "";
         var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
        var   check_flag= this.check_flag;
-  var beginTime= this.datatransMethod(this.date1);
+  var beginTime= this.getBegintime(this.date1);
       var finishTime= this.getEndtime(this.date2);
         var po= this.po;
       
@@ -2120,7 +2192,7 @@ detailCol:[
     downLoadAll() {
       var cid = this.companyId;
       var po = (this.po == null || this.po == "") ? "all" : this.po;
-      var beginTime = this.datatransMethod(this.date1);
+      var beginTime = this.getBegintime(this.date1);
      var finishTime=this.getEndtime(this.date2);
       var po_type = (this.po_type == null || this.po_type == "") ? "all" : this.po_type;
       var selvalue = this.selvalue;
@@ -2297,6 +2369,7 @@ detailCol:[
         this.pur_headForm.LINKTEL = this.gridData[0].LINKTEL;
         this.pur_headForm.POST_ADDRESS = this.gridData[0].POST_ADDRESS;
         this.pur_headForm.STATUS = this.gridData[0].STATUS;
+         this.pur_headForm.CONTRACT_NO = this.gridData[0].CONTRACT_NO;
         this.input = this.pur_headForm.SUPPLY_CHECK_NOTES;
         this.supply_check_notes = this.pur_headForm.SUPPLY_CHECK_NOTES;
         this.date_deliver = "";
@@ -2365,6 +2438,9 @@ detailCol:[
 </script>
 
 <style scoped>
+.customerInfo{
+  border: 1.5px solid #0000FF
+}
 .div-flex{
   display: flex;
 }
@@ -2417,8 +2493,8 @@ detailCol:[
 }
 .button_3 {
   width: 80px;
-  height: 40px;
-  background: #8bc34a;
+  height: 30px;
+  background: #e6a23c;
   margin-left: 10px;
   color: rgb(255, 255, 255);
   text-align: center;

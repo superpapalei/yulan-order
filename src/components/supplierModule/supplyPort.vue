@@ -337,8 +337,7 @@
                         class="tb_font13"
                         cellpadding="0" 
                         style="width:100%"
-                         :summary-method="getSummaries"
-                         show-summary 
+                    
                         >
                         <el-table-column
                         width="16"
@@ -346,10 +345,10 @@
                         label=" "
                         :index="indexMethod">
                         </el-table-column>
-                        <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
-                        <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
-                          <el-table-column property="BD_ITEM_NO" label="壁达型号" min-width="100"></el-table-column>
-                        <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
+                        <el-table-column property="ITEM_NO" label="物料号" min-width="90"></el-table-column>
+                        <el-table-column property="MGUIGE" label="物料型号"  min-width="90"></el-table-column>
+                          <el-table-column property="BD_ITEM_NO" label="壁达型号" min-width="90"></el-table-column>
+                        <el-table-column property="MNAME" label="名称"  min-width="50"></el-table-column>   <!--width="50" -->
                         <el-table-column property="GRADE" label="规格"  min-width="60"></el-table-column>
                         <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
                         <el-table-column label="含税单价" width="80">
@@ -358,9 +357,12 @@
                           </template>
                         </el-table-column>
                         <el-table-column property="UNIT1" label="单位"  min-width="50"></el-table-column>
-                        <el-table-column property="TOTAL_MONEY" label="金额"  min-width="80"> 
+                        <el-table-column  label="金额"  min-width="80"> 
+                           <template slot-scope="scope">
+                            <span>{{ scope.row.TOTAL_MONEY | numFilter }}</span>
+                          </template>
                         </el-table-column>
-                        <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
+                        <el-table-column property="NOTE" label="备注"  min-width="100" ></el-table-column>
                         <el-table-column property="DATE_REQ" label="约定日期" width="100" >
                           <template slot-scope="scope"> <span>{{ scope.row.DATE_REQ | datatrans }}</span> </template>
                         </el-table-column>
@@ -382,6 +384,34 @@
                 <el-input v-model="scope.row.SUPPLY_NOTES" clearable></el-input>
               </template>
             </el-table-column>
+                     </el-table>
+                          <el-table 
+                       :data="sumMoneyCol"
+                       :show-header="false"
+                        class="tb_font13"
+                        cellpadding="0" 
+                        style="width:100%"
+                        >
+                        <el-table-column
+                        width="16"
+                        property="ITEM_NO"
+                        label=" "
+                       >
+                        </el-table-column>
+                        <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
+                        <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
+                        <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
+                        <el-table-column property="GRADE" label="规格"  min-width="50"></el-table-column>
+                        <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
+                        <el-table-column label="含税单价" width="80"></el-table-column>
+                        <el-table-column property="UNIT1" label="单位"  min-width="50">汇总</el-table-column>
+                       <el-table-column    label="金额"   min-width="80" > <template slot-scope="scope">
+                            <span>{{ scope.row.name8 | numFilter }}</span>
+                          </template></el-table-column>
+                        <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
+                        <el-table-column property="DATE_REQ" label="约定日期" width="100" ></el-table-column>
+                        <el-table-column property="DATE_DELIVER" label="送货日期" width="120"> </el-table-column>
+                        <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"  min-width="100"></el-table-column> >
                      </el-table>
   
           <hr />
@@ -596,7 +626,9 @@
 
                       <tr>
                         合同号：
-                        <td colsan="3" style="text-align:left"></td>
+                        <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.CONTRACT_NO }}
+                        </td>
                       </tr>
                       <tr>
                         供应商：
@@ -1042,7 +1074,9 @@
 
                       <tr>
                         合同号：
-                        <td colsan="3" style="text-align:left"></td>
+                       <td colsan="3" style="text-align:left">
+                          {{ pur_headForm.CONTRACT_NO }}
+                        </td>
                       </tr>
                       <tr>
                         供应商：
@@ -1117,8 +1151,7 @@
                         class="tb_font13"
                         cellpadding="0" 
                         style="width:100%"
-                         :summary-method="getSummaries"
-                         show-summary 
+                 
                         >
                         <el-table-column
                         width="16"
@@ -1126,10 +1159,10 @@
                         label=" "
                         :index="indexMethod">
                         </el-table-column>
-                        <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
-                        <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
-                        <el-table-column property="BD_ITEM_NO" label="壁达型号" min-width="100"></el-table-column>
-                        <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
+                        <el-table-column property="ITEM_NO" label="物料号" min-width="90"></el-table-column>
+                        <el-table-column property="MGUIGE" label="物料型号"  min-width="90"></el-table-column>
+                        <el-table-column property="BD_ITEM_NO" label="壁达型号" min-width="90"></el-table-column>
+                        <el-table-column property="MNAME" label="名称"  min-width="50"></el-table-column>   <!--width="50" -->
                         <el-table-column property="GRADE" label="规格"  min-width="60"></el-table-column>
                         <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
                         <el-table-column label="含税单价" width="80">
@@ -1138,9 +1171,12 @@
                           </template>
                         </el-table-column>
                         <el-table-column property="UNIT1" label="单位"  min-width="50"></el-table-column>
-                        <el-table-column property="TOTAL_MONEY" label="金额"  min-width="80"> 
+                          <el-table-column  label="金额"  min-width="80"> 
+                           <template slot-scope="scope">
+                            <span>{{ scope.row.TOTAL_MONEY | numFilter }}</span>
+                          </template>
                         </el-table-column>
-                        <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
+                        <el-table-column property="NOTE" label="备注"  min-width="100" ></el-table-column>
                         <el-table-column property="DATE_REQ" label="约定日期" width="100" >
                           <template slot-scope="scope"> <span>{{ scope.row.DATE_REQ | datatrans }}</span> </template>
                         </el-table-column>
@@ -1149,6 +1185,34 @@
                             <span>{{ scope.row.DATE_DELIVER | datatrans }}</span>
                           </template>
                         </el-table-column>
+                        <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"  min-width="60"></el-table-column> 
+                     </el-table>
+                       <el-table 
+                       :data="sumMoneyCol"
+                       :show-header="false"
+                        class="tb_font13"
+                        cellpadding="0" 
+                        style="width:100%"
+                        >
+                        <el-table-column
+                        width="16"
+                        property="ITEM_NO"
+                        label=" "
+                       >
+                        </el-table-column>
+                        <el-table-column property="ITEM_NO" label="物料号" min-width="100"></el-table-column>
+                        <el-table-column property="MGUIGE" label="物料型号"  min-width="100"></el-table-column>
+                        <el-table-column property="MNAME" label="名称"  min-width="60"></el-table-column>   <!--width="50" -->
+                        <el-table-column property="GRADE" label="规格"  min-width="50"></el-table-column>
+                        <el-table-column property="QTY_PUR" label="数量"  min-width="60"></el-table-column>
+                        <el-table-column label="含税单价" width="80"></el-table-column>
+                        <el-table-column property="UNIT1" label="单位"  min-width="50">汇总</el-table-column>
+                       <el-table-column    label="金额"  min-width="80"> <template slot-scope="scope">
+                            <span>{{ scope.row.name8 | numFilter }}</span>
+                          </template></el-table-column>
+                        <el-table-column property="NOTE" label="备注"  min-width="60" ></el-table-column>
+                        <el-table-column property="DATE_REQ" label="约定日期" width="100" ></el-table-column>
+                        <el-table-column property="DATE_DELIVER" label="送货日期" width="100"> </el-table-column>
                         <el-table-column property="SUPPLY_CHECK_NOTES" label="说明"  min-width="60"></el-table-column> >
                      </el-table>
                   <!-- <div><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button> </div> -->
