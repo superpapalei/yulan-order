@@ -428,11 +428,25 @@ export default {
     },
     //初始化
     init() {
-      this.getData(1);
+      if (this.searchKey === "") {
+        this.getData(1);
+      } else {
+        this.currentPage = 1;
+        this.getDataBlur(0);
+      }
     }
   },
   created() {
+    // var selectNo = this.$route.params.selectNo;
+    // if(selectNo) this.searchKey = selectNo;
     this.init();
+  },
+  activated(){
+     var selectNo = this.$route.params.selectNo;
+     if(selectNo) {
+       this.searchKey = selectNo;
+       this.init();
+     }
   }
 };
 </script>

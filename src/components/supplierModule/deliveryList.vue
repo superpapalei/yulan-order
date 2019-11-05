@@ -56,7 +56,7 @@
           type="primary"
           style="float:right"
           @click="_addRecord()"
-          >送货新增</el-button
+          >新增</el-button
         >
       </div>
 
@@ -67,23 +67,23 @@
           style="width: 100%;font-size:12px"
           class="table_1"
         >
-          <el-table-column label="状态" align="center" width="70px">
+          <!-- <el-table-column label="状态" align="center" width="65px">
             <template slot-scope="scope">
               {{ scope.row.INVOICE_STATUS | transStatus }}
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="INVOICE_NO"
             label="送货单号"
             align="center"
-            width="120px"
+            width="100px"
           >
           </el-table-column>
           <el-table-column
             prop="CREATE_DATE"
             label="创建时间"
             align="center"
-            width="110px"
+            width="90px"
           >
             <template slot-scope="scope1">
               {{ scope1.row.CREATE_DATE | datatrans }}
@@ -93,13 +93,13 @@
             prop="CREATE_PERSON"
             label="创建人"
             align="center"
-            width="75px"
+            width="70px"
           ></el-table-column>
           <el-table-column
             prop="LOGISTICS_COMPANY"
             label="物流公司"
             align="center"
-            width="110px"
+            width="100px"
           ></el-table-column>
           <el-table-column
             prop="LOGISTICS_NUMBER"
@@ -111,7 +111,7 @@
             prop="AREA_DISTRICT"
             label="送货地址"
             align="center"
-            width="150px"
+            
           >
           </el-table-column>
           <el-table-column
@@ -125,7 +125,7 @@
             prop="INVOICE_DATE"
             label="发货日期"
             align="center"
-            width="100px"
+            width="90px"
           >
             <template slot-scope="scope2">
               {{ scope2.row.INVOICE_DATE | datatrans }}
@@ -152,7 +152,7 @@
             width="100px"
           >
           </el-table-column>
-          <el-table-column align="center" label="操作" >
+          <el-table-column align="center" label="操作" width="60px">
             <template slot-scope="scope">
               <el-button
                 @click="_CheckDetail(scope.row)"
@@ -160,7 +160,7 @@
                 size="mini"
                 icon="el-icon-search"
                 circle
-                v-show="
+                v-if="
                   scope.row.INVOICE_STATUS == 0 || scope.row.INVOICE_STATUS == 1
                 "
               ></el-button>
@@ -170,7 +170,7 @@
                 size="mini"
                 icon="el-icon-edit"
                 circle
-                v-show="scope.row.INVOICE_STATUS == 2"
+                v-if="scope.row.INVOICE_STATUS == 2"
               ></el-button>
             </template>
           </el-table-column>
@@ -429,11 +429,11 @@
           @click="Delete"
           >删除送货单</el-button
         >
-        <el-button class="trueButton" @click="isTrueEdit">确认</el-button>
+        <el-button class="trueButton" @click= "isTrueEdit">确认发货</el-button>
       </div>
     </el-dialog>
     <el-dialog
-      title="送货单新增"
+      title="新增送货单"
       :visible.sync="DeliverDetail"
       :close-on-click-modal="false"
       width="80%"
@@ -463,50 +463,56 @@
             prop="MNAME"
             label="名称"
             align="center"
-            width="110px"
+            width="200px"
           ></el-table-column>
           <el-table-column
             prop="GRADE"
             label="规格"
             align="center"
-            width="110px"
+            width="80px"
           ></el-table-column>
           <el-table-column
             prop="QTY_PUR"
-            label="用量"
+            label="数量"
             align="center"
-            width="80px"
+            width="70px"
           ></el-table-column>
           <el-table-column
             prop="PRICE_TAXIN"
             label="含税单价"
             align="center"
-            width="100px"
+            width="80px"
           ></el-table-column>
           <el-table-column
             prop="TOTAL_MONEY"
             label="金额"
             align="center"
-            width="100px"
+            width="80px"
           ></el-table-column>
           <el-table-column
             prop="PRODUCT_NOTE"
             label="制作说明"
             align="center"
-            
+            width="100px"
           ></el-table-column>
           <el-table-column
             prop="NOTES"
             label="备注"
             align="center"
-            
+            min-width="300px"
           ></el-table-column>
-          <el-table-column label="约定日期" align="center">
+          <el-table-column
+            prop="QTY"
+            label="已发货数量"
+            align="center"
+            width="100px"
+          ></el-table-column>
+          <el-table-column label="约定日期" align="center" width="90px">
             <template slot-scope="scope1">
               {{ scope1.row.DATE_REG | datatrans }}
             </template>
           </el-table-column>
-          <el-table-column label="送货日期" align="center" >
+          <el-table-column label="送货日期" align="center" width="90px">
             <template slot-scope="scope2">
               {{ scope2.row.DATE_DELIVER | datatrans }}
             </template>
@@ -522,13 +528,14 @@
           @keyup.enter.native="searchPUR()"
           placeholder="请输入采购单号"
           v-model="find"
-          style="width:280px;float:right"
+          style="width:280px;float:left;margin-top:-15px;margin-bottom:5px"
         >
           <el-button
             @click="searchPUR()"
             class="button_1"
             slot="append"
             icon="el-icon-search"
+            
             >搜索</el-button
           >
         </el-input>
@@ -583,7 +590,8 @@
             </td>
           </tr>
           <tr>
-            <td>物流公司：</td>
+            <td>物流公司
+              <span style="color:red;font-size:15px">*</span>：</td>
             <td>
               <input
                 v-model="submitForm.logistics_company"
@@ -593,7 +601,8 @@
               />
             </td>
 
-            <td>物流单号：</td>
+            <td>物流单号
+              <span style="color:red;font-size:15px">*</span>：</td>
             <td>
               <input
                 v-model="submitForm.logistics_number"
@@ -628,13 +637,13 @@
 
         <hr />
         <el-table
-          :data="multipleSelection_1"
+          :data="multipleSelection_2"
           border
           highlight-current-row
           style="width: 100%;font-weight:normal;font-size:12px"
           class="table_1"
         >
-          <el-table-column type="index" width="50px" label="序号">
+          <el-table-column type="index" width="50px" label="序号" align="center">
           </el-table-column>
           <el-table-column
             prop="PUR_NO"
@@ -649,10 +658,10 @@
             width="110px"
           ></el-table-column>
           <el-table-column
-            prop="MNAME"
+            prop="NAMEE"
             label="名称"
             align="center"
-            width="110px"
+            width="180px"
           ></el-table-column>
           <el-table-column
             prop="GRADE"
@@ -660,35 +669,27 @@
             align="center"
             width="110px"
           ></el-table-column>
-          <el-table-column
-            prop="QTY_PUR"
-            label="用量"
-            align="center"
-            width="70px"
-          ></el-table-column>
-          <el-table-column
-            prop="PRICE_TAXIN"
-            label="含税单价"
-            align="center"
-            width="90px"
-          ></el-table-column>
-          <el-table-column
-            prop="TOTAL_MONEY"
-            label="金额"
-            align="center"
-            width="90px"
-          ></el-table-column>
+          <el-table-column label="数量" align="center" width="100px">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.INVOICE_QTY" clearable ></el-input>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="PRODUCT_NOTE"
             label="制作说明"
             align="center"
-           
+            width="120px"
           ></el-table-column>
+          <el-table-column label="备注" align="center" min-width="300px">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.NOTE" clearable ></el-input>
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="NOTES"
-            label="备注"
+            prop="QTY"
+            label="已发货数量"
             align="center"
-           
+            width="100px"
           ></el-table-column>
           <el-table-column label="约定日期" align="center" width="100px">
             <template slot-scope="scope1">
@@ -704,7 +705,7 @@
       </div>
       <div style="margin-left:45%;margin-top:10px">
         <el-button @click="isAddTrue" class="trueButton"
-          >提交确认新增</el-button
+          >保存</el-button
         >
       </div>
     </el-dialog>
@@ -716,7 +717,7 @@ import {
   GetAllData,
   CheckDetailByID,
   addSubmit,
-  editByCustomer
+  editByCustomer,
 } from "@/api/lanju";
 import {
   GetRelativeDelivery,
@@ -724,7 +725,7 @@ import {
   GetPoDetail_1,
   AddDelivery,
   UpdateDelivery,
-  DeleteDelivery
+  DeleteDelivery,
 } from "@/api/supplierASP";
 import { UploadFiles } from "@/api/imageStoreASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
@@ -932,7 +933,6 @@ export default {
         this.multipleSelection_2[i] = {
           ITEM_NO: this.multipleSelection_1[i].ITEM_NO,
           INVOICE_QTY: this.multipleSelection_1[i].QTY_PUR,
-          INVOICE_QTY: this.multipleSelection_1[i].QTY_PUR,
           //PRICE :this.multipleSelection_1[i].PRICE1,
           MONEY1: this.multipleSelection_1[i].TOTAL_MONEY,
           //this.multipleSelection.MONEY_TAX =val.MONEY_TAX;
@@ -946,7 +946,12 @@ export default {
           //this.multipleSelection.FREE_ITEM =val.PUR_ID;
           NOTE: this.multipleSelection_1[i].NOTES,
           PUR_ID: this.multipleSelection_1[i].PUR_ID,
-          PUR_NO: this.multipleSelection_1[i].PUR_NO
+          PUR_NO: this.multipleSelection_1[i].PUR_NO,
+          PRODUCT_NOTE:this.multipleSelection_1[i].PRODUCT_NOTE,
+          QTY:this.multipleSelection_1[i].QTY,
+          DATE_REG:this.multipleSelection_1[i].DATE_REG,
+          DATE_DELIVER:this.multipleSelection_1[i].DATE_DELIVER,
+
         };
         this.$set(this.multipleSelection_2, i, this.multipleSelection_2[i]);
       }
@@ -994,7 +999,8 @@ export default {
         page: this.currentPage,
         beginTime: this.beginTime,
         finishTime: this.finishTime,
-        status: this.SELECT_STATUS
+        status: this.SELECT_STATUS,
+        find:this.SEARCHKEY,
       };
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";
