@@ -439,14 +439,14 @@ export default {
   created() {
     // var selectNo = this.$route.params.selectNo;
     // if(selectNo) this.searchKey = selectNo;
-    // this.init();
+    this.init();
   },
   activated(){
      var selectNo = this.$route.params.selectNo;
      if(selectNo) {
        this.searchKey = selectNo;
+       this.init();
      }
-     this.init();
   }
 };
 </script>
