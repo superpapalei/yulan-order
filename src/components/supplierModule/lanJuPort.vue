@@ -1,6 +1,7 @@
 <template>
   <div >
     <el-card shadow="hover">
+      
       <!-- X开头（窗帘）确认采购单界面 -->
       <el-dialog
         :show-close="true"
@@ -1298,6 +1299,7 @@
                   size="small"
                   style="margin-left:8px"
                   class="button_3"
+                
                   >一键确认</el-button>
               </div>
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" highlight-current-row>
@@ -1771,6 +1773,10 @@ detailCol:[
       for(let i=0; i<this.multipleSelection.length;i++){
         arr_pur.push(this.multipleSelection[i].PUR_NO);
       }
+      if(arr_pur.length==0){
+        return "未选定任何项！"
+      }
+      else {
       var data={
         arr_pur:arr_pur,
       };
@@ -1788,7 +1794,7 @@ detailCol:[
           });
         }
       });
-      
+      }
     },
 
 
