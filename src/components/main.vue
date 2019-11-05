@@ -137,43 +137,49 @@
               :label="item.label"
               :closable="item.closable"
             ></el-tab-pane>
-            <div class="backTop" style="max-height:590px;overflow:auto;">
-              <div v-if="activeTabName == 'main'">
-                <el-card>
-                  <div style="height:550px;overflow:auto;">
-                    <div style="width:300px;" v-if="hotSaleData.length">
-                      <h2 style="text-align:center;">热销榜</h2>
-                      <div>
-                        <table style="margin:0 auto;">
-                          <tr v-for="(item, index) in hotSaleData" :key="index">
-                            <td style="height:30px;">
-                              <span
-                                class="numIndex hot-index-normal"
-                                :class="{
-                                  'hot-index1': index == 0,
-                                  'hot-index2': index == 1,
-                                  'hot-index3': index == 2
-                                }"
-                                >{{ index + 1 }}</span
-                              >
-                              <a
-                                class="hoverAlink"
-                                title="点击前往下单"
-                                @click="selectHot(item.ITEM_NO)"
-                                >{{ item.ITEM_NO }}</a
-                              >
-                              <img
-                                src="../assets/img/img/search-hot.gif"
-                                v-if="index == 0 || index == 1 || index == 2"
-                              />
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
-                    </div>
+            <div v-if="activeTabName == 'main'">
+              <el-card v-if="identity !='SUPLY' && hotSaleData.length>0">
+                <div>
+                  <h2 style="text-align:center;margin:0 0 10px 0;">热销榜</h2>
+                  <div>
+                    <table style="margin:0 auto;">
+                      <tr v-for="(item, index) in hotSaleData" :key="index">
+                        <td
+                          style="height:27px;min-width:160px;"
+                          v-for="(n, indexx) in 5"
+                          :key="indexx"
+                        >
+                          <span
+                            v-if="item[indexx].ITEM_NO != ''"
+                            class="numIndex hot-index-normal"
+                            :class="{
+                              'hot-index1': index == 0,
+                              'hot-index2': index == 1,
+                              'hot-index3': index == 2
+                            }"
+                            >{{ index * 5 + indexx + 1 }}</span
+                          >
+                          <a
+                            class="hoverAlink"
+                            title="点击前往下单"
+                            @click="selectHot(item[indexx].ITEM_NO)"
+                            >{{ item[indexx].ITEM_NO }}</a
+                          >
+                          <img
+                            src="../assets/img/img/search-hot.gif"
+                            v-if="
+                              (index == 0 || index == 1) &&
+                                item[indexx].ITEM_NO != ''
+                            "
+                          />
+                        </td>
+                      </tr>
+                    </table>
                   </div>
-                </el-card>
-              </div>
+                </div>
+              </el-card>
+            </div>
+            <div class="backTop" style="max-height:590px;overflow:auto;">
               <keep-alive>
                 <router-view v-if="$route.meta.keepAlive === true" />
               </keep-alive>
@@ -907,9 +913,33 @@ export default {
       });
     },
     getHotSale() {
-      this.hotSaleData = [];
+      this.hotSaleData = {};
       GetHotSales().then(res => {
-        this.hotSaleData = res.data;
+        if (res.data.length > 0) {
+          var data = [];
+          var index = 0;
+          var indexx = 0;
+          for (var i = 0; i < res.data.length; i++) {
+            if (i >= 5 * (index + 1)) {
+              index++;
+              indexx = 0;
+            }
+            if (i == 5 * index) {
+              data[index] = new Array();
+            }
+            data[index][indexx] = res.data[i];
+            indexx++;
+          }
+          if (data[index].length < 5) {
+            var len = 5 - data[index].length;
+            for (var i = 0; i < len; i++) {
+              data[index].push({
+                ITEM_NO: ""
+              });
+            }
+          }
+          this.hotSaleData = data;
+        }
       });
     },
     selectHot(itemNo) {
@@ -917,13 +947,17 @@ export default {
         if (res.data) {
           switch (res.data[0].PRODUCT_TYPE) {
             case "KS": //窗帘
-              this.addTab("shops/curtain");
-              this.$router.push({
-                name: "curtain",
-                params: {
-                  selectNo: itemNo
-                }
-              });
+              if (this.isContainAttr("shops/curtain")) {
+                this.addTab("shops/curtain");
+                this.$router.push({
+                  name: "curtain",
+                  params: {
+                    selectNo: itemNo
+                  }
+                });
+              } else {
+                console.log("没有该菜单");
+              }
               break;
             case "ML":
             case "XHB":
@@ -932,15 +966,19 @@ export default {
             case "GH":
             case "TC":
             case "other":
-              this.addTab("shops/softSuit");
-              Cookies.set("activeNameSoftSuit", res.data[0].PRODUCT_TYPE);
-              this.$router.push({
-                name: "softSuit",
-                params: {
-                  selectNo: itemNo,
-                  selectType: res.data[0].PRODUCT_TYPE
-                }
-              });
+              if (this.isContainAttr("shops/softSuit")) {
+                this.addTab("shops/softSuit");
+                Cookies.set("activeNameSoftSuit", res.data[0].PRODUCT_TYPE);
+                this.$router.push({
+                  name: "softSuit",
+                  params: {
+                    selectNo: itemNo,
+                    selectType: res.data[0].PRODUCT_TYPE
+                  }
+                });
+              } else {
+                console.log("没有该菜单");
+              }
               break;
             default:
               if (
@@ -948,13 +986,17 @@ export default {
                 res.data[0].PRO_TYPE == "support" ||
                 res.data[0].PRO_TYPE == "other"
               ) {
-                this.addTab("shops/wallPaper");
-                this.$router.push({
-                  name: "wallPaper",
-                  params: {
-                    selectNo: itemNo
-                  }
-                });
+                if (this.isContainAttr("shops/wallPaper")) {
+                  this.addTab("shops/wallPaper");
+                  this.$router.push({
+                    name: "wallPaper",
+                    params: {
+                      selectNo: itemNo
+                    }
+                  });
+                } else {
+                  console.log("没有该菜单");
+                }
               }
               break;
           }
@@ -1134,7 +1176,7 @@ export default {
     //获得最新公告
     if (this.customerType != "110") this.getNews();
     this.getStudy();
-    //this.getHotSale();//获得热销榜
+    this.getHotSale(); //获得热销榜
   },
   beforeDestroy() {
     clearInterval(this.newsTimer);
@@ -1294,7 +1336,7 @@ export default {
   display: inline-block;
   padding: 1px 0;
   color: #fff;
-  width: 14px;
+  min-width: 15px;
   line-height: 100%;
   font-size: 12px;
   text-align: center;
