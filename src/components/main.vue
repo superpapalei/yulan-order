@@ -87,7 +87,7 @@
             >{{ "账户：" + cid + " " + realName + " " + "管理员" }}</span
           >
         </el-header>
-        <el-main style="margin:0;padding:0;background:#ECF5EF;">
+        <el-main style="margin:0;padding:0;background:#ECF5EF;" class="backTop">
           <el-tabs
             class="tabs"
             v-model="activeTabName"
@@ -138,7 +138,7 @@
               :closable="item.closable"
             ></el-tab-pane>
             <div v-if="activeTabName == 'main'">
-              <el-card v-if="identity !='SUPLY' && hotSaleData.length>0">
+              <el-card v-if="identity != 'SUPLY' && hotSaleData.length > 0">
                 <div>
                   <h2 style="text-align:center;margin:0 0 10px 0;">热销榜</h2>
                   <div>
@@ -179,24 +179,22 @@
                 </div>
               </el-card>
             </div>
-            <div class="backTop" style="max-height:590px;overflow:auto;">
-              <keep-alive>
-                <router-view v-if="$route.meta.keepAlive === true" />
-              </keep-alive>
-              <router-view v-if="$route.meta.keepAlive !== true" />
-            </div>
-            <el-backtop target=".backTop" :right="30"
-              ><div
-                style="{height: 100%;width: 100%;background-color: #f2f5f6;box-shadow: 0 0 6px rgba(0,0,0, .12);
-                        text-align: center;line-height: 40px;color: #1989fa;}"
-              >
-                UP
-              </div></el-backtop
-            >
+            <keep-alive>
+              <router-view v-if="$route.meta.keepAlive === true" />
+            </keep-alive>
+            <router-view v-if="$route.meta.keepAlive !== true" />
           </el-tabs>
         </el-main>
       </el-container>
     </el-container>
+    <el-backtop target=".backTop" :right='30' :visibility-height='20'
+      ><div
+        style="{height: 100%;width: 100%;background-color: #f2f5f6;box-shadow: 0 0 6px rgba(0,0,0, .12);
+                        text-align: center;line-height: 40px;color: #1989fa;}"
+      >
+        UP
+      </div></el-backtop
+    >
     <el-dialog
       :show-close="true"
       :visible.sync="notificationVisible"

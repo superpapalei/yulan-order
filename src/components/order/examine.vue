@@ -186,12 +186,14 @@
           </div>
         </div>
       </el-card>
+      <div v-if="data.length==0" style="text-align:center;margin:20px 0;">{{waitText}}
+        </div>
       <div style="margin:0 25%;" class="block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
-          :page-sizes="[5, 10, 15, 20]"
+          :page-sizes="[20, 50, 100, 1000]"
           :page-size="limit"
           layout="total, sizes, prev, pager, next, jumper"
           :total="count"
@@ -219,8 +221,8 @@ export default {
       orderType: "",
       state_id: "",
       activeName: "unCheck",
-      limit: 10,
-      count: 2,
+      limit: 100,
+      count: 0,
       currentPage: 1,
       buttonShow: true,
       isAll: false,
@@ -286,7 +288,8 @@ export default {
           label: "已通过",
           value: "4"
         }
-      ]
+      ],
+      waitText:'加载中。。。'
     };
   },
   filters: {
