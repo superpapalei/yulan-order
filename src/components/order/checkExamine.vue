@@ -452,7 +452,6 @@ export default {
       let transCookies = [];
       for (let i = 0; i < item.ORDERBODY.length; i++) {
         transCookies[i] = new Object();
-        //预留
         transCookies[i].width = item.ORDERBODY[i].CURTAIN_WIDTH;
         transCookies[i].height = item.ORDERBODY[i].CURTAIN_HEIGHT;
         transCookies[i].orderNumber = item.ORDER_NO;
@@ -467,11 +466,11 @@ export default {
         transCookies[i].item.itemNo = item.ORDERBODY[i].ITEM_NO;
         transCookies[i].item.note = item.ORDERBODY[i].NOTES;
         transCookies[i].item.itemVersion = item.ORDERBODY[i].PRODUCTION_VERSION;
-        //orderType
         transCookies[i].salPromotion = new Object();
         transCookies[i].salPromotion.orderType =
           item.ORDERBODY[i].PROMOTION_TYPE;
         transCookies[i].salPromotion.arrearsFlag = item.ARREARSFLAG;
+        transCookies[i].salPromotion.flagFl = item.ORDERBODY[i].FLAG_FL_TYPE;
       }
       transCookies[0].item.groupType = "E";
       sessionStorage.setItem("shopping", JSON.stringify(transCookies));

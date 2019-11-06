@@ -1282,7 +1282,7 @@ export default {
           : "";
         if (getPush2[0].salPromotion != null) {
           this.array2[i].promotionType = getPush2[0].salPromotion.orderType;
-          this.array2[i].flagFlType = getPush2[0].salPromotion.falgFl;
+          this.array2[i].flagFlType = getPush2[0].salPromotion.flagFl;
         }
         //初始化
         this.array2[i].orderNo = getPush2[i].orderNumber;
