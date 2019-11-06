@@ -500,7 +500,7 @@
 
       <div class="fixedDiv">
 <div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<!-- <div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div> -->
 <div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
  </div>
 
@@ -951,7 +951,7 @@
                 >采购单
   <div class="fixedDiv">
 <div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<div style="margin:20px"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
+<!-- <div style="margin:20px"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div> -->
 <div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
  </div>
                 </td>
