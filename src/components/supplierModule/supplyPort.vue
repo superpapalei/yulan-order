@@ -2504,7 +2504,7 @@ z-index:9999;
 }
 .lanJuport .el-input__inner{
 
-  width: 160px;
+   width: 160px !important;
   height: 30px;
   /* margin-left:0px;
   margin-right:0px; */
@@ -2512,7 +2512,7 @@ z-index:9999;
 }
 .lanJuport .el-input,
 .el-date-editor.el-input__inner {
-    width: 160px;
+     width: 160px !important;
 }
 
 

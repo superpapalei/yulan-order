@@ -1386,7 +1386,13 @@
        <el-tab-pane label="已确认" name="second" align="left">
 
               <div  style="margin-bottom:10px;">
-
+              <el-input
+                  @keyup.enter.native="SelectClick()"
+                  prefix-icon="el-icon-search"
+                  placeholder=" 客户:（模糊）"
+                  v-model="customer"
+                >
+                </el-input>
                 <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
@@ -1709,6 +1715,7 @@ detailCol:[
       sumMoney: 0,
       items: [],
       po: "",
+      customer:"",
       date1: this.getPastMonth(),
       date2: new Date(),
       now: new Date(),
@@ -2189,7 +2196,7 @@ detailCol:[
         limit: this.limit,
         page: this.currentPage,
         current_id: Cookies.get("cid"),
-        customer: "",
+       customer:(this.customer == null || this.customer == "") ? "all" : this.customer,
         po_type: this.po_type, //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
         check_flag: this.check_flag,
         beginTime:  this.getBegintime(this.date1),
@@ -2206,7 +2213,7 @@ detailCol:[
 
        downLoadSal() {
        var current_id= Cookies.get("cid");
-       var  customer= "";
+          var customer=(this.customer == null || this.customer == "") ? "all" : this.customer;
         var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
        var   check_flag= this.check_flag;
   var beginTime= this.getBegintime(this.date1);
@@ -2233,12 +2240,13 @@ detailCol:[
     downLoadAll() {
       var cid = this.companyId;
       var po = (this.po == null || this.po == "") ? "all" : this.po;
+      var customer=(this.customer == null || this.customer == "") ? "all" : this.customer;
       var beginTime = this.getBegintime(this.date1);
      var finishTime=this.getEndtime(this.date2);
       var po_type = (this.po_type == null || this.po_type == "") ? "all" : this.po_type;
       var selvalue = this.selvalue;
       downLoadFile(
-        this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}&po=${po}&beginTime=${beginTime}&finishTime=${finishTime}&po_type=${po_type}&selvalue=${selvalue}`,
+        this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}&po=${po}&customer=${customer}&beginTime=${beginTime}&finishTime=${finishTime}&po_type=${po_type}&selvalue=${selvalue}`,
 
 
       );
@@ -2647,7 +2655,7 @@ z-index:9999;
 }
 .lanJuport .el-input__inner{
 
-  width: 160px;
+  width: 160px !important;
   height: 30px;
   /* margin-left:0px;
   margin-right:0px; */
@@ -2655,7 +2663,7 @@ z-index:9999;
 }
 .lanJuport .el-input,
 .el-date-editor.el-input__inner {
-    width: 160px;
+    width: 160px !important;
 }
 
 
