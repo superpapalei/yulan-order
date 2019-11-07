@@ -720,10 +720,10 @@
                   </table>
        <table class="customerInfo" style="text-align:right" >
                     <tbody>
-                      <tr>  客户名称： <td colsan="3" style="text-align:left">{{ pur_headForm.CUSTOMER_NAME }}</td> </tr>
-                      <tr> 联系人： <td colsan="3" style="text-align:left"> {{ pur_headForm.LINKMAN }} </td> </tr>
-                      <tr> 联系电话：<td colsan="4" style="text-align:left"> {{ pur_headForm.LINKTEL }}</td> </tr>
-                      <tr>发货地址：<td colsan="4" style="text-align:left"> {{ pur_headForm.POST_ADDRESS }} </td></tr>
+                      <tr>   <td colsan="3" style="text-align:left">客户名称：{{ pur_headForm.CUSTOMER_NAME }}</td> </tr>
+                      <tr>  <td colsan="3" style="text-align:left">&nbsp;&nbsp;&nbsp;&nbsp;联系人： {{ pur_headForm.LINKMAN }} </td> </tr>
+                      <tr> <td colsan="4" style="text-align:left"> 联系电话：{{ pur_headForm.LINKTEL }}</td> </tr>
+                      <tr><td colsan="4" style="text-align:left">发货地址： {{ pur_headForm.POST_ADDRESS }} </td></tr>
                      </tbody>
                   </table>
     
@@ -1177,10 +1177,10 @@
                       
                         <table class="customerInfo" style="text-align:right" >
                     <tbody>
-                      <tr>  客户名称： <td colsan="3" style="text-align:left">{{ pur_headForm.CUSTOMER_NAME }}</td> </tr>
-                      <tr> 联系人： <td colsan="3" style="text-align:left"> {{ pur_headForm.LINKMAN }} </td> </tr>
-                      <tr> 联系电话：<td colsan="4" style="text-align:left"> {{ pur_headForm.LINKTEL }}</td> </tr>
-                      <tr>发货地址：<td colsan="4" style="text-align:left"> {{ pur_headForm.POST_ADDRESS }} </td></tr>
+                      <tr>  <td colsan="3" style="text-align:left"> 客户名称：{{ pur_headForm.CUSTOMER_NAME }}</td> </tr>
+                      <tr>  <td colsan="3" style="text-align:left"> &nbsp;&nbsp;&nbsp;&nbsp;联系人：{{ pur_headForm.LINKMAN }} </td> </tr>
+                      <tr> <td colsan="4" style="text-align:left"> 联系电话：{{ pur_headForm.LINKTEL }}</td> </tr>
+                      <tr><td colsan="4" style="text-align:left"> 发货地址：{{ pur_headForm.POST_ADDRESS }} </td></tr>
                      </tbody>
                   </table>
                       
