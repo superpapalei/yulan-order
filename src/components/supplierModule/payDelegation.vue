@@ -563,6 +563,7 @@ export default {
       this.submitForm = val;
       this.fileListGM=[];
       this.deleteFile = [];
+      this.isPicture=true;
       let data = {
         ID: val.ID
       };
@@ -641,7 +642,6 @@ export default {
       }
     },
     handleChange(file, fileList,index) {
-      this.isPicture=true;
       var point = file.name.lastIndexOf('.');
       var prefix= this.submitForm.ID+'-'+this.CID+'-'+ this.submitDetailForm[index].LINE_NO;
       var suffix=file.name.substr(point);
