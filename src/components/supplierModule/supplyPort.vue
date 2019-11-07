@@ -488,6 +488,11 @@
         width="1070px"
         top="8vh"
       >
+      <div class="fixedDiv">
+<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<!-- <div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div> -->
+<div style="margin:20px"><el-button @click="printRefund('checkedXPrint')" icon="el-icon-printer"  type="primary" size="small">打&nbsp;&nbsp;&nbsp;印 </el-button></div>
+ </div>
         <div   id="checkedXPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
@@ -496,16 +501,7 @@
                   colspan="2"
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
-                >
-
-      <div class="fixedDiv">
-<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<!-- <div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div> -->
-<div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
- </div>
-
- 
-                  采购单
+                >   采购单
                 </td>
               </tr>
               <tr>
@@ -940,6 +936,11 @@
         width="1170px"
         top="8vh"
       >
+      <div class="fixedDiv">
+<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<!-- <div style="margin:20px"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div> -->
+<div style="margin:20px"><el-button @click="printRefund('checkedYPrint')" icon="el-icon-printer"  type="primary" size="small">打&nbsp;&nbsp;&nbsp;印 </el-button></div>
+ </div>
         <div  id="checkedYPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
@@ -949,11 +950,7 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >采购单
-  <div class="fixedDiv">
-<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<!-- <div style="margin:20px"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div> -->
-<div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedYPrint')"></div></div>
- </div>
+  
                 </td>
               </tr>
               <tr>
@@ -2521,10 +2518,13 @@ z-index:9999;
   padding: 3px 0 !important;
 }
 .fixedDiv {
+  
 position:fixed;
+border:1px;
+border-color:#000;
 z-index:1;
 top: 200px;
-padding-right:250px;
-z-index:99999
+margin-left: 900px;
+z-index:9999
 }
 </style>
