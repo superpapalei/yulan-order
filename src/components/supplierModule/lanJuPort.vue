@@ -513,6 +513,12 @@
         width="1070px"
         top="8vh"
       >
+          <div class="fixedDiv">
+<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
+<div style="margin:20px"><el-button @click="printRefund('checkedXPrint')" icon="el-icon-printer"  type="primary" size="small">打&nbsp;&nbsp;&nbsp;印 </el-button></div>
+
+ </div>
         <div   id="checkedXPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
@@ -523,11 +529,7 @@
                   align="center"
                 >
 
-      <div class="fixedDiv">
-<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<div style="margin:20px"><el-button @click="downLoadX()" type="primary" size="small">导出Excel</el-button></div>
-<div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedXPrint')"></div></div>
- </div>
+  
 
  
                   采购单
@@ -971,6 +973,13 @@
         width="1070px"
         top="8vh"
       >
+             <div class="fixedDiv"  >
+<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
+<div style="margin:20px"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
+<div style="margin:20px"><el-button @click="printRefund('checkedYPrint')" icon="el-icon-printer"  type="primary" size="small">打&nbsp;&nbsp;&nbsp;印 </el-button></div>
+
+
+  </div>
         <div  id="checkedYPrint" style="width:100% ;margin:0 auto;">
           <table style=" width:100% ;margin:0 auto; ">
             <tbody>
@@ -980,13 +989,10 @@
                   style="font-family:黑体;font-size:1.6em;font-weight:bold;"
                   align="center"
                 >采购单
-  <div class="fixedDiv"  >
-<div style="margin:20px"><el-button  @click="returnMain"  type="primary"  size="small">返 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 回</el-button></div>
-<div style="margin:20px"><el-button @click="downLoadY()" type="primary" size="small">导出Excel</el-button></div>
-<div><div class="icon-print el-icon-printer cpoi" @click="printRefund('checkedYPrint')"></div></div>
-  </div>
+ 
                 </td>
               </tr>
+        
               <tr>
                 <td style="border-bottom:solid 3px gray;text-align:left">
                   订单状态
@@ -1318,11 +1324,11 @@
                   >批量确认</el-button> -->
               </div>
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" highlight-current-row>
-                 <el-table-column
+                 <!-- <el-table-column
                   type="selection"
                   width="55"
                   >
-               </el-table-column>
+               </el-table-column> -->
                 <el-table-column type="index"  label=" "  :index="indexMethod">
                 </el-table-column>
                 <el-table-column
@@ -2678,8 +2684,7 @@ border:1px;
 border-color:#000;
 z-index:1;
 top: 200px;
-right:250px;
-/* padding-left: 900px; */
+margin-left: 900px;
 z-index:9999
 }
 </style>
