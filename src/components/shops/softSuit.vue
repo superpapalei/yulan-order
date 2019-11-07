@@ -31,7 +31,6 @@
           >
           </el-tab-pane>
           <shopTab
-           style="width:80%"
             v-bind:tableData="tableData"
             v-bind:numberList="numberList"
           ></shopTab>

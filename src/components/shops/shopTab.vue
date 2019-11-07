@@ -9,14 +9,14 @@
       @expand-change="expandChange"
       style="min-width: 750px; margin: 5px auto;"
     >
-      <el-table-column label="型号" prop="itemNo"> </el-table-column>
-      <el-table-column label="名称" prop="note">
+      <el-table-column label="型号" prop="itemNo" width="150"> </el-table-column>
+      <el-table-column label="名称" prop="note" width="130">
         <template slot-scope="scope">
           <span v-if="scope.row.note !== null">{{ scope.row.note }}</span>
           <span v-else>--</span>
         </template>
       </el-table-column>
-      <el-table-column label="规格尺寸">
+      <el-table-column label="规格尺寸" width="120">
         <template slot-scope="scope">
           <span v-if="scope.row.fixType === '01'">
             <span v-if="scope.row.rzGrade">
@@ -53,30 +53,30 @@
                     <span v-else>--</span>
                 </template>
             </el-table-column> -->
-      <el-table-column min-width="140" label="数量">
+      <el-table-column width="100" label="数量">
         <template slot-scope="scope">
           <div v-if="scope.row.unit === '平方米'">
             <span class="num-font">宽</span>
             <currency-input
-              :customStyle="'width: 75px;'"
+              :customStyle="'width: 60px;'"
               v-model.number="numberList[scope.$index].value"
             >
             </currency-input>
             ×
             <span class="num-font">高</span>
             <currency-input
-              :customStyle="'width: 75px;'"
+              :customStyle="'width: 60px;'"
               v-model="numberList[scope.$index].value1"
             >
             </currency-input>
           </div>
           <div v-else>
-            <currency-input v-model.number="numberList[scope.$index].value">
+            <currency-input :customStyle="'width: 60px;'" v-model.number="numberList[scope.$index].value">
             </currency-input>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="单位">
+      <el-table-column label="单位" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.unit ? scope.row.unit : "米" }}</span>
         </template>

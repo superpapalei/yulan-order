@@ -38,23 +38,23 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="宽度(m)" width="120">
+          <el-table-column label="宽度(m)" width="80">
             <template slot-scope="scope">
-              <currency-input placeholder="0.00" v-model="scope.row.width">
+              <currency-input :customStyle="'width: 60px;'" placeholder="0.00" v-model="scope.row.width">
               </currency-input>
             </template>
           </el-table-column>
-          <el-table-column label="高度(m)" width="120">
+          <el-table-column label="高度(m)" width="80">
             <template slot-scope="scope">
-              <currency-input placeholder="0.00" v-model="scope.row.height">
+              <currency-input :customStyle="'width: 60px;'" placeholder="0.00" v-model="scope.row.height">
               </currency-input>
             </template>
           </el-table-column>
-          <el-table-column label="帘外包宽度(m)" prop="fixGrade" width="150">
+          <el-table-column label="帘外包宽度(m)" prop="fixGrade" width="120">
             <template slot-scope="scope">
               <div v-if="scope.row.wbhFlag === '1'">
                 <el-checkbox v-model="scope.row.isWBH">
-                  <currency-input placeholder="0.00" v-model="scope.row.WBH">
+                  <currency-input :customStyle="'width: 60px;'" placeholder="0.00" v-model="scope.row.WBH">
                   </currency-input>
                 </el-checkbox>
               </div>
@@ -72,12 +72,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="褶皱倍数" width="120">
+          <el-table-column label="褶皱倍数" width="100">
             <template slot-scope="scope">
               <el-select
                 size="mini"
                 v-model="scope.row.multiple"
-                style="width:85px;"
+                style="width:70px;"
               >
                 <el-option
                   v-for="item in options"
@@ -89,7 +89,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="位置" width="150">
+          <el-table-column label="位置" width="140">
             <template slot-scope="scope">
               <el-input
                 style="width:120px;"

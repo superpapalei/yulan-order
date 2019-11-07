@@ -64,7 +64,6 @@
       </div>
 
       <el-dialog
-        title="对账单明细"
         :visible.sync="detailVisible"
         :close-on-click-modal="false"
         width="65%"
@@ -84,6 +83,7 @@
               v-show="showButton"
               style="float:right; margin-left:10px;margin-bottom:10px;"
               type="primary"
+              size="small"
               @click="changeStatus(0)"
               >客户确认</el-button
             >
@@ -91,6 +91,7 @@
               v-show="showButton"
               style="float:right;"
               type="danger"
+              size="small"
               @click="dialogFormVisible = true"
               >客户反馈</el-button
             >
@@ -98,7 +99,6 @@
           <table
             border="1"
             width="100%"
-            cellpadding="10"
             style="margin:0 auto;"
           >
             <tr>
@@ -109,9 +109,7 @@
             </tr>
             <tr>
               <th class="grayTD">电话</th>
-              <th colspan="2">{{ theHead.officeTel }}</th>
-              <th class="grayTD">传真</th>
-              <th colspan="2">{{ theHead.fax }}</th>
+              <th colspan="5">{{ theHead.officeTel }}</th>
             </tr>
             <tr>
               <td colspan="2" align="center" class="grayTD">版本销售前5名</td>
@@ -187,7 +185,7 @@
                 <el-button
                   @click="openTHdia(scope1.row)"
                   type="text"
-                  size="medium"
+                  size="small"
                   >{{ scope1.row.saleNo }}</el-button
                 >
               </template>
