@@ -376,6 +376,13 @@ export default {
   color: rgb(255, 255, 255);
   text-align: center;
 }
+.fixedDiv {
+position:fixed;
+z-index:1;
+top: 200px;
+margin-left: 900px;
+z-index:9999
+}
 </style>
 <style>
 .zj-inputcss1{
@@ -387,18 +394,12 @@ export default {
   width: 160px;
   height: 30px;
   /* margin-left:0px;
-  margin-right:0px; */
+  margin-right:0px; */  
 }
 
 .lanJuport .el-table td,
 .lanJuport .el-table th {
   padding: 3px 0 !important;
 }
-.fixedDiv {
-position:fixed;
-z-index:1;
-top: 200px;
-padding-left: 900px;
-z-index:99999
-}
+
 </style>
