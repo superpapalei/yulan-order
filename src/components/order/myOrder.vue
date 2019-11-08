@@ -591,6 +591,7 @@ export default {
       //   console.log(this.data);
       // });
       //新后台
+      this.data = [];
       var data = {
         companyId: Cookies.get("companyId"),
         limit: this.limit,
@@ -612,7 +613,6 @@ export default {
       }
       getAllOrders(data).then(res => {
         this.count = res.count;
-        this.data = [];
         this.data = res.data;
         this.$root.$emit("refreshBadgeIcon", "orderDeal");
       });

@@ -9,16 +9,15 @@
         v-for="(item, index) of couponData"
         :key="index"
         :class="
-          item.dateId != 1 || item.rebateMoneyOver <= 0
+          item.dateId != 1 || item.rebateMoneyOver <= 0 || item.status !=1
             ? switchClass.cctvF
             : switchClass.cctvT
         "
       >
-        <!--v-if="item.dateId!='0'" @click="useCoupon(item.id,item.rebateType)"-->
         <div class="couponHead">
           <div
             :class="
-              item.dateId != 1 || item.rebateMoneyOver <= 0
+              item.dateId != 1 || item.rebateMoneyOver <= 0 || item.status !=1
                 ? switchClass.logoF
                 : switchClass.logoT
             "
@@ -37,7 +36,7 @@
         <div class="couponBody">
           <p
             :class="
-              item.dateId != 1 || item.rebateMoneyOver <= 0
+              item.dateId != 1 || item.rebateMoneyOver <= 0 || item.status !=1
                 ? switchClass.transTxtF
                 : switchClass.transTxtT
             "
@@ -50,7 +49,7 @@
           <div style="margin:0 auto; width:245px;">
             <div
               :class="
-                item.dateId != 1 || item.rebateMoneyOver <= 0
+                item.dateId != 1 || item.rebateMoneyOver <= 0 || item.status !=1
                   ? switchClass.roundedRectangleF
                   : switchClass.roundedRectangleT
               "
@@ -149,18 +148,6 @@ export default {
     };
   },
   methods: {
-    //获取优惠券
-    /* _getTickets(){
-        var url ='/order/getRebate.do';
-        var data ={
-          "cid":Cookies.get('cid'),
-          "typeId":"A",
-        }
-        searchTickets(url,data).then(res => {
-            console.log(res.data);
-            this.couponData=res.data;
-        })
-      }, */
     allTickets() {
       var url = "/order/findRebate.do";
       var data = {
@@ -168,6 +155,7 @@ export default {
         companyId: Cookies.get("companyId")
       };
       manageCoupon(url, data).then(res => {
+        console.log(res)
         this.couponData = res.data;
       });
     },

@@ -108,6 +108,12 @@ export default {
           return this.$store.state.badge.imageShop2; //形象店设计中可编辑的单据个数（兰居）
         case "design/ISExamineGM":
           return this.$store.state.badge.imageShop3; //形象店设计中可编辑的单据个数（广美）
+        case "shoppingCar/shopping?wallPaper":
+          return this.$store.state.badge.wallCount;//墙纸
+        case "shoppingCar/shopping?curtain":
+          return this.$store.state.badge.curtainCount;//窗帘
+        case "shoppingCar/shopping?softSuit":
+          return this.$store.state.badge.softCount;//软装  
         default:
           return 0;
       }
@@ -138,7 +144,7 @@ export default {
   color: white;
 }
 .el-submenu .el-menu-item {
-  padding: 0 20px;
+  padding: 0 10px;
 }
 .el-menu-item,
 .el-submenu__title {

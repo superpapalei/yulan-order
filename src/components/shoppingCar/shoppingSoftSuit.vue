@@ -255,6 +255,7 @@ export default {
         .then(res => {
           let theData = res.data;
           this.dataDeal(theData);
+          this.$root.$emit("refreshBadgeIcon", "softCount");
         })
         .catch(err => {
           this.shopsData = [];

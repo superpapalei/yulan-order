@@ -9,7 +9,8 @@
       @expand-change="expandChange"
       style="min-width: 750px; margin: 5px auto;"
     >
-      <el-table-column label="型号" prop="itemNo" width="150"> </el-table-column>
+      <el-table-column label="型号" prop="itemNo" width="150">
+      </el-table-column>
       <el-table-column label="名称" prop="note" width="130">
         <template slot-scope="scope">
           <span v-if="scope.row.note !== null">{{ scope.row.note }}</span>
@@ -71,7 +72,10 @@
             </currency-input>
           </div>
           <div v-else>
-            <currency-input :customStyle="'width: 60px;'" v-model.number="numberList[scope.$index].value">
+            <currency-input
+              :customStyle="'width: 60px;'"
+              v-model.number="numberList[scope.$index].value"
+            >
             </currency-input>
           </div>
         </template>
@@ -223,7 +227,7 @@ export default {
   //     },
   //     immediate:true,//关键
   // },
-  filters:{
+  filters: {
     calLength(str) {
       var len = 0;
       for (var i = 0; i < str.length; i++) {
@@ -370,97 +374,52 @@ export default {
         this.seletedActivity = "";
       this.numberList[index].value = this.numberList[index].value.toString();
       this.numberList[index].value1 = this.numberList[index].value1.toString();
-      if (row.unit !== "平方米") {
-        addShoppingCar({
-          customer_type: this.customerType,
-          CID: this.cid,
-          itemNO: row.itemNo,
-          commodityType: "soft",
-          activityID: this.seletedActivity,
-          quantity: this.numberList[index].value,
-          height: "",
-          width: "",
-          note: this.remark,
-          splitShipment: storeMessage,
-          softType: _type
+      addShoppingCar({
+        customer_type: this.customerType,
+        CID: this.cid,
+        itemNO: row.itemNo,
+        commodityType: "soft",
+        activityID: this.seletedActivity,
+        quantity: row.unit == "平方米" ? "" : this.numberList[index].value,
+        height: row.unit == "平方米" ? this.numberList[index].value1 : "",
+        width: row.unit == "平方米" ? this.numberList[index].value : "",
+        note: this.remark,
+        splitShipment: storeMessage,
+        softType: _type
+      })
+        .then(res => {
+          this.numberList[index].value = "";
+          this.numberList[index].value1 = "";
+          this.expands = [];
+          this.clearMsg();
+          if (res.data.code === 0) {
+            this.$alert("此型号已添加成功，请前往购物车查看", "添加成功", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.$root.$emit("refreshBadgeIcon", "softCount");
+          } else {
+            this.$alert(res.data.msg, "添加失败", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+          }
         })
-          .then(res => {
-            this.numberList[index].value = "";
-            this.expands = [];
-            this.clearMsg();
-            if (res.data.code === 0) {
-              this.$alert("此型号已添加成功，请前往购物车查看", "添加成功", {
-                confirmButtonText: "确定",
-                type: "success"
-              });
-            } else {
-              this.$alert(res.data.msg, "添加失败", {
-                confirmButtonText: "确定",
-                type: "warning"
-              });
+        .catch(err => {
+          this.numberList[index].value = "";
+          this.numberList[index].value1 = "";
+          this.expands = [];
+          this.clearMsg();
+          this.$alert(
+            "添加失败，请查看信息填写是否正确或者检查网络是否通畅",
+            "提示",
+            {
+              confirmButtonText: "确定",
+              type: "warning"
             }
-          })
-          .catch(err => {
-            this.numberList[index].value = "";
-            this.expands = [];
-            this.clearMsg();
-            this.$alert(
-              "添加失败，请查看信息填写是否正确或者检查网络是否通畅",
-              "提示",
-              {
-                confirmButtonText: "确定",
-                type: "warning"
-              }
-            );
-            console.log(err);
-          });
-      } else {
-        addShoppingCar({
-          customer_type: this.customerType,
-          CID: this.cid,
-          itemNO: row.itemNo,
-          commodityType: "soft",
-          activityID: this.seletedActivity,
-          quantity: "",
-          height: this.numberList[index].value1,
-          width: this.numberList[index].value,
-          note: this.remark,
-          splitShipment: storeMessage,
-          softType: _type
-        })
-          .then(res => {
-            this.numberList[index].value = "";
-            this.numberList[index].value1 = "";
-            this.expands = [];
-            this.clearMsg();
-            if (res.data.code === 0) {
-              this.$alert("此型号已添加成功，请前往购物车查看", "添加成功", {
-                confirmButtonText: "确定",
-                type: "success"
-              });
-            } else {
-              this.$alert(res.data.msg, "添加失败", {
-                confirmButtonText: "确定",
-                type: "warning"
-              });
-            }
-          })
-          .catch(err => {
-            this.numberList[index].value = "";
-            this.numberList[index].value1 = "";
-            this.expands = [];
-            this.clearMsg();
-            this.$alert(
-              "添加失败，请查看信息填写是否正确或者检查网络是否通畅",
-              "提示",
-              {
-                confirmButtonText: "确定",
-                type: "warning"
-              }
-            );
-            console.log(err);
-          });
-      }
+          );
+          console.log(err);
+        });
     },
     //修改该商品的计量
     numberChange(value) {},

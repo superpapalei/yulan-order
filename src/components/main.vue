@@ -336,6 +336,7 @@ import { GetCustomerMustWriteStudy } from "@/api/studyASP";
 import { QueryWebMenuByUserId } from "@/api/webMenuASP";
 import { getAllOrders } from "@/api/orderListASP";
 import { GetHotSales, GetItemDetailById } from "@/api/itemInfoASP";
+import { GetCartItemCount } from "@/api/shopASP";
 import screenfull from "screenfull";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -749,6 +750,48 @@ export default {
       this.changeBadge({
         name: "imageShop3",
         index: imageShop1.count
+      });
+    },
+    //购物车墙纸数量
+    async wallCountIcon() {
+      let wallpaper = await GetCartItemCount(
+        {
+          cid: Cookies.get("cid"),
+          commodityType: "wallpaper"
+        },
+        { loading: false }
+      );
+      this.changeBadge({
+        name: "wallCount",
+        index: wallpaper.count
+      });
+    },
+    //购物车窗帘数量
+    async curtainCountIcon() {
+      let curtain = await GetCartItemCount(
+        {
+          cid: Cookies.get("cid"),
+          commodityType: "curtain"
+        },
+        { loading: false }
+      );
+      this.changeBadge({
+        name: "curtainCount",
+        index: curtain.count
+      });
+    },
+    //购物车软装数量
+    async softCountIcon() {
+      let soft = await GetCartItemCount(
+        {
+          cid: Cookies.get("cid"),
+          commodityType: "soft"
+        },
+        { loading: false }
+      );
+      this.changeBadge({
+        name: "softCount",
+        index: soft.count
       });
     },
     //获取用户余额情况
@@ -1187,6 +1230,9 @@ export default {
     this.imageShopIcon();
     this.ISExamineMarketIcon();
     this.ISExamineGMIcon();
+    this.wallCountIcon();
+    this.curtainCountIcon();
+    this.softCountIcon();
     //触发角标刷新
     this.$root.$on("refreshBadgeIcon", value => {
       switch (value) {
@@ -1232,6 +1278,15 @@ export default {
         case "imageShop3":
           this.ISExamineGMIcon();
           break;
+        case "wallCount":
+          this.wallCountIcon();
+          break;
+        case "curtainCount":
+          this.curtainCountIcon();
+          break;
+        case "softCount":
+          this.softCountIcon();
+          break;     
       }
     });
     document.onkeydown = function(event) {

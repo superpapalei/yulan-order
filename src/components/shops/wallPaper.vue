@@ -516,6 +516,7 @@ export default {
             this.tableData = [];
             this.expands = [];
             this.clearMsg();
+            this.$root.$emit("refreshBadgeIcon", "wallCount");
           } else {
             this.$alert(res.data.msg, "添加失败", {
               confirmButtonText: "确定",

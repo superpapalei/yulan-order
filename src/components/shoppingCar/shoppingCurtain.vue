@@ -232,6 +232,7 @@ export default {
           //过滤无效数据
           let theData = res.data;
           this.dataDeal(theData);
+          this.$root.$emit("refreshBadgeIcon", "curtainCount");
         })
         .catch(err => {
           this.shopsData = [];
