@@ -155,7 +155,6 @@ export default {
         companyId: Cookies.get("companyId")
       };
       manageCoupon(url, data).then(res => {
-        console.log(res)
         this.couponData = res.data;
       });
     },

@@ -5,7 +5,7 @@
         title="订单详情"
         :show-close="true"
         :visible.sync="dialogVisible"
-        width="95%"
+        width="65%"
       >
         <dialogOrderDetail :ruleForm="ruleForm"></dialogOrderDetail>
       </el-dialog>
