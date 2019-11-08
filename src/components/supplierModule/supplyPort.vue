@@ -512,7 +512,7 @@
                   }}</span>
                 </td>
                 <td style="border-bottom:solid 3px gray;" align="right">
-                  <span style="margin-left:font-weight:bold;">{{
+                  <span style="margin-left:font-weight:bold;">打印日期：{{
                     now.getFullYear() + "-" + Month + "-" + now.getDate()
                   }}</span>
                 </td>
@@ -540,7 +540,7 @@
                       <tr>
                         建立日期：
                         <td style="text-align:left">
-                          {{ pur_headForm.DATE_PUR }}
+                          {{ pur_headForm.DATE_PUR|datatrans}}
                         </td>
                       </tr>
                       <tr>
@@ -594,7 +594,7 @@
                       <tr>
                         付款期限：
                         <td style="text-align:left">
-                          {{ pur_headForm.PAY_DATELIMIT }}
+                          {{ pur_headForm.PAY_DATELIMIT|datatrans }}
                         </td>
                       </tr>
                       <tr>
@@ -961,7 +961,7 @@
                     <div  style="position:fixed;z-index:1;top: 0.5px;padding-left: 15px;background-color: #FFFFFF"></div>
                 </td>
                 <td style="border-bottom:solid 3px gray;" align="right">
-                  <span style="margin-left:font-weight:bold;">{{
+                  <span style="margin-left:font-weight:bold;">打印日期：{{
                     now.getFullYear() + "-" + Month + "-" + now.getDate()
                   }}</span>
                 </td>
@@ -2523,7 +2523,7 @@ position:fixed;
 border:1px;
 border-color:#000;
 z-index:1;
-top: 200px;
+top: 180px;
 margin-left: 900px;
 z-index:9999
 }
