@@ -294,8 +294,10 @@
           <tr >
              <td style="width:12%">创建时间：</td>
              <td style="width:20%;">{{ submitForm.DATE_CRE| datatransDetail }}</td>
-             <td style="width:12%">创建人：</td>
-             <td style="width:30%;">{{ submitForm.USER_CRE }}</td>
+             <td style="width:12%">单据状态：</td>
+             <td v-if="submitForm.STATE=='3'" style="width:30%;color:green;">{{ submitForm.STATE|transStatus }}</td>
+             <td v-if="submitForm.STATE=='4'" style="width:30%;color:red;">{{ submitForm.STATE|transStatus }}</td>
+             <td v-if="submitForm.STATE!='3'&&submitForm.STATE!='4'" style="width:30%;">{{ submitForm.STATE|transStatus }}</td>
              <td style="width:8%;"></td>
              <td style="width:8%;"></td>
           </tr>
@@ -314,12 +316,6 @@
              <td style="width:30%;">{{ submitForm.AUDITOR }}</td>
              <td style="width:8%;"></td>
              <td style="width:8%;"></td>
-          </tr>
-          <tr >
-             <td style="width:12%">单据状态：</td>
-             <td v-if="submitForm.STATE=='3'" style="width:20%;color:green;">{{ submitForm.STATE|transStatus }}</td>
-             <td v-if="submitForm.STATE=='4'" style="width:20%;color:red;">{{ submitForm.STATE|transStatus }}</td>
-             <td v-if="submitForm.STATE!='3'&&submitForm.STATE!='4'" style="width:20%;">{{ submitForm.STATE|transStatus }}</td>
           </tr>
         </table> 
       </div>  
