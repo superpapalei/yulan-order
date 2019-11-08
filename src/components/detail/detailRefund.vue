@@ -9,19 +9,14 @@
         <section class="f14 t-foot border-b tr">
           <span v-if="baseData.method !== 'new'">编号：{{ baseData.ID }}</span>
           <span>创建人：{{ baseData.ERP_CREATORNAME }}</span>
-          <span>建立时间：{{ toLocaleTime }}&emsp;</span>
+          <span style="margin-right:30px;">建立时间：{{ toLocaleTime }}&emsp;</span>
         </section>
-        <h3 class="mt10 tc rel" style="margin:10px 0 0 0;">
+        <h3 class="mt10 tc rel" style="margin:5px 0 0 0;">
           客户确认书【{{ getNameByState(baseData.STATE) }}】
-          <i
-           
-            class="icon-print el-icon-printer cpoi"
-            @click="printRefund"
-          ></i>
+          <i class="icon-print el-icon-printer cpoi" style="margin-right:20px;" @click="printRefund"></i>
         </h3>
         <br />
-        <p class="ovh">
-          <!-- <el-button class="l" size="small">重要文件</el-button> -->
+        <!-- <p class="ovh">
           <a
             v-if="
               baseData.method === 'edit' ||
@@ -58,9 +53,9 @@
               >同意</i
             >
           </a>
-        </p>
+        </p> -->
         <section class="mt10">
-          <p class="uli">TO：{{ baseData.CNAME }}</p>
+          <p class="uli" style="margin-left:5px;">TO：{{ baseData.CNAME }}</p>
           <p class="t-indent">
             我公司现收到以下拟申请退货产品，经调查、检测核实，作如下处理：
           </p>
@@ -123,7 +118,7 @@
             添加退换货品
             <i class="el-icon-circle-plus success-icon f24 r"></i>
           </p>
-          <section class="t-dec" style="padding:10px 0 10px 40px;">
+          <section class="t-dec" style="padding:10px 0 10px 20px;">
             注意：1、若您未在我公司发出的《客户确认书》之日起15日内确认、提出异议的，则视为放弃赔偿权利<br />
             2、玉兰公司支付的退货金额，仅限于本确认书的金额，不承担其他费用；<br />
             3、请您仔细阅读本确认书相关信息，一旦确认，视为同意我公司的处理本方案。<br />
@@ -161,17 +156,50 @@
           v-if="baseData.method !== 'see'"
           type="danger"
           style="margin-right: 20px;"
-          width="130px"
           :disabled="item.length === 0"
           @click.native="updateOrDelete(0)"
         >
           保存修改
         </el-button>
         <el-button
+          v-if="
+              baseData.method === 'edit' ||
+                (baseData.method === 'new' && item.length !== 0)
+            "
+          :type="item.length != 0?'primary':'danger'"
+          style="margin-right: 20px;"
+          @click.native="updateOrDelete(1)"
+        >
+          {{ judgeOpa }}
+        </el-button>
+        <el-button
+          v-if="
+            baseData.method === 'see' &&
+              baseData.STATE === 'CUSTOMERAFFIRM' &&
+              identity === 'ECWEB'
+          "
+          type="primary"
+          style="margin-left: 20px;"
+          @click.native="userOperation(1)"
+        >
+          同意
+        </el-button>
+        <el-button
+          v-if="
+            baseData.method === 'see' &&
+              baseData.STATE === 'CUSTOMERAFFIRM' &&
+              identity === 'ECWEB'
+          "
+          type="danger"
+          style="margin-left: 20px;"
+          @click="userOperation(0)"
+        >
+          不同意
+        </el-button>
+        <el-button
           type="info"
           style="margin-left: 20px;"
-          width="130px"
-          @click.native="returnBack"
+          @click="returnBack"
         >
           返回
         </el-button>

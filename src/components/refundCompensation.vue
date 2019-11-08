@@ -364,7 +364,7 @@ export default {
           let obj = {
             CID: value.toUpperCase()
           };
-          getCustomerInfo({ companyId: value })
+          getCustomerInfo({ companyId: value.toUpperCase() })
             .then(res => {
               if (!res.data) {
                 this.$alert("没有找到该用户", "提示", {
@@ -391,7 +391,7 @@ export default {
                     let obj = {
                       ERP_CREATOR: this.cid, //创建人id
                       ERP_CREATORNAME: "", //创建人名称
-                      CID: value, //客户id
+                      CID: res.data.CUSTOMER_CODE, //客户id
                       CNAME: res.data.CUSTOMER_NAME, //客户名称
                       STATE: "ONCREATE" //状态同属确认中
                     };
