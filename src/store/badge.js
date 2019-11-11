@@ -15,6 +15,9 @@ const state = {
     imageShop1:0,//形象店设计中可编辑的单据个数（客户）
     imageShop2:0,//形象店设计中可编辑的单据个数（兰居）
     imageShop3:0,//形象店设计中可编辑的单据个数（广美）
+    wallCount:0,//墙纸购物车
+    curtainCount:0,//窗帘购物车
+    softCount:0//软装购物车
 }
 
 const mutations = {

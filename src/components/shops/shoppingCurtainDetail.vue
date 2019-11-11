@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <div class="curtainTable">
     <el-card shadow="hover">
       <div class="mb10">
         <p class="fstrong f16">商品信息：</p>
       </div>
       <el-table
-        style="width:100%;"
+        style="width:100%;font-size:14px;"
         border
         :data="curtainData"
         :span-method="cellMerge"
       >
-        <el-table-column width="170" header-align="center" label="商品信息">
+        <el-table-column width="140" header-align="center" label="商品信息">
           <template>
             <div class="messageBox">
               <div>
@@ -52,13 +52,9 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="名称" header-align="center" width="90">
+        <el-table-column label="名称" header-align="center" width="75">
           <template slot-scope="scope">
             {{ getTypeName(scope.row.itemType) }}
-            <!-- <br> -->
-            <!-- <el-checkbox @change="changeLink('lt',0)" v-if="scope.row.itemType === 'lt'" v-model="chooseBig[0]">
-                            <span v-if="chooseBig[0] == false" style="color: red;">×</span>
-                        </el-checkbox> -->
             <el-checkbox
               @change="changeLink('ls', 1)"
               v-if="scope.row.itemType === 'ls'"
@@ -80,10 +76,9 @@
             >
               <span v-if="chooseBig[3] == false" style="color: red;">×</span>
             </el-checkbox>
-            <!-- <el-checkbox v-if="scope.row.itemType === 'pjb'" v-model="chooseBig[3]"></el-checkbox> -->
           </template>
         </el-table-column>
-        <el-table-column label="编码" header-align="center" width="150">
+        <el-table-column label="编码" header-align="center" width="120">
           <template slot-scope="scope">
             <div>
               <span
@@ -118,24 +113,6 @@
                 >
                 </el-checkbox>
               </span>
-              <!-- <div v-else-if="scope.row.changeFlag === 'Y' && scope.row.itemType !== 'lt' && scope.row.productType !== 'SSDX'">
-                                <a class="uline" @click="getNewItemNo(scope.row,scope.$index)">
-                                    {{scope.row.itemNo}}
-                                </a>
-                                <el-checkbox class="ml5"
-                                    v-if="scope.row.deleteFlag === 'Y'"
-                                    v-model="scope.row.choose">
-                                </el-checkbox>
-                            </div>
-                            <div v-else-if="scope.row.itemType === 'lt' && scope.row.productType !== 'KS'">
-                                <a class="uline" @click="getNewItemNo(scope.row,scope.$index)">
-                                    {{scope.row.itemNo}}
-                                </a>
-                                <el-checkbox class="ml5"
-                                    v-if="scope.row.deleteFlag === 'Y'"
-                                    v-model="scope.row.choose">
-                                </el-checkbox>
-                            </div> -->
               <span v-else>
                 {{ scope.row.itemNo }}
                 <el-checkbox
@@ -152,17 +129,24 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="名称" header-align="center" width="120">
+        <el-table-column label="名称" header-align="center" width="110">
           <template slot-scope="scope">
             <div v-if="scope.row.note !== null">{{ scope.row.note }}</div>
             <div v-else>{{ getTypeName(scope.row.itemType) }}</div>
+          </template>
+        </el-table-column>
+      <el-table-column v-if="isManager != '0'" label="单价" header-align="center" width="40">
+          <template slot-scope="scope">
+            <span>
+              {{ scope.row.price }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column
           label="规格:米/对"
           header-align="center"
           align="center"
-          width="60"
+          width="50"
         >
           <template slot-scope="scope">
             {{
@@ -174,7 +158,7 @@
         </el-table-column>
         <el-table-column
           label="面料属性"
-          width="100"
+          width="80"
           header-align="center"
           align="center"
         >
@@ -200,7 +184,6 @@
                 >
                 </el-option>
               </el-select>
-              <!-- {{(scope.row.fixType === '01')?'定宽':'定高'}} -->
             </div>
             <div v-else></div>
           </template>
@@ -209,14 +192,14 @@
           label="用量"
           header-align="center"
           align="center"
-          width="100"
+          width="80"
         >
           <template slot-scope="scope">
             <span v-if="scope.row.itemType === 'lspb'">--</span>
             <span v-else-if="scope.row.modifyFlag === 'Y'">
               <el-input
                 v-if="scope.row.itemType != 'lt'"
-                style="width: 75%;"
+                style="width: 70%;"
                 size="mini"
                 oninput="value=value.replace(/[^\d.]/g,'')
                                 .replace(/^\./g, '').replace(/\.{2,}/g, '.')
@@ -228,7 +211,7 @@
               </el-input>
               <el-input
                 v-else
-                style="width: 75%;"
+                style="width: 70%;"
                 size="mini"
                 oninput="value=value.replace(/[^\d.]/g,'')
                                 .replace(/^\./g, '').replace(/\.{2,}/g, '.')
@@ -250,7 +233,7 @@
           label="制造说明"
           header-align="center"
           align="center"
-          width="130"
+          width="110"
         >
           <template slot-scope="scope">
             <div v-if="scope.row.productType === 'XHB'"></div>
@@ -299,23 +282,12 @@
                 </el-option>
               </el-select>
             </div>
-            <!-- <div v-if="part[scope.$index].length !== 0">
-                            <el-select size="mini" v-model="scope.row.creator" placeholder="--未选--">
-                                <el-option
-                                    v-for="item in part[scope.$index]"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div> -->
           </template>
         </el-table-column>
-        <el-table-column label="说明" header-align="center" width="80">
+        <el-table-column label="说明" header-align="center" width="100">
           <template slot-scope="scope">
             <span style="color:red;">
               {{ scope.row.tip }}
-              <!-- {{judgeTip(scope.row,scope.$index)}} -->
             </span>
           </template>
         </el-table-column>
@@ -462,6 +434,7 @@ export default {
     return {
       cid: Cookies.get("cid"), //假定给的用户id
       customerType: Cookies.get("customerType"), //客户类型
+      isManager: Cookies.get("isManager"), //是否为管理员
       getParams: Cookies.get("curtainMsg"), //获取传入的参数
       //获取真实数据
       message: {
@@ -740,6 +713,7 @@ export default {
         if (data.itemList[i].itemMLGY.itemType === "lspb") {
           data.itemList[i].fixType = "";
         }
+        var price = this.getPrice(this.customerType,data.itemList[i]);
         let obj = {
           itemNo: data.itemList[i].itemNo, //编号
           itemType: data.itemList[i].itemMLGY.itemType, //型号
@@ -751,6 +725,7 @@ export default {
           creator: "", //制造说明
           tip: "", //说明
           remark: "", //备注
+          price : price,
           unit: data.itemList[i].unit, //单位
           modifyFlag: data.itemList[i].itemMLGY.modifyFlag, //用量是否可以修改，Y可修改，N不可修改
           deleteFlag: data.itemList[i].itemMLGY.deleteFlag, //物料是否可删除，Y可删除，N不可删除
@@ -761,6 +736,24 @@ export default {
         this.curtainData.push(obj);
         this.getDosage(obj, i);
       }
+    },
+    getPrice(type,item){
+      var price = 0;
+        if (
+          type == "02" ||
+          type == "08" ||
+          type == "10"
+        ) {
+          //经销
+          price = item.priceSale;
+        } else if (type == "05") {
+          price = item.salePrice;
+        } else if (type == "06") {
+          price = item.priceFx;
+        } else if (type == "09") {
+          price = item.priceHome;
+        }
+        return price;
     },
     //点击更换编码名称
     getNewItemNo(data, index) {
@@ -855,12 +848,14 @@ export default {
       let data = this.items.find(v => {
         if (v.itemNo === this.itemNo) return v;
       });
+      var price = this.getPrice(this.customerType,data);
       let status2 =
         data.fixType === null ||
         this.curtainData[this.chooseIndex].itemType === "lspb";
       this.curtainData[this.chooseIndex].note = data.note;
       this.curtainData[this.chooseIndex].fixGrade = data.fixGrade;
       this.curtainData[this.chooseIndex].fixType = status2 ? "" : data.fixType;
+      this.curtainData[this.chooseIndex].price = price;
       this.allData.itemList[this.chooseIndex].fixType = status2
         ? ""
         : data.fixType;
@@ -1489,22 +1484,36 @@ export default {
   padding: 5px;
   font-size: 14px;
 }
-#curtainTable tr td {
-  padding: 6px 3px;
-}
 #shoppingMsg > p {
   margin: 20px auto;
 }
 .messageBox > div {
-  padding: 10px 0;
+  padding: 8px 0;
 }
 .messageInput {
   border: 1px solid #c3c3c3;
   margin-right: 3px;
-  padding: 3px 6px 3px 6px;
-  min-width: 65px;
+  padding: 0 2px;
+  min-width: 40px;
   border-radius: 4px;
   color: gray;
   display: inline-block;
+  line-height: 20px;
+}
+</style>
+<style>
+.curtainTable .el-table td,
+.curtainTable .el-table th {
+  padding: 0 !important;
+}
+.curtainTable .el-table .cell {
+  padding: 0 5px !important;
+}
+.curtainTable .el-input__inner {
+  padding: 0 5px;
+  height: 24px;
+}
+.curtainTable .el-textarea__inner {
+  padding: 5px;
 }
 </style>

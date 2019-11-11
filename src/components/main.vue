@@ -138,14 +138,58 @@
               :closable="item.closable"
             ></el-tab-pane>
             <div v-if="activeTabName == 'main'">
-              <el-card v-if="identity != 'SUPLY' && hotSaleData.length > 0">
-                <div>
-                  <h2 style="text-align:center;margin:0 0 10px 0;">热销榜</h2>
+              <el-card
+                v-if="
+                  identity != 'SUPLY' &&
+                    (hotSaleVersion.length > 0 || hotSaleItem.length > 0)
+                "
+              >
+                <div
+                  v-if="hotSaleVersion.length > 0"
+                  style="margin-bottom:20px;"
+                >
+                  <h2 style="text-align:center;margin:0 0 10px 0;">
+                    版本热销榜
+                  </h2>
                   <div>
                     <table style="margin:0 auto;">
-                      <tr v-for="(item, index) in hotSaleData" :key="index">
+                      <tr v-for="(item, index) in hotSaleVersion" :key="index">
                         <td
-                          style="height:27px;min-width:160px;"
+                          style="height:30px;min-width:160px;"
+                          v-for="(n, indexx) in 5"
+                          :key="indexx"
+                        >
+                          <span
+                            v-if="item[indexx].ITEM_NO != ''"
+                            class="numIndex hot-index-normal"
+                            :class="{
+                              'hot-index1': index == 0 && indexx == 0,
+                              'hot-index2':
+                                index == 0 && (indexx == 1 || indexx == 2),
+                              'hot-index3':
+                                index == 0 && (indexx == 3 || indexx == 4)
+                            }"
+                            >{{ index * 5 + indexx + 1 }}</span
+                          >
+                          <a>{{ item[indexx].ITEM_NO }}</a>
+                          <img
+                            src="../assets/img/img/search-hot.gif"
+                            v-if="index == 0 && item[indexx].ITEM_NO != ''"
+                          />
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <div v-if="hotSaleItem.length > 0">
+                  <h2 style="text-align:center;margin:0 0 10px 0;">
+                    型号热销榜
+                  </h2>
+                  <div>
+                    <table style="margin:0 auto;">
+                      <tr v-for="(item, index) in hotSaleItem" :key="index">
+                        <td
+                          style="height:30px;min-width:160px;"
                           v-for="(n, indexx) in 5"
                           :key="indexx"
                         >
@@ -187,7 +231,7 @@
         </el-main>
       </el-container>
     </el-container>
-    <el-backtop target=".backTop" :right='30' :visibility-height='20'
+    <el-backtop target=".backTop" :right="30" :visibility-height="20"
       ><div
         style="{height: 100%;width: 100%;background-color: #f2f5f6;box-shadow: 0 0 6px rgba(0,0,0, .12);
                         text-align: center;line-height: 40px;color: #1989fa;}"
@@ -292,6 +336,7 @@ import { GetCustomerMustWriteStudy } from "@/api/studyASP";
 import { QueryWebMenuByUserId } from "@/api/webMenuASP";
 import { getAllOrders } from "@/api/orderListASP";
 import { GetHotSales, GetItemDetailById } from "@/api/itemInfoASP";
+import { GetCartItemCount } from "@/api/shopASP";
 import screenfull from "screenfull";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -384,7 +429,9 @@ export default {
           }
         ]
       },
-      hotSaleData: []
+      hotSaleData: [],
+      hotSaleVersion: [],
+      hotSaleItem: []
     };
   },
   methods: {
@@ -705,6 +752,48 @@ export default {
         index: imageShop1.count
       });
     },
+    //购物车墙纸数量
+    async wallCountIcon() {
+      let wallpaper = await GetCartItemCount(
+        {
+          cid: Cookies.get("cid"),
+          commodityType: "wallpaper"
+        },
+        { loading: false }
+      );
+      this.changeBadge({
+        name: "wallCount",
+        index: wallpaper.count
+      });
+    },
+    //购物车窗帘数量
+    async curtainCountIcon() {
+      let curtain = await GetCartItemCount(
+        {
+          cid: Cookies.get("cid"),
+          commodityType: "curtain"
+        },
+        { loading: false }
+      );
+      this.changeBadge({
+        name: "curtainCount",
+        index: curtain.count
+      });
+    },
+    //购物车软装数量
+    async softCountIcon() {
+      let soft = await GetCartItemCount(
+        {
+          cid: Cookies.get("cid"),
+          commodityType: "soft"
+        },
+        { loading: false }
+      );
+      this.changeBadge({
+        name: "softCount",
+        index: soft.count
+      });
+    },
     //获取用户余额情况
     async userMoney() {
       this.refreshMoneyClass = "el-icon-loading";
@@ -912,12 +1001,18 @@ export default {
     },
     getHotSale() {
       this.hotSaleData = {};
+      this.hotSaleVersion = {};
+      this.hotSaleItem = {};
       GetHotSales().then(res => {
         if (res.data.length > 0) {
+          var versionData = res.data.filter(item => item.TYPE == "B");
+          var itemData = res.data.filter(item => item.TYPE == "A");
           var data = [];
+          var data2 = [];
           var index = 0;
           var indexx = 0;
-          for (var i = 0; i < res.data.length; i++) {
+          //版本
+          for (var i = 0; i < versionData.length; i++) {
             if (i >= 5 * (index + 1)) {
               index++;
               indexx = 0;
@@ -925,7 +1020,7 @@ export default {
             if (i == 5 * index) {
               data[index] = new Array();
             }
-            data[index][indexx] = res.data[i];
+            data[index][indexx] = versionData[i];
             indexx++;
           }
           if (data[index].length < 5) {
@@ -936,7 +1031,30 @@ export default {
               });
             }
           }
-          this.hotSaleData = data;
+          this.hotSaleVersion = data;
+          //型号
+          index = 0;
+          indexx = 0;
+          for (var i = 0; i < itemData.length; i++) {
+            if (i >= 5 * (index + 1)) {
+              index++;
+              indexx = 0;
+            }
+            if (i == 5 * index) {
+              data2[index] = new Array();
+            }
+            data2[index][indexx] = itemData[i];
+            indexx++;
+          }
+          if (data2[index].length < 5) {
+            var len = 5 - data2[index].length;
+            for (var i = 0; i < len; i++) {
+              data2[index].push({
+                ITEM_NO: ""
+              });
+            }
+          }
+          this.hotSaleItem = data2;
         }
       });
     },
@@ -1112,6 +1230,9 @@ export default {
     this.imageShopIcon();
     this.ISExamineMarketIcon();
     this.ISExamineGMIcon();
+    this.wallCountIcon();
+    this.curtainCountIcon();
+    this.softCountIcon();
     //触发角标刷新
     this.$root.$on("refreshBadgeIcon", value => {
       switch (value) {
@@ -1157,6 +1278,15 @@ export default {
         case "imageShop3":
           this.ISExamineGMIcon();
           break;
+        case "wallCount":
+          this.wallCountIcon();
+          break;
+        case "curtainCount":
+          this.curtainCountIcon();
+          break;
+        case "softCount":
+          this.softCountIcon();
+          break;     
       }
     });
     document.onkeydown = function(event) {

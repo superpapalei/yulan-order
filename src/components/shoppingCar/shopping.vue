@@ -2,10 +2,10 @@
   <div>
     <el-card shadow="hover" class="clearfix">
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="墙纸" name="wallPaper">
+        <el-tab-pane label="墙纸配套类" name="wallPaper">
           <ShoppingWallPaper v-if="activeName =='wallPaper'" :wallpaperData="wallpaperData"></ShoppingWallPaper>
         </el-tab-pane>
-        <el-tab-pane label="窗帘" name="curtain">
+        <el-tab-pane label="定制窗帘" name="curtain">
           <ShoppingCurtain v-if="activeName =='curtain'" :curtainData="curtainData"></ShoppingCurtain>
         </el-tab-pane>
         <el-tab-pane label="软装" name="softSuit">

@@ -82,7 +82,7 @@
                 "
               >
                 <el-table-column
-                  width="130"
+                  width="120"
                   header-align="center"
                   label="商品信息"
                 >
@@ -277,7 +277,7 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column label="名称" header-align="center" width="150">
+                <el-table-column label="名称" header-align="center" width="110">
                   <template slot-scope="scope1">
                     <div
                       v-if="
@@ -294,7 +294,7 @@
                   label="规格:米/对"
                   header-align="center"
                   align="center"
-                  width="75"
+                  width="50"
                 >
                   <template slot-scope="scope1">
                     {{
@@ -341,7 +341,7 @@
                 </el-table-column>
                 <el-table-column
                   label="用量"
-                  width="80"
+                  width="70"
                   header-align="center"
                   align="center"
                 >
@@ -353,7 +353,7 @@
                     <span v-else-if="customerType === '110'">
                       <el-input
                         v-if="scope1.row.itemType != 'lt'"
-                        style="width: 75%;"
+                        style="width: 70%;"
                         size="mini"
                         oninput="value=value.replace(/[^\d.]/g,'')
                                 .replace(/^\./g, '').replace(/\.{2,}/g, '.')
@@ -365,7 +365,7 @@
                       </el-input>
                       <el-input
                         v-else
-                        style="width: 75%;"
+                        style="width: 70%;"
                         size="mini"
                         oninput="value=value.replace(/[^\d.]/g,'')
                                 .replace(/^\./g, '').replace(/\.{2,}/g, '.')
@@ -380,7 +380,7 @@
                     <span v-else-if="scope1.row.itemType === 'lspb'">--</span>
                     <span v-else-if="scope1.row.modifyFlag === 'Y'">
                       <el-input
-                        style="width: 75%;"
+                        style="width: 70%;"
                         size="mini"
                         oninput="value=value.replace(/[^\d.]/g,'')
                                 .replace(/^\./g, '').replace(/\.{2,}/g, '.')
@@ -400,7 +400,7 @@
                 </el-table-column>
                 <el-table-column
                   label="制造说明"
-                  width="110"
+                  width="100"
                   header-align="center"
                   align="center"
                 >
@@ -460,7 +460,6 @@
                   <template slot-scope="scope1">
                     <span style="color:red;">
                       {{ scope1.row.illustrate }}
-                      <!-- {{judgeTip(scope.row,scope.$index)}} -->
                     </span>
                   </template>
                 </el-table-column>

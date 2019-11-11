@@ -5,7 +5,7 @@
         title="订单详情"
         :show-close="true"
         :visible.sync="dialogVisible"
-        width="95%"
+        width="65%"
       >
         <dialogOrderDetail :ruleForm="ruleForm"></dialogOrderDetail>
       </el-dialog>
@@ -70,14 +70,14 @@
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column :label="tableHead2">
+        <el-table-column :label="tableHead2" :render-header="renderColor">
           <el-table-column prop="sumMoney" label="订单金额"></el-table-column>
           <el-table-column
             prop="ALLBACK_Y"
             label="年返利使用金额"
           ></el-table-column>
         </el-table-column>
-        <el-table-column :label="tableHead3">
+        <el-table-column :label="tableHead3" :render-header="renderColor">
           <el-table-column
             prop="ALLBACK_M"
             label="月返利使用金额"
@@ -283,6 +283,9 @@ export default {
       this.tableHead1 = `${selectMonth}协议月任务：${this.assignments}`;
       this.tableHead2 = `${selectMonth}促销目标任务：${this.assignmentsTarget}`;
       this.tableHead3 = `任务完成差额：${this.assignmentsReduce}`;
+    },
+    renderColor(h, { column }) {
+      return h("span", { style: "color:red;" }, column.label);
     }
   },
   filters: {

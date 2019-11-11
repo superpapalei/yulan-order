@@ -27,7 +27,7 @@
         value-format="yyyy-MM-dd"
         placeholder="日期区间"
         v-model="date1"
-        style="width:14%;"
+        style="width:12%;"
       ></el-date-picker
       >&nbsp;至
       <el-date-picker
@@ -36,10 +36,10 @@
         value-format="yyyy-MM-dd"
         placeholder="日期区间"
         v-model="date2"
-        style="width:14%;"
+        style="width:12%;"
       ></el-date-picker>
       <el-select
-        style="width:160px;"
+        style="width:140px;"
         v-model="CommodityType"
         placeholder="请选择商品类型"
       >
@@ -64,7 +64,7 @@
       </el-select>
       <el-input
         @keyup.enter.native="search()"
-        placeholder="请输入相关信息搜索订单"
+        placeholder="订单号，型号，购买人"
         v-model="find"
         style="width:280px;"
       >
@@ -591,6 +591,7 @@ export default {
       //   console.log(this.data);
       // });
       //新后台
+      this.data = [];
       var data = {
         companyId: Cookies.get("companyId"),
         limit: this.limit,
@@ -612,7 +613,6 @@ export default {
       }
       getAllOrders(data).then(res => {
         this.count = res.count;
-        this.data = [];
         this.data = res.data;
         this.$root.$emit("refreshBadgeIcon", "orderDeal");
       });
