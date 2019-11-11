@@ -47,6 +47,7 @@ import lanJuGMExamine from '@/components/design/lanJuGMExamine'
 import lanJuMarketExamine from '@/components/design/lanJuMarketExamine'
 import payDelegation from '@/components/supplierModule/payDelegation'
 import payDelegationExamine from '@/components/supplierModule/payDelegationExamine'
+import DeliveryList_lanju from '@/components/supplierModule/deliveryList_lanju'
 
 Vue.use(Router)
 
@@ -274,25 +275,19 @@ const router = new Router({
           path: '/query/stockQuery',
           name: 'stockQuery',
           component: StockQuery,
-          meta: {
-            keepAlive: true
-          }
+          
         },
         {
           path: '/query/areaQuery',
           name: 'areaQuery',
           component: AreaQuery,
-          meta: {
-            keepAlive: true
-          }
+          
         },
         {
           path: '/query/orderQuery',
           name: 'orderQuery',
           component: OrderQuery,
-          meta: {
-            keepAlive: true
-          }
+          
         },
         {
           path: '/supplierModule/trans',
@@ -351,6 +346,11 @@ const router = new Router({
           meta: {
             returnMain: true//该页面刷新回到主界面
           }
+        },
+        {
+          path: '/supplierModule/deliveryList_lanju',
+          name: 'DeliveryList_lanju',
+          component: DeliveryList_lanju
         },
       ]
     }
