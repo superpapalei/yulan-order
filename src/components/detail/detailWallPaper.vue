@@ -33,7 +33,7 @@
         >
       </router-link>
       <div class="dib" style="border-bottom: 1px solid #ebeef5;">
-        <p class="fstrong f16">商品信息：</p>
+        <!-- <p class="fstrong f16" style="margin:0;">商品信息：</p> -->
         <table id="messageRight">
           <tr>
             <td>型号：</td>
@@ -118,6 +118,7 @@
             <td>活动：</td>
             <td>
               <el-select
+                style="width:300px;"
                 :disabled="disableFlag"
                 v-model="data.activityId"
                 :placeholder="
@@ -148,7 +149,8 @@
                 <el-input
                   resize="none"
                   type="textarea"
-                  maxlength="200"
+                  maxlength="50"
+                  placeholder="请输入您的备注信息（50字内）"
                   :autosize="{ minRows: 3, maxRows: 6 }"
                   v-model="data.note"
                 ></el-input>
@@ -159,7 +161,7 @@
                 ></i>
               </div>
               <span style="margin-left:10px;"
-                >{{ data.note ? data.note.length : 0 }}/200</span
+                >{{ data.note ? data.note.length : 0 }}/50</span
               >
             </td>
           </tr>
@@ -515,7 +517,7 @@ export default {
   -o-transform: scale(0.75, 0.75);
 }
 #messageRight {
-  margin: 20px 40px;
+  margin: 10px 20px;
   display: inline-block;
   vertical-align: middle;
 }

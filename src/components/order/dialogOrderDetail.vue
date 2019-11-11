@@ -59,7 +59,7 @@
           align="center"
           label="活动类型"
         ></el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="PART_SEND_ID"
           align="center"
           :formatter="formatRole"
@@ -97,7 +97,7 @@
             <span v-if="isManager === '0'">***</span>
             <span v-else>{{ scope1.row.PROMOTION_COST }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="应付金额" align="center">
           <template slot-scope="scope1">
             <span v-if="isManager === '0'">***</span>
@@ -112,7 +112,7 @@
         ></el-table-column>
       </el-table>
 
-      <div style="float:right; margin-right:10.4%;height:100px;">
+      <div style="float:right; margin-right:18%;height:100px;">
         <p v-if="isManager === '0'">
           商品总价格：
           <span style="color:tomato;font-weight:bold;">***</span>

@@ -25,15 +25,15 @@
               width="55"
               :selectable="checkActiviyEffect"
             ></el-table-column>
-            <el-table-column label="型号">
+            <el-table-column label="型号" width="100">
               <template slot-scope="scope1">{{
                 scope1.row.modelNumber
               }}</template>
             </el-table-column>
-            <el-table-column label="宽度(m)">
+            <el-table-column label="宽度(m)" width="90">
               <template slot-scope="scope1">{{ scope1.row.width }}</template>
             </el-table-column>
-            <el-table-column label="高度(m)">
+            <el-table-column label="高度(m)" width="90">
               <template slot-scope="scope1">{{ scope1.row.height }}</template>
             </el-table-column>
             <el-table-column label="帘外包宽度(m)" width="120px">
@@ -47,10 +47,10 @@
                 <span v-else>--</span>
               </template>
             </el-table-column>
-            <el-table-column label="褶皱倍数">
+            <el-table-column label="褶皱倍数" width="100">
               <template slot-scope="scope1">{{ scope1.row.drape }}</template>
             </el-table-column>
-            <el-table-column label="位置">
+            <el-table-column label="位置" width="100">
               <template slot-scope="scope1">{{
                 scope1.row.location === null || scope1.row.location === ""
                   ? "--"
@@ -70,7 +70,7 @@
                 {{ scope1.row.activity }}
               </template>
             </el-table-column>
-            <el-table-column min-width="100" label="数量">
+            <el-table-column width="120" label="数量">
               <template slot-scope="scope1">
                 <el-input-number
                   size="mini"
@@ -84,7 +84,7 @@
                 ></el-input-number>
               </template>
             </el-table-column>
-            <el-table-column label="小计">
+            <el-table-column label="小计" width="100">
               <template slot-scope="scope1">
                 <span v-if="isManager === '0'">***</span>
                 <span v-else>{{
@@ -232,6 +232,7 @@ export default {
           //过滤无效数据
           let theData = res.data;
           this.dataDeal(theData);
+          this.$root.$emit("refreshBadgeIcon", "curtainCount");
         })
         .catch(err => {
           this.shopsData = [];

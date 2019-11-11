@@ -39,39 +39,40 @@
           :row-key="getRowKeys"
           :expand-row-keys="expands"
           @expand-change="expandChange"
-          style="min-width: 750px; margin: 0px auto 20px auto;"
+          style="margin: 0px auto 20px auto;"
         >
-          <el-table-column label="型号" prop="type"></el-table-column>
-          <el-table-column label="样本型号" prop="sample"></el-table-column>
-          <el-table-column label="版本" prop="versionNumber"></el-table-column>
-          <el-table-column label="名称" prop="version"></el-table-column>
-          <el-table-column label="品牌" prop="brand"></el-table-column>
-          <el-table-column min-width="150" label="数量">
+          <el-table-column label="型号" prop="type" width="120"></el-table-column>
+          <el-table-column label="样本型号" prop="sample" width="120"></el-table-column>
+          <el-table-column label="版本" prop="versionNumber" width="130"></el-table-column>
+          <el-table-column label="名称" prop="version" width="110"></el-table-column>
+          <el-table-column label="品牌" prop="brand" width="80"></el-table-column>
+          <el-table-column min-width="150" label="数量" width="100">
             <template slot-scope="scope">
               <div v-if="scope.row.unit === '平方米'">
                 <span class="num-font">宽</span>
                 <currency-input
-                  :customStyle="'width: 75px;'"
+                  :customStyle="'width: 60px;'"
                   :decimalNum="decimalNum"
                   v-model="scope.row.number"
                 ></currency-input
                 >×
                 <span class="num-font">高</span>
                 <currency-input
-                  :customStyle="'width: 75px;'"
+                  :customStyle="'width: 60px;'"
                   :decimalNum="decimalNum"
                   v-model="scope.row.anotherNumber"
                 ></currency-input>
               </div>
               <div v-else>
                 <currency-input
+                  :customStyle="'width: 60px;'"
                   :decimalNum="decimalNum"
                   v-model="scope.row.number"
                 ></currency-input>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="单位" prop="unit"></el-table-column>
+          <el-table-column label="单位" prop="unit" width="80"></el-table-column>
           <el-table-column width="100px" label="操作">
             <template slot-scope="scope">
               <a class="mr10" @click="seeStore(scope)">查看库存</a>
@@ -515,6 +516,7 @@ export default {
             this.tableData = [];
             this.expands = [];
             this.clearMsg();
+            this.$root.$emit("refreshBadgeIcon", "wallCount");
           } else {
             this.$alert(res.data.msg, "添加失败", {
               confirmButtonText: "确定",
