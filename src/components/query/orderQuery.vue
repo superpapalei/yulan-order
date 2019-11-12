@@ -467,7 +467,7 @@ export default {
   computed: {    
     timeDefault_1() {      
       var date = new Date();      
-      var s1 = date.getFullYear() + "-" + "01" + "-" + "01";
+      var s1 = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + "01";
       return s1;    
       },
     
