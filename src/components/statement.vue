@@ -66,42 +66,17 @@
       <el-dialog
         :visible.sync="detailVisible"
         :close-on-click-modal="false"
-        width="55%"
+        width="760px"
         top="5vh"
       >
        <div class="fixedDiv">
-               <el-button
-              v-show="showButton"
-             style="float:right; margin-left:10px;margin-bottom:10px;"
-             size="small"
-              type="primary"
-             @click="OutExcel()"
-              >导出</el-button>
-                   <el-button
-              v-show="showButton"
-              size="small"
-              style="float:right; margin-left:10px;margin-bottom:10px;"
-              type="primary"
-              @click="printRefund('PrintDiv1')"
-              >打印</el-button>
-            <el-button
-              v-show="showButton"
-              size="small"
-              style="float:right; margin-left:10px;margin-bottom:10px;"
-              type="primary"
-         
-              @click="changeStatus(0)"
-              >客户确认</el-button>
-            <el-button
-              v-show="showButton"
-              size="small"
-              style="float:right;"
-              type="danger"
-      
-              @click="dialogFormVisible = true"
-              >客户反馈</el-button>
+              <div style="margin:10px"> <el-button v-show="showButton" size="mini" type="primary" @click="changeStatus(0)" >客户确认</el-button> 
+              <el-button  v-show="showButton" size="mini" type="primary"  @click="printRefund('PrintDiv1')">打印</el-button> </div>
+           <div style="margin:10px"><el-button v-show="showButton"  size="mini"  type="danger" @click="dialogFormVisible = true" >客户反馈</el-button> 
+           <el-button v-show="showButton" size="mini" type="primary"  @click="OutExcel()" >导出</el-button>
             </div>
-        <div id="PrintDiv1"  style="width:100% ;margin:0 auto;">
+         </div>
+        <div id="PrintDiv1"  class="dialogDetailStyle" style="width:100% ;margin:0 auto;">
           <div
             style="margin:0 auto; height:40px; width:100%;text-align:center;"
           >
@@ -116,73 +91,73 @@
           </div>
           <table
           class="table1Style"
-
-            border="1"
+            border="2"
             width="100%"
             cellpadding="2"
-            style="margin:0 auto;"
           >
             <tr>
               <th class="grayTD">客户名称</th>
-              <th colspan="2">{{ theHead.customerName }}</th>
+              <th colspan="3">{{ theHead.customerName }}</th>
               <th class="grayTD">联系人</th>
-              <th colspan="2">{{ theHead.customerAgent }}</th>
+              <th colspan="3">{{ theHead.customerAgent }}</th>
             </tr>
             <tr>
+              <th class="grayTD">备货单据号</th>
+              <th colspan="3">{{ theBody.ctmBhBill }}</th>
               <th class="grayTD">电话</th>
-              <th colspan="5">{{ theHead.officeTel }}</th>
+              <th colspan="3">{{ theHead.officeTel }}</th>
             </tr>
             <tr>
-              <td colspan="2" align="center" class="grayTD">版本销售前5名</td>
-              <td colspan="4" align="center">{{ theBody.verTop }}</td>
+              <td colspan="3" align="center" class="grayTD">版本销售前5名</td>
+              <td colspan="5" align="center">{{ theBody.verTop }}</td>
             </tr>
             <tr>
-              <td colspan="2" align="center" class="grayTD">
+              <td colspan="3" align="center" class="grayTD">
                 本客户版本销售前5名
               </td>
-              <td colspan="4" align="center">{{ theBody.ctmVerTop }}</td>
+              <td colspan="5" align="center">{{ theBody.ctmVerTop }}</td>
             </tr>
-            <tr>
-              <td colspan="1" align="center" class="grayTD">备货单据号</td>
-              <td colspan="5" align="center">{{ theBody.ctmBhBill }}</td>
-            </tr>
+            <!-- <tr>
+              <td colspan="1" align="center" class="grayTD"></td>
+              <td colspan="5" align="center"></td>
+            </tr> -->
             <tr>
               <td colspan="1"></td>
               <td align="center" class="grayTD">本期</td>
-              <td align="center" class="grayTD">本年</td>
+              <td align="center" class="grayTD" colspan="2">本年</td>
               <td></td>
               <td align="center" class="grayTD">本期</td>
-              <td align="center" class="grayTD">本年</td>
+              <td align="center" class="grayTD"  colspan="2">本年</td>
             </tr>
             <tr>
               <td class="grayTD" align="center">实际发货总金额</td>
               <td align="center">{{ theBody.fhjeMonth }}</td>
-              <td align="center">{{ theBody.consignmentMoney }}</td>
+              <td align="center"  colspan="2">{{ theBody.consignmentMoney }}</td>
               <td class="grayTD" align="center">实际收款金额</td>
               <td align="center">{{ theBody.czskMonth }}</td>
-              <td align="center">{{ theBody.gatherMoneyFax }}</td>
+              <td align="center"  colspan="2">{{ theBody.gatherMoneyFax }}</td>
             </tr>
             <tr>
               <td class="grayTD" align="center">返利发货总金额</td>
               <td align="center">{{ theBody.moneyFl }}</td>
-              <td align="center">{{ theBody.moneyFlTotal }}</td>
+              <td align="center"  colspan="2">{{ theBody.moneyFlTotal }}</td>
               <td class="grayTD" align="center">本期剩余返利</td>
-              <td align="center">{{ theBody.moneyFl }}</td>
-              <td></td>
+              <td align="center"  >{{ theBody.moneyFl }}</td>
+              <td  colspan="2"></td>
             </tr>
             <tr>
               <td class="grayTD" align="center">备货总金额</td>
               <td align="center">{{ theBody.moneyBh }}</td>
-              <td align="center">{{ theBody.moneyBhTotal }}</td>
+              <td align="center"  colspan="2">{{ theBody.moneyBhTotal }}</td>
               <td class="grayTD" align="center">运费总金额</td>
               <td align="center">{{ theBody.freightMonth }}</td>
-              <td align="center">{{ theBody.freight }}</td>
+              <td align="center"  colspan="2">{{ theBody.freight }}</td>
             </tr>
             <tr>
               <td class="grayTD" align="center">期初应收款</td>
-              <td colspan="2" align="center">{{ theBody.qcczysk }}</td>
+              <td colspan="3" align="center">{{ theBody.qcczysk }}</td>
               <td class="grayTD" align="center">期末应收款</td>
-              <td colspan="2" align="center">{{ theBody.czysk }}</td>
+              <td colspan="3" align="center">{{ theBody.czysk }}</td>
             </tr>
           </table>
   
@@ -194,14 +169,13 @@
             border
             :row-class-name="tableRowClassName"
             style="width: 100%; margin:10px auto"
-            class="table2Style"
           >
             <el-table-column width="100" label="日期">
               <template slot-scope="scope1">
                 <span>{{ scope1.row.dateOutStock | datatrans }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="单据号" width="130">
+            <el-table-column label="单据号" width="119">
               <template slot-scope="scope1">
                 <!-- <span>{{scope1.row.saleNo}}</span> -->
                 <el-button
@@ -217,9 +191,9 @@
                 <span>{{ scope1.row.billNo | stateChange }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="money" label="发货总额" width="100"></el-table-column>
-            <el-table-column prop="qty" label="发货数量" width="100"></el-table-column>
-            <el-table-column prop="freight" label="运费" width="100"></el-table-column>
+            <el-table-column prop="money" label="发货总额" width="90"></el-table-column>
+            <el-table-column prop="qty" label="发货数量" width="90"></el-table-column>
+            <el-table-column prop="freight" label="运费" width="70"></el-table-column>
             <el-table-column
               prop="gatherMoneyFax"
               label="收款金额"
@@ -424,7 +398,7 @@ export default {
         var end=doc.substring(doc.length-1000,doc.length);
      
         doc=  doc.replace('<h2 data-v-864abbe2="" style="margin: 0px;">广东玉兰集团股份有限公司对账单</h2>',
-        '<div style="margin: 10px auto;  width:1000px; font-size:20px;"> <table> <tr><td data-v-864abbe2="" colspan="6" align="center" class="grayTD"><h2 data-v-864abbe2="" style="margin: 0px;">广东玉兰集团股份有限公司对账单</h2></td><td data-v-864abbe2="" colspan="5" align="center"></td> </tr></table></div>');
+        '<div style="margin: 10px auto;  width:1000px; font-size:20px;"> <table> <tr><td data-v-864abbe2="" colspan="8" align="center" class="grayTD"><h2 data-v-864abbe2="" style="margin: 0px;">广东玉兰集团股份有限公司对账单</h2></td><td data-v-864abbe2="" colspan="5" align="center"></td> </tr></table></div>');
         doc+="</table>";
         
         var docFile="<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:"+doc+"' xmlns='http://www.w3.org/TR/REC-html40'>";
@@ -761,13 +735,16 @@ export default {
 </script>
 
 <style scoped>
+.table1Style{
+  border-collapse: collapse;
+}
 .fixedDiv {
 position:fixed;
 border:1px;
 border-color:#000;
 z-index:1;
-top: 115px;
-margin-left: 500px;
+top: 60px;
+margin-left: 530px;
 z-index:9999
 }
 .noprint{
@@ -786,15 +763,22 @@ z-index:9999
   background: rgb(241, 242, 243);
   width:90;
 }
+
 </style>
 
 <style>
+.dialogDetailStyle .el-table td,
+.dialogDetailStyle .el-table th {
+    padding: 0px 0 !important;
+}
 .el-table .success-row {
   background: #f0f9eb;
 }
-.table2Style .el-button--medium {
+.dialogDetailStyle .el-button--medium {
     padding: 1px 20px;
     font-size: 14px;
     border-radius: 4px;
 }
+
+
 </style>

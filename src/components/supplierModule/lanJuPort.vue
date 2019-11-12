@@ -1270,7 +1270,7 @@
             <el-tab-pane label="待确认" name="first" align="left" >
                      <div  style="margin-bottom:10px;">
                 <el-input
-                  @keyup.enter.native="SelectClick()"
+                  @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
                   
                   placeholder=" 采购单号:（精确）"
@@ -1279,7 +1279,7 @@
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-           
+             placeholder="开始时间"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1289,7 +1289,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-            
+                 placeholder="结束时间"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1393,14 +1393,14 @@
 
               <div  style="margin-bottom:10px;">
               <el-input
-                  @keyup.enter.native="SelectClick()"
+                  @keyup.enter.native="SelectByCustomer()"
                   prefix-icon="el-icon-search"
-                  placeholder=" 客户:（模糊）"
+                  placeholder=" 客户:（Enter独立查询）"
                   v-model="customer"
                 >
                 </el-input>
                 <el-input
-                  @keyup.enter.native="SelectClick()"
+                  @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
                 
                   placeholder=" 采购单号:（精确）"
@@ -1409,7 +1409,7 @@
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-                
+                  placeholder="开始时间"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1419,7 +1419,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-           
+             placeholder="结束时间"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1535,7 +1535,7 @@
        <el-tab-pane label="已取消" name="third" align="left">
             <div  style="margin-bottom:10px;">
                 <el-input
-                  @keyup.enter.native="SelectClick()"
+                  @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
        
                   placeholder=" 采购单号:（精确）"
@@ -1544,7 +1544,7 @@
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-           
+             placeholder="开始时间"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1554,7 +1554,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-                 
+                   placeholder="结束时间"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1994,10 +1994,10 @@ detailCol:[
       date.setHours(0, 0, 0);
       return date;
     },
-    //获取最近一周时间
+    //获取最近一周时间 
     getCurrentWeek() {
       var date = new Date();
-      date.setDate(date.getDate() - 7);
+      date.setDate(date.getDate() - 30);//改成了最近一个月
       date.setHours(0, 0, 0);
       return date;
     },
@@ -2077,7 +2077,44 @@ detailCol:[
       }
     },
     //选择或输入条件后搜索
+    SelectByCustomer() {
+        if(this.customer!=null && this.customer!="" &&this.customer!="all"){
+           this.date1=null;
+           this.date2=null;
+           this.po="";
+           this.selvalue="all";
+      }
+      else  if(this.date1==null&&this.date2==null){
+        this.date1= new Date(this.getPastMonth());
+           this.date2=new Date();
+      }
+      this.currentPage = 1;
+      this.po_type = this.selvalue;
+      this.autoSearch();
+    },
+    SelectByPo() {
+       if(this.po!=""){
+         this.date1=null;
+         this.date2=null;
+         this.customer=null;
+      }
+    
+      else  if(this.date1==null&&this.date2==null){
+        this.date1= new Date(this.getPastMonth());
+           this.date2=new Date();
+      }
+     
+    
+      this.currentPage = 1;
+      this.po_type = this.selvalue;
+      this.autoSearch();
+    },
+
     SelectClick() {
+      if(this.date1==null&&this.date2==null){
+        this.date1= new Date(this.getPastMonth());
+           this.date2=new Date();
+      }
       this.currentPage = 1;
       this.po_type = this.selvalue;
       this.autoSearch();
