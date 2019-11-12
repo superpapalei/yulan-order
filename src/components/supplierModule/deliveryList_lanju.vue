@@ -3,7 +3,7 @@
   <div>
     <el-card shadow="hover">
       <div slot="header">
-        <span class="fstrong f16">送货单</span>
+        <span class="fstrong f16">送货单(兰居)</span>
       </div>
 
       <div id="tbar" class="tbarStyle">
@@ -26,7 +26,7 @@
         ></el-date-picker>
 
         <el-select
-          v-model="SELECT_STATUS"
+          v-model="confirm_status"
           style="margin-left:10px;width:160px;"
           placeholder="状态"
         >
@@ -118,7 +118,7 @@
           </el-table-column>
           <el-table-column
             prop="INVOICE_DATE"
-            label="送货日期"
+            label="发货日期"
             align="center"
             width="90px"
           >
@@ -156,7 +156,7 @@
                 icon="el-icon-search"
                 circle
                 v-if="
-                  scope.row.INVOICE_STATUS == 0 || scope.row.INVOICE_STATUS == 1 || scope.row.INVOICE_STATUS == 3
+                 (scope.row.INVOICE_STATUS == 1 || scope.row.CONFIRM_STATUS == 3)  && (scope.row.CONFIRM_STATUS == 0 || scope.row.CONFIRM_STATUS == 1 || scope.row.CONFIRM_STATUS == 3)
                 "
               ></el-button>
               <el-button
@@ -165,7 +165,7 @@
                 size="mini"
                 icon="el-icon-edit"
                 circle
-                v-if="scope.row.INVOICE_STATUS == 2 "
+                v-if="scope.row.INVOICE_STATUS == 2 && (scope.row.CONFIRM_STATUS == 2 || scope.row.CONFIRM_STATUS == 3)"
               ></el-button>
             </template>
           </el-table-column>
@@ -190,11 +190,29 @@
       :close-on-click-modal="false"
       width="70%"
     >
+        <el-dialog
+        width="30%"
+        
+        :visible.sync="rebackVisible"
+        append-to-body
+        >
+            <div style="width:100%;text-align:center;font-size:20px">{{editData.PUR_NO}} 退回说明</div>
+            <div style="margin-top:10px">
+                <el-input
+                v-model="reback_notes_1"
+                placeholder="请输入退回说明:"
+                tyle="width:30%;height:50PX"
+                clearable>
+                </el-input>
+            </div>
+            <el-button 
+            style="margin-left:40%;margin-top:10px"
+            class="trueButton"
+            @click="rebackTure">确认退回</el-button>
+        </el-dialog>
       <!-- 查看区 -->
       <div v-show="isCheck">
-        <div style="width:100%;text-align:center;font-size:20px">{{DeliverData_1.PUR_NO}} 送货单明细 ({{DeliverData_1.INVOICE_STATUS | transStatus}})</div>
-        <div v-if="DeliverData_1.INVOICE_STATUS == 3" style="font-size:20px;float:right;">退回说明：{{DeliverData_1.REBACK_NOTES}}
-        </div>
+        <div style="width:100%;text-align:center;font-size:20px">{{DeliverData_1.PUR_NO}} 送货单明细 ({{DeliverData_1.CONFIRM_STATUS | transStatus}})</div>
         <br>
         <table style="width:100%;text-align:center">
         <tr>
@@ -214,9 +232,9 @@
         <div class="checkTable">
         <table class="" style="width:100%;font-size:12px">
           <tr>
-            <td>送货单号：</td>
+            <td>发货单号：</td>
             <td>{{ DeliverData_1.INVOICE_NO }}</td>
-            <td>送货日期：</td>
+            <td>发货日期：</td>
             <td>{{ DeliverData_1.INVOICE_DATE | datatrans }}</td>
             <td>预计到货日期：</td>
             <td>{{ DeliverData_1.EXPECT_ARRIVAL_DATE | datatrans }}</td>
@@ -265,7 +283,7 @@
           ></el-table-column>
           <el-table-column
             prop="INVOICE_QTY"
-            label="送货数量"
+            label="发货数量"
             align="center"
             width="150px"
           ></el-table-column>
@@ -297,9 +315,7 @@
       </div>
       <!-- 编辑区 -->
       <div v-show="isEdit">
-        <div style="width:100%;text-align:center;font-size:20px">{{editData.PUR_NO}} 送货单明细 ({{editData.INVOICE_STATUS | transStatus}})</div>
-        <div v-if="editData.INVOICE_STATUS == 3" style="font-size:20px;float:right;">退回说明：{{editData.REBACK_NOTES}}
-        </div>
+        <div style="width:100%;text-align:center;font-size:20px">{{editData.PUR_NO}} 送货单明细 ({{editData.CONFIRM_STATUS | transStatus}})</div>
         <br>
         <table style="width:100%;text-align:center">
         <tr>
@@ -329,9 +345,9 @@
         <div class="checkTable">
           <table style="width:100%;font-size:12px">
             <tr>
-              <td style="width:12%">送货单号：</td>
+              <td style="width:12%">发货单号：</td>
               <td>{{ editData.INVOICE_NO }}</td>
-              <td>送货日期：</td>
+              <td>发货日期：</td>
               <td>
                 <div style="width:100%">
                   <span
@@ -451,7 +467,7 @@
             align="center"
             width="180px"
           ></el-table-column>
-          <el-table-column label="送货数量" align="center" width="155px">
+          <el-table-column label="发货数量" align="center" width="155px">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.INVOICE_QTY"
@@ -494,10 +510,10 @@
         <el-button
           style="margin-left:40%;margin-top:10px"
           class="trueButton"
-          @click="Delete"
-          >删除送货单</el-button
+          @click="reback_show"
+          >退回</el-button
         >
-        <el-button class="trueButton" @click="isTrueEdit">确认修改</el-button>
+        <el-button class="trueButton" @click="isTrueEdit">确认</el-button>
       </div>
     </el-dialog>
     <el-dialog
@@ -575,7 +591,7 @@
           ></el-table-column>
           <el-table-column
             prop="QTY"
-            label="已送货数量"
+            label="已发货数量"
             align="center"
             width="100px"
           ></el-table-column>
@@ -640,15 +656,15 @@
       <div v-show="isAdd" class="table-c">
         <table style="width:100%">
           <tr>
-            <td>送货单号：</td>
+            <td>发货单号：</td>
             <td>(系统生成)</td>
-            <td>送货日期：</td>
+            <td>发货日期：</td>
             <td>
               <el-date-picker
                 type="date"
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
-                placeholder="送货日期"
+                placeholder="发货日期"
                 v-model="ruleForm_2.dateValue"
                 style="width:100%"
               ></el-date-picker>
@@ -801,7 +817,7 @@
           </el-table-column>
           <el-table-column
             prop="QTY"
-            label="已送货数量"
+            label="已发货数量"
             align="center"
             width="100px"
           ></el-table-column>
@@ -848,11 +864,12 @@ export default {
   name: "DeliveryList",
   data() {
     return {
-      reback_notes:"",
+        reback_notes_1:"",
       max_qty: [],
       editData: [],
       submit: {
         INVOICE_STATUS: "",
+        CONFIRM_STATUS:"",
         INVOICE_DATE: "",
         CREATE_DATE: "",
         CREATE_PERSON: "",
@@ -877,6 +894,7 @@ export default {
       ruleForm_4: { dateValue: "" },
       multipleSelection: [],
       innerVisible: false,
+      rebackVisible:false,
       PURData: [],
       find: "",
       DeliverData_2: [],
@@ -899,7 +917,7 @@ export default {
       finishTime: "", //查询的结束时间
       SEARCHKEY: "", //搜索栏关键字
       SELECT_STATUS: "", //存储下拉框的值
-      CONFIRM_STATUS:"",
+      confirm_status:"",
       rowPlus: 0, //兰居软装设计需求表中的户型编辑项添加数
       isAdd: false, //新增记录
       isEdit: false, //编辑记录
@@ -931,7 +949,7 @@ export default {
         {
           label: "退回",
           value: "3"
-        }
+        },
       ],
       lanjuData: [],
       submitForm: [], //提交的表头信息
@@ -1032,7 +1050,7 @@ export default {
         this.submitForm.LOGISTICS_LINKMAN == "" ||
         this.submitForm.LOGISTICS_TEL == ""
       ) {
-        this.$alert("请完善送货信息", "提示", {
+        this.$alert("请完善发货信息", "提示", {
           confirmButtonText: "确定",
           type: "warning"
         });
@@ -1044,7 +1062,6 @@ export default {
       this.submitForm.INVOICE_DATE = this.ruleForm_2.dateValue;
       this.submitForm.EXPECT_ARRIVAL_DATE = this.ruleForm_3.dateValue;
       this.submitForm.INVOICE_STATUS = this.newStatus;
-      
       AddDelivery({
         headForm: this.submitForm,
         gridData: this.multipleSelection_2,
@@ -1058,6 +1075,15 @@ export default {
           this.search();
         }
       });
+    },
+    //确认退回
+    rebackTure(){
+        this.rebackVisible = false;
+        this.reback();
+    },
+    //退回弹窗
+    reback_show(){
+        this.rebackVisible = true;
     },
     //确认采购单
     isTrue() {
@@ -1112,17 +1138,8 @@ export default {
         };
         GetPoDetail_1(data).then(res => {
           this.PURData = res.data;
-          if(res.data.length == 0){
-            this.$alert("采购单已入库", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-          }else{
-          this.PURData = res.data;
           this.submitForm.SUPPLY_LINKMAN = res.data[0].G_LINK;
           this.submitForm.LINKMAN_TEL = res.data[0].HANDSET;
-          }
-          
         });
       }
     },
@@ -1152,7 +1169,7 @@ export default {
         finishTime: this.finishTime,
         status: this.SELECT_STATUS,
         find: this.SEARCHKEY,
-        confirm_status:this.CONFIRM_STATUS,
+        confirm_status:this.confirm_status,
       };
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";
@@ -1187,21 +1204,20 @@ export default {
         SUPPLY_CODE: "",
         EXPECT_ARRIVAL_DATE: "",
         LOGISTICS_LINKMAN: "",
-        LOGISTICS_TEL: "",
-        CONFIRM_STATUS:2,
+        LOGISTICS_TEL: ""
       }),
         (this.multipleSelection = []);
       this.multipleSelection_1 = [];
       this.multipleSelection_2 = [];
     },
-    //查看送货单列表详情
+    //查看发货单列表详情
     _CheckDetail(val) {
       this.isCheck = true;
       this.lanjuDetail = true;
       this.isEdit = false;
       let data = {
-        INVOICE_NO: val.INVOICE_NO, //送货单号
-        INVOICE_DATE: val.INVOICE_DATE, //送货日期
+        INVOICE_NO: val.INVOICE_NO, //发货单号
+        INVOICE_DATE: val.INVOICE_DATE, //发货日期
         CREATE_DATE: val.CREATE_DATE, //创建日期
         CREATE_PERSON: val.CREATE_PERSON, //创建人
         LOGISTICS_COMPANY: val.LOGISTICS_COMPANY, //物流公司
@@ -1214,7 +1230,6 @@ export default {
         EXPECT_ARRIVAL_DATE: val.EXPECT_ARRIVAL_DATE, //预计到货时间
         LOGISTICS_LINKMAN: val.LOGISTICS_LINKMAN, //物流联系人
         LOGISTICS_TEL: val.LOGISTICS_TEL, //物流联系电话
-        INVOICE_STATUS:val.INVOICE_STATUS,//送货状态
         CONFIRM_STATUS:val.CONFIRM_STATUS,
         REBACK_NOTES:val.REBACK_NOTES,
       };
@@ -1257,9 +1272,10 @@ export default {
       );
       this.submit.LOGISTICS_LINKMAN = val.LOGISTICS_LINKMAN;
       this.submit.LOGISTICS_TEL = val.LOGISTICS_TEL
+      
       let data = {
-        INVOICE_NO: val.INVOICE_NO, //送货单号
-        INVOICE_DATE: val.INVOICE_DATE, //送货日期
+        INVOICE_NO: val.INVOICE_NO, //发货单号
+        INVOICE_DATE: val.INVOICE_DATE, //发货日期
         CREATE_DATE: val.CREATE_DATE, //创建日期
         CREATE_PERSON: val.CREATE_PERSON, //创建人
         LOGISTICS_COMPANY: val.LOGISTICS_COMPANY, //物流公司
@@ -1270,7 +1286,6 @@ export default {
         LINKMAN_TEL: val.LINKMAN_TEL, //供应商联系人电话
         PUR_NO:val.PUR_NO,//采购单号
         PUR_ID:val.PUR_ID,
-        INVOICE_STATUS:val.INVOICE_STATUS,
         CONFIRM_STATUS:val.CONFIRM_STATUS,
         REBACK_NOTES:val.REBACK_NOTES,
       };
@@ -1304,21 +1319,45 @@ export default {
         }
       });
     },
-    //删除
-    Delete() {
-      var data = {
-        invoice_no: this.submit.INVOICE_NO
-      };
-      DeleteDelivery(data).then(res => {
-        this.search();
+    //退回
+    reback() {
+        if (this.reback_notes_1.length == "") {
+        this.$alert("请输入退回说明", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+      } else {
+        this.lanjuDetail = false;
+      this.submit.CONFIRM_STATUS = 3;
+      this.submit.INVOICE_STATUS = 3;
+      this.submit.REBACK_NOTES = this.reback_notes_1;
+      if (this.ruleForm_1.dateValue !== this.submit.INVOICE_DATE) {
+        this.submit.INVOICE_DATE = this.ruleForm_1.dateValue;
+      }
+      if (this.ruleForm_4.dateValue !== this.submit.EXPECT_ARRIVAL_DATE) {
+        this.submit.EXPECT_ARRIVAL_DATE = this.ruleForm_4.dateValue;
+      }
+      UpdateDelivery({
+        headForm: this.submit,
+        gridData: this.DetailData_1,
+        cid: Cookies.get("companyId")
+      }).then(res => {
+        if (res.code == "0") {
+          this.$alert("保存成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.search();
+        }
       });
-      this.lanjuDetail = false;
+      }
+      
     },
     //编辑
     isTrueEdit() {
       this.lanjuDetail = false;
-      this.submit.INVOICE_STATUS = this.newStatus;
-      this.submit.CONFIRM_STATUS = 2;
+      this.submit.CONFIRM_STATUS = 1;
+      this.submit.INVOICE_STATUS = 1;
       if (this.ruleForm_1.dateValue !== this.submit.INVOICE_DATE) {
         this.submit.INVOICE_DATE = this.ruleForm_1.dateValue;
       }
@@ -1339,34 +1378,6 @@ export default {
         }
       });
     },
-    // CheckDetailByID(data).then(res => {
-    //     if (res.count > 0) {
-    //       this.submitDetailForm = res.data;
-    //       this.detailCount=res.count;
-    //       this.submitForm.CUSTOMER_AGENT = this.submitDetailForm[0].CUSTOMER_AGENT;
-    //       this.submitForm.OFFICE_TEL= this.submitDetailForm[0].OFFICE_TEL;
-    //     }
-    //     //将数据库里文件路径集合数据拆解，拆分成可以访问的路径
-    //     for (let j = 0; j < this.submitDetailForm.length; j++) {
-    //     this.submitDetailForm[j].rowNumber=this.initRowspan+j;
-    //     var list = this.submitDetailForm[j].ATTACHMENT_FILE.split(";");
-    //     this.submitDetailForm[j].fileList=[];
-    //     for (var i = 0; i < list.length - 1; i++) {
-    //     var index = list[i].lastIndexOf("/");
-    //     var fileName = list[i].substr(index + 1);
-    //     this.submitDetailForm[j].fileList.push({
-    //     name: fileName,
-    //     url: list[i]
-    //     });
-    //     }
-    //     }
-    //  this.usedRowspan=this.initRowspan+this.detailCount-1;
-    //  this.dateStamp = new Date().getTime();
-    //  this.isAdd = false;
-    //  this.isEdit = true;
-    //  this.isCheck = false;
-    //  this.lanjuDetail = true;
-    //  });
   }
 };
 </script>
