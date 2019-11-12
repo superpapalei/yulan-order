@@ -64,9 +64,9 @@
       </el-select>
       <el-input
         @keyup.enter.native="search()"
-        placeholder="订单号，型号，购买人"
+        placeholder="订单号,型号,购买人,联系方式"
         v-model="find"
-        style="width:280px;"
+        style="width:300px;"
       >
         <el-button @click="search()" slot="append" icon="el-icon-search"
           >搜索</el-button
