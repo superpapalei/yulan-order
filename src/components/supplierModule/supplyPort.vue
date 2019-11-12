@@ -1227,7 +1227,7 @@
             <el-tab-pane label="待确认" name="first" align="left" >
                      <div  style="margin-bottom:10px;">
                 <el-input
-                  @keyup.enter.native="SelectClick()"
+                  @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
                   
                   placeholder=" 采购单号:（精确）"
@@ -1339,7 +1339,7 @@
               <div  style="margin-bottom:10px;">
 
                 <el-input
-                  @keyup.enter.native="SelectClick()"
+                  @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
                 
                   placeholder=" 采购单号:（精确）"
@@ -1455,7 +1455,7 @@
        <el-tab-pane label="已取消" name="third" align="left">
             <div  style="margin-bottom:10px;">
                 <el-input
-                  @keyup.enter.native="SelectClick()"
+                  @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
        
                   placeholder=" 采购单号:（精确）"
@@ -1855,7 +1855,7 @@ detailCol:[
     //获取最近一周时间
     getCurrentWeek() {
       var date = new Date();
-      date.setDate(date.getDate() - 7);
+      date.setDate(date.getDate() - 30);//改为过去三十天
       date.setHours(0, 0, 0);
       return date;
     },
@@ -1933,8 +1933,27 @@ detailCol:[
         this.gridData[i].DATE_DELIVER = this.gridData[i].DATE_REQ;
       }
     },
+        SelectByPo() {
+       if(this.po!=""){
+         this.date1=null;
+         this.date2=null;
+         this.customer=null;
+          
+      }
+      else  if(this.date1==null&&this.date2==null){
+        this.date1= new Date(this.getPastMonth());
+           this.date2=new Date();
+      }
+      this.currentPage = 1;
+      this.po_type = this.selvalue;
+      this.autoSearch();
+    },
     //选择或输入条件后搜索
     SelectClick() {
+       if(this.date1==null&&this.date2==null){
+        this.date1= new Date(this.getPastMonth());
+           this.date2=new Date();
+      }
       this.currentPage = 1;
       this.po_type = this.selvalue;
       this.autoSearch();
