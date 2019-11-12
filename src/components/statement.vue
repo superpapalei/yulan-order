@@ -66,39 +66,60 @@
       <el-dialog
         :visible.sync="detailVisible"
         :close-on-click-modal="false"
-        width="65%"
+        width="55%"
         top="5vh"
       >
-        <div style="width:100% ;margin:0 auto;">
+       <div class="fixedDiv">
+               <el-button
+              v-show="showButton"
+             style="float:right; margin-left:10px;margin-bottom:10px;"
+             size="small"
+              type="primary"
+             @click="OutExcel()"
+              >导出</el-button>
+                   <el-button
+              v-show="showButton"
+              size="small"
+              style="float:right; margin-left:10px;margin-bottom:10px;"
+              type="primary"
+              @click="printRefund('PrintDiv1')"
+              >打印</el-button>
+            <el-button
+              v-show="showButton"
+              size="small"
+              style="float:right; margin-left:10px;margin-bottom:10px;"
+              type="primary"
+         
+              @click="changeStatus(0)"
+              >客户确认</el-button>
+            <el-button
+              v-show="showButton"
+              size="small"
+              style="float:right;"
+              type="danger"
+      
+              @click="dialogFormVisible = true"
+              >客户反馈</el-button>
+            </div>
+        <div id="PrintDiv1"  style="width:100% ;margin:0 auto;">
           <div
             style="margin:0 auto; height:40px; width:100%;text-align:center;"
           >
             <h2 style="margin:0;">广东玉兰集团股份有限公司对账单</h2>
           </div>
           <div style="margin:0 auto; width:100%;">
-            <h4 style="display:inline;margin:0;">
+            <div style="margin-top:5px;margin-left:20px; auto; width:300px; float:left;">
+              <h4 style="display:inline;margin:0;">
               统计日期：{{ startDate | cutdate }}~{{ endDate | cutdate }}
             </h4>
-            <el-button
-              v-show="showButton"
-              style="float:right; margin-left:10px;margin-bottom:10px;"
-              type="primary"
-              size="small"
-              @click="changeStatus(0)"
-              >客户确认</el-button
-            >
-            <el-button
-              v-show="showButton"
-              style="float:right;"
-              type="danger"
-              size="small"
-              @click="dialogFormVisible = true"
-              >客户反馈</el-button
-            >
+            </div>
           </div>
           <table
+          class="table1Style"
+
             border="1"
             width="100%"
+            cellpadding="2"
             style="margin:0 auto;"
           >
             <tr>
@@ -164,17 +185,18 @@
               <td colspan="2" align="center">{{ theBody.czysk }}</td>
             </tr>
           </table>
-
+  
           <el-table
-            height="500"
+           
             :data="tableDetail"
             :summary-method="getSummaries"
             show-summary
             border
             :row-class-name="tableRowClassName"
             style="width: 100%; margin:10px auto"
+            class="table2Style"
           >
-            <el-table-column width="130" label="日期">
+            <el-table-column width="100" label="日期">
               <template slot-scope="scope1">
                 <span>{{ scope1.row.dateOutStock | datatrans }}</span>
               </template>
@@ -190,19 +212,20 @@
                 >
               </template>
             </el-table-column>
-            <el-table-column label="类别">
+            <el-table-column label="类别" width="50">
               <template slot-scope="scope1">
                 <span>{{ scope1.row.billNo | stateChange }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="money" label="发货总额"></el-table-column>
-            <el-table-column prop="qty" label="发货数量"></el-table-column>
-            <el-table-column prop="freight" label="运费"></el-table-column>
+            <el-table-column prop="money" label="发货总额" width="100"></el-table-column>
+            <el-table-column prop="qty" label="发货数量" width="100"></el-table-column>
+            <el-table-column prop="freight" label="运费" width="100"></el-table-column>
             <el-table-column
               prop="gatherMoneyFax"
               label="收款金额"
+              width="100"
             ></el-table-column>
-            <el-table-column label="加收物流费">
+            <el-table-column label="加收物流费" width="100">
               <template slot-scope="scope1">
                 <span>{{ scope1.row.transFlag | NYchange }}</span>
               </template>
@@ -245,7 +268,7 @@
           v-show="whatType"
           :data="THtabledata"
           border
-          :summary-method="getSummaries"
+          :summary-method="getSummaries1"
           :row-class-name="tableRowClassName"
           show-summary
           style="width: 100%; margin-top:10px"
@@ -313,6 +336,8 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
+      idTmr:"",
+      tableToExcel:null,
       CZSK: {},
       THtitle: "对账单明细",
       THwidth: "70%",
@@ -350,6 +375,116 @@ export default {
     };
   },
   methods: {
+    //根据div id打印内容
+      printRefund(id) {
+      printJS({
+        printable: id,
+        type: "html",
+        maxWidth: 1300,
+        headerStyle: "margin: -2px;",
+        targetStyles: ["*"]
+      });
+    },
+  
+   getExplorer(){
+     var explorer = window.navigator.userAgent ;
+         //判断是否为IE浏览器
+        if (explorer.indexOf("MSIE") >= 0) {
+            return 'ie';
+        }
+        //判断是否为Firefox浏览器
+        else if (explorer.indexOf("Firefox") >= 0) {
+            return 'Firefox';
+        }
+        //判断是否为Chrome浏览器
+        else if(explorer.indexOf("Chrome") >= 0){
+            return 'Chrome';
+        }
+        //判断是否为Opera浏览器
+        else if(explorer.indexOf("Opera") >= 0){
+            return 'Opera';
+        }
+        //判断是否为Safari浏览器
+        else if(explorer.indexOf("Safari") >= 0){
+            return 'Safari';
+        }
+   },
+     Cleanup() {
+        window.clearInterval(idTmr);
+        CollectGarbage();
+    },
+    tableExport(type){
+        var doc="";
+        doc+="<table>";
+        var html=document.getElementById("PrintDiv1").innerHTML;
+        doc+=html;
+        doc=doc.replace(/border="0"/g,'border="1"');
+        doc=doc.replace(/<th class=\"gutter\" style=\"width: 0px; display: none;\"><\/th>/g,"");
+       
+        var end=doc.substring(doc.length-1000,doc.length);
+     
+        doc=  doc.replace('<h2 data-v-864abbe2="" style="margin: 0px;">广东玉兰集团股份有限公司对账单</h2>',
+        '<div style="margin: 10px auto;  width:1000px; font-size:20px;"> <table> <tr><td data-v-864abbe2="" colspan="6" align="center" class="grayTD"><h2 data-v-864abbe2="" style="margin: 0px;">广东玉兰集团股份有限公司对账单</h2></td><td data-v-864abbe2="" colspan="5" align="center"></td> </tr></table></div>');
+        doc+="</table>";
+        
+        var docFile="<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:"+doc+"' xmlns='http://www.w3.org/TR/REC-html40'>";
+        docFile=docFile+"<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>"+doc+"</body></html>";
+
+        var base64data="base64,"+window.btoa(unescape(encodeURIComponent(docFile)));
+        if(type=='doc'){
+            window.open('data:application/msword;'+ base64data);
+        }else if(type=='excel'){
+            window.open('data:application/vnd.ms-excel;'+ base64data);
+        }
+    },
+ 
+    // 导出Excel
+     OutExcel() {
+   if(this.getExplorer()=='ie')
+    {
+         this.$alert("请换火狐或谷歌浏览器下载！", "提示", {
+                confirmButtonText: "确定",
+                type: "danger"
+              });
+        // var curTbl = document.getElementById("PrintDiv1");
+        // var oXL = new ActiveXObject("Excel.Application");
+        // //创建AX对象excel 
+        //   var oWB = oXL.Workbooks.Add();
+        //   //获取workbook对象 
+        //   var xlsheet = oWB.Worksheets(1);
+        //   //激活当前sheet 
+        //   var sel = document.body.createTextRange();
+        //     sel.moveToElementText(curTbl);
+        //   //把表格中的内容移到TextRange中 
+        //   sel.select;
+        //   //全选TextRange中内容 
+        //   sel.execCommand("Copy");
+        //   //复制TextRange中内容  
+        //   xlsheet.Paste();
+        //   //粘贴到活动的EXCEL中       
+        //   oXL.Visible = true;
+        //   //设置excel可见属性
+        //   try {
+        //               var fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
+        //           } catch (e) {
+        //               print("Nested catch caught " + e);
+        //           } finally {
+        //               oWB.SaveAs(fname);
+        //               oWB.Close(savechanges = false);
+        //               //xls.visible = false;
+        //               oXL.Quit();
+        //               oXL = null;
+        //               //结束excel进程，退出完成
+        //               //window.setInterval("Cleanup();",1);
+        //               idTmr = window.setInterval("Cleanup();", 1);
+        //           }
+    }
+    else {
+      this.tableExport('excel');
+    }
+
+     },
+        
     //打开对账单提货弹窗
     openTHdia(tab) {
       if (tab.billNo == "CZSK" || tab.billNo == "收款") {
@@ -499,9 +634,46 @@ export default {
             }
           }, 0);
           if (index < 10) {
+            if(index==4){
             sums[index] = sums[index].toFixed(2);
+            }
+           else{
+               sums[index] = sums[index].toFixed(2);
             sums[index] += " 元";
+           }
           }
+        } else {
+          sums[index] = "";
+        }
+      });
+      return sums;
+    },
+        getSummaries1(param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "汇总";
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          if (index ==7) {
+           sums[index] = sums[index].toFixed(2);
+            sums[index] += " 元";
+           
+          }
+          else {
+          sums[index] = "";
+        }
         } else {
           sums[index] = "";
         }
@@ -589,6 +761,18 @@ export default {
 </script>
 
 <style scoped>
+.fixedDiv {
+position:fixed;
+border:1px;
+border-color:#000;
+z-index:1;
+top: 115px;
+margin-left: 500px;
+z-index:9999
+}
+.noprint{
+  display: none;color:green
+}
 .headSpan {
   font-weight: bold;
   font-size: 18px;
@@ -600,11 +784,17 @@ export default {
 }
 .grayTD {
   background: rgb(241, 242, 243);
+  width:90;
 }
 </style>
 
 <style>
 .el-table .success-row {
   background: #f0f9eb;
+}
+.table2Style .el-button--medium {
+    padding: 1px 20px;
+    font-size: 14px;
+    border-radius: 4px;
 }
 </style>
