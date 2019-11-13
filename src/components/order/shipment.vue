@@ -355,7 +355,7 @@ export default {
         return;
       }
       if (
-        this.submit.DAMAGED_QUANTITY ==0 || this.submit.LOSED_QUANTITY == 0
+        this.submit.DAMAGED_QUANTITY ==0 && this.submit.LOSED_QUANTITY == 0
       )
       {
         this.$alert("请输入相应的货物数量", "提示", {
