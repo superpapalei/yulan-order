@@ -274,7 +274,6 @@ export default {
       this.headerData.cartItemId = "";
       this.headerData.activityGroupType = ""; //
       this.headerData.activity = tab.PROMOTION_TYPE;
-      console.log(this.headerData);
     },
     formatRole: function(row, column) {
       //return row.PART_SEND_ID ===0? "是":"否";  //预留
