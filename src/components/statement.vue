@@ -71,9 +71,9 @@
       >
        <div class="fixedDiv">
               <div style="margin:10px"> <el-button v-show="showButton" size="mini" type="primary" @click="changeStatus(0)" >客户确认</el-button> 
-              <el-button  v-show="showButton" size="mini" type="primary"  @click="printRefund('PrintDiv1')">打印</el-button> </div>
+              <el-button   size="mini" type="primary"  @click="printRefund('PrintDiv1')">打印</el-button> </div>
            <div style="margin:10px"><el-button v-show="showButton"  size="mini"  type="danger" @click="dialogFormVisible = true" >客户反馈</el-button> 
-           <el-button v-show="showButton" size="mini" type="primary"  @click="OutExcel()" >导出</el-button>
+           <el-button  size="mini" type="primary"  @click="OutExcel()" >导出</el-button>
             </div>
          </div>
         <div id="PrintDiv1"  class="dialogDetailStyle" style="width:100% ;margin:0 auto;">
@@ -230,7 +230,6 @@
       </el-dialog>
 
       <el-dialog
-        :title="THtitle"
         :visible.sync="THdetail"
         :width="THwidth"
         :top="THtop"
@@ -249,40 +248,42 @@
         >
           <el-table-column
             prop="itemNo"
-            width="160"
+            width="120"
+            header-align="center" 
+            align="center"
             label="版本型号"
           ></el-table-column>
-          <el-table-column width="150" label="名称" prop="itemNote">
+          <el-table-column min-width="120" header-align="center"   label="名称" prop="itemNote">
             <!-- <template slot-scope="scope1">
               <el-button type="text">{{ scope1.row.itemNote }}</el-button>
             </template> -->
           </el-table-column>
-          <el-table-column width="150" label="版本名称">
+          <el-table-column header-align="center"  min-width="80" align="center"  label="版本名称">
             <template slot-scope="scope">
               <span>{{ scope.row.itemVersion }}</span>
             </template>
           </el-table-column>
-          <el-table-column width="150" label="批号">
+          <el-table-column header-align="center"  min-width="120" align="center" label="批号">
             <template slot-scope="scope">
               <span>{{ scope.row.batchNo }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="单价">
+          <el-table-column   min-width="60" label="单价">
             <template slot-scope="scope">
               <span>{{ scope.row.salePrice }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="物流单价">
+          <el-table-column  width="80" label="物流单价">
             <template slot-scope="scope">
               <span>{{ scope.row.transPrice }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="数量">
+          <el-table-column  min-width="60" label="数量">
             <template slot-scope="scope">
               <span>{{ scope.row.qtyDeliver }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="money" label="金额"></el-table-column>
+          <el-table-column  min-width="80" prop="money" label="金额"></el-table-column>
         </el-table>
         <div class="TH" v-show="!whatType">
           <p>日期：{{ CZSK.dateOutStock | datatrans }}</p>
@@ -469,8 +470,8 @@ export default {
         this.THtop = "30vh";
       } else {
         this.whatType = true;
-        this.THtitle = "对账单明细";
-        this.THwidth = "72%";
+        // this.THtitle = "对账单明细";
+        this.THwidth = "65%";
         this.THtop = "15vh";
       }
       this.THdetail = true;
@@ -613,7 +614,7 @@ export default {
             }
            else{
                sums[index] = sums[index].toFixed(2);
-            sums[index] += " 元";
+            // sums[index] += " 元";
            }
           }
         } else {
@@ -642,7 +643,7 @@ export default {
           }, 0);
           if (index ==7) {
            sums[index] = sums[index].toFixed(2);
-            sums[index] += " 元";
+            // sums[index] += " 元";
            
           }
           else {

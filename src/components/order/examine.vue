@@ -210,8 +210,9 @@ import { cancelOrder } from "@/api/orderList";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 import Cookies from "js-cookie";
+
 export default {
-  name: "MyOrder",
+  name: "examine",
   data() {
     return {
       data: [],
