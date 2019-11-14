@@ -128,7 +128,7 @@
           <tr>
             <td class="grayTD" style="width:16%;height:15px">客户代码</td>
             <td style="width:34%;height:15px" class="grayTD">
-              (提交后自动生成)
+              {{}}
             </td>
             <td class="grayTD" style="width:16%;height:15px">客户名称</td>
             <td style="width:34%;height:15px" class="grayTD">
@@ -245,7 +245,8 @@
           </tr>
          </table>
       </div>
-      <div  v-show="isRefundAdd" >
+      <!-- 新增的时候不给看 -->
+      <div  v-show="!isRefundAdd" >
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr >
             <td style="font-size:10px;height:15px;" colspan="1">编号：</td>
@@ -272,33 +273,32 @@
           <tr>
             <td class="grayTD" style="height:15px" colspan="1">客户代码</td>
             <td style="height:15px" colspan="1">
-              (提交后自动生成)
+              {{this.companyId}}
             </td>
             <td class="grayTD" style="height:15px" colspan="1">客户名称</td>
             <td style="height:15px" colspan="4">
-              (提交后自动生成)
+              {{this.CNAME}}     <!-- 应该是对应公司的名称，而不是账户的 -->
             </td>
           </tr>
-
           <tr>
             <td class="grayTD" style="height:15px">提货单号</td>
             <td style="height:15px">{{ submit.SALE_NO }}</td>
             <td class="grayTD" style="height:15px">B2B订单号</td>
             <td style="height:15px" colspan="2">{{ submit.orderNo }}</td>
             <td class="grayTD" style="height:15px">ERP订单号</td>
-            <td  style="height:15px" colspan="2">{{  }}</td>
+            <td  style="height:15px" colspan="2">{{ submit.CONTRACT_NO }}</td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">联系人</td>
-            <td style="height:15px">{{  }}</td>
+            <td style="height:15px">{{ submit.CONTACT_MAN  }}</td>
             <td class="grayTD" style="height:15px">联系电话</td>
-            <td style="height:15px" colspan="2">{{  }}</td>
+            <td style="height:15px" colspan="2">{{ submit.CONTACT_PHONE  }}</td>
             <td class="grayTD" style="height:15px">物流单号</td>
-            <td style="height:15px" >{{  }}</td>
+            <td style="height:15px" >{{ submit.C_TRANSBILL  }}</td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">问题描述</td>
-            <td style="height:15px" colspan="6">{{  }}</td>
+            <td style="height:15px" colspan="6">{{ submit.NOTES  }}</td>
           </tr>
           <tr>
             <td class="grayTD"  colspan="1" style="height:15px">产品/项目</td>
@@ -308,31 +308,51 @@
             <td class="grayTD"  colspan="2" style="height:15px">上传相关信息</td>
           </tr>
           <tr>
-            <td  colspan="1" style="height:21px">{{}}</td>
-            <td  colspan="2" style="height:21px" ></td>
-            <td  colspan="1" style="height:21px"></td>
-            <td  colspan="1" style="height:21px"></td>
-            <td  colspan="2" style="height:21px"></td>
+            <td  colspan="1" style="height:21px">{{submit.PRODUCTION_VERSION}}</td>
+            <td  colspan="2" style="height:21px" >{{submit.ITEM_NO}}</td>
+            <td  colspan="1" style="height:21px">{{submit.UNIT}}</td>
+            <td  colspan="1" style="height:21px">{{submit.QTY}}</td> <!-- 要小于发货数量 -->
+            <td  colspan="2" style="height:21px"></td><!-- 附件 -->
           </tr>
+          <!-- 新增时，用户看不到 -->
           <tr>
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理意见
             </td>
           </tr>
           <tr>
-            <td class="grayTD" style="height:15px">初审意见</td>
-            <td style="height:15px" colspan="2">{{  }}</td>
-            <td style="height:15px" colspan="4">具体意见</td>
+            <td class="grayTD" style="height:15px"  colspan="1">初审意见</td><!-- 下拉框 -->
+            <td style="height:15px" colspan="2">     
+              <el-select
+                style="height:16px;width:100%;padding:0px 0px 0px 0px;"
+                v-model="submit.RETURN_TYPE"
+                filterable
+                placeholder="退货方式"
+              >
+                <el-option
+                  v-for="item in returnArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </td>
+            <td style="height:15px" colspan="4">{{submit.FIRST_AUDITION}}</td><!-- 兰居自填 -->
           </tr>
-          <tr>
+          <tr v-if="submit.RETURN_TYPE!='无需退货'"> 
             <td class="grayTD" style="height:15px">备注信息</td>
-            <td style="height:15px" colspan="6">随退货方式变化</td>
+            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
+            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
+            <td style="height:15px" colspan="6" v-else></td>
           </tr>
-          <tr>
-            <td class="grayTD" style="height:15px">退货或寄样信息</td>
-            <td style="height:15px" colspan="3"> 这一行要加v-show</td>
+          <tr v-if="submit.RETURN_TYPE=='客户邮寄'">
+            <td class="grayTD" style="height:15px">退货或寄样信息</td><!-- 下拉框 -->
+            <td style="height:15px" colspan="3">
+                {{returnInfo.RETURN_INFO}}      <!-- 一个新的数据查询方法：退货信息，然后将需要的字段拼在一起-->
+            </td>
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
-            <td style="height:15px" colspan="2">{{}}</td>
+            <td style="height:15px" colspan="2">您的提货单号为{{submit.SALE_NO}}</td>
           </tr>
           <tr>
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
@@ -348,34 +368,41 @@
             <td class="grayTD"  style="width:18%;height:15px">质量问题</td>
             <td class="grayTD"  style="width:22%;height:15px">处理意见</td>
           </tr>
-          <tr>
-            <td style="height:15px">{{}}</td>
-            <td style="height:15px"></td>
-            <td style="height:15px"></td>
-            <td style="height:15px"></td>
-            <td style="height:15px"></td>
-            <td style="height:15px"></td>
-            <td style="height:15px"></td>
-          </tr>
-          <tr>
-            <td class="grayTD"  style="height:15px">金额小写</td>
-            <td style="height:15px" colspan="2">{{}}</td>
-            <td class="grayTD"  style="height:15px">金额大写</td>
-            <td style="height:15px" colspan="3">{{}}</td>
-          </tr>
 
-
-          <tr>
-            <td class="grayTD" colspan="1" style="height:16px">投诉类型</td>
-            <td colspan="2" style="text-align:left;height:16px;">
+          <tr v-for="(item,index) of processDetail" :key="index">
+            <td colspan="1" rowspan="1" style="height:30px">{{processDetail[index].PRODUCTION_VERSION}}</td>
+            <td colspan="1" rowspan="1" style="height:30px">{{processDetail[index].ITEM_NO}}</td>
+            <td colspan="1" rowspan="1" style="height:30px">{{processDetail[index].UNIT}}</td>
+            <td colspan="1" rowspan="1" style="height:30px">                 
+               <input
+                  v-model="processDetail[index].QTY"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td colspan="1" rowspan="1" style="height:30px">                 
+               <input
+                  v-model="processDetail[index].MONEY"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td colspan="1" rowspan="1" style="height:30px">                 
+               <input
+                  v-model="processDetail[index].NOTES"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td colspan="1" rowspan="1" style="height:30px">                 
               <el-select
                 style="height:16px;width:100%;padding:0px 0px 0px 0px;"
-                v-model="submit.TYPE"
+                v-model="processDetail[index].PROCESS"
                 filterable
-                placeholder="选择相应类型"
+                placeholder="请选择"
               >
                 <el-option
-                  v-for="item in typeArray"
+                  v-for="item in processArray"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -383,37 +410,40 @@
                 </el-option>
               </el-select>
             </td>
-            <td class="grayTD" colspan="1" style="height:16px">货物数量</td>
-            <td
-              v-if="submit.TYPE == '丢失'"
-              class="grayTD"
-              colspan="3"
-              style="height:20px"
-            >
-              <el-input
-                v-model="submit.LOSED_QUANTITY"
-                placeholder="（丢失数量）"
-                clearable
-                class="inputStyle"
-              >
-              </el-input>
-            </td>
-            <td
-              v-if="submit.TYPE == '破损'"
-              class="grayTD"
-              colspan="3"
-              style="height:16px"
-            >
-              <el-input
-                v-model="submit.DAMAGED_QUANTITY"
-                placeholder="（破损数量）"
-                clearable
-                class="inputStyle"
-              >
-              </el-input>
-            </td>
-            <td v-else class="grayTD" colspan="3" style="height:16px"></td>
           </tr>
+
+          <!-- 固定一行选这里，多行选上面 -->
+          <tr>
+            <td style="height:15px">{{submit.PRODUCTION_VERSION}}</td>
+            <td style="height:15px">{{submit.ITEM_NO}}</td>
+            <td style="height:15px">{{submit.UNIT}}</td>
+            <td style="height:15px">{{submit.QTY}}</td>
+            <td style="height:15px">{{submit.TOTALMONEY}}</td>
+            <td style="height:15px">{{submit.NOTES}}</td>
+            <td style="height:15px">              
+              <el-select
+                style="height:16px;width:100%;padding:0px 0px 0px 0px;"
+                v-model="submit.PROCESS"
+                filterable
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in processArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select></td>
+          </tr>
+
+          <tr>
+            <td class="grayTD"  style="height:15px">金额小写</td>
+            <td style="height:15px" colspan="3">{{submit.TOTALMONEY}}</td>
+            <td class="grayTD"  style="height:15px">金额大写</td>
+            <td style="height:15px" colspan="2">{{submit.TOTALMONEY_TEXT}}</td>
+          </tr>
+
            <tr style="height:90px">
             <td
               colspan="7"
@@ -489,10 +519,15 @@ export default {
     return {
       tableData: [],
       submit: [],
+      returnInfo:[],
+      processDetail:[],
       complaintDetail: false,
       isAdd: false,
       RefundDetail:false,
       isRefundAdd:false,
+      companyId: Cookies.get("companyId"),
+      CID: Cookies.get("cid"),
+      CNAME :Cookies.get("realName"),
       //itemNo: "", //产品型号
       //orderNo: "",
       //lineNo: "",
@@ -521,7 +556,35 @@ export default {
           label: "其他",
           value: "其他"
         }
-      ]
+      ],
+      returnArray: [   //退货方式
+        {
+          label: "玉兰取货",
+          value: "玉兰取货"
+        },
+        {
+          label: "客户邮寄",
+          value: "客户邮寄"
+        },
+        {
+          label: "无需退货",
+          value: "无需退货"
+        },
+      ],
+      processArray: [   //退货方式
+        {
+          label: "赔偿",
+          value: "赔偿"
+        },
+        {
+          label: "退货",
+          value: "退货"
+        },
+        {
+          label: "无质量问题",
+          value: "无质量问题"
+        },
+      ],
     };
   },
   props: ["orderNo", "itemNo", "lineNo"],
