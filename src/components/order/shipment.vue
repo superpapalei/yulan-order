@@ -1,103 +1,111 @@
 <template>
   <div class="shipmentCard">
     <el-card class="centerCard">
-        <div slot="header">
-          <span class="zoomLeft">
-            订单号：
-            <span class="zoomRight">{{ orderNo }}</span>
-          </span>
-          <br />
-          <span class="zoomLeft">
-            产品型号：
-            <span class="zoomRight">{{ itemNo }}</span>
-          </span>
-          <br />
-          <span class="zoomLeft">
-            下单数量：
-            <span class="zoomRight">{{ zongshuliang }}</span>
-          </span>
-        </div>
-        <el-table
-          :data="tableData"
-          style="width: 100%"
-          :row-class-name="tableRowClassName"
-        >
-          <el-table-column
-            prop="SALE_NO"
-            label="提货单号"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="QTY_DELIVER"
-            label="数量"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="BATCH_NO"
-            label="批号"
-            align="center"
-          ></el-table-column>
-          <el-table-column align="center" label="出货情况">
-            <template slot-scope="scope">
-              <span
-                style="font-size:14px; color:black;"
-                v-if="
-                  scope.row.DATE_OUT_STOCK == '' ||
-                    scope.row.DATE_OUT_STOCK == '9999/12/31 00:00:00'
-                "
-                >待发货</span
-              >
-              <span style="font-size:14px; color:black;" v-else>已发货</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="发货日期" align="center">
-            <template slot-scope="scope1">
-              <span>{{ scope1.row.DATE_OUT_STOCK | datatrans }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="FREIGHT"
-            label="加收物流费"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="TRANSCOMPANY"
-            label="物流公司"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="TRANS_ID"
-            label="物流单号"
-            align="center"
-          ></el-table-column>
-          <el-table-column align="center" label="物流查看">
-            <template slot-scope="scope">
-              <a
-                :href="kuaidi100"
-                target="_blank"
-                @click="searchWL(scope.row.TRANS_ID)"
-              >
-                <el-button
-                  :disabled="scope.row.TRANS_ID === ''"
-                  type="danger"
-                  size="small"
-                  >查看物流</el-button
-                >
-              </a>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="">
-            <template slot-scope="scope">
+      <div slot="header">
+        <span class="zoomLeft">
+          订单号：
+          <span class="zoomRight">{{ orderNo }}</span>
+        </span>
+        <br />
+        <span class="zoomLeft">
+          产品型号：
+          <span class="zoomRight">{{ itemNo }}</span>
+        </span>
+        <br />
+        <span class="zoomLeft">
+          下单数量：
+          <span class="zoomRight">{{ zongshuliang }}</span>
+        </span>
+      </div>
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+      >
+        <el-table-column
+          prop="SALE_NO"
+          label="提货单号"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="QTY_DELIVER"
+          label="数量"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="BATCH_NO"
+          label="批号"
+          align="center"
+        ></el-table-column>
+        <el-table-column align="center" label="出货情况">
+          <template slot-scope="scope">
+            <span
+              style="font-size:14px; color:black;"
+              v-if="
+                scope.row.DATE_OUT_STOCK == '' ||
+                  scope.row.DATE_OUT_STOCK == '9999/12/31 00:00:00'
+              "
+              >待发货</span
+            >
+            <span style="font-size:14px; color:black;" v-else>已发货</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="发货日期" align="center">
+          <template slot-scope="scope1">
+            <span>{{ scope1.row.DATE_OUT_STOCK | datatrans }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="FREIGHT"
+          label="加收物流费"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="TRANSCOMPANY"
+          label="物流公司"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="TRANS_ID"
+          label="物流单号"
+          align="center"
+        ></el-table-column>
+        <el-table-column align="center" label="物流查看">
+          <template slot-scope="scope">
+            <a
+              :href="kuaidi100"
+              target="_blank"
+              v-if="scope.row.TRANS_ID"
+              @click="searchWL(scope.row.TRANS_ID)"
+            >
               <el-button
                 :disabled="scope.row.TRANS_ID === ''"
-                type="primary"
+                type="danger"
                 size="small"
-                @click="addRecord(scope.row)"
-                >投诉</el-button
+                >查看物流</el-button
               >
-            </template>
-          </el-table-column>
-        </el-table>
+            </a>
+            <el-button
+              :disabled="scope.row.TRANS_ID === ''"
+              type="danger"
+              size="small"
+              v-else
+              >查看物流</el-button
+            >
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="">
+          <template slot-scope="scope">
+            <el-button
+              :disabled="scope.row.TRANS_ID === ''"
+              type="primary"
+              size="small"
+              @click="addRecord(scope.row)"
+              >投诉</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
     </el-card>
 
     <el-dialog
@@ -268,7 +276,7 @@ export default {
       ]
     };
   },
-  props:['orderNo','itemNo','lineNo'],
+  props: ["orderNo", "itemNo", "lineNo"],
   filters: {
     datatrans(value) {
       if (value == "9999/12/31 00:00:00") return "";
