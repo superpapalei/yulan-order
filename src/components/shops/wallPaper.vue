@@ -46,7 +46,7 @@
           <el-table-column label="版本" prop="versionNumber" width="130"></el-table-column>
           <el-table-column label="名称" prop="version" width="110"></el-table-column>
           <el-table-column label="品牌" prop="brand" width="80"></el-table-column>
-          <el-table-column min-width="150" label="数量" width="100">
+          <el-table-column :width='numWidth' label="数量">
             <template slot-scope="scope">
               <div v-if="scope.row.unit === '平方米'">
                 <span class="num-font">宽</span>
@@ -55,7 +55,7 @@
                   :decimalNum="decimalNum"
                   v-model="scope.row.number"
                 ></currency-input
-                >×
+                >&nbsp;×
                 <span class="num-font">高</span>
                 <currency-input
                   :customStyle="'width: 60px;'"
@@ -200,6 +200,7 @@ export default {
       activity: [], //活动
       seletedActivity: "", //选择的活动
       remark: "", //备注
+      numWidth:100,
       tableData: [
         {
           type: "DT35010", //型号
@@ -319,6 +320,7 @@ export default {
               number: "", //数量
               anotherNumber: "" //辅助数量
             });
+            if(res.data.unit == '平方米') this.numWidth =200; else this.numWidth=100;
             let storage = window.localStorage;
             let arr = [];
             if (storage.history !== undefined && storage.history !== null) {

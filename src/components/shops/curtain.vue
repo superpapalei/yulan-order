@@ -94,7 +94,7 @@
               <el-input
                 style="width:120px;"
                 size="mini"
-                placeholder="选填"
+                placeholder="选填(20字符内)"
                 v-model="scope.row.location"
               >
               </el-input>
