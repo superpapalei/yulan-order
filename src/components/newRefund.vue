@@ -241,7 +241,30 @@
       <div  v-show="isRefundAdd" >
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr >
-            <td style="font-size:20px;height:30px;text-align:center;" colspan="6">退货/赔偿申请书【新增】</td>
+            <td style="font-size:20px;height:30px;text-align:center;" colspan="7">退货/赔偿申请书{{"【"+"】"}}</td>
+          </tr>
+         </table>
+      </div>
+      <!-- 新增的时候不给看 -->
+      <div  v-show="!isRefundAdd" >
+         <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr >
+            <td style="font-size:10px;height:15px;" colspan="1">编号：</td>
+            <td style="font-size:10px;height:15px;text-align:left;" colspan="1">{{}}</td>
+            <td style="font-size:10px;height:15px;" colspan="1">创建时间：</td>
+            <td style="font-size:10px;height:15px;text-align:left;" colspan="3">{{}}</td>
+            <td style="font-size:10px;height:15px;" colspan="1">处理人：</td>
+            <td style="font-size:10px;height:15px;text-align:left;" colspan="1">{{}}</td>
+            <td style="font-size:10px;height:15px;" colspan="1">处理时间：</td>
+            <td style="font-size:10px;height:15px;text-align:left;" colspan="3">{{}}</td>
+            <td >
+              <el-button
+                type="primary"
+                size="small"
+                style="float:right;"
+                >打印</el-button
+              >
+            </td>
           </tr>
          </table>
       </div>
@@ -253,80 +276,217 @@
               {{this.companyId}}
             </td>
             <td class="grayTD" style="height:15px" colspan="1">客户名称</td>
-            <td style="height:15px" colspan="3">
-              {{this.companyName}}     <!-- 应该是对应公司的名称，而不是账户的 -->
+            <td style="height:15px" colspan="4">
+              {{this.CNAME}}     <!-- 应该是对应公司的名称，而不是账户的 -->
             </td>
           </tr>
           <tr>
-            <td class="grayTD" style="width:14%;height:15px" colspan="1">提货单号</td>
-            <td style="width:15%;height:15px" colspan="1">{{ submit.SALE_NO }}</td>
-            <td class="grayTD" style="width:15%;height:15px" colspan="1">B2B订单号</td>
-            <td style="width:20%;height:15px" colspan="1">{{ submit.orderNo }}</td>
-            <td class="grayTD" style="width:14%;height:15px" colspan="1">ERP订单号</td>
-            <td  style="width:22%;height:19px" colspan="1">{{ this.CONTRACT_NO }}</td>
+            <td class="grayTD" style="height:15px">提货单号</td>
+            <td style="height:15px">{{ submit.SALE_NO }}</td>
+            <td class="grayTD" style="height:15px">B2B订单号</td>
+            <td style="height:15px" colspan="2">{{ submit.orderNo }}</td>
+            <td class="grayTD" style="height:15px">ERP订单号</td>
+            <td  style="height:15px" colspan="2">{{ submit.CONTRACT_NO }}</td>
           </tr>
           <tr>
-            <td class="grayTD" style="height:15px" colspan="1">联系人<span style="color:red;">*</span></td>
-            <td style="height:15px" colspan="1">
-               <el-input
-                v-model="submit.CONTACT_MAN"
-                placeholder=""
-                clearable
-                class="inputStyle"
-              >
-              </el-input>
-            </td>
-            <td class="grayTD" style="height:15px" colspan="1">联系电话<span style="color:red;">*</span></td>
-            <td style="height:15px" colspan="1">
-              <el-input
-                v-model="submit.CONTACT_PHONE"
-                placeholder=""
-                clearable
-                class="inputStyle"
-              >
-              </el-input>
-            </td>
-            <td class="grayTD" style="height:15px" colspan="1">物流单号</td>
-            <td style="height:15px" colspan="1">{{ submit.C_TRANSBILL  }}</td>
+            <td class="grayTD" style="height:15px">联系人</td>
+            <td style="height:15px">{{ submit.CONTACT_MAN  }}</td>
+            <td class="grayTD" style="height:15px">联系电话</td>
+            <td style="height:15px" colspan="2">{{ submit.CONTACT_PHONE  }}</td>
+            <td class="grayTD" style="height:15px">物流单号</td>
+            <td style="height:15px" >{{ submit.C_TRANSBILL  }}</td>
           </tr>
           <tr>
-            <td class="grayTD" style="height:15px" colspan="1">问题描述<span style="color:red;">*</span></td>
-            <td style="height:15px" colspan="5">
-              <el-input
-                v-model="submit.NOTES"
-                placeholder=""
-                clearable
-                class="inputStyle"
-              >
-              </el-input>
-            </td>
+            <td class="grayTD" style="height:15px">问题描述</td>
+            <td style="height:15px" colspan="6">{{ submit.NOTES  }}</td>
           </tr>
           <tr>
             <td class="grayTD"  colspan="1" style="height:15px">产品/项目</td>
-            <td class="grayTD"  colspan="1" style="height:15px" >型号</td>
+            <td class="grayTD"  colspan="2" style="height:15px" >型号</td>
             <td class="grayTD"  colspan="1" style="height:15px">单位</td>
-            <td class="grayTD"  colspan="1" style="height:15px">数量<span style="color:red;">*</span></td>
-            <td class="grayTD"  colspan="2" style="height:15px">上传相关信息<span style="color:red;">*</span></td>
+            <td class="grayTD"  colspan="1" style="height:15px">数量</td>
+            <td class="grayTD"  colspan="2" style="height:15px">上传相关信息</td>
           </tr>
           <tr>
             <td  colspan="1" style="height:21px">{{submit.PRODUCTION_VERSION}}</td>
-            <td  colspan="1" style="height:21px" >{{submit.ITEM_NO}}</td>
+            <td  colspan="2" style="height:21px" >{{submit.ITEM_NO}}</td>
             <td  colspan="1" style="height:21px">{{submit.UNIT}}</td>
-            <td  colspan="1" style="height:21px">
-              <el-input
-                v-model="submit.QTY"
-                placeholder="应小于发货数量"
-                clearable
-                class="inputStyle"
-              >
-              </el-input>
-            </td> <!-- 要小于发货数量 -->
+            <td  colspan="1" style="height:21px">{{submit.QTY}}</td> <!-- 要小于发货数量 -->
             <td  colspan="2" style="height:21px"></td><!-- 附件 -->
+          </tr>
+          <!-- 新增时，用户看不到 -->
+          <tr>
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
+              玉兰处理意见
+            </td>
+          </tr>
+          <tr>
+            <td class="grayTD" style="height:15px"  colspan="1">初审意见</td><!-- 下拉框 -->
+            <td style="height:15px" colspan="2">     
+              <el-select
+                style="height:16px;width:100%;padding:0px 0px 0px 0px;"
+                v-model="submit.RETURN_TYPE"
+                filterable
+                placeholder="退货方式"
+              >
+                <el-option
+                  v-for="item in returnArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </td>
+            <td style="height:15px" colspan="4">{{submit.FIRST_AUDITION}}</td><!-- 兰居自填 -->
+          </tr>
+          <tr v-if="submit.RETURN_TYPE!='无需退货'"> 
+            <td class="grayTD" style="height:15px">备注信息</td>
+            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
+            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
+            <td style="height:15px" colspan="6" v-else></td>
+          </tr>
+          <tr v-if="submit.RETURN_TYPE=='客户邮寄'">
+            <td class="grayTD" style="height:15px">退货或寄样信息</td><!-- 下拉框 -->
+            <td style="height:15px" colspan="6">        <!-- 一个新的数据查询方法：退货信息，然后将需要的字段拼在一起-->  
+              <el-select
+                v-if="isRefundAdd"
+                style="width:99%;"
+                v-model="submit.RETURN_ADDRESS"
+                filterable
+                placeholder="请选择地址和收件人"
+              >
+                <el-option
+                  v-for="item in returnInfo"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+              <span v-else style="margin-left:20px;">{{
+                submit.RETURN_ADDRESS
+              }}</span>  
+            </td>
+          </tr>
+          <tr v-if="submit.RETURN_TYPE=='客户邮寄'">
+            <td class="grayTD" style="height:15px">邮寄备注信息</td>
+            <td style="height:15px" colspan="6">您的提货单号为{{submit.SALE_NO}}</td>
+          </tr>
+          <tr>
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
+              玉兰处理结果
+            </td>
+          </tr>
+          <tr>
+            <td class="grayTD"  style="width:15%;height:15px">
+              <el-button 
+                 type="primary" 
+                 size="mini" 
+                 icon="el-icon-plus" 
+                 @click="_rowPlus()"
+                 circle
+                 style="border-radius:50%;"
+                 >
+              </el-button>
+              产品/项目
+            </td>
+            <td class="grayTD"  style="width:18%;height:15px">型号</td>
+            <td class="grayTD"  style="width:10%;height:15px">单位</td>
+            <td class="grayTD"  style="width:10%;height:15px">数量</td>
+            <td class="grayTD"  style="width:10%;height:15px">金额</td>
+            <td class="grayTD"  style="width:17%;height:15px">质量问题</td>
+            <td class="grayTD"  style="width:20%;height:15px">处理意见</td>
+          </tr>
+
+          <tr v-for="(item,index) of processDetail" :key="index">
+            <td colspan="1" rowspan="1" style="height:15px">
+                   <el-button 
+                     type="danger" 
+                     size="mini" 
+                     icon="el-icon-minus" 
+                     @click="_rowSubtract(index)"
+                     v-if="index!=0"
+                     circle>
+                  </el-button>
+              {{submit.PRODUCTION_VERSION}}
+              </td>
+            <td colspan="1" rowspan="1" style="height:15px">{{submit.ITEM_NO}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">{{submit.UNIT}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">                 
+               <input
+                  v-model="processDetail[index].QTY"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td colspan="1" rowspan="1" style="height:15px">                 
+               <input
+                  v-model="processDetail[index].MONEY"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td colspan="1" rowspan="1" style="height:15px">                 
+               <input
+                  v-model="processDetail[index].NOTES"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td colspan="1" rowspan="1" style="height:15px">                 
+              <el-select
+                style="height:15px;width:100%;padding:0px 0px 0px 0px;"
+                v-model="processDetail[index].PROCESS"
+                filterable
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in processArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </td>
+          </tr>
+
+          <!-- 固定一行选这里，多行选上面 -->
+          <!-- <tr>
+            <td style="height:15px">{{submit.PRODUCTION_VERSION}}</td>
+            <td style="height:15px">{{submit.ITEM_NO}}</td>
+            <td style="height:15px">{{submit.UNIT}}</td>
+            <td style="height:15px">{{submit.QTY}}</td>
+            <td style="height:15px">{{submit.TOTALMONEY}}</td>
+            <td style="height:15px">{{submit.NOTES}}</td>
+            <td style="height:15px">              
+              <el-select
+                style="height:16px;width:100%;padding:0px 0px 0px 0px;"
+                v-model="submit.PROCESS"
+                filterable
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in processArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select></td>
+          </tr> -->
+
+          <tr>
+            <td class="grayTD"  style="height:15px">金额小写</td>
+            <td style="height:15px" colspan="3">{{submit.TOTALMONEY}}</td>
+            <td class="grayTD"  style="height:15px">金额大写</td>
+            <td style="height:15px" colspan="2">{{submit.TOTALMONEY_TEXT}}</td>
           </tr>
 
            <tr style="height:90px">
             <td
-              colspan="6"
+              colspan="7"
               border="0px"
               style="font-size:13px;color:gray;text-align:left;"
             >
@@ -341,7 +501,7 @@
           </tr>
           <tr  style="height:40px">
             <td 
-              colspan="3"
+              colspan="4"
               border="0px"
               style="font-size:13px;color:gray;text-align:center;">
             <div >
@@ -376,8 +536,9 @@
         </table>
 
         <div style="text-align:center;margin-top:5px">           
+          <el-button type="danger" size="mini" >保存修改</el-button>
           <el-button type="success" size="mini" @click="_addSubmit()">提交</el-button>  
-          <el-button type="info"   size="mini" @click="isRefundAdd=false;RefundDetail=false">返回</el-button>  
+          <el-button type="info"   size="mini" @click="_editSubmit()">返回</el-button>  
         </div> 
       </div>
     </el-dialog>
@@ -390,7 +551,7 @@ import Axios from "axios";
 import { addSubmit } from "@/api/complaint";
 import Cookies from "js-cookie";
 import { getShipment } from "@/api/orderList";
-import { getPackDetailInfo,getReturnInfo,getCompanyInfo} from "@/api/orderListASP";
+import { getPackDetailInfo,getReturnInfo } from "@/api/orderListASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 export default {
@@ -404,12 +565,9 @@ export default {
       isAdd: false,
       RefundDetail:false,
       isRefundAdd:false,
-      companyId: Cookies.get("companyId"), //公司Id
-      companyName:"",//公司名称
-      CONTRACT_NO:"",//ERP订单号
-      CID: Cookies.get("cid"),//用户id
-      CNAME :Cookies.get("realName"),//用户名称
-      
+      companyId: Cookies.get("companyId"),
+      CID: Cookies.get("cid"),
+      CNAME :Cookies.get("realName"),
       //itemNo: "", //产品型号
       //orderNo: "",
       //lineNo: "",
@@ -469,7 +627,7 @@ export default {
       ],
     };
   },
-  props: ["orderNo", "itemNo", "lineNo", "PRODUCT", "UNIT"],       
+  props: ["orderNo", "itemNo", "lineNo"],
   filters: {
     datatrans(value) {
       if (value == "9999/12/31 00:00:00") return "";
@@ -517,6 +675,21 @@ export default {
         lineNo: this.lineNo,
         itemNo: this.itemNo
       };
+      getReturnInfo().then(res => {
+        if (res.code == 0) {
+          for (var i = 0; i < res.data.length; i++) {
+          this.returnInfo[i] = new Object();
+          this.returnInfo[i].label =
+            "地址:" +
+            res.data[i].ADDRESS +
+            "   收件人:" +
+            res.data[i].ADDRESSEE +
+            "   电话:" +
+            res.data[i].TEL;
+          this.returnInfo[i].value = res.data[i].ID;
+        }
+        } 
+      });
       // Axios.post("/packDetail/getPackDetailAppoint.do", {
       //   itemNo: this.itemNo,
       //   orderId: this.orderNo,
@@ -644,45 +817,33 @@ export default {
     addRefundRecord(data) {
       this.isRefundAdd = true;
       this.RefundDetail = true;
-      this.submit = {
-          RTCB_ID: "", //退货单ID
-          ITEM_NO: "", //产品型号
-          PRODUCTION_VERSION: "", //版本（项目、产品）
-          UNIT: "", //单位
-          QTY: "", //数量
-          NOTES: "", //问题描述
-          CONTACT_MAN:"",//联系人
-          CONTACT_PHONE:"",//联系方式
-          SALE_NO:"",//提货单号
-          orderNo:"",//B2B订单号
-          ITEM_NO:"",//产品型号
-          C_TRANSBILL:"",//物流单号
-          UNIT:"",//单位
-          NOTE:"",//类型
-      };
-      this.submit.orderNo = this.orderNo;
-      this.submit.ITEM_NO = this.itemNo;
-      this.submit.UNIT = this.UNIT;
-      this.submit.SALE_NO = data.SALE_NO;
-      this.submit.C_TRANSBILL = data.TRANS_ID;
-      getReturnInfo({companyId:this.companyId,SALE_NO:this.submit.SALE_NO,ITEM_NO:this.submit.ITEM_NO}).then(res => {
-        if (res.code == 0) {
-          this.companyName=res.data[0].CUSTOMER_NAME;
-          this.CONTRACT_NO=res.data[0].CONTRACT_NO;
-          this.submit.PRODUCTION_VERSION = res.data[0].PRODUCTVERSION_NAME;
-          for (var i = 0; i < res.data.length; i++) {
-          this.returnInfo[i] = new Object();
-          this.returnInfo[i].label =
-            "地址:" +
-            res.data[i].ADDRESS +
-            "   收件人:" +
-            res.data[i].ADDRESSEE +
-            "   电话:" +
-            res.data[i].TEL;
-          this.returnInfo[i].value = res.data[i].ID;
-        }
-        } 
-      });
+      //   this.CNAME = Cookies.get("realName"); 
+      //   this.submit = {
+      //     SID: "", //投诉单id
+      //     SALE_NO: "", //销售单号
+      //     CUSTOMER_CODE: "", //客户编码
+      //     SUBMITTS: "", //提交时间
+      //     TYPE: "", //投诉类型
+      //     MEMO: "", //备注——投诉内容
+      //     OPERATOR: "", //处理人
+      //     PROCESSTS: "", //处理时间
+      //     PROCESSDESC: "", //处理结果——回复
+      //     WLTS_THINK: "", //服务评价
+      //     FEEDBACKTS: "", //评价时间
+      //     STATUS: 1,
+      //     TELEPHONE: "",
+      //     IMGURL: "",
+      //     LOSED_QUANTITY: "", //货物丢失数量
+      //     DAMAGED_QUANTITY: "", //货物损坏数量
+      //     C_TRANSBILL: "", //物流单号
+      //     orderNo: "",
+      //     itemNo: ""
+      //   };
+      // this.submit.orderNo = this.orderNo;
+      // this.submit.itemNo = this.itemNo;
+      // this.submit.CUSTOMER_CODE = Cookies.get("companyId");
+      // this.submit.SALE_NO = data.SALE_NO;
+      // this.submit.C_TRANSBILL = data.TRANS_ID;
     },
     //新增售后记录提交
     _addRefundSubmit() {
