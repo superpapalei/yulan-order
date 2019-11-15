@@ -109,7 +109,7 @@
           <span class="zoomLeft">电话：</span>
           <span class="zoomRight">{{ item.TELEPHONE }}</span>
           <span class="zoomLeft">地址：</span>
-          <span class="zoomRight">{{ item.POST_ADDRESS }}</span>
+          <span class="zoomRight">{{ item.ALL_ADDRESS }}</span>
         </div>
         <div :id="'cardBody' + item.ORDER_NO" class="collapseHive">
           <div class="outDiv" style="float:left;width:90%">

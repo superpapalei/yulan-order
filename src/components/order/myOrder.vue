@@ -766,7 +766,7 @@ export default {
         .catch(err => {});
     },
     copyCart(orderNo) {
-      this.$confirm("是否是否退回数据到购物车？", "提示", {
+      this.$confirm("是否退回数据到购物车？", "提示", {
         confirmButtonText: "是",
         cancelButtonText: "否",
         type: "warning"

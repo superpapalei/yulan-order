@@ -477,6 +477,7 @@ export default {
       sessionStorage.setItem("shoppingHead", JSON.stringify(item));
       Cookies.set("cur_status", 3);
       this.addTab("order/checkOrder");
+      this.closeTab("order/checkExamine");
     },
     //客户修改
     LjExamine() {
@@ -533,7 +534,7 @@ export default {
                 OPERATION_NAME: "确认兰居修改"
               };
               InsertOperationRecord(recordData); //插入操作记录
-              this.$alert("操作成功,该订单已经确认可再次提交", "提示", {
+              this.$alert("操作成功,该订单已经确认,可再次提交", "提示", {
                 confirmButtonText: "确定",
                 type: "success"
               }).then(() => {

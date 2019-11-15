@@ -61,7 +61,7 @@
               <div v-else>
                 <el-checkbox v-model="scope.row.isWBH" disabled>
                   <el-input
-                    style="width:85px;"
+                    style="width:60px;"
                     size="mini"
                     placeholder="无"
                     v-model="scope.row.WBH"
