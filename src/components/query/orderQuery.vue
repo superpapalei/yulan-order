@@ -2,6 +2,112 @@
   <div id="orderQuery">
     <el-card shadow="hover">
       <el-dialog
+      width="40%"
+      style="height:100%"
+      :visible.sync = "showOrder"
+      >
+      <div style="font-size:18px">
+        <div>客户名称：{{get_CUSTOMER_NAME}}
+          <span style="color:blue;margin-left:10px">汇总金额:{{getMoney}}</span>
+        </div>
+      </div>
+        <div>
+          <el-table
+            :data="tableData"
+            border
+            highlight-current-row
+            style="width: 100%;font-weight:normal;font-size:12px"
+            class="table_1"
+          >
+            <el-table-column prop="num" label width="50" align="center">
+              <template slot-scope="scope"
+                ><span
+                  >{{ scope.$index + (currentPage - 1) * limit + 1 }}
+                </span></template>
+            </el-table-column>
+            <el-table-column label="订单号" align="center" width="120px">
+              <template slot-scope="scope1">
+                <el-button
+                  size="mini"
+                  @click="openDialog(scope1.row.ORDER_NO)"
+                  type="text"
+                  >{{ scope1.row.ORDER_NO }}</el-button
+                >
+              </template>
+            </el-table-column>
+            <el-table-column label="状态" width="150px" align="center">
+              <template slot-scope="scope2">
+                {{ scope2.row.STATUS_ID | transType }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="DATE_CRE"
+              label="提交时间"
+              align="center"
+              width="150px"
+            >
+              <template slot-scope="scope4">
+                {{ scope4.row.DATE_CRE | datatrans }}
+              </template>
+            </el-table-column>
+            <!-- <el-table-column label="客户" align="center" width="350px">
+              <template slot-scope="scope3">
+                <el-button
+                  size="mini"
+                  @click="customer_info(scope3.row)"
+                  type="text"
+                  >{{ scope3.row.CUSTOMER_NAME }}</el-button
+                >
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="LINKPERSON"
+              label="联系人"
+              align="center"
+              width="150px"
+            ></el-table-column>
+            <el-table-column
+              prop="TELEPHONE"
+              label="联系电话"
+              align="center"
+            ></el-table-column> -->
+            <el-table-column
+              prop="ALL_SPEND"
+              label="订单金额"
+              align="center"
+            ></el-table-column>
+          </el-table>
+
+          <!-- 分页 -->
+          <div style="margin:0 25%;" class="block">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-size="limit"
+              layout="total, prev, pager, next, jumper"
+              :total="count"
+            ></el-pagination>
+          </div>
+        </div>   
+        <el-dialog
+        :show-close="true"
+        :visible.sync="dialogVisible_1"
+        width="70%"
+        top="5vh"
+        append-to-body
+      >
+        <keep-alive>
+          <checkExamine
+            v-if="dialogVisible_1"
+            :isShowButton="false"
+            :ruleForm="ruleForm"
+          >
+          </checkExamine>
+        </keep-alive>
+      </el-dialog>
+
+      </el-dialog>
+      <el-dialog
         title="客户详情"
         :visible.sync="dialogVisible"
         width="40%"
@@ -16,7 +122,7 @@
               </tr>
               <tr>
                 <td>联系人：</td>
-                <td>{{ customerInfo.LINKPERSON }}</td>
+                <td>{{customerInfo.LINKPERSON }}</td>
               </tr>
               <tr>
                 <td>电话：</td>
@@ -40,23 +146,8 @@
           </el-card>
         </div>
       </el-dialog>
-
-      <el-dialog
-        :show-close="true"
-        :visible.sync="dialogVisible_1"
-        width="70%"
-        top="5vh"
-      >
-        <keep-alive>
-          <checkExamine
-            v-if="dialogVisible_1"
-            :isShowButton="false"
-            :ruleForm="ruleForm"
-          >
-          </checkExamine>
-        </keep-alive>
-      </el-dialog>
-
+      
+   
       <div class="ff">
         <!-- <el-tabs class="tabs_1"  v-model="activeName" style="width:1340px">
           <el-tab-pane label="区域订单查询" name="first_1"> -->
@@ -193,46 +284,34 @@
           </div>
         </form>
         <hr />
+        <div style="float:left;font-size:15px;color:blue;margin:10px">订单金额汇总：{{moneySum}}元</div>
         <div v-if="query_1">
           <el-table
-            :data="tableData"
-            border
-            highlight-current-row
-            style="width: 100%;font-weight:normal;font-size:12px"
-            class="table_1"
-          >
-            <el-table-column prop="num" label width="50" align="center">
+          :data="CUSTOMERED"
+          border
+          class="table_1">
+            <el-table-column prop="num" width="58" align="center" label="序号">
               <template slot-scope="scope"
                 ><span
                   >{{ scope.$index + (currentPage - 1) * limit + 1 }}
-                </span></template>
-            </el-table-column>
-            <el-table-column label="订单号" align="center" width="120px">
-              <template slot-scope="scope1">
-                <el-button
-                  size="mini"
-                  @click="openDialog(scope1.row.ORDER_NO)"
-                  type="text"
-                  >{{ scope1.row.ORDER_NO }}</el-button
-                >
-              </template>
-            </el-table-column>
-            <el-table-column label="状态" width="150px" align="center">
-              <template slot-scope="scope2">
-                {{ scope2.row.STATUS_ID | transType }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
-              prop="DATE_CRE"
-              label="创建时间"
+              label="客户代码"
               align="center"
-              width="150px"
+              width="120px"
             >
-              <template slot-scope="scope4">
-                {{ scope4.row.DATE_CRE | datatrans }}
+            <template slot-scope="scope1">
+                <el-button
+                  size="mini"
+                  @click="openDetail_1(scope1.row)"
+                  type="text"
+                  >{{ scope1.row.CUSTOMER_CODE }}</el-button
+                >
               </template>
             </el-table-column>
-            <el-table-column label="客户" align="center" width="350px">
+            <el-table-column label="客户名称" align="center" width="350px">
               <template slot-scope="scope3">
                 <el-button
                   size="mini"
@@ -243,29 +322,32 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="LINKPERSON"
-              label="联系人"
+              prop="TASK"
+              label="目标任务"
               align="center"
-              width="150px"
-            ></el-table-column>
+            >
+            </el-table-column>
             <el-table-column
-              prop="TELEPHONE"
-              label="联系电话"
+              prop="ORDER_MONEY"
+              label="订单总额"
               align="center"
-            ></el-table-column>
+            >
+            </el-table-column>
+            <el-table-column
+              prop="TASK_MONEY_DF"
+              label="任务差额"
+              align="center"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="flag"
+              label="任务完成标记"
+              align="center"
+            >
+            </el-table-column>
           </el-table>
-
-          <!-- 分页 -->
-          <div style="margin:0 25%;" class="block">
-            <el-pagination
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-size="limit"
-              layout="total, prev, pager, next, jumper"
-              :total="count"
-            ></el-pagination>
-          </div>
         </div>
+        
         <!-- </el-tab-pane>
         </el-tabs> -->
       </div>
@@ -280,13 +362,15 @@ import { searchAssignments, orderDetail, manageCoupon } from "@/api/orderList";
 import { getUserMoney } from "@/api/user";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
+import { GetTaskProgress } from "@/api/orderListASP";
 import {
   getAreaCode,
   getDistrictByAreaCode,
   getCustomerByAreaCode,
-  getPackDetails
+  getPackDetails,
+  getCustomerName
 } from "@/api/areaInfoASP";
-import { getOrderByAreaCustomer } from "@/api/orderInfoASP";
+import { getOrderByAreaCustomer,getOrderInfoByCustomer } from "@/api/orderInfoASP";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 const Quest = "http://14.29.223.114:10250/yulan-capital";
@@ -294,6 +378,24 @@ export default {
   name: "OrderQuery",
   data() {
     return {
+      getSomeData:[],
+      get_customer_code:"",
+      getMoney:"",
+      get_CUSTOMER_NAME:"",
+      showOrder:false,
+      flag:0,
+      get_CUSTOMER_NAME:"",
+      date1:"",
+      date2:"",
+      assignments: "",
+      assignmentsTarget: "",
+      assignmentsReduce: "",
+      tableHead1: "",
+      tableHead2: "",
+      tableHead3: "",
+      moneySum:0,
+      CUSTOMERED : [],
+      CUSTOMERED_1 : [],
       checked:false,
       button_1: false,
       ruleForm: {},
@@ -501,13 +603,13 @@ export default {
       this.customerInfo = val;
       var res = await getUserMoney({
         cid: this.cid,
-        companyId: this.customerInfo.COMPANY_ID
+        companyId: this.customerInfo.CUSTOMER_CODE
       });
       this.moneySituation = "当前余额 " + res.data + "元";
       var url = "/order/findRebate.do";
       var data = {
         cid: Cookies.get("cid"),
-        companyId: this.customerInfo.COMPANY_ID
+        companyId: this.customerInfo.CUSTOMER_CODE
       };
       var res2 = await manageCoupon(url, data);
       this.couponData = res2.data;
@@ -624,18 +726,177 @@ export default {
       this.currentPage = 1;
       this.queryQuYu_1();
     },
-    queryQuYu_1() {
-      this.query_1 = true;
+    async queryQuYu_1() {
+      
+      //this.typeFilter=[],
       this.tableData = [];
+      this.CUSTOMERED = [];
+      this.CUSTOMERED_1 = [];
+      this.date1="",
+      this.date2="",
+      this.assignments= "",
+      this.assignmentsTarget= "",
+      this.assignmentsReduce= "",
+      this.tableHead1= "",
+      this.tableHead2= "",
+      this.tableHead3= "",
+      this.moneySum=0,
+      this.flag = 0,
+      this. date1 = this.ruleForm_1.dateValue.slice(0, 4) + "-" + (this.ruleForm_1.dateValue.slice(5, 7))
+      this. date2 = this.ruleForm_2.dateValue.slice(0, 4) + "-" + (this.ruleForm_2.dateValue.slice(5, 7))
+      
+      let year = this.date1.slice(0, 4);
+      let endYear = this.date2.slice(0, 4);
+      let month = this.date1.slice(5, 7);
+      let endMonth = this.date2.slice(5, 7);
       if (this.value_4.length == 0) {
             this.$alert("未选择用户", "提示", {
             confirmButtonText: "确定",
             type: "success"
           });
-        return (this.tableData = []);
+        
       } else {
-        var data = {
-          costomerCodes: this.value_4, //已选用户
+        for (var i = 0; i < this.value_4.length; i++) {
+          this.date1=""
+      this.date2=""
+      this.assignments= ""
+      this.assignmentsTarget= ""
+      this.assignmentsReduce= ""
+      this.tableHead1= ""
+      this.tableHead2= ""
+      this.tableHead3= ""
+          var res = await  GetTaskProgress({
+            companyId:this.value_4[i],
+            year:year,
+            endYear:endYear,
+            month:month,
+            endMonth:endMonth,
+            cid: Cookies.get("cid"),
+          },{ loading: false })
+          let zoom = res.data[0].orders;
+          
+        let reduce = 0;
+        for (let i = 0; i < zoom.length; i++) {
+          zoom[i].sumMoney =
+            zoom[i].ALL_SPEND + zoom[i].ALLBACK_Y + zoom[i].ALLBACK_M;
+          reduce += zoom[i].ALL_SPEND;
+        }
+        //this.tableData = zoom;
+        if (res.data[0].assignments) {
+          this.assignments = res.data[0].assignments.ASSIGNMENTS;
+          this.assignmentsTarget = res.data[0].assignments.ASSIGNMENTS_TARGET;
+          this.assignmentsReduce = (this.assignmentsTarget - reduce).toFixed(2);
+          var selectMonth = "";
+      if (this.date1 == this.date2) {
+        selectMonth = this.date1.slice(5, 7) + "月";
+      } else if (this.date1.slice(0, 4) == this.date2.slice(0, 4)) {
+        selectMonth =
+          this.date1.slice(5, 7) + "-" + this.date2.slice(5, 7) + "月总";
+      } else {
+        selectMonth =
+          this.date1.slice(0, 4) +
+          "." +
+          this.date1.slice(5, 7) +
+          "-" +
+          this.date2.slice(0, 4) +
+          "." +
+          this.date2.slice(5, 7) +
+          "月总";
+      }
+      this.date1 == this.date2
+        ? this.date1.slice(5, 7) + "月"
+        : this.date1.slice(5, 7) + "-" + this.date2.slice(5, 7) + "月总";
+            this.tableHead1 = `${selectMonth}协议月任务：${this.assignments}`;
+            this.tableHead2 = `${(this.assignmentsTarget).toFixed(2)}`;
+            this.tableHead3 = `${this.assignmentsReduce}`;
+        } else {
+          this.tableHead1 = "所选月无任务";
+        }
+        if(this.tableHead2>0 && this.tableHead3<=0){
+          this.flag = "完成"
+        }else{
+          this.flag = ""
+        }
+        if(!this.tableHead2){
+          this.tableHead2 = "无任务"
+        }
+        var res1 = await  getCustomerName({customer:this.value_4[i]},{ loading: false })
+          this.get_CUSTOMER_NAME = res1.data[0]
+        var res2 = await getOrderInfoByCustomer({
+          customer: this.value_4[i], //已选用户
+        })
+        this.getSomeData = res2.data[0]
+        if(res2.data.length == 0){
+          this.$alert("选择客户无订单", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.moneySum = 0
+        }
+        var sum = this.moneySum + reduce
+        this.moneySum = sum
+          this.CUSTOMERED_1[i] = await {
+            CUSTOMER_CODE: this.value_4[i],
+            CUSTOMER_NAME: this.get_CUSTOMER_NAME.CUSTOMER_NAME,
+            TASK:this.tableHead2,
+            ORDER_MONEY:(reduce).toFixed(2),
+            TASK_MONEY_DF:this.tableHead3,
+            flag:this.flag,
+            LINKPERSON:this.getSomeData.LINKPERSON,
+            TELEPHONE:this.getSomeData.TELEPHONE,
+            POST_ADDRESS:this.getSomeData.POST_ADDRESS,
+            //MONEYSUM:this.moneySum.MONEYSUM
+          }
+        }
+
+        this.CUSTOMERED = this.CUSTOMERED_1 
+        // for(var i = 0; i < this.CUSTOMERED.length;i++){
+        //    var money = parseInt(this.CUSTOMERED[i].ORDER_MONEY)
+        //     var sum = parseInt(this.moneySum) + money
+        //     this.moneySum = sum
+        // }
+        this.query_1 = true;
+        // var data = {
+        //   type:this.typeFilter,//类型筛选
+        //   costomerCodes: this.value_4, //已选用户
+        //   beginTime: this.ruleForm_1.dateValue, //起始时间
+        //   finishTime: this.ruleForm_2.dateValue, //结束时间
+        //   limit: this.limit, //限制数
+        //   page: this.currentPage, //页数
+        //   status: this.status_info //状态
+        // };
+        // if (!data.beginTime) {
+        //   data.beginTime = "0001/1/1";
+        // }
+        // if (!data.finishTime) {
+        //   data.finishTime = "9999/12/31";
+        // } else {
+        //   data.finishTime = data.finishTime + " 23:59:59";
+        // }
+        // this._getTotalMoneySum(data)
+        // getPackDetails(data).then(res => {
+        //   this.count = res.count;
+        //   this.tableData = res.data;
+        //   if(res.data.length != 0){
+        //     //this._getPackDetailsType();
+        //     this._getTotalMoneySum(data)
+        //   }
+          
+        // });
+      }
+      
+    },
+    openDetail_1(val){
+      this.currentPage = 1;
+      this.get_CUSTOMER_NAME = val.CUSTOMER_NAME
+      this.getMoney = val.ORDER_MONEY
+      this.get_customer_code = val.CUSTOMER_CODE
+      this.openDetail()
+    },
+    openDetail(){
+      this.tableData = [];
+      var data = {
+          customerCode: this.get_customer_code, //已选用户
           beginTime: this.ruleForm_1.dateValue, //起始时间
           finishTime: this.ruleForm_2.dateValue, //结束时间
           limit: this.limit, //限制数
@@ -653,18 +914,52 @@ export default {
         getOrderByAreaCustomer(data).then(res => {
           this.count = res.count;
           this.tableData = res.data;
+          this.showOrder = true
         });
-      }
     },
+    // queryQuYu_1() {
+    //   this.query_1 = true;
+    //   this.tableData = [];
+    //   if (this.value_4.length == 0) {
+    //         this.$alert("未选择用户", "提示", {
+    //         confirmButtonText: "确定",
+    //         type: "success"
+    //       });
+    //     return (this.tableData = []);
+    //   } else {
+    //     var data = {
+    //       costomerCodes: this.value_4, //已选用户
+    //       beginTime: this.ruleForm_1.dateValue, //起始时间
+    //       finishTime: this.ruleForm_2.dateValue, //结束时间
+    //       limit: this.limit, //限制数
+    //       page: this.currentPage, //页数
+    //       status: this.status_info //状态
+    //     };
+    //     if (!data.beginTime) {
+    //       data.beginTime = "0001/1/1";
+    //     }
+    //     if (!data.finishTime) {
+    //       data.finishTime = "9999/12/31";
+    //     } else {
+    //       data.finishTime = data.finishTime;
+    //     }
+    //     getOrderByAreaCustomer(data).then(res => {
+    //       this.count = res.count;
+    //       this.tableData = res.data;
+    //     });
+    //   }
+    // },
     //翻页获取订单
     handleCurrentChange(val) {
       this.currentPage = val;
       this.tableData = [];
-      this.queryQuYu_1();
+      this.openDetail();
     },
 
     //重置
     reset() {
+      this.moneySum="0"
+      this.CUSTOMERED=[],
       this.checked=false
       this.currentPage = 1;
       this.customerData = [];

@@ -52,6 +52,15 @@ export function getPackDetailsType() {
     })
 }
 
+//获取用户名称
+export function getCustomerName(data) {
+    return post('/PACK_DETAIL/getCustomerName',data).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
 //获取所选用户总金额
 export function getTotalMoneySum(data) {
     return post('/PACK_DETAIL/getTotalMoneySum',data).then((res) => {
