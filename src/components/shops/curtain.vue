@@ -40,13 +40,21 @@
           </el-table-column>
           <el-table-column label="宽度(m)" width="80">
             <template slot-scope="scope">
-              <currency-input :customStyle="'width: 60px;'" placeholder="0.00" v-model="scope.row.width">
+              <currency-input
+                :customStyle="'width: 60px;'"
+                placeholder="0.00"
+                v-model="scope.row.width"
+              >
               </currency-input>
             </template>
           </el-table-column>
           <el-table-column label="高度(m)" width="80">
             <template slot-scope="scope">
-              <currency-input :customStyle="'width: 60px;'" placeholder="0.00" v-model="scope.row.height">
+              <currency-input
+                :customStyle="'width: 60px;'"
+                placeholder="0.00"
+                v-model="scope.row.height"
+              >
               </currency-input>
             </template>
           </el-table-column>
@@ -54,7 +62,11 @@
             <template slot-scope="scope">
               <div v-if="scope.row.wbhFlag === '1'">
                 <el-checkbox v-model="scope.row.isWBH">
-                  <currency-input :customStyle="'width: 60px;'" placeholder="0.00" v-model="scope.row.WBH">
+                  <currency-input
+                    :customStyle="'width: 60px;'"
+                    placeholder="0.00"
+                    v-model="scope.row.WBH"
+                  >
                   </currency-input>
                 </el-checkbox>
               </div>
@@ -94,8 +106,10 @@
               <el-input
                 style="width:120px;"
                 size="mini"
+                ref="location"
                 placeholder="选填(20字符内)"
                 v-model="scope.row.location"
+                @input="oninput($event,scope.$index)"
               >
               </el-input>
             </template>
@@ -200,7 +214,29 @@ export default {
       totalNumber: 0 //总条数
     };
   },
+  filters: {
+    calLength(str) {
+      var len = 0;
+      for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        //单字节加1
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+          len++;
+        } else {
+          len += 2;
+        }
+      }
+      return len;
+    }
+  },
   methods: {
+    oninput(e,index) {
+      var length = this.$options.filters.calLength(e);
+      if (length > 20) {
+        e = e.slice(0, 20);
+      }
+      this.curtainMsg[index].location = e;
+    },
     //进入窗帘详情
     chooseItem(data, index) {
       let arr = [];
@@ -441,12 +477,12 @@ export default {
     // if(selectNo) this.searchKey = selectNo;
     this.init();
   },
-  activated(){
-     var selectNo = this.$route.params.selectNo;
-     if(selectNo) {
-       this.searchKey = selectNo;
-       this.init();
-     }
+  activated() {
+    var selectNo = this.$route.params.selectNo;
+    if (selectNo) {
+      this.searchKey = selectNo;
+      this.init();
+    }
   }
 };
 </script>
