@@ -69,3 +69,22 @@ export function getTotalMoneySum(data) {
         return Promise.reject(err);
     })
 }
+
+//获取所有版本
+export function getAllVersion() {
+    return post('/PACK_DETAIL/getAllVersion').then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+//获取销售提货单信息
+//获取所选用户总金额
+export function getProductSales(data) {
+    return post('/PACK_DETAIL/getProductSales',data).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
