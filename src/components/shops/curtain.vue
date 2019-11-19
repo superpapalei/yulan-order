@@ -231,11 +231,23 @@ export default {
   },
   methods: {
     oninput(e,index) {
-      var length = this.$options.filters.calLength(e);
-      if (length > 20) {
-        e = e.slice(0, 20);
-      }
+      e = this.splitStr(e,20)
       this.curtainMsg[index].location = e;
+    },
+    splitStr(str,length){
+       var len = 0;
+       var returnStr = '';
+       for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        //单字节加1
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+          len++;
+        } else {
+          len += 2;
+        }
+        if(len <= length) returnStr += String.fromCharCode(c);
+      }
+      return returnStr;
     },
     //进入窗帘详情
     chooseItem(data, index) {

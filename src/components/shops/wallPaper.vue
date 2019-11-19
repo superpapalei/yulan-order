@@ -41,12 +41,32 @@
           @expand-change="expandChange"
           style="margin: 0px auto 20px auto;"
         >
-          <el-table-column label="型号" prop="type" width="120"></el-table-column>
-          <el-table-column label="样本型号" prop="sample" width="120"></el-table-column>
-          <el-table-column label="版本" prop="versionNumber" width="130"></el-table-column>
-          <el-table-column label="名称" prop="version" width="110"></el-table-column>
-          <el-table-column label="品牌" prop="brand" width="80"></el-table-column>
-          <el-table-column :width='numWidth' label="数量">
+          <el-table-column
+            label="型号"
+            prop="type"
+            width="120"
+          ></el-table-column>
+          <el-table-column
+            label="样本型号"
+            prop="sample"
+            width="120"
+          ></el-table-column>
+          <el-table-column
+            label="版本"
+            prop="versionNumber"
+            width="130"
+          ></el-table-column>
+          <el-table-column
+            label="名称"
+            prop="version"
+            width="110"
+          ></el-table-column>
+          <el-table-column
+            label="品牌"
+            prop="brand"
+            width="80"
+          ></el-table-column>
+          <el-table-column :width="numWidth" label="数量">
             <template slot-scope="scope">
               <div v-if="scope.row.unit === '平方米'">
                 <span class="num-font">宽</span>
@@ -72,10 +92,20 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="单位" prop="unit" width="80"></el-table-column>
+          <el-table-column
+            label="单位"
+            prop="unit"
+            width="80"
+          ></el-table-column>
           <el-table-column width="100px" label="操作">
             <template slot-scope="scope">
-              <a class="mr10" @click="seeStore(scope)">查看库存</a>
+              <a
+                v-if="scope.row.noteType != 'I_S_H'"
+                class="mr10"
+                @click="seeStore(scope)"
+                >查看库存</a
+              >
+              <span v-else style="color:red;">库存异常</span>
               <el-dialog
                 title="库存查询"
                 :visible.sync="dialogTableVisible"
@@ -119,6 +149,18 @@
           </el-table-column>
           <el-table-column width="20px;" type="expand">
             <template slot-scope="scope">
+              <div
+                v-if="scope.row.noteTypeName"
+                style="color:darkred;font-size:15px;margin:10px 20px;"
+              >
+                {{ scope.row.noteTypeName }}
+              </div>
+              <div
+                v-if="baobei"
+                style="color:darkred;font-size:15px;margin:10px 20px;"
+              >
+                此型号已报备，如果直接下单，有可能不被处理，请先与工厂订单部联系
+              </div>
               <el-form label-position="left" class="loading-area">
                 <el-form-item label="活动：">
                   <el-select
@@ -189,6 +231,7 @@ import { addShoppingCar } from "@/api/shop";
 import { getItemById, GetPromotionByItem } from "@/api/orderListASP";
 import Vue from "vue";
 import Cookies from "js-cookie";
+import { GetWallpaperInfo, GetSalPutonRecord } from "@/api/itemInfoASP";
 
 export default {
   name: "WallPaper",
@@ -200,7 +243,7 @@ export default {
       activity: [], //活动
       seletedActivity: "", //选择的活动
       remark: "", //备注
-      numWidth:100,
+      numWidth: 100,
       tableData: [
         {
           type: "DT35010", //型号
@@ -246,10 +289,11 @@ export default {
       dialogTableVisible: false, //控制展开的是哪些行
       disableFlag: false, //判断是否禁用选择框
       history: [], //本地存储
-      decimalNum: 2 //保留小数的位数
+      decimalNum: 2, //保留小数的位数
+      baobei: false
     };
   },
-  filters:{
+  filters: {
     calLength(str) {
       var len = 0;
       for (var i = 0; i < str.length; i++) {
@@ -296,31 +340,39 @@ export default {
     //查询搜索墙纸
     _getShopsWallPaperMsg() {
       var data = {
-        paperType: this.searchKey.toUpperCase(),
-        cid: this.cid
+        ITEM_NO: this.searchKey.toUpperCase(),
+        LOGINNAME: this.cid,
+        type: ""
       };
       this.expands = [];
-      getShopsWallPaperMsg(data)
+      this.baobei = false;
+      //getShopsWallPaperMsg(data)
+      GetWallpaperInfo(data)
         .then(res => {
-          getItemById({ itemNo: res.data.itemNo }).then(res2 => {
-            res2.data.DECIMAL_PLACES == "1"
+          //getItemById({ itemNo: res.data.itemNo }).then(res2 => {
+          GetSalPutonRecord({ itemNo: res.data[0].ITEM_NO }).then(res2 => {
+            this.baobei = res2.count > 0 ? true : false;
+            res.data[0].DECIMAL_PLACES == "1"
               ? (this.decimalNum = 1)
               : (this.decimalNum = 2);
 
             this.tableData = [];
             this.tableData.push({
-              type: res.data.itemNo, //型号
-              sample: res.data.oldItemNo, //样本型号
-              versionNumber: res.data.itemVersion, //版本
-              version: res.data.itemType.note, //名称
-              brand: res.data.productBrand, //品牌
-              productType: res.data.productType, //类型
-              unit: res.data.unit === "°ü" ? "包" : res.data.unit, //单位
-              itemFlag: res.data.itemFlag, //不知是啥
+              type: res.data[0].ITEM_NO, //型号
+              sample: res.data[0].OLD_ITEM_NO, //样本型号
+              versionNumber: res.data[0].ITEM_VERSION, //版本
+              version: res.data[0].NOTE, //名称
+              brand: res.data[0].BRAND_NAME, //品牌
+              productType: res.data[0].PRODUCT_TYPE, //类型
+              unit: res.data[0].UNIT, //单位
+              noteType: res.data[0].NOTE_TYPE,
+              noteTypeName: res.data[0].NOTE_TYPE_NAME,
+              itemFlag: res.data[0].ITEM_FALG, //不知是啥
               number: "", //数量
               anotherNumber: "" //辅助数量
             });
-            if(res.data.unit == '平方米') this.numWidth =200; else this.numWidth=100;
+            if (res.data[0].UNIT == "平方米") this.numWidth = 200;
+            else this.numWidth = 100;
             let storage = window.localStorage;
             let arr = [];
             if (storage.history !== undefined && storage.history !== null) {
@@ -341,13 +393,13 @@ export default {
             GetPromotionByItem({
               cid: this.cid,
               customerType: this.customerType,
-              itemNo: res2.data.ITEM_NO,
-              itemVersion: res2.data.ITEM_VERSION,
-              productType: res2.data.PRODUCT_TYPE,
-              productBrand: res2.data.PRODUCT_BRAND
+              itemNo: res.data[0].ITEM_NO,
+              itemVersion: res.data[0].ITEM_VERSION,
+              productType: res.data[0].PRODUCT_TYPE,
+              productBrand: res.data[0].PRODUCT_BRAND
             })
-              .then(res => {
-                if (res.data.length === 0) {
+              .then(res2 => {
+                if (res2.data.length === 0) {
                   this.disableFlag = true;
                 } else {
                   this.disableFlag = false;
@@ -356,21 +408,23 @@ export default {
                   pri: 0,
                   id: 0
                 };
-                for (var i = 0; i < res.data.length; i++) {
+                for (var i = 0; i < res2.data.length; i++) {
                   var obj = {
                     label:
-                      res.data[i].ORDER_TYPE + " -- " + res.data[i].ORDER_NAME,
-                    value: res.data[i].P_ID
+                      res2.data[i].ORDER_TYPE +
+                      " -- " +
+                      res2.data[i].ORDER_NAME,
+                    value: res2.data[i].P_ID
                   };
-                  if (res.data[i].PRIORITY != 0 && defaultSel.pri == 0) {
-                    defaultSel.pri = res.data[i].PRIORITY;
-                    defaultSel.id = res.data[i].P_ID;
+                  if (res2.data[i].PRIORITY != 0 && defaultSel.pri == 0) {
+                    defaultSel.pri = res2.data[i].PRIORITY;
+                    defaultSel.id = res2.data[i].P_ID;
                   } else if (
-                    res.data[i].PRIORITY != 0 &&
-                    defaultSel.pri > res.data[i].PRIORITY
+                    res2.data[i].PRIORITY != 0 &&
+                    defaultSel.pri > res2.data[i].PRIORITY
                   ) {
-                    defaultSel.pri = res.data[i].PRIORITY;
-                    defaultSel.id = res.data[i].P_ID;
+                    defaultSel.pri = res2.data[i].PRIORITY;
+                    defaultSel.id = res2.data[i].P_ID;
                   }
                   this.activity.push(obj);
                 }
@@ -386,7 +440,7 @@ export default {
                 console.log(err);
               });
             this.expands = [];
-            this.expands.push(res.data.itemNo);
+            this.expands.push(res.data[0].ITEM_NO);
           });
         })
         .catch(err => {
@@ -642,12 +696,12 @@ export default {
     this.tableData = [];
     this.history = this.localHistory();
   },
-  activated(){
+  activated() {
     var selectNo = this.$route.params.selectNo;
-    if(selectNo) {
-       this.searchKey = selectNo;
-       this._getShopsWallPaperMsg();
-     }
+    if (selectNo) {
+      this.searchKey = selectNo;
+      this._getShopsWallPaperMsg();
+    }
   },
   computed: {
     getNum(index) {
