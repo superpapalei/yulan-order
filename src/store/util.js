@@ -97,6 +97,8 @@ export function tabsName(index) {
       return "付款委托书";
     case "supplierModule/payDelegationExamine":
       return "付款委托书";
+    case "query/salesQuery":
+      return "销售提货单查询";
     default:
       return "xxx";
   }
