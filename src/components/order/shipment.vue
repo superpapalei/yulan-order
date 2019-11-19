@@ -128,7 +128,7 @@
           <tr>
             <td class="grayTD" style="width:16%;height:15px">客户代码</td>
             <td style="width:34%;height:15px" class="grayTD">
-              {{}}
+              (提交后自动生成)
             </td>
             <td class="grayTD" style="width:16%;height:15px">客户名称</td>
             <td style="width:34%;height:15px" class="grayTD">
@@ -326,7 +326,7 @@
                 <div>
                 <el-upload
                 class="upload-de"
-                :action="Global.baseUrl + '/Lanju/UploadFiles'"
+                :action="Global.baseUrl + '/RTCB_ITEM/UploadFiles'"
                 drag
                 multiple
                 :on-change="function(file,fileList){return  handleChange(file,fileList)}"
@@ -550,11 +550,6 @@ export default {
         lineNo: this.lineNo,
         itemNo: this.itemNo
       };
-      // Axios.post("/packDetail/getPackDetailAppoint.do", {
-      //   itemNo: this.itemNo,
-      //   orderId: this.orderNo,
-      //   lineNo: this.lineNo
-      // })
       getPackDetailInfo(data)
         .then(res => {
           this.tableData = res.data[0].packDetails;
@@ -694,6 +689,9 @@ export default {
           RETURN_TYPE:"",//退货类型
           RETURN_ADDRESS:"",//退货地址
           REASSURE_TS:"",//签订日期
+          DEALMAN_CODE:"",
+          DEAL_TS:"",
+          DEALMAN_NAME:"",
       };
       this.submit = {
           RTCB_ID: "", //退货单ID
@@ -711,6 +709,8 @@ export default {
           UNIT:"",//单位
           NOTE:"",//类型
           fileList:[],//附件列表
+          ATTACHMENT_FILE:"",//附件
+          ATTACHMENT_FILE_FOLDER:"",//附件文件夹
       };
       this.submit.orderNo = this.orderNo;
       this.submit.ITEM_NO = this.itemNo;
@@ -722,7 +722,7 @@ export default {
           this.companyName=res.data[0].CUSTOMER_NAME;
           this.CONTRACT_NO=res.data[0].CONTRACT_NO;
           this.submit.PRODUCTION_VERSION = res.data[0].PRODUCTVERSION_NAME;
-          for (var i = 0; i < res.data.length; i++) {
+          for (var i = 0; i < res.data.length; i++) {  //这一部分应该在编辑里使用（可以进行初审的时候使用）
           this.returnInfo[i] = new Object();
           this.returnInfo[i].label =
             "地址:" +
@@ -873,7 +873,7 @@ export default {
       //附件拼接
       for (let j = 0; j < this.submit.fileList.length; j++) {
                this.submit.ATTACHMENT_FILE +=
-                "/Files/LANJU_STORE/" +
+                "/Files/RTCB_ITEM/" +
                this.CID +
                "/" +
                this.dateStamp +
@@ -882,7 +882,7 @@ export default {
                 ";"; 
               }
       this.submit.ATTACHMENT_FILE_FOLDER =
-        "/Files/LANJU_STORE/" + this.CID + "/" + this.dateStamp;
+        "/Files/RTCB_ITEM/" + this.CID + "/" + this.dateStamp;
       this.submit.ITEM_INDEX = 1;
       this.submitHead.ERP_CREATOR=this.CID;
       this.submitHead.ERP_CREATORNAME = this.CNAME;
@@ -891,11 +891,13 @@ export default {
       this.submitHead.SENDBACK_REASON = null;
       this.submitHead.ITEM_COUNT = 1;
       this.submitHead.ITEM_MAX_INDEX = 1;
+      this.submitHead.SALE_NO=this.submit.SALE_NO;
+      this.submitHead.ORDER_NO=this.orderNo;
       InsertCompensation({ head: this.submitHead, details: this.submit })
             .then(res => {
                 UpdateState({
                   id: res.data.ID,
-                  state: "CUSTOMERAFFIRM"
+                  state: "SUBMITTED"
                 })
                   .then(res => {
                     this.$alert("提交成功", "提示", {
