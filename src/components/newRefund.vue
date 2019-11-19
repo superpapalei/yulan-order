@@ -1,236 +1,222 @@
 <template>
-  <div class="shipmentCard">
-   <el-card class="centerCard">
-        <div slot="header">
-          <span class="zoomLeft">
-            订单号：
-            <span class="zoomRight">{{ orderNo }}</span>
-          </span>
-          <br />
-          <span class="zoomLeft">
-            产品型号：
-            <span class="zoomRight">{{ itemNo }}</span>
-          </span>
-          <br />
-          <span class="zoomLeft">
-            下单数量：
-            <span class="zoomRight">{{ zongshuliang }}</span>
-          </span>
+  <div>
+   <el-card shadow="hover" class="centerCard">
+      <div slot="header">
+        <span class="fstrong f16">退款赔偿</span>
+      </div>
+      <div>
+        <div  class="tbarStyle">
+          <span style="font-size:15px;margin-right:5px">建立日期:</span>
+          <el-date-picker
+            value-format="yyyy-MM-dd"
+            style="width:14%;margin-right:25px"
+            v-model="beginTime"
+            type="date"
+            placeholder="日期区间"            
+          >
+          </el-date-picker>
+          <span style="font-size:15px;margin-right:35px">至</span>
+          <el-date-picker
+            value-format="yyyy-MM-dd"
+            style="width:14%;margin-right:10px;"
+            v-model="finishTime"  
+            type="date"
+            placeholder="日期区间"
+          >
+          </el-date-picker>
+          <span style="font-size:15px;margin-right:31px">状态:</span>
+          <el-select
+            style="width:14%;margin-right:10px;"
+            v-model="SELECT_STATUS"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in statusArray"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+          <el-button 
+            type="success" 
+            @click.native="clickSearch"    
+            style="margin-right:6px;"
+            >查 询</el-button
+          >
+          <el-button
+            type="warning"
+            @click.native="resetSearch"
+            style="margin-right:6px;"
+            >重 置</el-button
+          >
+        </div>
+        <div class="tbarStyle">
+          <span style="font-size:15px;margin-right:24px">型号：</span>
+          <el-input
+            clearable
+            v-model="selectItemNo"
+            style="width:14%;margin-right:10px;"
+            placeholder="产品型号"
+          >
+          </el-input>
+          <span style="font-size:15px;margin-right:5px">客户名：</span>
+          <el-input
+            clearable
+            v-model="selectCNAME"
+            style="width:14%;margin-right:10px;"
+            placeholder="客户名"
+          >
+          </el-input>
+          <span style="font-size:15px;margin-right:5px">创建人：</span>
+          <el-input
+            clearable
+            style="width:14%;margin-right:10px;"
+            v-model="selectCreator"
+            placeholder="创建人"
+          >
+          </el-input>
+          <el-button 
+            @click.native="checkNoPrint" 
+            style="margin-right:6px;width:168px"
+            >查看未打印
+            </el-button >
         </div>
         <el-table
+          border
+          :row-class-name="tableRowClassName"
           :data="tableData"
           style="width: 100%"
-          :row-class-name="tableRowClassName"
         >
-          <el-table-column
-            prop="SALE_NO"
-            label="提货单号"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="QTY_DELIVER"
-            label="数量"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="BATCH_NO"
-            label="批号"
-            align="center"
-          ></el-table-column>
-          <el-table-column align="center" label="出货情况">
+          <el-table-column width="130" label="编号" prop="ID"  align="center"> </el-table-column>
+          <el-table-column width="145" label="创建时间"  align="center">
             <template slot-scope="scope">
-              <span
-                style="font-size:14px; color:black;"
+               {{ scope.row.CREATE_TS | datatrans }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="客户名称"
+            prop="CNAME"
+            align="center"
+          >
+          </el-table-column>
+          <el-table-column width="70" label="货品数" prop="ITEM_COUNT"  align="center"> </el-table-column>
+          <el-table-column width="120" label="状态"  align="center">
+            <template slot-scope="scope">
+              {{ scope.row.STATE | transStatus }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="创建人"
+            prop="ERP_CREATORNAME"
+            align="center"
+          >
+          </el-table-column>
+
+           <!-- 未做 -->
+          <el-table-column width="100" label="操作" align="center">
+            <template slot-scope="scope">
+              <el-tooltip content="查看" placement="top">
+                <el-button
+                  circle
+                  style="padding: 7px;"
+                  type="warning"
+                  icon="el-icon-search"
+                  size="mini"
+                >
+                </el-button>
+              </el-tooltip>
+              <el-tooltip
                 v-if="
-                  scope.row.DATE_OUT_STOCK == '' ||
-                    scope.row.DATE_OUT_STOCK == '9999/12/31 00:00:00'
+                  scope.row.STATE === 'CUSTOMERAFFIRM' &&
+                    scope.row.ERP_CREATOR === this.CID
                 "
-                >待发货</span
-              >
-              <span style="font-size:14px; color:black;" v-else>已发货</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="发货日期" align="center">
-            <template slot-scope="scope1">
-              <span>{{ scope1.row.DATE_OUT_STOCK | datatrans }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="FREIGHT"
-            label="加收物流费"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="TRANSCOMPANY"
-            label="物流公司"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="TRANS_ID"
-            label="物流单号"
-            align="center"
-          ></el-table-column>
-          <el-table-column align="center" label="物流查看">
-            <template slot-scope="scope">
-              <a
-                :href="kuaidi100"
-                target="_blank"
-                @click="searchWL(scope.row.TRANS_ID)"
+                content="撤回"
+                placement="top"
               >
                 <el-button
-                  :disabled="scope.row.TRANS_ID === ''"
-                  type="danger"
-                  size="small"
-                  >查看物流</el-button
+                  circle
+                  style="padding: 7px;"
+                  @click="returnBack(scope.row, 'back')"
+                  type="info"
+                  icon="el-icon-back"
+                  size="mini"
                 >
-              </a>
+                </el-button>
+              </el-tooltip>
+              <el-tooltip
+                v-if="
+                  scope.row.STATE === 'ONCREATE' &&
+                    scope.row.ERP_CREATOR === cid
+                "
+                content="编辑"
+                placement="top"
+              >
+                <el-button
+                  circle
+                  style="padding: 7px;"
+                  @click="toDetail(scope.row, 'edit')"
+                  type="primary"
+                  icon="el-icon-edit"
+                  size="mini"
+                >
+                </el-button>
+              </el-tooltip>
+              <el-tooltip
+                v-if="
+                  scope.row.STATE === 'ONCREATE' &&
+                    scope.row.ERP_CREATOR === cid &&
+                    scope.row.ITEM_COUNT === 0
+                "
+                content="删除"
+                placement="top"
+              >
+                <el-button
+                  circle
+                  style="padding: 7px;"
+                  @click="returnBack(scope.row, 'delete')"
+                  type="danger"
+                  icon="el-icon-delete"
+                  size="mini"
+                >
+                </el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="">
+          <el-table-column
+            width="100"
+            label="打印标记"
+            prop="PRINTED"
+            align="center"
+          >
             <template slot-scope="scope">
-              <el-button
-                :disabled="scope.row.TRANS_ID === ''"
-                type="primary"
-                size="small"
-                @click="addRecord(scope.row)"
-                >投诉</el-button
+              <el-checkbox
+                v-if="
+                  scope.row.STATE === 'APPROVED' ||
+                    scope.row.STATE === 'CANCELED'
+                "
+                @change="changePrinted(scope.row, scope.$index)"
+                v-model="scope.row.PRINTED"
               >
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="">
-            <template slot-scope="scope">
-              <el-button
-                :disabled="scope.row.TRANS_ID === ''"
-                type="danger"
-                size="small"
-                @click="addRefundRecord(scope.row)"
-                >售后</el-button
-              >
+                {{ scope.row.PRINTED === false ? "未打印" : "已打印" }}
+              </el-checkbox>
             </template>
           </el-table-column>
         </el-table>
-    </el-card>
-
-    <el-dialog
-      title="投诉登记表"
-      :visible.sync="complaintDetail"
-      :close-on-click-modal="false"
-      width="40%"
-      append-to-body
-    >
-      <!-- 编辑区 -->
-      <div v-show="isAdd" class="table-c">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-          <tr class="grayTD">
-            <td style="font-size:20px;height:30px;" colspan="4">投诉登记表</td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" style="width:16%;height:15px">客户代码</td>
-            <td style="width:34%;height:15px" class="grayTD">
-              {{}}
-            </td>
-            <td class="grayTD" style="width:16%;height:15px">客户名称</td>
-            <td style="width:34%;height:15px" class="grayTD">
-              (提交后自动生成)
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" style="height:15px">提货单号</td>
-            <td class="grayTD" style="height:15px">{{ submit.SALE_NO }}</td>
-            <td class="grayTD" style="height:15px">物流单号</td>
-            <td class="grayTD" style="height:15px">{{ submit.C_TRANSBILL }}</td>
-          </tr>
-          <tr>
-            <td class="grayTD" style="height:15px">订单号</td>
-            <td class="grayTD" style="height:15px">{{ submit.orderNo }}</td>
-            <td class="grayTD" style="height:15px">产品型号</td>
-            <td class="grayTD" style="height:15px">{{ submit.itemNo }}</td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="4">
-              投诉信息
-            </td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" style="height:16px">投诉类型</td>
-            <td colspan="1" style="text-align:left;height:16px;">
-              <el-select
-                style="height:16px;width:100%;padding:0px 0px 0px 0px;"
-                v-model="submit.TYPE"
-                filterable
-                placeholder="选择相应类型"
-              >
-                <el-option
-                  v-for="item in typeArray"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </td>
-            <td class="grayTD" colspan="1" style="height:16px">货物数量</td>
-            <td
-              v-if="submit.TYPE == '丢失'"
-              class="grayTD"
-              colspan="1"
-              style="height:20px"
-            >
-              <el-input
-                v-model="submit.LOSED_QUANTITY"
-                placeholder="（丢失数量）"
-                clearable
-                class="inputStyle"
-              >
-              </el-input>
-            </td>
-            <td
-              v-if="submit.TYPE == '破损'"
-              class="grayTD"
-              colspan="1"
-              style="height:16px"
-            >
-              <el-input
-                v-model="submit.DAMAGED_QUANTITY"
-                placeholder="（破损数量）"
-                clearable
-                class="inputStyle"
-              >
-              </el-input>
-            </td>
-            <td v-else class="grayTD" colspan="1" style="height:16px"></td>
-          </tr>
-
-          <tr>
-            <td class="grayTD" colspan="1" rowspan="1" style="height:50px;">
-              投诉内容
-            </td>
-            <td colspan="3" rowspan="1" style="height:50px;">
-              <el-input
-                v-model="submit.MEMO"
-                type="textarea"
-                maxlength="200"
-                placeholder="（请输入投诉内容和要求）"
-                clearable
-                class="inputStyle"
-              >
-              </el-input>
-            </td>
-          </tr>
-        </table>
-
-        <div style="margin:0 auto; width:75px;">
-          <br />
-          <el-button type="success" @click="_addSubmit()">提 交</el-button>
-          <!-- 新增时的按钮 -->
-        </div>
+        <el-pagination
+          style="width: 100%;"
+          class="dib tc"
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="allNum"
+        >
+        </el-pagination>
       </div>
-    </el-dialog>
-
+    </el-card>
+    
+    <!-- 未做 -->
      <el-dialog
       :visible.sync="RefundDetail"
       :close-on-click-modal="false"
@@ -548,16 +534,31 @@
 
 <script>
 import Axios from "axios";
-import { addSubmit } from "@/api/complaint";
 import Cookies from "js-cookie";
-import { getShipment } from "@/api/orderList";
-import { getPackDetailInfo,getReturnInfo } from "@/api/orderListASP";
+import {
+  getAllRefund,
+  deleteRefund,
+  updataRefundStatus,
+  updatePrinted
+} from "@/api/refund";
+import { getCustomerInfo,getPackDetailInfo,getReturnInfo } from "@/api/orderListASP";
+import {
+  GetAllCompensation,
+  UpdatePrintedById,
+  DeleteCompensation,
+  UpdateState,
+  GetNoPrinted
+} from "@/api/paymentASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 export default {
+  name: "refund",
   data() {
     return {
-      tableData: [],
+      tableData: [], //表格数据
+      allNum: 0 ,//表格总共有几条数据
+      currentPage:1,//当前页数
+      pageSize:10,//每页最多显示数量
       submit: [],
       returnInfo:[],
       processDetail:[],
@@ -565,37 +566,26 @@ export default {
       isAdd: false,
       RefundDetail:false,
       isRefundAdd:false,
+      SELECT_STATUS: null, //存储下拉框的值
+      beginTime: "", //查询的开始时间
+      finishTime: "", //查询的结束时间
       companyId: Cookies.get("companyId"),
       CID: Cookies.get("cid"),
       CNAME :Cookies.get("realName"),
-      //itemNo: "", //产品型号
-      //orderNo: "",
-      //lineNo: "",
+      selectItemNo: "", //搜索栏产品型号
+      selectCNAME: "", //搜索栏姓名
+      selectCreator: "", //搜索栏创建人名
       zongshuliang: "",
       daifashuliang: "",
       kuaidi100: "",
       kuaididanhao: "",
-      typeArray: [
-        {
-          label: "晚点",
-          value: "晚点"
-        },
-        {
-          label: "破损",
-          value: "破损"
-        },
-        {
-          label: "丢失",
-          value: "丢失"
-        },
-        {
-          label: "服务",
-          value: "服务"
-        },
-        {
-          label: "其他",
-          value: "其他"
-        }
+      //单据状态
+      statusArray: [
+        { value: null, label: "全部状态" },
+        { value: "SUBMITTED", label: "已提交" },
+        { value: "RECEIVE", label: "已接收" },
+        { value: "CUSTOMERAFFIRM", label: "客户确认中" },
+        { value: "APPROVED", label: "客户同意" }
       ],
       returnArray: [   //退货方式
         {
@@ -644,65 +634,119 @@ export default {
       m = m < 10 ? "0" + m : m;
       let s = date.getSeconds();
       s = s < 10 ? "0" + s : s;
-      return y + "-" + MM + "-" + d + " "; /* + h + ':' + m + ':' + s; */
-    }
+      return y + "-" + MM + "-" + d + " " + h + ':' + m ; //+ ':' + s
+    },
+    //过滤掉值为空的属性
+    propertyFilter(obj) {
+      let keyArr = Object.keys(obj);
+      for (let i = 0; i < keyArr.length; i++) {
+        if (obj[keyArr[i]] === "") {
+          delete obj[keyArr[i]];
+        }
+      }
+      return obj;
+    },
+    transStatus(value) {
+      switch (value) {
+        case null:
+          return "";
+          break;
+        case "SUBMITTED":
+          return "已提交";
+          break;
+        case "RECEIVE":
+          return "已接收";
+          break;
+        case "CUSTOMERAFFIRM":
+          return "客户确认中";
+          break;
+        case "APPROVED":
+          return "客户同意";
+          break;
+      }
+    },
   },
   methods: {
-    //查看物流
-    searchWL(tab) {
-      this.kuaididanhao = tab;
-      let kongchuan = "";
-      this.kuaidi100 =
-        "https://www.kuaidi100.com/chaxun?com=" +
-        kongchuan +
-        "&nu=" +
-        this.kuaididanhao;
+    //初始化最新一周时间
+    initDate() {
+      let to = new Date();
+      let from = new Date(to.getTime() - 7 * 24 * 60 * 60 * 1000);
+      this.beginTime =
+        from.getFullYear() +
+        "-" +
+        this.addZeroIfNeed(from.getMonth() + 1) +
+        "-" +
+        this.addZeroIfNeed(from.getDate());
+      this.finishTime =
+        to.getFullYear() +
+        "-" +
+        this.addZeroIfNeed(to.getMonth() + 1) +
+        "-" +
+        this.addZeroIfNeed(to.getDate());
     },
-    //跳转调用接口
-    init_shipment() {
-      // this.orderNo = this.$route.params.orderId;
-      // this.itemNo = this.$route.params.itemNo;
-      // this.lineNo = this.$route.params.lineNo;
-      this.processDetail=[{
-        RTCB_ID: "", 
-        LINE_NO:"",
-        QTY: "", 
-        NOTES: "", 
-        PROCESS: "", 
-        MONEY: "" }];
-      var data = {
-        orderNo: this.orderNo,
-        lineNo: this.lineNo,
-        itemNo: this.itemNo
-      };
-      getReturnInfo().then(res => {
-        if (res.code == 0) {
-          for (var i = 0; i < res.data.length; i++) {
-          this.returnInfo[i] = new Object();
-          this.returnInfo[i].label =
-            "地址:" +
-            res.data[i].ADDRESS +
-            "   收件人:" +
-            res.data[i].ADDRESSEE +
-            "   电话:" +
-            res.data[i].TEL;
-          this.returnInfo[i].value = res.data[i].ID;
-        }
-        } 
-      });
-      // Axios.post("/packDetail/getPackDetailAppoint.do", {
-      //   itemNo: this.itemNo,
-      //   orderId: this.orderNo,
-      //   lineNo: this.lineNo
-      // })
-      getPackDetailInfo(data)
-        .then(res => {
-          this.tableData = res.data[0].packDetails;
-          this.zongshuliang = res.data[0].allCount;
-        })
-        .catch(error => {
-          console.log(error);
+    //展开搜索
+    clickSearch() {
+      this.currentPage = 1;
+      this.refresh();
+    },
+    //重置搜索条件
+    resetSearch() { 
+      this.beginTime = "";
+      this.finishTime = "";
+      this.SELECT_STATUS="";
+      this.selectItemNo = "";
+      this.selectCNAME = "";
+      this.selectCreator = "";
+    },
+    //查询未打印的单据
+    checkNoPrint() {
+      GetNoPrinted().then(res => {
+        this.tableData = res.data;
+        this.tableData.forEach(item => {
+          item.PRINTED = item.PRINTED === "0" ? true : false;
         });
+        this.allNum = res.count;
+      });
+    },
+    //查询满足条件的该用户的退货赔偿
+    refresh() {
+      let obj = {
+        CID: this.CID, //客户ID
+        page: this.currentPage, //第几页
+        number: this.pageSize, //一页有多少数据
+        startDate: this.dateFrom, //开始日期
+        endDate: this.dateTo, //结束日期
+        state: this.chooseState, //状态
+        createName: this.erpCreatorname, //创建者名称
+        cName: this.cname, //客户名称
+        itemNo: this.itemNo //产品号
+      };
+      if (!obj.startDate) {
+        obj.startDate = "0001/1/1";
+      }
+      if (!obj.endDate) {
+        obj.endDate = "9999/12/31";
+      } else {
+        obj.endDate = obj.endDate + " 23:59:59";
+      }
+      let filter = this.$options.filters["propertyFilter"];
+      GetAllCompensation(filter(obj))
+        .then(res => {
+          this.tableData = res.data;
+          this.tableData.forEach(item => {
+            item.PRINTED = item.PRINTED === "0" ? true : false;
+          });
+          this.allNum = res.count;
+        })
+        .catch(err => {
+          this.tableData = [];
+          this.allNum = 0;
+        });
+    },
+    //切换下一页
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.refresh();
     },
     //隔行变色
     tableRowClassName({ row, rowIndex }) {
@@ -950,8 +994,19 @@ export default {
               this.processDetail.splice(index,1);
         }
     },
+    //给时间加前缀'0'
+    addZeroIfNeed(num) {
+      if (num < 10) {
+        return "0" + num;
+      }
+      return num;
+    },
     ...mapMutations("navTabs", ["addTab"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"])
+  },
+  created() {
+    this.initDate();
+    this.refresh();
   },
   activated: function() {
     this.init_shipment();
@@ -1061,5 +1116,8 @@ export default {
   border-radius: 4px;
   -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.tbarStyle {
+  margin-bottom: 13px;
 }
 </style>
