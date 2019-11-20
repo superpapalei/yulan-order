@@ -707,7 +707,7 @@ export default {
     //通过接口数据生成窗帘表格信息
     getCurtainMsg(data) {
       this.curtainData = [];
-      this.message.highJia = this.allData.itemList[0].highJia;
+      if(this.allData.itemList.length) this.message.highJia = this.allData.itemList[0].highJia;
       for (let i = 0; i < data.itemList.length; i++) {
         if (data.itemList[i].unit === "°ü") data.itemList[i].unit = "包";
         if (data.itemList[i].itemMLGY.itemType === "lspb") {

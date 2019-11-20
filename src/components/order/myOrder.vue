@@ -64,9 +64,9 @@
       </el-select>
       <el-input
         @keyup.enter.native="search()"
-        placeholder="订单号，型号，购买人"
+        placeholder="订单号,型号,购买人,联系方式"
         v-model="find"
-        style="width:280px;"
+        style="width:300px;"
       >
         <el-button @click="search()" slot="append" icon="el-icon-search"
           >搜索</el-button
@@ -263,6 +263,21 @@
         ></el-pagination>
       </div>
     </div>
+    <el-dialog
+      :show-close="true"
+      :visible.sync="shipmentVisible"
+      width="1100px"
+      title="出货详情"
+    >
+      <keep-alive>
+        <shipment
+          v-if="shipmentVisible"
+          :orderNo="shipmentOrderNo"
+          :itemNo="shipmentItemNo"
+          :lineNo="shipmentLineNo"
+        ></shipment>
+      </keep-alive>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -281,6 +296,8 @@ import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 import Cookies from "js-cookie";
 import { async } from "q";
+import shipment from "./shipment";
+
 export default {
   name: "MyOrder",
   data() {
@@ -299,6 +316,10 @@ export default {
       currentPage: 1,
       Initial_balance: 0,
       buttonShow: true,
+      shipmentVisible: false,
+      shipmentOrderNo: "",
+      shipmentItemNo: "",
+      shipmentLineNo: "",
       statusIdOptionValue1: ["0", "5", "6", "21", "22"],
       commodityTypeOptions: [
         {
@@ -452,6 +473,7 @@ export default {
       ]
     };
   },
+  components: { shipment },
   activated: function() {
     this.refresh();
   },
@@ -540,7 +562,7 @@ export default {
         transCookies[i].item.itemVersion = item.ORDERBODY[i].PRODUCTION_VERSION;
         transCookies[i].salPromotion = new Object();
         transCookies[i].salPromotion.orderType =
-        item.ORDERBODY[i].PROMOTION_TYPE;
+          item.ORDERBODY[i].PROMOTION_TYPE;
         transCookies[i].salPromotion.arrearsFlag = item.ARREARSFLAG;
         transCookies[i].salPromotion.flagFl = item.ORDERBODY[i].FLAG_FL_TYPE;
       }
@@ -619,15 +641,19 @@ export default {
     },
     //出货详情
     shipmentDetail(tab) {
-      this.$router.push({
-        name: `shipment`,
-        params: {
-          itemNo: tab.ITEM_NO,
-          orderId: tab.ORDER_NO,
-          lineNo: tab.LINE_NO
-        }
-      });
-      this.addTab("order/shipment");
+      // this.$router.push({
+      //   name: `shipment`,
+      //   params: {
+      //     itemNo: tab.ITEM_NO,
+      //     orderId: tab.ORDER_NO,
+      //     lineNo: tab.LINE_NO
+      //   }
+      // });
+      // this.addTab("order/shipment");
+      this.shipmentOrderNo = tab.ORDER_NO;
+      this.shipmentLineNo = tab.LINE_NO;
+      this.shipmentItemNo = tab.ITEM_NO;
+      this.shipmentVisible = true;
     },
     //标签页切换
     handleClick(tab) {
@@ -798,7 +824,10 @@ export default {
                   );
                   return;
                 }
-                if (new Date(res.data.DATE_END) < new Date() || res.data.USE_ID == "0") {
+                if (
+                  new Date(res.data.DATE_END) < new Date() ||
+                  res.data.USE_ID == "0"
+                ) {
                   this.$alert(
                     `活动‘&${item.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
                     "提示",
