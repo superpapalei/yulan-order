@@ -360,7 +360,7 @@ export default {
             this.tableData.push({
               type: res.data[0].ITEM_NO, //型号
               sample: res.data[0].OLD_ITEM_NO, //样本型号
-              versionNumber: res.data[0].ITEM_VERSION, //版本
+              versionNumber: res.data[0].PRODUCTVERSION_NAME, //版本
               version: res.data[0].NOTE, //名称
               brand: res.data[0].BRAND_NAME, //品牌
               productType: res.data[0].PRODUCT_TYPE, //类型
