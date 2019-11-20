@@ -129,7 +129,7 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.STATE == 'CUSTOMERAFFIRM'
+                  scope.row.STATE == 'SUBMITTED'|| scope.row.STATE == 'RECEIVE'
                 "
                 content="编辑"
                 placement="top"
@@ -478,8 +478,31 @@
           </tr>
           <tr>
             <td class="grayTD" style="height:15px"  colspan="1">初审意见</td>
-            <td style="height:15px" colspan="2" >{{submit.RETURN_TYPE}}</td>
-            <td style="height:15px" colspan="4" >{{submit.FIRST_AUDITION}}</td>
+            <td style="height:15px" colspan="2" v-if="submit.STATE=='SUBMITTED'">     
+              <el-select
+                style="height:16px;width:100%;padding:0px 0px 0px 0px;"
+                v-model="submit.RETURN_TYPE"
+                filterable
+                placeholder="退货方式"
+              >
+                <el-option
+                  v-for="item in returnArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </td>
+            <td style="height:15px" colspan="2" v-else>{{submit.RETURN_TYPE}}</td>
+            <td style="height:15px" colspan="4" v-if="submit.STATE=='SUBMITTED'">
+                <input
+                  v-model="submit.FIRST_AUDITION"
+                  placeholder="请填写相关处理意见"
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td style="height:15px" colspan="4" v-else>{{submit.FIRST_AUDITION}}</td>
           </tr>
           <tr v-if="submit.RETURN_TYPE!='无需退货'"> 
             <td class="grayTD" style="height:15px">备注信息</td>
@@ -489,19 +512,45 @@
           </tr>
           <tr v-if="submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">退货或寄样信息</td>
-            <td style="height:15px" colspan="6" >{{submit.RETURN_ADDRESS}}</td>
+            <td style="height:15px" colspan="6" v-if="submit.STATE=='SUBMITTED'">       
+              <el-select
+                style="width:99%;"
+                v-model="submit.RETURN_ADDRESS"
+                filterable
+                placeholder="请选择地址和收件人"
+              >
+                <el-option
+                  v-for="item in returnInfo"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </td>
+            <td style="height:15px" colspan="6" v-else>{{submit.RETURN_ADDRESS}}</td>
           </tr>
           <tr v-if="submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
             <td style="height:15px" colspan="6">您的提货单号： {{submit.SALE_NO}}</td>
           </tr>
-          <tr>
+          <tr v-if="submit.STATE!='SUBMITTED'">
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理结果
             </td>
           </tr>
-          <tr>
-            <td class="grayTD"  style="width:17%;height:15px">产品/项目</td>
+          <tr v-if="submit.STATE!='SUBMITTED'">
+            <td class="grayTD"  style="width:17%;height:15px">
+              <el-button 
+                 type="primary" 
+                 size="mini" 
+                 icon="el-icon-plus" 
+                 @click="_rowPlus()"
+                 circle
+                 style="border-radius:50%;"
+                 >
+              </el-button>
+              产品/项目</td>
             <td class="grayTD"  style="width:18%;height:15px">型号</td>
             <td class="grayTD"  style="width:12%;height:15px">单位</td>
             <td class="grayTD"  style="width:10%;height:15px">数量</td>
@@ -509,14 +558,47 @@
             <td class="grayTD"  style="width:15%;height:15px">质量问题</td>
             <td class="grayTD"  style="width:18%;height:15px">处理意见</td>
           </tr>
-          <tr v-for="(item,index) of processDetail" :key="index">
-            <td colspan="1" rowspan="1" style="height:15px">{{submit.PRODUCTION_VERSION}}</td>
+          <tr v-if="submit.STATE!='SUBMITTED'" v-for="(item,index) of processDetail" :key="index">
+            <td colspan="1" rowspan="1" style="height:15px">
+                  <el-button 
+                     type="danger" 
+                     size="mini" 
+                     icon="el-icon-minus" 
+                     @click="_rowSubtract(index)"
+                     v-if="index!=0"
+                     circle>
+                  </el-button>
+              {{submit.PRODUCTION_VERSION}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{submit.ITEM_NO}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{submit.UNIT}}</td>
-            <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_QTY}}</td>
-            <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_MONEY}}</td>
-            <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_NOTES}}</td>
-            <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_RESULT}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">
+                <input
+                  v-model="processDetail[index].P_QTY"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td colspan="1" rowspan="1" style="height:15px">
+                <input
+                  v-model="processDetail[index].P_MONEY"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td colspan="1" rowspan="1" style="height:15px">
+                <input
+                  v-model="processDetail[index].P_NOTES"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
+            <td colspan="1" rowspan="1" style="height:15px">
+                <input
+                  v-model="processDetail[index].P_RESULT"
+                  placeholder=""
+                  clearable
+                  class="inputStyle">
+            </td>
           </tr>
 
            <tr style="height:90px">
@@ -571,7 +653,7 @@
         </table>
 
         <div style="text-align:center;margin-top:5px" v-if="isEdit">           
-          <el-button type="success" size="mini" @click="_EditDetail()">同意</el-button>
+          <el-button type="primary" size="mini" @click="_EditDetail(submit.STATE)">保存修改</el-button>
           <el-button type="info"   size="mini" @click="isEdit=false;RefundDetail=false">返回</el-button>  
         </div> 
       </div>
@@ -606,7 +688,8 @@ import {
   GetAllCompensation,
   GetCompensationById,
   GetNoPrinted,
-  ApprovedUpdate,
+  UpdateFirstAudition,
+  UpdateProcess
 } from "@/api/paymentASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import { mapMutations, mapActions } from "vuex";
@@ -866,9 +949,11 @@ export default {
       });
     },
     //保存修改
-    _EditDetail(){
-          this.submit.STATE='APPROVED';
-          ApprovedUpdate({ head: this.submit }).then(res => {
+    _EditDetail(val){
+        if(val=="SUBMITTED")
+        {
+          this.submit.STATE='RECEIVE';
+          UpdateFirstAudition({ head: this.submit }).then(res => {
             if (res.code == 0) {
               this.$alert("修改成功", "提示", {
               confirmButtonText: "确定",
@@ -885,6 +970,30 @@ export default {
             return;
             }
           });
+        }
+        else
+        {
+          this.submit.STATE='CUSTOMERAFFIRM';
+          this.submit.DEALMAN_CODE=this.CID;
+          this.submit.DEALMAN_NAME=this.CNAME;;
+          UpdateProcess({ head: this.submit,details:this.processDetail}).then(res => {
+            if (res.code == 0) {
+              this.$alert("修改成功", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.refresh();
+            this.RefundDetail = false;
+            return;
+            } else {
+              this.$alert("修改失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            return;
+            }
+          });
+        }
     },
     //显示图片
     showImage(url) {
@@ -954,6 +1063,59 @@ export default {
       }
       return "";
     },
+    //添加兰居处理结果中的明细数目
+    _rowPlus(){
+        if(this.processDetail.length>=this.submit.QTY)
+        {
+        this.$alert("已经达到编辑项的上限", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+        }
+        else{
+        this.processDetail.push({
+           P_RTCB_ID: this.submit.RTCB_ID, 
+           LINE_NO:"",
+           P_QTY: "", 
+           P_NOTES: "", 
+           P_RESULT: "", 
+           P_MONEY: "", 
+        });
+        }
+    },
+    //减少兰居处理结果中的明细数目
+    _rowSubtract(index){
+        if(this.processDetail.length==1)
+        {
+        this.$alert("必须至少有一项该类信息", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+        }
+        else{
+              this.processDetail.splice(index,1);
+        }
+    },
+    //获得退货或寄样信息
+    _getReturnInfo(){
+      getReturnInfo2().then(res => {
+        if (res.code == 0) {
+          for (var i = 0; i < res.data.length; i++) {  //这一部分应该在编辑里使用（可以进行初审的时候使用）
+          this.returnInfo[i] = new Object();
+          this.returnInfo[i].label =
+            "地址:" +
+            res.data[i].ADDRESS +
+            "   收件人:" +
+            res.data[i].ADDRESSEE +
+            "   电话:" +
+            res.data[i].TEL;
+          this.returnInfo[i].value = this.returnInfo[i].label;
+        }
+        } 
+      });
+    },
     //给时间加前缀'0'
     addZeroIfNeed(num) {
       if (num < 10) {
@@ -972,6 +1134,7 @@ export default {
   },
   created() {
     this.initDate();
+    this._getReturnInfo();
     this.refresh();
   },
   activated: function() {

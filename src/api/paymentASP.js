@@ -80,3 +80,29 @@ export function UpdateState(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//更新玉兰处理意见
+export function UpdateFirstAudition(data, config = {}) {
+    return post('/RETURNCOMPENSATIONBILL/UpdateFirstAudition', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//更新玉兰处理结果
+export function UpdateProcess(data, config = {}) {
+    return post('/RETURNCOMPENSATIONBILL/UpdateProcess', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//更新玉兰处理意见
+export function ApprovedUpdate(data, config = {}) {
+    return post('/RETURNCOMPENSATIONBILL/ApprovedUpdate', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+
