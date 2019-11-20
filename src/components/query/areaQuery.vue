@@ -375,8 +375,8 @@
           </div>
         </form>
         <hr />
-        <div style="float:left;font-size:15px;color:blue;margin:10px">提货单金额汇总：{{moneySum.MONEYSUM}}元</div>
         <div v-if="query_1">
+          <div style="float:left;font-size:15px;color:blue;margin:10px">提货单金额汇总：{{moneySum.MONEYSUM}}元</div>
           <el-table
           :data="CUSTOMERED"
           border
@@ -769,7 +769,10 @@ export default {
           }
           var res1= await getTotalMoneySum(data_2 ,{ loading: false })
           this.moneySum = res1.data[0];
-          this.CUSTOMERED_1[i] = await {
+          if(this.moneySum.MONEYSUM == 0){
+            continue
+          }
+          this.CUSTOMERED_1[i] =  {
             CUSTOMER_CODE: this.value_4[i],
             CUSTOMER_NAME: this.get_CUSTOMER_NAME.CUSTOMER_NAME,
             MONEYSUM:this.moneySum.MONEYSUM

@@ -100,7 +100,7 @@
               align="center"
             >
             <template slot-scope="scope2">
-                {{ scope2.row.SUMQYT }}（米）
+                {{ scope2.row.SUMQTY }}（米）
             </template>
             </el-table-column>
             <el-table-column
@@ -111,7 +111,16 @@
             </el-table-column>
           </el-table>
         </div>
-        
+        <!-- 分页 -->
+          <div style="margin:0 35%;" class="block">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-size="limit"
+              layout="total, prev, pager, next, jumper"
+              :total="count"
+            ></el-pagination>
+          </div>
         <!-- </el-tab-pane>
         </el-tabs> -->
       </div>
@@ -223,13 +232,14 @@ export default {
     },
     queryQuYu_1() {
       this.tableData = [];
-      if (this.XH == "") {
-            this.$alert("未输入型号", "提示", {
+      if (this.XH == "" && this.getVersion == "") {
+            this.$alert("未输入型号或者版本号", "提示", {
             confirmButtonText: "确定",
             type: "success"
           });
         return (this.tableData = []);
-      } else {
+      }
+      if(this.XH != "" || this.getVersion != ""){
         var data = {
           item_no:this.XH,//类型筛选
           version: this.getVersion, //已选用户
@@ -249,10 +259,23 @@ export default {
         getProductSales(data).then(res => {
           this.count = res.count;
           this.tableData = res.data;
+          if (this.XH != "" && this.getVersion != "" && res.data.length == 0) {
+            this.$alert("所输版本和型号不对应，请重新输入！", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+        return (this.tableData = []);
+      }
           this.query_1 = true;
         });
-      }
-     
+      } 
+      // }  else if(this.getVersion == ""){
+      //   this.$alert("未选择版本", "提示", {
+      //       confirmButtonText: "确定",
+      //       type: "success"
+      //     });
+      //   return (this.tableData = []);
+      // }
     },
     //翻页获取订单
     handleCurrentChange(val) {
