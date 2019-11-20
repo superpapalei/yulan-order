@@ -65,7 +65,7 @@
           <span class="zoomRight">{{ ruleForm.NOTES }}</span>
         </span>
         <br />
-        <span class="zoomLeft" v-if="isX">
+        <span class="zoomLeft">
           玉兰处理说明：
           <span class="zoomRight">{{ ruleForm.YULAN_NOTES }}</span>
         </span>
