@@ -682,6 +682,7 @@ import {getReturnInfo2 } from "@/api/orderListASP";
 import {
   GetAllCompensation,
   GetCompensationById,
+  GetCompensationByIdBefore,
   GetNoPrinted,
   UpdateFirstAudition,
   UpdateProcess,
@@ -814,23 +815,6 @@ export default {
     },
   },
   methods: {
-    //初始化最新一周时间
-    initDate() {
-      let to = new Date();
-      let from = new Date(to.getTime() - 7 * 24 * 60 * 60 * 1000);
-      this.beginTime =
-        from.getFullYear() +
-        "-" +
-        this.addZeroIfNeed(from.getMonth() + 1) +
-        "-" +
-        this.addZeroIfNeed(from.getDate());
-      this.finishTime =
-        to.getFullYear() +
-        "-" +
-        this.addZeroIfNeed(to.getMonth() + 1) +
-        "-" +
-        this.addZeroIfNeed(to.getDate());
-    },
     //展开搜索
     clickSearch() {
       this.currentPage = 1;
@@ -869,7 +853,7 @@ export default {
         itemNo: this.itemNo //产品号S
       };
       if (!obj.startDate) {
-        obj.startDate = "0001/1/1";
+        obj.startDate = "0001/1/1 00:00:00";
       }
       if (!obj.endDate) {
         obj.endDate = "9999/12/31";
@@ -948,6 +932,30 @@ export default {
     _EditDetail(val){
         if(val=="SUBMITTED")
         {
+           //判断信息是否填写完整
+           if (!this.submit.FIRST_AUDITION ) {
+              this.$alert("请填写相关的初审意见", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+           });
+              return;
+           }
+           if (!this.submit.RETURN_TYPE ) {
+              this.$alert("请选择退货方式", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+           });
+              return;
+           }
+           else{
+              if (this.submit.RETURN_TYPE=='客户邮寄'&&!this.submit.RETURN_ADDRESS ) {
+              this.$alert("请选择地址和收件人", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+              });
+              return;
+               }
+           }
           this.submit.STATE='RECEIVE';
           UpdateFirstAudition({ head: this.submit }).then(res => {
             if (res.code == 0) {
@@ -969,6 +977,21 @@ export default {
         }
         else
         {
+          //判断是否填完所有信息  
+          for (var i = 0; i < this.processDetail.length; i++) {
+            if ( 
+              !this.processDetail[i].P_QTY ||
+              !this.processDetail[i].P_NOTES ||
+              !this.processDetail[i].P_RESULT ||
+              !this.processDetail[i].P_MONEY 
+            ) {
+              this.$alert("请完善处理结果", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+              });
+              return;
+            }
+           }
           this.submit.STATE='CUSTOMERAFFIRM';
           this.submit.DEALMAN_CODE=this.CID;
           this.submit.DEALMAN_NAME=this.CNAME;;
@@ -1147,7 +1170,6 @@ export default {
     }
   },
   created() {
-    this.initDate();
     this._getReturnInfo();
     this.refresh();
   },

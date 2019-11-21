@@ -597,7 +597,7 @@ import {
 } from "@/api/refund";
 import {getReturnInfo2 } from "@/api/orderListASP";
 import {
-  GetAllCompensation,
+  GetUserCompensation,
   GetCompensationById,
   GetNoPrinted,
   ApprovedUpdate,
@@ -730,23 +730,6 @@ export default {
     },
   },
   methods: {
-    //初始化最新一周时间
-    initDate() {
-      let to = new Date();
-      let from = new Date(to.getTime() - 7 * 24 * 60 * 60 * 1000);
-      this.beginTime =
-        from.getFullYear() +
-        "-" +
-        this.addZeroIfNeed(from.getMonth() + 1) +
-        "-" +
-        this.addZeroIfNeed(from.getDate());
-      this.finishTime =
-        to.getFullYear() +
-        "-" +
-        this.addZeroIfNeed(to.getMonth() + 1) +
-        "-" +
-        this.addZeroIfNeed(to.getDate());
-    },
     //展开搜索
     clickSearch() {
       this.currentPage = 1;
@@ -785,7 +768,7 @@ export default {
         itemNo: this.itemNo //产品号S
       };
       if (!obj.startDate) {
-        obj.startDate = "0001/1/1";
+        obj.startDate = "0001/1/1 00:00:00";
       }
       if (!obj.endDate) {
         obj.endDate = "9999/12/31";
@@ -793,7 +776,7 @@ export default {
         obj.endDate = obj.endDate + " 23:59:59";
       }
       let filter = this.$options.filters["propertyFilter"];
-      GetAllCompensation(filter(obj))
+      GetUserCompensation(filter(obj))
         .then(res => {
           this.tableData = res.data;
           this.tableData.forEach(item => {
@@ -984,7 +967,6 @@ export default {
     }
   },
   created() {
-    this.initDate();
     this.refresh();
   },
   activated: function() {

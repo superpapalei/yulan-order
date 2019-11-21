@@ -24,7 +24,7 @@ export function InsertCompensation(data, config = {}) {
         return Promise.reject(err);
     })
 }
-//查找退货赔偿记录
+//查找所有的退货赔偿记录
 export function GetAllCompensation(data, config = {}) {
     return post('/RETURNCOMPENSATIONBILL/GetAllCompensation', data, config).then((res) => {
         return Promise.resolve(res);
@@ -32,9 +32,25 @@ export function GetAllCompensation(data, config = {}) {
         return Promise.reject(err);
     })
 }
-//根据查找退货赔偿记录和明细
+//查找当前用户的退货赔偿记录
+export function GetUserCompensation(data, config = {}) {
+    return post('/RETURNCOMPENSATIONBILL/GetUserCompensation', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//19.11.21之后——根据查找退货赔偿记录和明细
 export function GetCompensationById(data, config = {}) {
     return post('/RETURNCOMPENSATIONBILL/GetCompensationById', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//19.11.21之前——根据查找退货赔偿记录和明细
+export function GetCompensationByIdBefore(data, config = {}) {
+    return post('/RETURNCOMPENSATIONBILL/GetCompensationByIdBefore', data, config).then((res) => {
         return Promise.resolve(res);
     }).catch((err) => {
         return Promise.reject(err);
