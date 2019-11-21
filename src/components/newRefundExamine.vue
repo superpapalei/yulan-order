@@ -1,7 +1,7 @@
 <template>
   <div>
-   <el-card shadow="hover" class="centerCard">
-      <div slot="header">
+    <el-card shadow="hover" class="centerCard">
+      <div slot="header" >
         <span class="fstrong f16">退款赔偿</span>
       </div>
       <div>
@@ -155,8 +155,7 @@
             <template slot-scope="scope">
               <el-checkbox
                 v-if="
-                  scope.row.STATE === 'APPROVED' ||
-                    scope.row.STATE === 'CANCELED'
+                  scope.row.STATE === 'APPROVED' 
                 "
                 @change="changePrinted(scope.row, scope.$index)"
                 v-model="scope.row.PRINTED"
@@ -178,41 +177,36 @@
         </el-pagination>
       </div>
     </el-card>
-    
+    <div >
      <el-dialog
       :visible.sync="RefundDetail"
       :close-on-click-modal="false"
-      width="45%"
+      width="55%"
       append-to-body
     >    
       <!-- 查看区 -->
-      <div v-show="isCheck">
-      <div >
+      <div v-show="isCheck" id="printTable">
+      <div style="margin-bottom:5px;">
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr >
-            <td style="font-size:20px;height:30px;text-align:center;" colspan="7">退货/赔偿申请书【{{submit.STATE | transStatus}}】</td>
+            <td style="font-size:20px;height:30px;text-align:center;" colspan="7">
+              退货/赔偿申请书【{{submit.STATE | transStatus}}】
+              <i class="icon-print el-icon-printer cpoi" style="float:right" @click="printRefund"></i>
+            </td>
           </tr>
          </table>
       </div>
       <div >
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr >
-            <td style="font-size:10px;height:15px;" colspan="1">编号：</td>
-            <td style="font-size:10px;height:15px;text-align:left;" colspan="1">{{submit.ID}}</td>
-            <td style="font-size:10px;height:15px;" colspan="1">创建时间：</td>
-            <td style="font-size:10px;height:15px;text-align:left;" colspan="3">{{submit.CREATE_TS|datatrans}}</td>
-            <td style="font-size:10px;height:15px;" colspan="1">处理人：</td>
-            <td style="font-size:10px;height:15px;text-align:left;" colspan="1">{{submit.DEALMAN_NAME}}</td>
-            <td style="font-size:10px;height:15px;" colspan="1">处理时间：</td>
-            <td style="font-size:10px;height:15px;text-align:left;" colspan="3">{{submit.DEAL_TS|datatrans}}</td>
-            <td >
-              <el-button
-                type="primary"
-                size="small"
-                style="float:right;"
-                >打印</el-button
-              >
-            </td>
+            <td style="font-size:10px;height:15px;width:6%;" colspan="1">编号：</td>
+            <td style="font-size:10px;height:15px;text-align:left;width:15%;" colspan="1">{{submit.ID}}</td>
+            <td style="font-size:10px;height:15px;width:9%;" colspan="1">创建时间：</td>
+            <td style="font-size:10px;height:15px;text-align:left;width:17%;" colspan="3">{{submit.CREATE_TS|datatrans}}</td>
+            <td style="font-size:10px;height:15px;width:8%;" colspan="1">处理人：</td>
+            <td style="font-size:10px;height:15px;text-align:left;width:19%;" colspan="1">{{submit.DEALMAN_NAME}}</td>
+            <td style="font-size:10px;height:15px;width:9%;" colspan="1">处理时间：</td>
+            <td style="font-size:10px;height:15px;text-align:left;width:17%;" colspan="3">{{submit.DEAL_TS|datatrans}}</td>
           </tr>
          </table>
       </div>
@@ -278,8 +272,8 @@
                       >{{ file.name }}
                       </el-link>
                   </a>
-                  <label style="display:block;position:absolute;top:0px;right:10px;">
-                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
+                  <label style="display:block;position:absolute;top:1px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)" >下载</a>
                   </label>
               </li>
               </ul>
@@ -345,7 +339,7 @@
               border="0px"
               style="font-size:13px;color:gray;text-align:left;"
             >
-            <div style="margin:0 5px;">
+            <div style="margin:4px 0px 4px 4px">
                注意：1.若您未在我公司对您的《退货/赔偿申请书》提交处理意见之日起15日内确认、提出异议的，则视为放弃赔偿权利；<br />
                2.玉兰公司支付的退货金额，仅限于本《退货/赔偿申请书》的金额，不承担其他费用；<br />
                3.请您仔细阅读本《退货/赔偿申请书》相关信息，一旦确认，视为同意我公司的处理方案。<br />
@@ -359,7 +353,7 @@
               colspan="4"
               border="0px"
               style="font-size:13px;color:gray;text-align:center;">
-            <div >
+            <div style="margin:4px 0px 4px 4px">
               广东玉兰集团股份有限公司<br />
               市场部<br />
               {{ new Date(submit.CREATE_TS).getFullYear() }}年
@@ -464,7 +458,7 @@
                       >{{ file.name }}
                       </el-link>
                   </a>
-                  <label style="display:block;position:absolute;top:0px;right:10px;">
+                  <label style="display:block;position:absolute;top:1px;right:10px;">
                     <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
                   </label>
               </li>
@@ -607,7 +601,7 @@
               border="0px"
               style="font-size:13px;color:gray;text-align:left;"
             >
-            <div style="margin:0 5px;">
+            <div style="margin:4px 0px 4px 4px">
                注意：1.若您未在我公司对您的《退货/赔偿申请书》提交处理意见之日起15日内确认、提出异议的，则视为放弃赔偿权利；<br />
                2.玉兰公司支付的退货金额，仅限于本《退货/赔偿申请书》的金额，不承担其他费用；<br />
                3.请您仔细阅读本《退货/赔偿申请书》相关信息，一旦确认，视为同意我公司的处理方案。<br />
@@ -621,7 +615,7 @@
               colspan="4"
               border="0px"
               style="font-size:13px;color:gray;text-align:center;">
-            <div >
+            <div style="margin:4px 0px 4px 4px">
               广东玉兰集团股份有限公司<br />
               市场部<br />
               {{ new Date(submit.CREATE_TS).getFullYear() }}年
@@ -659,6 +653,7 @@
       </div>
       </div>
     </el-dialog>
+    </div>
 
     <div v-if="MiniPic" style="z-index:99999;position:fixed;" :style="{left:picX,top:picY}">
         <img class="BIGimg2" :src="imgUrl" />
@@ -689,7 +684,8 @@ import {
   GetCompensationById,
   GetNoPrinted,
   UpdateFirstAudition,
-  UpdateProcess
+  UpdateProcess,
+  UpdatePrintedById
 } from "@/api/paymentASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import { mapMutations, mapActions } from "vuex";
@@ -1123,6 +1119,24 @@ export default {
       }
       return num;
     },
+    //修改打印标记
+    changePrinted(value, index) {
+      //updatePrinted({
+      UpdatePrintedById({
+        id: value.ID,
+        printed: value.PRINTED ? "0" : "1"
+      });
+    },
+    //执行打印操作
+    printRefund() {
+      printJS({
+        printable: "printTable",
+        type: "html",
+        maxWidth: 1300,
+        headerStyle: "margin: -2px;",
+        targetStyles: ["*"]
+      });
+    },
     ...mapMutations("navTabs", ["addTab"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"])
   },
@@ -1246,6 +1260,10 @@ export default {
   -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
+.table-c  .el-upload-list__item{
+    margin-top: 0px;
+    line-height: 22px;
+}
 .tbarStyle {
   margin-bottom: 13px;
 }
@@ -1256,5 +1274,9 @@ export default {
 .BIGimg2 {
   width: 200px;
   height: 200px;
+}
+.icon-print {
+  font-size: 25px;
+  color: gray;
 }
 </style>
