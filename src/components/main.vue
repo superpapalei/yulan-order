@@ -880,7 +880,10 @@ export default {
       Cookies.remove("customerType");
       //跳转链接
       this.$router.push({
-        path: "/login"
+        name: "login",
+        params: {
+          autoSign: false
+        }
       });
       //this.$router.go(0);//刷新页面
     },
@@ -1288,7 +1291,7 @@ export default {
           break;
         case "softCount":
           this.softCountIcon();
-          break;     
+          break;
       }
     });
     document.onkeydown = function(event) {

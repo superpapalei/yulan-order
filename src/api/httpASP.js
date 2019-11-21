@@ -3,9 +3,8 @@ import Cookies from "js-cookie";
 
 //订单的url
 
- var baseUrl = 'http://localhost:49438/';//本地
-
-//var baseUrl = 'http://47.107.56.156:666/';//测试  
+//var baseUrl = 'http://localhost:49438/';//本地
+var baseUrl = 'http://47.107.56.156:666/';//测试  
 //var baseUrl = 'http://14.29.223.114:568/';//正式
 
 //下载中心的url
@@ -22,6 +21,15 @@ const DECODE = {
     CODE_FAIL: 1//失败
 }
 
+function logout() {
+    vm.$router.push({
+        name: "login",
+        params: {
+            autoSign: false
+        }
+    });
+}
+
 /**
  * 封装get方法
  * @param url 
@@ -32,9 +40,7 @@ export function get(url, params = {}, config = {}) {
     Axios.defaults.withCredentials = false;
     return new Promise((resolve, reject) => {
         if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
-            vm.$router.push({
-                path: '/login'
-            });
+            logout();
             reject('登录失效');
         }
         Axios.get(baseUrl + url, {
@@ -45,9 +51,7 @@ export function get(url, params = {}, config = {}) {
                 var res = response.data;
                 if (res.code != undefined) {//vue返回code
                     if (res.code == DECODE.CODE_INVALID) {//失效
-                        vm.$router.push({
-                            path: '/login'
-                        });
+                        logout();
                         console.log(res.msg);
                         reject(res);
                     } else if (res.code == DECODE.CODE_OK) {//成功
@@ -84,9 +88,7 @@ export function post(url, data = {}, config = {}) {
     Axios.defaults.withCredentials = false;
     return new Promise((resolve, reject) => {
         if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
-            vm.$router.push({
-                path: '/login'
-            });
+            logout();
             reject('登录失效');
         }
         Axios.post(baseUrl + url, data, config)
@@ -95,9 +97,7 @@ export function post(url, data = {}, config = {}) {
                 var res = response.data;
                 if (res.code != undefined) {//vue返回code
                     if (res.code == DECODE.CODE_INVALID) {//失效
-                        vm.$router.push({
-                            path: '/login'
-                        });
+                        logout();
                         console.log(res.msg);
                         reject(res);
                     } else if (res.code == DECODE.CODE_OK) {//成功
@@ -134,9 +134,7 @@ export function patch(url, data = {}, config = {}) {
     Axios.defaults.withCredentials = false;
     return new Promise((resolve, reject) => {
         if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
-            vm.$router.push({
-                path: '/login'
-            });
+            logout();
             reject('登录失效');
         }
         Axios.patch(baseUrl + url, data, config)
@@ -145,9 +143,7 @@ export function patch(url, data = {}, config = {}) {
                 var res = response.data;
                 if (res.code != undefined) {//vue返回code
                     if (res.code == DECODE.CODE_INVALID) {//失效
-                        vm.$router.push({
-                            path: '/login'
-                        });
+                        logout();
                         console.log(res.msg);
                         reject(res);
                     } else if (res.code == DECODE.CODE_OK) {//成功
@@ -184,9 +180,7 @@ export function put(url, data = {}, config = {}) {
     Axios.defaults.withCredentials = false;
     return new Promise((resolve, reject) => {
         if (Cookies.get("cid") && sessionStorage.getItem("_userId") && sessionStorage.getItem("_userId") != Cookies.get("cid")) {
-            vm.$router.push({
-                path: '/login'
-            });
+            logout();
             reject('登录失效');
         }
         Axios.put(baseUrl + url, data, config)
@@ -195,9 +189,7 @@ export function put(url, data = {}, config = {}) {
                 var res = response.data;
                 if (res.code != undefined) {//vue返回code
                     if (res.code == DECODE.CODE_INVALID) {//失效
-                        vm.$router.push({
-                            path: '/login'
-                        });
+                        logout();
                         console.log(res.msg);
                         reject(res);
                     } else if (res.code == DECODE.CODE_OK) {//成功
