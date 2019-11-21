@@ -14,19 +14,14 @@
         <h1>玉兰B2B订单管理系统</h1>
         <div class="loginBar"></div>
         <div class="info">
-          <p>账号:</p>
-          <el-input style="width:327px;" placeholder="请输入账号" v-model="cid">
+          <p>账&nbsp;号</p>
+          <el-input style="width:300px;" v-model="cid">
             <img slot="prefix" src="../assets/img/cid.png" width="22" alt />
           </el-input>
         </div>
         <div class="info">
-          <p>密码:</p>
-          <el-input
-            type="password"
-            style="width:327px;"
-            placeholder="请输入密码"
-            v-model="password"
-          >
+          <p>密&nbsp;码</p>
+          <el-input type="password" style="width:300px;" v-model="password">
             <img
               slot="prefix"
               src="../assets/img/password.png"
@@ -36,10 +31,51 @@
           </el-input>
         </div>
         <div class="submit" @click="loginSubmit">登录</div>
+        <div style="margin-top:10px;">
+          <span
+            style="position:relative;float:right;right:60px;"
+            @click="rememberPassWord = !rememberPassWord"
+          >
+            <input
+              style="width:14px;height:14px;vertical-align:middle;"
+              type="checkbox"
+              value
+              v-model="rememberPassWord"
+            /><span style="color:gray;vertical-align:middle;"
+              >自&nbsp;动&nbsp;登&nbsp;录</span
+            >
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="bottomButton">
+      <div class="bottomBtn" @click="maskShow = true">
+        <img
+          src="../assets/img/img/Android.png"
+          style="vertical-align:middle;"
+          width="23"
+        />
+        <span style="vertical-align:middle">安卓版下载 ></span>
+      </div>
+      <div class="bottomBtn">
+        <img
+          src="../assets/img/img/Apple.png"
+          style="vertical-align:middle;"
+          width="23"
+        />
+        <span style="vertical-align:middle">苹果版敬请期待</span>
       </div>
     </div>
     <div class="loginTitle">
       <img width="100%" src="../assets/img/loginTitle.png" alt />
+    </div>
+    <div v-if="maskShow" class="photoMask" @click="maskShow = false">
+      <div class="photoMaskContain">
+        <img style="width:320px;" src="../assets/img/QRCode.png" alt="" />
+        <div style="color:white;margin:top:20px;font-size:18px;">
+          手机扫一扫即可下载
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -55,7 +91,10 @@ export default {
   data() {
     return {
       cid: "", //用户账号
-      password: "" //用户密码
+      password: "", //用户密码
+      maskShow: false,
+      rememberPassWord: true,
+      autoSign: true
     };
   },
   methods: {
@@ -114,7 +153,17 @@ export default {
             Cookies.set("customerType", res.customerType);
           }
           this.emptyTabList();
-
+          if (this.rememberPassWord) {
+            window.localStorage.setItem("username", cid);
+            window.localStorage.setItem("password", this.password);
+          } else {
+            window.localStorage.setItem("username", "");
+            window.localStorage.setItem("password", "");
+          }
+          window.localStorage.setItem(
+            "rememberPassWord",
+            this.rememberPassWord
+          );
           this.$router.push({
             path: "/main"
           });
@@ -128,7 +177,18 @@ export default {
         });
     }
   },
-  created() {}
+  mounted() {
+    if (this.$route.params && this.$route.params.autoSign != undefined) {
+      this.autoSign = this.$route.params.autoSign;
+    } else {
+      this.autoSign = true;
+    }
+    this.cid = window.localStorage.getItem("username");
+    this.password = window.localStorage.getItem("password");
+    this.rememberPassWord =
+      window.localStorage.getItem("rememberPassWord") == "true";
+    if (this.cid && this.password && this.autoSign) this.loginSubmit();
+  }
 };
 </script>
 <style scoped>
@@ -179,10 +239,10 @@ export default {
   margin: 0;
 }
 .loginBar {
-  width: 19em;
-  height: 3px;
+  width: 21em;
+  height: 3.5px;
   border-radius: 50%;
-  background-color: #82bc00;
+  background: radial-gradient(#82bc00 85%, white 15%);
   margin: 20px auto 0;
 }
 .info {
@@ -191,26 +251,70 @@ export default {
   font-size: 1em;
 }
 .info p {
-  padding: 0 0 10px 40px;
+  padding: 0 0 5px 0;
   text-align: left;
   margin: 0;
+  color: gray;
+  margin-left: 60px;
 }
 .info img {
-  margin: 8px 0;
+  margin: 8px 0 8px 10px;
 }
 .submit {
   user-select: none;
-  margin: 3.6rem auto 0;
-  width: 327px;
+  margin: 36px auto 0;
+  width: 300px;
   height: 40px;
   line-height: 40px;
   font-size: 20px;
   text-align: center;
   background-color: #82bc00;
   color: #fff;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
 }
+.bottomButton {
+  width: 100%;
+  height: 45px;
+  position: fixed;
+  bottom: 100px;
+  text-align: center;
+}
+.bottomBtn {
+  width: 140px;
+  height: 22px;
+  margin: 0 15px;
+  border-radius: 22px;
+  padding: 11px 10px;
+  cursor: pointer;
+  display: inline-block;
+  background-color: #eeeeee;
+  text-align: center;
+  vertical-align: middle;
+}
+.photoMask {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.5);
+}
+.photoMaskContain {
+  position: relative;
+  top: 50%; /*偏移*/
+  transform: translateY(-50%);
+  text-align: center;
+  vertical-align: center;
+}
 </style>
-
-
+<style>
+.info .el-input__inner {
+  border-radius: 20px;
+  background-color: #eeeeee;
+}
+.info .el-input--prefix .el-input__inner {
+  padding-left: 40px;
+}
+</style>>
