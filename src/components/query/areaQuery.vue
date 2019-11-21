@@ -451,7 +451,7 @@ export default {
       typeNameFilter:[],
       typeIdFilter:[],
       typeFilter:[],
-      checked:false,
+      checked:true,
       detailVisible: false,
       startDate: "",
       endDate: "",
@@ -732,6 +732,7 @@ export default {
       this.queryQuYu_1();
     },
     async queryQuYu_1() {
+      
       this.moneySum=[],
       this.typeFilter=[],
       
@@ -749,7 +750,7 @@ export default {
           var res = await  getCustomerName({customer:this.value_4[i]},{ loading: false })
           this.get_CUSTOMER_NAME = res.data[0]
             
-          var data_2 = await {
+          var data_2 =  {
             beginTime: this.ruleForm_1.dateValue, //起始时间
             finishTime: this.ruleForm_2.dateValue+" 23:59:59", //结束时间
             status: this.status_info , //状态
@@ -768,7 +769,7 @@ export default {
         }
        
         this.CUSTOMERED = this.CUSTOMERED_1 
-        this.query_1 = true;
+       
         var data = {
           type:this.typeFilter,//类型筛选
           costomerCodes: this.value_4, //已选用户
@@ -801,7 +802,6 @@ export default {
     },
     //客户总金额
     _getTotalMoneySum(val){
-      this.query_1 = true;
       this.moneySum = []
       var data = {
         beginTime: val.beginTime, //起始时间
@@ -811,7 +811,7 @@ export default {
       }
       getTotalMoneySum(data).then(res => {
         this.moneySum = res.data[0];
-        
+        this.query_1 = true;
       });
     },
     //计算表格末行
@@ -856,7 +856,7 @@ export default {
     reset() {
       this.CUSTOMERED=[]
       this.moneySum=[]
-      this.checked=false
+      this.checked=true
       this.customerData = [];
       this.value_4 = [];
       this.tableData = [];

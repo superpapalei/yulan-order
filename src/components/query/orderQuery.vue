@@ -396,7 +396,7 @@ export default {
       moneySum:0,
       CUSTOMERED : [],
       CUSTOMERED_1 : [],
-      checked:false,
+      checked:true,
       button_1: false,
       ruleForm: {},
       cid: "",
@@ -960,7 +960,7 @@ export default {
     reset() {
       this.moneySum="0"
       this.CUSTOMERED=[],
-      this.checked=false
+      this.checked=true
       this.currentPage = 1;
       this.customerData = [];
       this.beginTime_1 = "";

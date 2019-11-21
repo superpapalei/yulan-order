@@ -52,7 +52,7 @@
                 size="10"
                 v-model="XH"
                 placeholder="请输入型号"
-                style="width:250px"
+                style="width:200px"
               ></el-input>
                   <el-button
                     type="#DCDFE6"
@@ -75,6 +75,7 @@
         </form>
         <hr />
         <div v-if="query_1">
+          <div style="float:left;font-size:15px;color:blue;margin:10px">金额汇总：{{getSumMoneyBySales[0].SUNMONEY}}元</div>
           <el-table
           :data="tableData"
           border
@@ -112,7 +113,7 @@
           </el-table>
         </div>
         <!-- 分页 -->
-          <div style="margin:0 35%;" class="block">
+          <!-- <div style="margin:0 35%;" class="block">
             <el-pagination
               @current-change="handleCurrentChange"
               :current-page="currentPage"
@@ -120,7 +121,7 @@
               layout="total, prev, pager, next, jumper"
               :total="count"
             ></el-pagination>
-          </div>
+          </div> -->
         <!-- </el-tab-pane>
         </el-tabs> -->
       </div>
@@ -141,13 +142,15 @@ import {
   getTotalMoneySum,
   getCustomerName,
   getAllVersion,
-  getProductSales
+  getProductSales,
+  getSumMoneyBySales
 } from "@/api/areaInfoASP";
 import Cookies from "js-cookie";
 export default {
   name: "SalesQuery",
   data() {
     return {
+      getSumMoneyBySales:[],
         getVersion:"",
         XH:"",
         VERSION:[],
@@ -230,7 +233,7 @@ export default {
       this.currentPage = 1;
       this.queryQuYu_1();
     },
-    queryQuYu_1() {
+    async queryQuYu_1() {
       this.tableData = [];
       if (this.XH == "" && this.getVersion == "") {
             this.$alert("未输入型号或者版本号", "提示", {
@@ -245,8 +248,8 @@ export default {
           version: this.getVersion, //已选用户
           beginTime: this.ruleForm_1.dateValue, //起始时间
           finishTime: this.ruleForm_2.dateValue, //结束时间
-          limit: this.limit, //限制数
-          page: this.currentPage, //页数
+          // limit: this.limit, //限制数
+          // page: this.currentPage, //页数
         };
         if (!data.beginTime) {
           data.beginTime = "0001/1/1";
@@ -256,8 +259,8 @@ export default {
         } else {
           data.finishTime = data.finishTime + " 23:59:59";
         }
-        getProductSales(data).then(res => {
-          this.count = res.count;
+        var res = await getProductSales(data)
+          // this.count = res.count;
           this.tableData = res.data;
           if (this.XH != "" && this.getVersion != "" && res.data.length == 0) {
             this.$alert("所输版本和型号不对应，请重新输入！", "提示", {
@@ -266,8 +269,10 @@ export default {
           });
         return (this.tableData = []);
       }
+      var res1 = await getSumMoneyBySales(data)
+      this.getSumMoneyBySales = res1.data;
           this.query_1 = true;
-        });
+
       } 
       // }  else if(this.getVersion == ""){
       //   this.$alert("未选择版本", "提示", {
