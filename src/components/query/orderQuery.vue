@@ -284,8 +284,8 @@
           </div>
         </form>
         <hr />
-        <div style="float:left;font-size:15px;color:blue;margin:10px">订单金额汇总：{{moneySum}}元</div>
         <div v-if="query_1">
+          <div style="float:left;font-size:15px;color:blue;margin:10px">订单金额汇总：{{moneySum}}元</div>
           <el-table
           :data="CUSTOMERED"
           border

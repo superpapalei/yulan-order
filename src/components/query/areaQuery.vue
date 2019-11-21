@@ -746,18 +746,6 @@ export default {
         return (this.tableData = []);
       } else {
         for (var i = 0; i < this.value_4.length; i++) {
-          // var data = {
-          // type:this.typeFilter,//类型筛选
-          // costomerCodes: this.value_4[i], //已选用户
-          // beginTime: this.ruleForm_1.dateValue, //起始时间
-          // finishTime: this.ruleForm_2.dateValue, //结束时间
-          // limit: this.limit, //限制数
-          // page: this.currentPage, //页数
-          // status: this.status_info //状态
-          // };
-          // var data_1 = {
-          //   customer:this.value_4[i]
-          // }
           var res = await  getCustomerName({customer:this.value_4[i]},{ loading: false })
           this.get_CUSTOMER_NAME = res.data[0]
             

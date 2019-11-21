@@ -80,7 +80,6 @@ export function getAllVersion(config = {}) {
 }
 
 //获取销售提货单信息
-//获取所选用户总金额
 export function getProductSales(data,config = {}) {
     return post('/PACK_DETAIL/getProductSales',data,config).then((res) => {
         return Promise.resolve(res);
