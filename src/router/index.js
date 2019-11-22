@@ -36,6 +36,7 @@ import Complaint from '@/components/complaint'
 import ComplaintReply from '@/components/complaintReply'
 import StockQuery from '@/components/query/stockQuery'
 import AreaQuery from '@/components/query/areaQuery'
+import SalesQuery from '@/components/query/salesQuery'
 import OrderQuery from '@/components/query/orderQuery'
 import SupplyPort from '@/components/supplierModule/supplyPort'
 import Trans from '@/components/supplierModule/trans'
@@ -281,6 +282,12 @@ const router = new Router({
           path: '/query/areaQuery',
           name: 'areaQuery',
           component: AreaQuery,
+          
+        },
+        {
+          path: '/query/salesQuery',
+          name: 'salesQuery',
+          component: SalesQuery,
           
         },
         {

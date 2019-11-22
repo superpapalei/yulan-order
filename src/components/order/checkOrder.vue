@@ -1120,9 +1120,9 @@ export default {
                 wlContacts: this.ctm_order.wlContacts,
                 wlTel: this.ctm_order.wlTel,
                 addressId: this.transferData[i].addressId,
-                province: this.ctm_order.reciverArea1,
-                city: this.ctm_order.reciverArea2,
-                country: this.ctm_order.reciverArea3,
+                province: this.ctm_order.reciverArea1 == ''?null:this.ctm_order.reciverArea1,
+                city: this.ctm_order.reciverArea2 == ''?null:this.ctm_order.reciverArea2,
+                country: this.ctm_order.reciverArea3 == ''?null:this.ctm_order.reciverArea3,
                 provinceID: this.transferData[i].provinceID,
                 cityID: this.transferData[i].cityID,
                 countryID: this.transferData[i].countryID

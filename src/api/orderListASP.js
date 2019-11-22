@@ -168,3 +168,19 @@ export function GetOrderUseRebate(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//获取退货或寄样信息
+export function getReturnInfo(data, config = {}) {
+    return post('/PACK_DETAIL/getReturnInfo', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//获取用户的公司信息
+export function getCompanyInfo(data, config = {}) {
+    return post('/PACK_DETAIL/getCompanyInfo', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}

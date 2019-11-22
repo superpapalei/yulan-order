@@ -275,6 +275,8 @@
           :orderNo="shipmentOrderNo"
           :itemNo="shipmentItemNo"
           :lineNo="shipmentLineNo"
+          :PRODUCT="shipmentNote"
+          :UNIT="shipmentUnit"
         ></shipment>
       </keep-alive>
     </el-dialog>
@@ -320,6 +322,8 @@ export default {
       shipmentOrderNo: "",
       shipmentItemNo: "",
       shipmentLineNo: "",
+      shipmentNote: "",
+      shipmentUnit: "",
       statusIdOptionValue1: ["0", "5", "6", "21", "22"],
       commodityTypeOptions: [
         {
@@ -653,6 +657,8 @@ export default {
       this.shipmentOrderNo = tab.ORDER_NO;
       this.shipmentLineNo = tab.LINE_NO;
       this.shipmentItemNo = tab.ITEM_NO;
+      this.shipmentNote = tab.NOTE;
+      this.shipmentUnit = tab.UNIT;
       this.shipmentVisible = true;
     },
     //标签页切换
@@ -760,7 +766,7 @@ export default {
         .catch(err => {});
     },
     copyCart(orderNo) {
-      this.$confirm("是否是否退回数据到购物车？", "提示", {
+      this.$confirm("是否退回数据到购物车？", "提示", {
         confirmButtonText: "是",
         cancelButtonText: "否",
         type: "warning"

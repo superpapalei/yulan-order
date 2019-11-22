@@ -1216,6 +1216,8 @@ export default {
     this.getPath();
     this.addTab("main");
     this.addTab(this.defaultUrl); //刷新之后添加的
+    //获得最新公告
+    if (this.customerType != "110") this.getNews();
     this.addBadgeIcon();
     this.PaintingIcon();
     this.OrderDealIcon();
@@ -1301,8 +1303,6 @@ export default {
     this.$root.$on("refreshMoneyEvent", () => {
       this.userMoney();
     });
-    //获得最新公告
-    if (this.customerType != "110") this.getNews();
     this.getStudy();
     this.getHotSale(); //获得热销榜
   },

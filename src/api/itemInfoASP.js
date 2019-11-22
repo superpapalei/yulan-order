@@ -48,9 +48,25 @@ export function GetDosageByNo(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//墙纸查询,type='barcode'为条形码查询
+export function GetWallpaperInfo(data, config = {}){
+    return post('/ITEM/GetWallpaperInfo',data, config).then(res=>{
+        return Promise.resolve(res);
+    }).catch(err=>{
+        return Promise.reject(err)
+    })
+}
 //获得热销榜
 export function GetHotSales(data, config = {}) {
     return post('/HOTSALES/GetHotSales', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//获得报备
+export function GetSalPutonRecord(data, config = {}) {
+    return post('/ITEM/GetSalPutonRecord', data, config).then((res) => {
         return Promise.resolve(res);
     }).catch((err) => {
         return Promise.reject(err);
