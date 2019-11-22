@@ -805,9 +805,9 @@ export default {
               this.processDetail = res.data;
               var totalMoney=0;
               for (let j = 0; j < res.count; j++) {
-              totalMoney+=this.processDetail[j].P_MONEY;
+              totalMoney=totalMoney.add(this.processDetail[j].P_MONEY);
+              }
               this.submit.TOTALMONEY=totalMoney;
-          }
           };
         }
           var list = this.submit.ATTACHMENT_FILE.split(";");
