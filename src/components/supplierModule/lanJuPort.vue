@@ -2030,7 +2030,12 @@ detailCol:[
     },
     //打开确认页面，确认页面也分两种情况
     openDialog(PUR_NO, ORDER_NO) {
-      if (ORDER_NO == "" || ORDER_NO == null) {
+      // this.gridData = [];
+      // this.pur_headForm=[];lgh
+      // this.
+    
+      this.autoSearchDetail(PUR_NO);
+        if (ORDER_NO == "" || ORDER_NO == null) {
         this.checkY_Visible = true;
         // console.log("无B2B订单号");
       } else if (ORDER_NO.substring(0, 1) == "X") {
@@ -2038,12 +2043,11 @@ detailCol:[
       } else {
         this.checkY_Visible = true;
       }
-      this.autoSearchDetail(PUR_NO);
     },
     openDialog1(PUR_NO, ORDER_NO) {
       this.int_add = this.int_add + 1
       this.detailData[0].cl_place = this.int_add
-      this.autoSearchDetail(PUR_NO);
+   
       this.forceHandle("checkedX");
       if (ORDER_NO == "" || ORDER_NO == null) {
         this.checkedY_Visible = true;
@@ -2053,7 +2057,7 @@ detailCol:[
       } else {
         this.checkedY_Visible = true;
       }
-
+     this.autoSearchDetail(PUR_NO);
 
       //将表头内容填充到明细
     },

@@ -1927,7 +1927,7 @@ detailCol:[
     openDialog1(PUR_NO, ORDER_NO) {
       this.int_add = this.int_add + 1
       this.detailData[0].cl_place = this.int_add
-      this.autoSearchDetail(PUR_NO);
+      
       this.forceHandle("checkedX");
       if (ORDER_NO == "" || ORDER_NO == null) {
         this.checkedY_Visible = true;
@@ -1937,7 +1937,7 @@ detailCol:[
       } else {
         this.checkedY_Visible = true;
       }
-
+this.autoSearchDetail(PUR_NO);
 
       //将表头内容填充到明细
     },
