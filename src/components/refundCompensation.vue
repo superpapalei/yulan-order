@@ -237,7 +237,7 @@ import {
 } from "@/api/refund";
 import { getCustomerInfo } from "@/api/orderListASP";
 import {
-  GetAllCompensation,
+  GetAllCompensationOld,
   UpdatePrintedById,
   DeleteCompensation,
   UpdateState,
@@ -341,7 +341,7 @@ export default {
       }
       let filter = this.$options.filters["propertyFilter"];
       //getAllRefund(filter(obj))
-      GetAllCompensation(filter(obj))
+      GetAllCompensationOld(filter(obj))
         .then(res => {
           this.tableData = res.data;
           this.tableData.forEach(item => {

@@ -651,6 +651,7 @@ export default {
       var list4=suffix.split('bmp');
       if(list1.length>1||list2.length>1||list3.length>1||list4.length>1)
       {
+          this.isPicture=true;
           var fileName = prefix + suffix;
           file.name=fileName;
           this.submitDetailForm[index].fileList = fileList;

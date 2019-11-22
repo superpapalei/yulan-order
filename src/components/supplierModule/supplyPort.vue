@@ -2155,8 +2155,6 @@ this.autoSearchDetail(PUR_NO);
       var selvalue = this.selvalue;
       downLoadFile(
         this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}&po=${po}&beginTime=${beginTime}&finishTime=${finishTime}&po_type=${po_type}&selvalue=${selvalue}`,
-
-
       );
     },
     autoSearchDetail(PUR_NO) {

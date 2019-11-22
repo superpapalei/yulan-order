@@ -168,7 +168,7 @@ export function GetOrderUseRebate(data, config = {}) {
         return Promise.reject(err);
     })
 }
-//获取退货或寄样信息
+//我的订单-出货列表-售后，获取部分信息
 export function getReturnInfo(data, config = {}) {
     return post('/PACK_DETAIL/getReturnInfo', data, config).then((res) => {
         return Promise.resolve(res);
@@ -176,6 +176,15 @@ export function getReturnInfo(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//退货赔偿点击查看，获取部分信息
+export function getReturnInfo2(data, config = {}) {
+    return post('/PACK_DETAIL/getReturnInfo2', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
 //获取用户的公司信息
 export function getCompanyInfo(data, config = {}) {
     return post('/PACK_DETAIL/getCompanyInfo', data, config).then((res) => {
