@@ -128,7 +128,7 @@
           <tr>
             <td class="grayTD" style="width:16%;height:15px">客户代码</td>
             <td style="width:34%;height:15px" class="grayTD">
-              {{}}
+              (提交后自动生成)
             </td>
             <td class="grayTD" style="width:16%;height:15px">客户名称</td>
             <td style="width:34%;height:15px" class="grayTD">
@@ -318,10 +318,34 @@
                 placeholder="应小于发货数量"
                 clearable
                 class="inputStyle"
+                style="height:25px"
               >
               </el-input>
             </td> <!-- 要小于发货数量 -->
-            <td  colspan="2" style="height:21px"></td><!-- 附件 -->
+            <td  colspan="2" style="height:21px">
+                <div>
+                <el-upload
+                class="upload-de"
+                :action="Global.baseUrl + '/RTCB_ITEM/UploadFiles'"
+                drag
+                multiple
+                :on-change="function(file,fileList){return  handleChange(file,fileList)}"
+                :on-remove="function(file,fileList){return  handleRemove(file,fileList)}"
+                :on-success="function(res,file,fileList){return  handleSuccess(res,file,fileList)}"
+                ref="upload"
+                :auto-upload="false"
+                :file-list="submit.fileList"
+                :data="{ CID: CID, dateStamp: dateStamp }"
+              >
+                <i
+                  class="el-icon-upload2"
+                  style="margin-top:5px;"
+                >
+                <span style="font-size:15px;">上传附件</span>
+                </i>
+              </el-upload>
+              </div>
+            </td><!-- 附件 -->
           </tr>
 
            <tr style="height:90px">
@@ -376,7 +400,7 @@
         </table>
 
         <div style="text-align:center;margin-top:5px">           
-          <el-button type="success" size="mini" @click="_addSubmit()">提交</el-button>  
+          <el-button type="success" size="mini" @click="_addRefundSubmit()">提交</el-button>  
           <el-button type="info"   size="mini" @click="isRefundAdd=false;RefundDetail=false">返回</el-button>  
         </div> 
       </div>
@@ -391,17 +415,26 @@ import { addSubmit } from "@/api/complaint";
 import Cookies from "js-cookie";
 import { getShipment } from "@/api/orderList";
 import { getPackDetailInfo,getReturnInfo,getCompanyInfo} from "@/api/orderListASP";
+import {
+  InsertCompensation,
+  UpdateState
+} from "@/api/paymentASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 export default {
   data() {
     return {
       tableData: [],
-      submit: [],
-      returnInfo:[],
+      submitHead:[],//存储退货单单据信息的表
+      submit: [],//存储货物信息的表
+      returnInfo:[],//存储退货寄样信息的表
       processDetail:[],
+      dateStamp: "",
+      fileChange: false,
+      deleteFile: [],
       complaintDetail: false,
       isAdd: false,
+      FormRight:true,
       RefundDetail:false,
       isRefundAdd:false,
       companyId: Cookies.get("companyId"), //公司Id
@@ -517,11 +550,6 @@ export default {
         lineNo: this.lineNo,
         itemNo: this.itemNo
       };
-      // Axios.post("/packDetail/getPackDetailAppoint.do", {
-      //   itemNo: this.itemNo,
-      //   orderId: this.orderNo,
-      //   lineNo: this.lineNo
-      // })
       getPackDetailInfo(data)
         .then(res => {
           this.tableData = res.data[0].packDetails;
@@ -644,6 +672,27 @@ export default {
     addRefundRecord(data) {
       this.isRefundAdd = true;
       this.RefundDetail = true;
+      this.dateStamp = new Date().getTime();
+      this.FormRight=true;
+      this.submitHead = {
+          ID:"",
+          ERP_CREATOR: "", //创建人编号
+          ERP_CREATORNAME: "", //创建人姓名
+          CID: "", //客户编号
+          CNAME: "", //客户姓名
+          SENDBACK_REASON: "", //退回理由
+          ITEM_COUNT: "", //总货品数量
+          ITEM_MAX_INDEX:"",//最大索引
+          STATE:"",//状态
+          PRINTED:"",//打印方式
+          FIRST_AUDITION:"",//初审意见
+          RETURN_TYPE:"",//退货类型
+          RETURN_ADDRESS:"",//退货地址
+          REASSURE_TS:"",//签订日期
+          DEALMAN_CODE:"",
+          DEAL_TS:"",
+          DEALMAN_NAME:"",
+      };
       this.submit = {
           RTCB_ID: "", //退货单ID
           ITEM_NO: "", //产品型号
@@ -659,6 +708,9 @@ export default {
           C_TRANSBILL:"",//物流单号
           UNIT:"",//单位
           NOTE:"",//类型
+          fileList:[],//附件列表
+          ATTACHMENT_FILE:"",//附件
+          ATTACHMENT_FILE_FOLDER:"",//附件文件夹
       };
       this.submit.orderNo = this.orderNo;
       this.submit.ITEM_NO = this.itemNo;
@@ -670,7 +722,7 @@ export default {
           this.companyName=res.data[0].CUSTOMER_NAME;
           this.CONTRACT_NO=res.data[0].CONTRACT_NO;
           this.submit.PRODUCTION_VERSION = res.data[0].PRODUCTVERSION_NAME;
-          for (var i = 0; i < res.data.length; i++) {
+          for (var i = 0; i < res.data.length; i++) {  //这一部分应该在编辑里使用（可以进行初审的时候使用）
           this.returnInfo[i] = new Object();
           this.returnInfo[i].label =
             "地址:" +
@@ -686,13 +738,12 @@ export default {
     },
     //新增售后记录提交
     _addRefundSubmit() {
-      let data = this.submit;
       //判断是否填完所有信息
       if (
-        this.submit.SALE_NO == "" ||
-        this.submit.C_TRANSBILL == "" ||
-        this.submit.TYPE == "" ||
-        this.submit.MEMO == ""
+        !this.submit.CONTACT_MAN ||
+        !this.submit.CONTACT_PHONE ||
+        !this.submit.NOTES ||
+        !this.submit.QTY 
       ) {
         this.$alert("请完善信息", "提示", {
           confirmButtonText: "确定",
@@ -700,19 +751,9 @@ export default {
         });
         return;
       }
-      if (this.submit.TYPE == "丢失") {
-        this.submit.DAMAGED_QUANTITY = 0;
-      }
-      if (this.submit.TYPE == "破损") {
-        this.submit.LOSED_QUANTITY = 0;
-      }
-      if (this.submit.TYPE != "破损" && this.submit.TYPE != "丢失") {
-        this.submit.LOSED_QUANTITY = 0;
-        this.submit.DAMAGED_QUANTITY = 0;
-      }
+      //退货数量应小于下单数量
       if (
-        this.submit.DAMAGED_QUANTITY > this.zongshuliang ||
-        this.submit.LOSED_QUANTITY > this.zongshuliang
+        this.submit.QTY > this.zongshuliang 
       ) {
         this.$alert("填写数量必须小于下单数量", "提示", {
           confirmButtonText: "确定",
@@ -720,39 +761,31 @@ export default {
         });
         return;
       }
-      if (this.submit.DAMAGED_QUANTITY < 0 || this.submit.LOSED_QUANTITY < 0) {
-        this.$alert("填写数量必须为非负数", "提示", {
+      if (this.submit.QTY <=0 ) {
+        this.$alert("填写数量必须为正数", "提示", {
           confirmButtonText: "确定",
           type: "warning"
         });
         return;
       }
-      if (
-        this.submit.DAMAGED_QUANTITY == 0 &&
-        this.submit.LOSED_QUANTITY == 0
-      ) {
-        this.$alert("请输入相应的货物数量", "提示", {
+      //判断是否上传附件
+      if (this.submit.fileList.length == 0) {
+        this.$alert("请上传相关附件", "提示", {
           confirmButtonText: "确定",
           type: "warning"
         });
         return;
       }
-      console.log(data);
-      addSubmit(data).then(res => {
-        if (res.code == 0) {
-          this.$alert("提交成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.init_shipment();
-        } else {
-          this.$alert("提交失败，请稍后重试", "提示", {
+      //判断上传附件的形式为图片或视频
+      if(this.FormRight==false)
+      {
+            this.$alert("提交失败，附件仅能上传图片或视频", "提示", {
             confirmButtonText: "确定",
             type: "warning"
-          });
-        }
-      });
-      this.complaintDetail = false;
+            });
+            return ;
+      }
+      this.$refs.upload.submit();
     },
     //添加兰居处理结果中的明细数目
     _rowPlus(){
@@ -788,6 +821,102 @@ export default {
         else{
               this.processDetail.splice(index,1);
         }
+    },
+    handleChange(file, fileList) {
+      var point = file.name.lastIndexOf('.');
+      var suffix=file.name.substr(point);
+      var list1=suffix.split('png');
+      var list2=suffix.split('jpg');
+      var list3=suffix.split('jpeg');
+      var list4=suffix.split('bmp');
+      var list5=suffix.split('avi');
+      var list6=suffix.split('rmvb');
+      var list7=suffix.split('mp4');
+      var list8=suffix.split('flv');
+      var list9=suffix.split('rm');
+      var list10=suffix.split('mpg');
+      if(list1.length>1||list2.length>1||list3.length>1||list4.length>1||list5.length>1||list6.length>1||list7.length>1||list8.length>1||list9.length>1||list10.length>1)
+      {
+            this.FormRight=true;
+            this.submit.fileList = fileList;
+            this.fileChange = true;
+      }
+      else{
+            this.FormRight=false;
+            this.submit.fileList=[];
+            this.$alert("请上传图片或视频，否则无法成功提交", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+            });
+            return ;
+      }
+    },
+    handleRemove(file, fileList) {
+      this.submit.fileList = fileList;
+      if ((file.status = "success")) {
+        this.deleteFile.push(file.url);
+      }
+    },
+    handleSuccess(res, file, fileList) {
+      var successCount = this.submit.fileList.filter(item => item.status == "success")
+        .length;
+      if (successCount == fileList.length) {
+        if (this.isRefundAdd) {
+          this.sumbitNEWANSYC();
+        } else {
+          this.submitEDITANSYC();
+        }
+      }
+    },
+    sumbitNEWANSYC() {
+      //相当于同步，等提交成功后再执行
+      //附件拼接
+      for (let j = 0; j < this.submit.fileList.length; j++) {
+               this.submit.ATTACHMENT_FILE +=
+                "/Files/RTCB_ITEM/" +
+               this.CID +
+               "/" +
+               this.dateStamp +
+                "/" +
+               this.submit.fileList[j].name +
+                ";"; 
+              }
+      this.submit.ATTACHMENT_FILE_FOLDER =
+        "/Files/RTCB_ITEM/" + this.CID + "/" + this.dateStamp;
+      this.submit.ITEM_INDEX = 1;
+      this.submitHead.ERP_CREATOR=this.CID;
+      this.submitHead.ERP_CREATORNAME = this.CNAME;
+      this.submitHead.CID=this.companyId;
+      this.submitHead.CNAME = this.companyName;
+      this.submitHead.SENDBACK_REASON = null;
+      this.submitHead.ITEM_COUNT = 1;
+      this.submitHead.ITEM_MAX_INDEX = 1;
+      this.submitHead.SALE_NO=this.submit.SALE_NO;
+      this.submitHead.ORDER_NO=this.orderNo;
+      InsertCompensation({ head: this.submitHead, details: this.submit })
+            .then(res => {
+                UpdateState({
+                  id: res.data.ID,
+                  state: "SUBMITTED"
+                })
+                  .then(res => {
+                    this.$alert("提交成功", "提示", {
+                      type: "success",
+                      confirmButtonText: "好的"
+                    })
+                  })
+                  .catch(() => {
+                    throw "提交失败";
+                  });
+                  this.init_shipment();
+                  this.RefundDetail = false;
+            })
+            .catch(err => {
+              this.$alert("添加失败", "提示", {
+                type: "warning",
+                confirmButtonText: "好的"
+              }).catch(() => {});
+            });
     },
     ...mapMutations("navTabs", ["addTab"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"])
@@ -900,5 +1029,9 @@ export default {
   border-radius: 4px;
   -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.upload-de .el-upload-dragger {
+  height: 25px;
+  width:200px;
 }
 </style>
