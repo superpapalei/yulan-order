@@ -131,7 +131,7 @@
         </el-dialog>
         <div style="font-size:18px">
           <div>客户名称：{{get_CUSTOMER_NAME}}
-            <span style="color:blue;margin-left:10px">汇总金额:{{getMoney}}</span>
+            <span style="color:blue;margin-left:10px">汇总金额:{{getMoney}}元</span>
           </div>
         </div>
         <br>
@@ -434,7 +434,8 @@ import {
   getPackDetailsBySaleNo,
   getPackDetailsType,
   getTotalMoneySum,
-  getCustomerName
+  getCustomerName,
+  getPackData,
 } from "@/api/areaInfoASP";
 import Cookies from "js-cookie";
 export default {
@@ -446,6 +447,7 @@ export default {
       showBill:false,
       get_CUSTOMER_NAME:"",
       CUSTOMERED:[],//查询的已选用户
+      CUSTOMERED_2:[],
       CUSTOMERED_1:[],
       moneySum:[],
       typeNameFilter:[],
@@ -739,6 +741,7 @@ export default {
       this.tableData = [];
       this.CUSTOMERED = [];
       this.CUSTOMERED_1 = [];
+      this.CUSTOMERED_2 = [];
       if (this.value_4.length == 0) {
             this.$alert("未选择用户", "提示", {
             confirmButtonText: "确定",
@@ -746,30 +749,36 @@ export default {
           });
         return (this.tableData = []);
       } else {
-        for (var i = 0; i < this.value_4.length; i++) {
-          var res = await  getCustomerName({customer:this.value_4[i]},{ loading: false })
-          this.get_CUSTOMER_NAME = res.data[0]
+        
+        // for (var i = 0; i < this.value_4.length; i++) {
+        //   var res = await  getCustomerName({customer:this.value_4[i]},{ loading: false })
+        //   this.get_CUSTOMER_NAME = res.data[0]
             
-          var data_2 =  {
+        //   var data_2 =  {
+        //     beginTime: this.ruleForm_1.dateValue, //起始时间
+        //     finishTime: this.ruleForm_2.dateValue+" 23:59:59", //结束时间
+        //     status: this.status_info , //状态
+        //     customers:[this.value_4[i]]
+        //   }
+        //   var res1= await getTotalMoneySum(data_2 ,{ loading: false })
+        //   this.moneySum = res1.data[0];
+        //   if(this.moneySum.MONEYSUM == 0){
+        //     continue
+        //   }
+        //   this.CUSTOMERED_1[i] =  {
+        //     CUSTOMER_CODE: this.value_4[i],
+        //     CUSTOMER_NAME: this.get_CUSTOMER_NAME.CUSTOMER_NAME,
+        //     MONEYSUM:this.moneySum.MONEYSUM
+        //   }
+        // }
+       
+        //this.CUSTOMERED = this.CUSTOMERED_1 
+       var data_2 =  {
             beginTime: this.ruleForm_1.dateValue, //起始时间
             finishTime: this.ruleForm_2.dateValue+" 23:59:59", //结束时间
             status: this.status_info , //状态
-            customers:[this.value_4[i]]
+            customers:this.value_4
           }
-          var res1= await getTotalMoneySum(data_2 ,{ loading: false })
-          this.moneySum = res1.data[0];
-          if(this.moneySum.MONEYSUM == 0){
-            continue
-          }
-          this.CUSTOMERED_1[i] =  {
-            CUSTOMER_CODE: this.value_4[i],
-            CUSTOMER_NAME: this.get_CUSTOMER_NAME.CUSTOMER_NAME,
-            MONEYSUM:this.moneySum.MONEYSUM
-          }
-        }
-       
-        this.CUSTOMERED = this.CUSTOMERED_1 
-       
         var data = {
           type:this.typeFilter,//类型筛选
           costomerCodes: this.value_4, //已选用户
@@ -787,7 +796,26 @@ export default {
         } else {
           data.finishTime = data.finishTime + " 23:59:59";
         }
+       await getPackData(data_2).then(res =>{
+          this.CUSTOMERED_1 = res.data
+          for (var i = 0; i < this.CUSTOMERED_1.length; i++) {
+            this.CUSTOMERED_2[i] = {
+              CUSTOMER_CODE : this.CUSTOMERED_1[i][0],
+            CUSTOMER_NAME : this.CUSTOMERED_1[i][1],
+            MONEYSUM : this.CUSTOMERED_1[i][2],
+            }
+          }
+          this.CUSTOMERED = this.CUSTOMERED_2
+        })
+        if(this.CUSTOMERED.length == 0){
+          this.$alert("所选客户无提货单信息", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          return this.query_1 = false
+        }
         this._getTotalMoneySum(data)
+        
         // getPackDetails(data).then(res => {
         //   this.count = res.count;
         //   this.tableData = res.data;
@@ -854,7 +882,10 @@ export default {
     },
     //重置
     reset() {
+      this.query_1 = false;
       this.CUSTOMERED=[]
+      this.CUSTOMERED_1=[]
+      this.CUSTOMERED_2=[]
       this.moneySum=[]
       this.checked=true
       this.customerData = [];

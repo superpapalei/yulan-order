@@ -96,3 +96,12 @@ export function getSumMoneyBySales(data,config = {}) {
         return Promise.reject(err);
     })
 }
+
+//获取提货单信息金额汇总
+export function getPackData(data,config = {}) {
+    return post('/PACK_DETAIL/getPackData',data,config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}

@@ -289,6 +289,7 @@ export default {
     },
     //重置
     reset() {
+      this.query_1 = false
         this.getVersion="",
         this.XH="",
         this.VERSION=[],
