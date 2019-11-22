@@ -1198,7 +1198,7 @@ export default {
 }
 .inputStyle {
   border: 0;
-  height: 95%;
+  height: 90%;
   width: 100%;
   font-size: 16px;
   text-align: center;
@@ -1230,7 +1230,7 @@ export default {
 }
 
 .table-c .el-input__inner {
-  height: 19px;
+  height: 20px;
   width: 100%;
   font-size: 16px;
   box-shadow: none;
@@ -1248,7 +1248,7 @@ export default {
 }
 
 .table-c .el-input__inner::-webkit-input-placeholder {
-  line-height: 19px;
+  line-height: 20px;
 }
 
 .table-c .el-input__inner,
