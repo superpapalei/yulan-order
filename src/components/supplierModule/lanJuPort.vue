@@ -2100,7 +2100,7 @@ detailCol:[
        if(this.po!=""){
          this.date1=null;
          this.date2=null;
-         this.customer="";
+         this.customer=null;
       }
     
       else  if(this.date1==null&&this.date2==null){
