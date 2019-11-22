@@ -1839,9 +1839,36 @@ detailCol:[
       var date = new Date(strDay);
       return date;
     },
-     getEndtime(value){
-    var endTime=new Date(value);
-    endTime.setHours(23,59,59);
+    
+    getBegintime(value){
+     var startTime=null;
+       if (value == null || value == "") {
+         startTime=new Date();
+        let longtime=100*365*24*3600*1000;
+        startTime-=longtime;
+           startTime=new Date(startTime);
+            startTime.setHours(0,0,0);
+      }
+      else{
+         startTime=new Date(value);
+        startTime.setHours(0,0,0);
+      }
+    var  date = this.datatransMethod(startTime);
+    return date;
+    },
+         getEndtime(value){
+     var endTime=null;
+       if (value == null || value == "") {
+         endTime=new Date();
+        let longtime=100*365*24*3600*1000;
+        endTime+=longtime;
+            endTime=new Date(endTime);
+            endTime.setHours(23,59,59);
+      }
+      else{
+         endTime=new Date(value);
+        endTime.setHours(23,59,59);
+      }
     var  date = this.datatransMethod(endTime);
     return date;
     },
@@ -1937,7 +1964,7 @@ this.autoSearchDetail(PUR_NO);
        if(this.po!=""){
          this.date1=null;
          this.date2=null;
-         this.customer=null;
+         this.customer="";
           
       }
       else  if(this.date1==null&&this.date2==null){
@@ -2081,7 +2108,7 @@ this.autoSearchDetail(PUR_NO);
         customer: "",
         po_type: this.po_type, //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
         check_flag: this.check_flag,
-        beginTime: this.date1,
+        beginTime:  this.getBegintime(this.date1),
         finishTime: this.getEndtime(this.date2),
         po: this.po,
       };
@@ -2128,8 +2155,6 @@ this.autoSearchDetail(PUR_NO);
       var selvalue = this.selvalue;
       downLoadFile(
         this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}&po=${po}&beginTime=${beginTime}&finishTime=${finishTime}&po_type=${po_type}&selvalue=${selvalue}`,
-
-
       );
     },
     autoSearchDetail(PUR_NO) {

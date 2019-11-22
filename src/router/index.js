@@ -49,6 +49,8 @@ import lanJuMarketExamine from '@/components/design/lanJuMarketExamine'
 import payDelegation from '@/components/supplierModule/payDelegation'
 import payDelegationExamine from '@/components/supplierModule/payDelegationExamine'
 import DeliveryList_lanju from '@/components/supplierModule/deliveryList_lanju'
+import refund from '@/components/newRefund'    
+import refundExamine from '@/components/newRefundExamine'    
 
 Vue.use(Router)
 
@@ -358,6 +360,16 @@ const router = new Router({
           path: '/supplierModule/deliveryList_lanju',
           name: 'DeliveryList_lanju',
           component: DeliveryList_lanju
+        },
+        {
+          path: '/newRefund',
+          name: 'refund',
+          component: refund
+        },
+        {
+          path: '/newRefundExamine',
+          name: 'refundExamine',
+          component: refundExamine
         },
       ]
     }
