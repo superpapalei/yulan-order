@@ -765,7 +765,7 @@ export default {
         state: this.SELECT_STATUS, //状态
         createName: this.selectCreator, //创建者名称
         cName: this.selectCNAME, //客户名称
-        itemNo: this.itemNo //产品号S
+        itemNo: this.selectItemNo //产品号S
       };
       if (!obj.startDate) {
         obj.startDate = "0001/1/1 00:00:00";
