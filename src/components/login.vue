@@ -1,69 +1,71 @@
 <template>
   <div class="loginBody">
-    <div class="loginMain">
-      <!-- 登录框头部--图标 -->
-      <div class="mainLogoWrap">
-        <img
-          class="mainLogo"
-          width="100%"
-          src="../assets/img/loginLogo.png"
-          alt
-        />
-      </div>
-      <div class="mainInfo">
-        <h1>玉兰B2B订单管理系统</h1>
-        <div class="loginBar"></div>
-        <div class="info">
-          <p>账&nbsp;号</p>
-          <el-input style="width:300px;" v-model="cid">
-            <img slot="prefix" src="../assets/img/cid.png" width="22" alt />
-          </el-input>
+    <div class="centerDiv">
+      <div class="loginMain">
+        <!-- 登录框头部--图标 -->
+        <div class="mainLogoWrap">
+          <img
+            class="mainLogo"
+            width="100%"
+            src="../assets/img/loginLogo.png"
+            alt
+          />
         </div>
-        <div class="info">
-          <p>密&nbsp;码</p>
-          <el-input type="password" style="width:300px;" v-model="password">
-            <img
-              slot="prefix"
-              src="../assets/img/password.png"
-              width="22"
-              alt
-            />
-          </el-input>
-        </div>
-        <div class="submit" @click="loginSubmit">登录</div>
-        <div style="margin-top:10px;">
-          <span
-            style="position:relative;float:right;right:60px;"
-            @click="rememberPassWord = !rememberPassWord"
-          >
-            <input
-              style="width:14px;height:14px;vertical-align:middle;"
-              type="checkbox"
-              value
-              v-model="rememberPassWord"
-            /><span style="color:gray;vertical-align:middle;"
-              >自&nbsp;动&nbsp;登&nbsp;录</span
+        <div class="mainInfo">
+          <h1>玉兰B2B订单管理系统</h1>
+          <div class="loginBar"></div>
+          <div class="info">
+            <p>账&nbsp;号</p>
+            <el-input style="width:300px;" v-model="cid">
+              <img slot="prefix" src="../assets/img/cid.png" width="22" alt />
+            </el-input>
+          </div>
+          <div class="info">
+            <p>密&nbsp;码</p>
+            <el-input type="password" style="width:300px;" v-model="password">
+              <img
+                slot="prefix"
+                src="../assets/img/password.png"
+                width="22"
+                alt
+              />
+            </el-input>
+          </div>
+          <div class="submit" @click="loginSubmit">登录</div>
+          <div style="margin-top:10px;">
+            <span
+              style="position:relative;float:right;right:60px;"
+              @click="rememberPassWord = !rememberPassWord"
             >
-          </span>
+              <input
+                style="width:14px;height:14px;vertical-align:middle;"
+                type="checkbox"
+                value
+                v-model="rememberPassWord"
+              /><span style="color:gray;vertical-align:middle;"
+                >自&nbsp;动&nbsp;登&nbsp;录</span
+              >
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="bottomButton">
-      <div class="bottomBtn" @click="maskShow = true">
-        <img
-          src="../assets/img/img/Android.png"
-          style="vertical-align:middle;"
-          width="23"
-        />
-        <span style="vertical-align:middle">安卓版下载 ></span>
-      </div>
-      <div class="bottomBtn">
-        <img
-          src="../assets/img/img/Apple.png"
-          style="vertical-align:middle;"
-          width="23"
-        />
-        <span style="vertical-align:middle">苹果版敬请期待</span>
+      <div class="bottomButton">
+        <div class="bottomBtn" @click="maskShow = true">
+          <img
+            src="../assets/img/img/Android.png"
+            style="vertical-align:middle;"
+            width="23"
+          />
+          <span style="vertical-align:middle">安卓版下载 ></span>
+        </div>
+        <div class="bottomBtn">
+          <img
+            src="../assets/img/img/Apple.png"
+            style="vertical-align:middle;"
+            width="23"
+          />
+          <span style="vertical-align:middle">苹果版敬请期待</span>
+        </div>
       </div>
     </div>
     <div class="loginTitle">
@@ -206,11 +208,13 @@ export default {
   bottom: 3.5%;
   right: 2%;
 }
-.loginMain {
+.centerDiv {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -43%);
+}
+.loginMain {
   width: 27em;
   height: 28em;
   background-color: #fff;
@@ -276,8 +280,8 @@ export default {
 .bottomButton {
   width: 100%;
   height: 45px;
-  position: fixed;
-  bottom: 100px;
+  display: inline-block;
+  margin-top: 10px;
   text-align: center;
 }
 .bottomBtn {

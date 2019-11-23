@@ -587,11 +587,20 @@
                   class="inputStyle">
             </td>
             <td colspan="1" rowspan="1" style="height:15px">
-                <input
-                  v-model="processDetail[index].P_RESULT"
-                  placeholder=""
-                  clearable
-                  class="inputStyle">
+              <el-select
+                style="width:99%;"
+                v-model="processDetail[index].P_RESULT"
+                filterable
+                placeholder=""
+              >
+                <el-option
+                  v-for="item in processArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
             </td>
           </tr>
 
@@ -887,11 +896,6 @@ export default {
           this.submit = res.data[0];
           if(this.submit.STATE=='CUSTOMERAFFIRM'||this.submit.STATE=='APPROVED'){
               this.processDetail = res.data;
-              var totalMoney=0;
-              for (let j = 0; j < res.count; j++) {
-              totalMoney+=this.processDetail[j].P_MONEY;
-              this.submit.TOTALMONEY=totalMoney;
-          }
           };
         }
           var list = this.submit.ATTACHMENT_FILE.split(";");
@@ -976,6 +980,7 @@ export default {
         }
         else
         {
+          var totalMoney=0;
           //判断是否填完所有信息  
           for (var i = 0; i < this.processDetail.length; i++) {
             if ( 
@@ -990,11 +995,13 @@ export default {
               });
               return;
             }
+            totalMoney=totalMoney.add(this.processDetail[i].P_MONEY);
            }
+          this.submit.TOTALMONEY=totalMoney;
           this.submit.STATE='CUSTOMERAFFIRM';
           this.submit.DEALMAN_CODE=this.CID;
           this.submit.DEALMAN_NAME=this.CNAME;;
-          UpdateProcess({ head: this.submit,details:this.processDetail}).then(res => {
+          UpdateProcess({ head: this.submit,details:this.processDetail,totalMoney:this.submit.TOTALMONEY}).then(res => {
             if (res.code == 0) {
               this.$alert("修改成功", "提示", {
               confirmButtonText: "确定",
@@ -1198,7 +1205,7 @@ export default {
 }
 .inputStyle {
   border: 0;
-  height: 95%;
+  height: 90%;
   width: 100%;
   font-size: 16px;
   text-align: center;
@@ -1230,7 +1237,7 @@ export default {
 }
 
 .table-c .el-input__inner {
-  height: 19px;
+  height: 20px;
   width: 100%;
   font-size: 16px;
   box-shadow: none;
@@ -1248,7 +1255,7 @@ export default {
 }
 
 .table-c .el-input__inner::-webkit-input-placeholder {
-  line-height: 19px;
+  line-height: 20px;
 }
 
 .table-c .el-input__inner,
