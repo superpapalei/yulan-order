@@ -128,7 +128,7 @@
       </div>
     </el-card>
 
-    <el-dialog title="投诉登记表" :visible.sync="complaintDetail" :close-on-click-modal="false" width="40%">
+    <el-dialog  :visible.sync="complaintDetail" :close-on-click-modal="false" width="40%">
       <!-- 查看区 -->
       <div v-show="isCheck" class="table-c">
         <table width="100%" border="0px" cellspacing="0px" cellpadding="0">

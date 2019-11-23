@@ -112,7 +112,6 @@
     </el-card>
 
     <el-dialog
-      title="投诉登记表"
       :visible.sync="complaintDetail"
       :close-on-click-modal="false"
       width="40%"
@@ -144,9 +143,9 @@
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">订单号</td>
-            <td class="grayTD" style="height:15px">{{ submit.orderNo }}</td>
+            <td class="grayTD" style="height:15px">{{ submit.DINGDANHAO }}</td>
             <td class="grayTD" style="height:15px">产品型号</td>
-            <td class="grayTD" style="height:15px">{{ submit.itemNo }}</td>
+            <td class="grayTD" style="height:15px">{{ submit.SALENO }}</td>
           </tr>
 
           <tr>
@@ -589,11 +588,11 @@ export default {
           LOSED_QUANTITY: "", //货物丢失数量
           DAMAGED_QUANTITY: "", //货物损坏数量
           C_TRANSBILL: "", //物流单号
-          orderNo: "",
-          itemNo: ""
+          DINGDANHAO: "",  //b2b订单号
+          SALENO: ""//产品型号
         }),
-        (this.submit.orderNo = this.orderNo);
-      this.submit.itemNo = this.itemNo;
+      this.submit.DINGDANHAO = this.orderNo;
+      this.submit.SALENO = this.itemNo;
       this.submit.CUSTOMER_CODE = Cookies.get("companyId");
       this.submit.SALE_NO = data.SALE_NO;
       this.submit.C_TRANSBILL = data.TRANS_ID;
