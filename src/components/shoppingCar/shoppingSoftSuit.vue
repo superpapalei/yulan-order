@@ -24,16 +24,19 @@
               type="selection"
               width="55"
               :selectable="checkActiviyEffect"
+              align="center"
             ></el-table-column>
             <el-table-column
               prop="item.itemNo"
               label="型号"
               min-width="100"
+              align="center"
             ></el-table-column>
             <el-table-column
               label="活动"
               min-width="140px"
               show-overflow-tooltip
+              align="center"
             >
               <template slot-scope="scope">
                 <span
@@ -56,13 +59,13 @@
                             <span style="margin-left:20px;" v-else>--</span>
                         </template>
             </el-table-column>-->
-            <el-table-column label="单价" show-overflow-tooltip>
+            <el-table-column label="单价" align="center">
               <template slot-scope="scope">
                 <span v-if="isManager === '0'">***</span>
                 <span v-else>{{ scope.row.price }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="数量" min-width="120">
+            <el-table-column label="数量" min-width="120" align="center">
               <template slot-scope="scope1">
                 <div v-if="scope1.row.unit === '平方米'">
                   <span>
@@ -95,8 +98,9 @@
               min-width="100"
               label="单位"
               prop="unit"
+              align="center"
             ></el-table-column>
-            <el-table-column label="小计">
+            <el-table-column label="小计" align="center">
               <template slot-scope="scope">
                 <div v-if="isManager === '0'">***</div>
                 <div v-else-if="scope.row.unit === '平方米'">
@@ -113,7 +117,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="170px">
+            <el-table-column label="操作" width="170px" align="center">
               <template slot-scope="scope">
                 <a
                   class="link-detail"
@@ -286,7 +290,7 @@ export default {
       //   for (var j = 0; j < theData[i].commodities.length; j++) {
       //     if (
       //       theData[i].commodities[j].activityId !== undefined &&
-      //       theData[i].commodities[j].activityId !== null && 
+      //       theData[i].commodities[j].activityId !== null &&
       //       theData[i].commodities[j].activityId !== ''
       //     ) {
       //       obj.push(theData[i].commodities[j].activityId);
@@ -672,7 +676,8 @@ export default {
         }
         if (
           this.customerType === "10" &&
-          (this.multipleSelection[i].onlineSalesAmount === null|| this.multipleSelection[i].onlineSalesAmount == 0)
+          (this.multipleSelection[i].onlineSalesAmount === null ||
+            this.multipleSelection[i].onlineSalesAmount == 0)
         ) {
           arr.push(this.multipleSelection[i].item.itemNo);
         }
@@ -720,7 +725,7 @@ export default {
   },
   created() {
     this.init();
-  },
+  }
   // watch: {
   //   softsuitData(data) {
   //     this.shopsData = [];
@@ -778,7 +783,7 @@ a:hover {
 }
 #accountBox {
   width: 100%;
-  height: 50px;
+  height: 53px;
   margin-top: 20px;
   background: #f0f0f0;
   line-height: 50px;

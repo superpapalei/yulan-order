@@ -44,10 +44,10 @@ body {
   transform: none !important;
 }
 .el-table__expand-icon > .el-icon {
-  position: inherit;
-  left: 0%;
-  top: 0%;
-  margin-left: 0px;
-  margin-top: 0px;
+  position: inherit !important;
+  left: 0% !important;
+  top: 0% !important;
+  margin-left: 0px !important;
+  margin-top: 0px !important;
 }
 </style>

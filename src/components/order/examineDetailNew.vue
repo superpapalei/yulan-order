@@ -626,21 +626,25 @@
           align="center"
           prop="NOTE"
           label="类型"
+          width="100"
         ></el-table-column>
         <el-table-column
           prop="PRODUCTION_VERSION"
           align="center"
           label="所属版本"
+          width="120"
         ></el-table-column>
         <el-table-column
           align="center"
           prop="QTY_REQUIRED"
           label="数量"
+          width="90"
         ></el-table-column>
         <el-table-column
           prop="PROMOTION"
           align="center"
-          label="活动类型"
+          label="活动"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           align="center"

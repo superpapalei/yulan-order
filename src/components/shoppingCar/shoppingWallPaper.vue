@@ -24,16 +24,19 @@
               type="selection"
               width="55"
               :selectable="checkActiviyEffect"
+              align="center"
             ></el-table-column>
             <el-table-column
               prop="item.itemNo"
               label="型号"
               min-width="100"
+              align="center"
             ></el-table-column>
             <el-table-column
               label="活动"
               min-width="140px"
               show-overflow-tooltip
+              align="center"
             >
               <template slot-scope="scope">
                 <span
@@ -53,6 +56,7 @@
               label="发货说明"
               min-width="80"
               show-overflow-tooltip
+              align="center"
             >
               <template slot-scope="scope">
                 <span v-if="scope.row.splitShipment === 0">等生产</span>
@@ -60,13 +64,13 @@
                 <span style="margin-left:20px;" v-else>--</span>
               </template>
             </el-table-column>
-            <el-table-column label="单价">
+            <el-table-column label="单价" align="center">
               <template slot-scope="scope">
                 <span v-if="isManager === '0'">***</span>
                 <span v-else>{{ scope.row.price }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="数量" min-width="120">
+            <el-table-column label="数量" min-width="120" align="center">
               <template slot-scope="scope1">
                 <div v-if="scope1.row.unit === '平方米'">
                   <span>
@@ -95,7 +99,12 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column min-width="100" label="单位" prop="unit">
+            <el-table-column
+              min-width="100"
+              label="单位"
+              prop="unit"
+              align="center"
+            >
               <!-- <template slot-scope="scope">
                             <div v-if="scope.row.status === '0'">
                                 <span>个</span>
@@ -108,7 +117,7 @@
                             </div>
               </template>-->
             </el-table-column>
-            <el-table-column label="小计">
+            <el-table-column label="小计" align="center">
               <template slot-scope="scope">
                 <div v-if="isManager === '0'">***</div>
                 <div v-else-if="scope.row.unit === '平方米'">
@@ -125,7 +134,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="操作" min-width="170">
+            <el-table-column label="操作" min-width="170" align="center">
               <template slot-scope="scope">
                 <a
                   class="link-detail"
@@ -793,7 +802,7 @@ a:hover {
 }
 #accountBox {
   width: 100%;
-  height: 50px;
+  height: 53px;
   margin-top: 20px;
   background: #f0f0f0;
   line-height: 50px;

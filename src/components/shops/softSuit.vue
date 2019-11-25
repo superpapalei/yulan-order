@@ -35,7 +35,7 @@
             v-bind:numberList="numberList"
           ></shopTab>
           <el-pagination
-            class="tc"
+            style="margin:0 10%;"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"

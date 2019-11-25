@@ -50,10 +50,11 @@
             prop="WEB_TJ_TIME"
             width="160"
             label="提交时间"
+            align="center"
           ></el-table-column>
         </el-table-column>
         <el-table-column :label="tableHead1">
-          <el-table-column label="订单号">
+          <el-table-column label="订单号" align="center">
             <template slot-scope="scope1">
               <!-- <el-button @click="toOrderDetail(scope1.row.ORDER_NO,scope1.row.STATUS_ID)" type="text">{{scope1.row.ORDER_NO}}</el-button> -->
               <el-button
@@ -64,32 +65,35 @@
               >
             </template>
           </el-table-column>
-          <el-table-column label="订单状态">
+          <el-table-column label="订单状态" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.STATUS_ID | transStatus }}</span>
             </template>
           </el-table-column>
         </el-table-column>
         <el-table-column :label="tableHead2" :render-header="renderColor">
-          <el-table-column prop="sumMoney" label="订单金额"></el-table-column>
+          <el-table-column prop="sumMoney" label="订单金额" align="center"></el-table-column>
           <el-table-column
             prop="ALLBACK_Y"
             label="年返利使用金额"
+            align="center"
           ></el-table-column>
         </el-table-column>
         <el-table-column :label="tableHead3" :render-header="renderColor">
           <el-table-column
             prop="ALLBACK_M"
             label="月返利使用金额"
+            align="center"
           ></el-table-column>
-          <el-table-column prop="ALL_SPEND" label="实付金额"></el-table-column>
+          <el-table-column prop="ALL_SPEND" label="实付金额" align="center"></el-table-column>
         </el-table-column>
         <el-table-column>
           <el-table-column
             prop="REBATE_MONEY"
             label="返利金额"
+            align="center"
           ></el-table-column>
-          <el-table-column label="备注">
+          <el-table-column label="备注" align="center">
             <template slot-scope="scope1">
               <span>{{ scope1.row.REBATE_NOTES }}</span>
             </template>

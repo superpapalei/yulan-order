@@ -25,7 +25,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column label="发布时间" width="120">
+      <el-table-column label="发布时间" width="120" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.PUBLISHTS | datatrans }}</span>
         </template>

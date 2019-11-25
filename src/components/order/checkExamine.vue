@@ -90,7 +90,7 @@
           label="型号"
           width="140"
         ></el-table-column>
-        <el-table-column align="center" label="经销单价" width="100">
+        <el-table-column align="center" label="经销单价" width="80">
           <template slot-scope="scope1">
             <span v-if="isManager === '0' && check_CURTAIN_STATUS_ID != -1"
               >***</span
@@ -107,8 +107,9 @@
         <el-table-column
           prop="PROMOTION"
           align="center"
-          label="活动类型"
-          width="90"
+          label="活动"
+          width="110"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="PART_SEND_ID"
@@ -121,7 +122,7 @@
           prop="PROMOTION_COST"
           align="center"
           label="折后金额"
-          width="100"
+          width="90"
         >
           <template slot-scope="scope1">
             <span v-if="isManager === '0' && check_CURTAIN_STATUS_ID != -1"
@@ -134,7 +135,7 @@
           prop="BACK_Y"
           align="center"
           label="年返利使用金额"
-          width="100"
+          width="90"
         >
           <template slot-scope="scope1">
             <span v-if="isManager === '0' && check_CURTAIN_STATUS_ID != -1"
@@ -147,7 +148,7 @@
           prop="BACK_M"
           align="center"
           label="月返利使用金额"
-          width="100"
+          width="90"
         >
           <template slot-scope="scope1">
             <span v-if="isManager === '0' && check_CURTAIN_STATUS_ID != -1"
@@ -160,7 +161,7 @@
           prop="FINAL_COST"
           align="center"
           label="应付金额"
-          width="100"
+          width="90"
         >
           <template slot-scope="scope1">
             <span v-if="isManager === '0' && check_CURTAIN_STATUS_ID != -1"

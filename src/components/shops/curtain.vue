@@ -27,7 +27,7 @@
           :data="curtainMsg"
           style="min-width: 750px; margin: 5px auto;"
         >
-          <el-table-column label="型号" width="120">
+          <el-table-column label="型号" width="120" align="center">
             <template slot-scope="scope">
               <div v-if="scope.row.wbhFlag === '1'">
                 {{ scope.row.itemNo }}
@@ -38,7 +38,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="宽度(m)" width="80">
+          <el-table-column label="宽度(m)" width="80" align="center">
             <template slot-scope="scope">
               <currency-input
                 :customStyle="'width: 60px;'"
@@ -48,7 +48,7 @@
               </currency-input>
             </template>
           </el-table-column>
-          <el-table-column label="高度(m)" width="80">
+          <el-table-column label="高度(m)" width="80" align="center">
             <template slot-scope="scope">
               <currency-input
                 :customStyle="'width: 60px;'"
@@ -58,7 +58,7 @@
               </currency-input>
             </template>
           </el-table-column>
-          <el-table-column label="帘外包宽度(m)" prop="fixGrade" width="120">
+          <el-table-column label="帘外包宽度(m)" prop="fixGrade" width="120" align="center">
             <template slot-scope="scope">
               <div v-if="scope.row.wbhFlag === '1'">
                 <el-checkbox v-model="scope.row.isWBH">
@@ -84,7 +84,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="褶皱倍数" width="100">
+          <el-table-column label="褶皱倍数" width="100" align="center">
             <template slot-scope="scope">
               <el-select
                 size="mini"
@@ -101,7 +101,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="位置" width="140">
+          <el-table-column label="位置" width="140" align="center">
             <template slot-scope="scope">
               <el-input
                 style="width:120px;"
@@ -114,7 +114,7 @@
               </el-input>
             </template>
           </el-table-column>
-          <el-table-column label="活动" width="280">
+          <el-table-column label="活动" width="280" align="center">
             <template slot-scope="scope">
               <el-select
                 style="width:250px"
@@ -137,7 +137,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="100">
+          <el-table-column label="操作" width="100" align="center">
             <template slot-scope="scope">
               <a @click="chooseItem(scope.row, scope.$index)" style="color:red;"
                 >选择此款</a
@@ -146,7 +146,7 @@
           </el-table-column>
         </el-table>
         <el-pagination
-          class="tc"
+          style="margin:0 20%;"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"

@@ -45,28 +45,33 @@
             label="型号"
             prop="type"
             width="120"
+            align="center"
           ></el-table-column>
           <el-table-column
             label="样本型号"
             prop="sample"
             width="120"
+            align="center"
           ></el-table-column>
           <el-table-column
             label="版本"
             prop="versionNumber"
             width="130"
+            align="center"
           ></el-table-column>
           <el-table-column
             label="名称"
             prop="version"
             width="110"
+            align="center"
           ></el-table-column>
           <el-table-column
             label="品牌"
             prop="brand"
             width="80"
+            align="center"
           ></el-table-column>
-          <el-table-column :width="numWidth" label="数量">
+          <el-table-column :width="numWidth" label="数量" align="center">
             <template slot-scope="scope">
               <div v-if="scope.row.unit === '平方米'">
                 <span class="num-font">宽</span>
@@ -96,8 +101,9 @@
             label="单位"
             prop="unit"
             width="80"
+            align="center"
           ></el-table-column>
-          <el-table-column width="100px" label="操作">
+          <el-table-column width="100px" label="操作" align="center">
             <template slot-scope="scope">
               <a
                 v-if="scope.row.noteType != 'I_S_H'"
@@ -120,17 +126,20 @@
                   <el-table-column
                     property="stockNo"
                     label="库房"
+                    align="center"
                   ></el-table-column>
                   <el-table-column
                     property="batchNo"
                     label="批号"
                     width="200"
                     show-overflow-tooltip
+                    align="center"
                   ></el-table-column>
                   <el-table-column
                     property="qty"
                     label="库存"
                     width="70"
+                    align="center"
                   ></el-table-column>
                 </el-table>
                 <div slot="footer">

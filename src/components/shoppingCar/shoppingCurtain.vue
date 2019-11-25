@@ -24,19 +24,20 @@
               type="selection"
               width="55"
               :selectable="checkActiviyEffect"
+              align="center"
             ></el-table-column>
-            <el-table-column label="型号" width="100">
+            <el-table-column label="型号" width="100" align="center">
               <template slot-scope="scope1">{{
                 scope1.row.modelNumber
               }}</template>
             </el-table-column>
-            <el-table-column label="宽度(m)" width="90">
+            <el-table-column label="宽度(m)" width="90" align="center">
               <template slot-scope="scope1">{{ scope1.row.width }}</template>
             </el-table-column>
-            <el-table-column label="高度(m)" width="90">
+            <el-table-column label="高度(m)" width="90" align="center">
               <template slot-scope="scope1">{{ scope1.row.height }}</template>
             </el-table-column>
-            <el-table-column label="帘外包宽度(m)" width="120px">
+            <el-table-column label="帘外包宽度(m)" width="120px" align="center">
               <template slot-scope="scope1">
                 <span v-if="scope1.row.outsourcingBoxExist === 1">{{
                   scope1.row.outsourcingBoxWidth !== null &&
@@ -47,17 +48,17 @@
                 <span v-else>--</span>
               </template>
             </el-table-column>
-            <el-table-column label="褶皱倍数" width="100">
+            <el-table-column label="褶皱倍数" width="100" align="center">
               <template slot-scope="scope1">{{ scope1.row.drape }}</template>
             </el-table-column>
-            <el-table-column label="位置" width="100">
+            <el-table-column label="位置" width="100" align="center">
               <template slot-scope="scope1">{{
                 scope1.row.location === null || scope1.row.location === ""
                   ? "--"
                   : scope1.row.location
               }}</template>
             </el-table-column>
-            <el-table-column label="活动">
+            <el-table-column label="活动" align="center">
               <template slot-scope="scope1">
                 <span
                   style="color: red;"
@@ -70,9 +71,9 @@
                 {{ scope1.row.activity }}
               </template>
             </el-table-column>
-            <el-table-column width="120" label="数量">
+            <el-table-column width="120" label="数量" align="center">
               <template slot-scope="scope1">
-                <el-input-number
+                <!-- <el-input-number
                   size="mini"
                   style="width: 100%;"
                   v-model="scope1.row.count"
@@ -81,10 +82,11 @@
                   :disabled="true"
                   :step="1"
                   step-strictly
-                ></el-input-number>
+                ></el-input-number> -->
+                {{scope1.row.count}}
               </template>
             </el-table-column>
-            <el-table-column label="小计" width="100">
+            <el-table-column label="小计" width="100" align="center">
               <template slot-scope="scope1">
                 <span v-if="isManager === '0'">***</span>
                 <span v-else>{{
@@ -92,7 +94,7 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="160px">
+            <el-table-column label="操作" width="160px" align="center">
               <template slot-scope="scope1">
                 <a
                   class="link-detail"
@@ -741,7 +743,7 @@ a:hover {
 }
 #accountBox {
   width: 100%;
-  height: 50px;
+  height: 53px;
   margin-top: 20px;
   background: #f0f0f0;
   line-height: 50px;

@@ -9,15 +9,15 @@
       @expand-change="expandChange"
       style="min-width: 750px; margin: 5px auto;"
     >
-      <el-table-column label="型号" prop="itemNo" width="150">
+      <el-table-column label="型号" prop="itemNo" width="150" align="center">
       </el-table-column>
-      <el-table-column label="名称" prop="note" width="130">
+      <el-table-column label="名称" prop="note" width="130" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.note !== null">{{ scope.row.note }}</span>
           <span v-else>--</span>
         </template>
       </el-table-column>
-      <el-table-column label="规格尺寸" width="120">
+      <el-table-column label="规格尺寸" width="120" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.fixType === '01'">
             <span v-if="scope.row.rzGrade">
@@ -54,9 +54,9 @@
                     <span v-else>--</span>
                 </template>
             </el-table-column> -->
-      <el-table-column width="100" label="数量">
+      <el-table-column width="100" label="数量" align="center">
         <template slot-scope="scope">
-          <div v-if="scope.row.unit === '平方米'">
+          <div v-if="scope.row.unit === '平方米'" align="center">
             <span class="num-font">宽</span>
             <currency-input
               :customStyle="'width: 60px;'"
@@ -80,12 +80,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="单位" width="80">
+      <el-table-column label="单位" width="80" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.unit ? scope.row.unit : "米" }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="100px" label="操作">
+      <el-table-column width="100px" label="操作" align="center">
         <template slot-scope="scope">
           <a class="mr10" @click="seeStore(scope)">
             查看库存

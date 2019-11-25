@@ -46,7 +46,7 @@
     </div>
     <el-table :data="fileData" @selection-change="handleSelectionChange">
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
-      <el-table-column label="文件名">
+      <el-table-column label="文件名" header-align="center">
         <template slot-scope="scope">
           <span>
             <div class="format" :class="formatClass(scope.row.FILE_NAME)"></div>
@@ -73,7 +73,7 @@
           ></el-button>
         </template>
       </el-table-column>
-      <el-table-column label="文件大小" width="150"
+      <el-table-column label="文件大小" width="150" header-align="center"
         ><template slot-scope="scope">
           <span v-if="scope.row.FILE_TYPE == 1">-</span>
           <span v-else>{{ scope.row.FILE_SIZE | fileSizeFilter }}</span>
@@ -83,8 +83,9 @@
         label="上传时间"
         prop="UPLOAD_TIME"
         width="200"
+        header-align="center"
       ></el-table-column>
-      <el-table-column v-if="dirShow" label="所在目录" width="200"
+      <el-table-column v-if="dirShow" label="所在目录" width="200" header-align="center"
         ><template slot-scope="scope">
           <a
             style="text-decoration: underline;cursor:pointer;"
