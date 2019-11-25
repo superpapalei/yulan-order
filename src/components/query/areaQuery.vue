@@ -734,7 +734,7 @@ export default {
       this.queryQuYu_1();
     },
     async queryQuYu_1() {
-      
+      this.query_1 = false,
       this.moneySum=[],
       this.typeFilter=[],
       
@@ -974,7 +974,6 @@ export default {
             type: "success"
           });
           }
-          
         });
     },
     //打开弹窗显示详情数据
