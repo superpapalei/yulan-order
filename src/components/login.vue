@@ -12,7 +12,7 @@
           />
         </div>
         <div class="mainInfo">
-          <h1>玉兰B2B订单管理系统</h1>
+          <h1>{{ Global.webTitle }}</h1>
           <div class="loginBar"></div>
           <div class="info">
             <p>账&nbsp;号</p>

@@ -12,7 +12,8 @@
   <meta http-equiv="expires" content="0">
   <link rel="icon" type="image/x-icon" href="./static/base/img/headerLogo.jpg" />
   <link rel="stylesheet" href="./static/base/css/tip.css">
-  <title>玉兰B2B订单系统</title>
+  <!-- title在下面配置 -->
+  <title></title>
 </head>
 
 <body>
@@ -33,6 +34,49 @@
   <!-- built files will be auto injected -->
   <script>
     var vm;
+    //供应商系统与订单系统显示文本
+    var sysTitle = {
+      order: {
+        webTitle: '玉兰B2B订单管理系统',
+      },
+      supply: {
+        webTitle: '玉兰B2B供应商系统',
+      }
+    }
+
+    //var titleSetting = sysTitle.order;//订单系统
+    var titleSetting = sysTitle.supply;//供应商系统
+
+    var webTitle = titleSetting.webTitle;
+    document.title = webTitle;//网页标签的title
+
+    //后台地址统一配置
+    var urlArr = {
+      local: {
+        baseUrl: 'http://localhost:49438/',//订单
+        fileCenterUrl: "http://47.107.56.156:1001/",//下载中心
+        orderBaseUrl: "http://120.79.140.75:567/yulan-order",//java后台
+      },
+      test: {
+        baseUrl: 'http://47.107.56.156:666/',
+        fileCenterUrl: "http://47.107.56.156:1001/",
+        orderBaseUrl: "http://120.79.140.75:567/yulan-order",
+      },
+      formal: {
+        baseUrl: 'http://14.29.223.114:568/',
+        fileCenterUrl: "http://14.29.223.114:1001/",
+        orderBaseUrl: "http://14.29.223.114:10250/yulan-order",
+      }
+    }
+
+    var urlSetting = urlArr.local;//本地
+    //var urlSetting = urlArr.test;//测试
+    //var urlSetting = urlArr.formal;//正式
+
+    var baseUrl = urlSetting.baseUrl;
+    var fileCenterUrl = urlSetting.fileCenterUrl;
+    var orderBaseUrl = urlSetting.orderBaseUrl;
+
     function browserType() {
       var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串 
       var isOpera = userAgent.indexOf("Opera") > -1; //判断是否Opera浏览器 

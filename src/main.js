@@ -16,7 +16,6 @@ import './assets/css/base.css'
 import store from './store'
 import { showFullScreenLoading, tryHideFullScreenLoading } from './api/loading'
 import * as custom from './common/js/filter'
-import * as Global from './api/httpASP.js'
 
 Vue.use(ElementUI);
 Vue.use(Cookies);
@@ -28,7 +27,12 @@ Vue.prototype.$get = get;
 Vue.prototype.$post = post;
 Vue.prototype.$patch = patch;
 Vue.prototype.$put = put;
-Vue.prototype.Global = Global//引入全局变量
+//引入全局变量
+Vue.prototype.Global = {
+  baseUrl: baseUrl,//订单url
+  fileCenterUrl: fileCenterUrl,//下载中心url
+  webTitle: webTitle,//网页标题
+}
 
 //请求拦截
 Axios.interceptors.request.use(config => {
@@ -176,19 +180,19 @@ function isInteger(obj) {
 function toInteger(floatNum) {
   var ret = { floatLength: 1, intNum: 0 };
   if (isInteger(floatNum)) {//如果是整数
-      ret.intNum = floatNum;
+    ret.intNum = floatNum;
   }
   else {
-      var strFloat = floatNum + '';
-      var dotPosition = strFloat.indexOf('.');
-      var len = strFloat.substr(dotPosition + 1).length;
-      var floatLength = Math.pow(10, len);
-      var intNum = parseInt(Math.abs(floatNum) * floatLength + 0.5, 10);//放大
-      ret.floatLength = floatLength;
-      if (floatNum < 0) {//负数的处理
-          intNum = -intNum;
-      }
-      ret.intNum = intNum;
+    var strFloat = floatNum + '';
+    var dotPosition = strFloat.indexOf('.');
+    var len = strFloat.substr(dotPosition + 1).length;
+    var floatLength = Math.pow(10, len);
+    var intNum = parseInt(Math.abs(floatNum) * floatLength + 0.5, 10);//放大
+    ret.floatLength = floatLength;
+    if (floatNum < 0) {//负数的处理
+      intNum = -intNum;
+    }
+    ret.intNum = intNum;
   }
   return ret;
 }
@@ -202,29 +206,29 @@ function operation(a, b, opType) {
   var maxLength = langth1 > langth2 ? langth1 : langth2;//以最大位数为基准
   var result = null;
   switch (opType) {
-      case 'add':
-          if (langth1 === langth2) { //两个小数位数相同
-              result = int1 + int2;
-          } else if (langth1 > langth2) {
-              result = int1 + int2 * (langth1 / langth2);
-          } else {
-              result = int1 * (langth2 / langth1) + int2;
-          }
-          return result / maxLength;
-      case 'subtract':
-          if (langth1 === langth2) {
-              result = int1 - int2;
-          } else if (langth1 > langth2) {
-              result = int1 - int2 * (langth1 / langth2);
-          } else {
-              result = int1 * (langth2 / langth1) - int2;
-          }
-          return result / maxLength;
-      case 'multiply':
-          result = (int1 * int2) / (langth1 * langth2);
-          return result;
-      case 'divide':
-          result = (int1 / int2) / (langth1 / langth2);
-          return result;
+    case 'add':
+      if (langth1 === langth2) { //两个小数位数相同
+        result = int1 + int2;
+      } else if (langth1 > langth2) {
+        result = int1 + int2 * (langth1 / langth2);
+      } else {
+        result = int1 * (langth2 / langth1) + int2;
+      }
+      return result / maxLength;
+    case 'subtract':
+      if (langth1 === langth2) {
+        result = int1 - int2;
+      } else if (langth1 > langth2) {
+        result = int1 - int2 * (langth1 / langth2);
+      } else {
+        result = int1 * (langth2 / langth1) - int2;
+      }
+      return result / maxLength;
+    case 'multiply':
+      result = (int1 * int2) / (langth1 * langth2);
+      return result;
+    case 'divide':
+      result = (int1 / int2) / (langth1 / langth2);
+      return result;
   }
 }
