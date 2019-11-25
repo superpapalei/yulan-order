@@ -137,7 +137,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="100">
             <template slot-scope="scope">
               <a @click="chooseItem(scope.row, scope.$index)" style="color:red;"
                 >选择此款</a

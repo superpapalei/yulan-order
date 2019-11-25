@@ -137,7 +137,6 @@
     </el-card>
 
     <el-dialog
-      title="投诉登记表"
       :visible.sync="complaintDetail"
       :close-on-click-modal="false"
       width="40%"

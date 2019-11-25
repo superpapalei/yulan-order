@@ -22,7 +22,12 @@
           </div>
           <div class="info">
             <p>密&nbsp;码</p>
-            <el-input type="password" style="width:300px;" v-model="password">
+            <el-input
+              type="password"
+              style="width:300px;"
+              v-model="password"
+              @keydown.native="keyLogin"
+            >
               <img
                 slot="prefix"
                 src="../assets/img/password.png"
@@ -101,6 +106,11 @@ export default {
   },
   methods: {
     ...mapMutations("navTabs", ["emptyTabList"]),
+    keyLogin(e) {
+      if (e.keyCode == 13) {
+        this.loginSubmit();
+      }
+    },
     loginSubmit() {
       if (this.cid === "") {
         this.$alert("请输入用户账号", "提示", {
@@ -297,8 +307,8 @@ export default {
   vertical-align: middle;
 }
 .photoMask {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   position: absolute;
   left: 0;
   top: 0;
@@ -307,8 +317,8 @@ export default {
 }
 .photoMaskContain {
   position: relative;
-  top: 50%; /*偏移*/
-  transform: translateY(-50%);
+  top: 50%;
+  transform: translateY(-50%); /*偏移*/
   text-align: center;
   vertical-align: center;
 }

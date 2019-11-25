@@ -53,7 +53,11 @@
                   <!-- <el-dropdown-item>历年经销设计书</el-dropdown-item>
                   <el-dropdown-item>修改登录密码</el-dropdown-item>
                   <el-dropdown-item>修改对账密码</el-dropdown-item>-->
-                  <!--v-if = "isContainAttr('myZone/myCoupon')"  -->
+                  <el-dropdown-item
+                    ><a style="color:#606266;" target="_blank" href="http://14.29.221.109:10250/pc/#/"
+                      >网络协议签订</a
+                    ></el-dropdown-item
+                  >
                   <router-link
                     v-if="isContainAttr('myZone/myCoupon')"
                     to="/myZone/myCoupon"
@@ -344,7 +348,7 @@ import Vue from "vue";
 import Cookies from "js-cookie";
 import menuTree from "./menuTree";
 import studyContextDetail from "./studyContext/studyContextDetail";
-import { GetAllCompensation } from "@/api/paymentASP";
+import { GetAllCompensationOld } from "@/api/paymentASP";
 import { ChangePassword } from "@/api/webUserASP";
 import payDelegationVue from "./supplierModule/payDelegation.vue";
 import { GetCurrentDelegation, GetAllDelegation } from "@/api/supplierASP";
@@ -442,7 +446,7 @@ export default {
     async addBadgeIcon() {
       if (Cookies.get("identity") === "ECWEB") {
         //let _refund = await getAllRefund({
-        let _refund = await GetAllCompensation(
+        let _refund = await GetAllCompensationOld(
           {
             CID: this.cid,
             page: 1,
