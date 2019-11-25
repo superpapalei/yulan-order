@@ -48,7 +48,15 @@ export function GetUserCompensation(data, config = {}) {
         return Promise.reject(err);
     })
 }
-//19.11.21之后——根据查找退货赔偿记录和明细
+//查找退货赔偿记录和明细(原)
+export function GetCompensationByIdBefore(data, config = {}) {
+    return post('/RETURNCOMPENSATIONBILL/GetCompensationByIdBefore', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//查找退货赔偿记录和明细(新需求)
 export function GetCompensationById(data, config = {}) {
     return post('/RETURNCOMPENSATIONBILL/GetCompensationById', data, config).then((res) => {
         return Promise.resolve(res);
