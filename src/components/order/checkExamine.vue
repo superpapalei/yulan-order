@@ -667,6 +667,8 @@ export default {
         GetCtmOrder({orderNo: Cookies.get("ORDER_NO")}).then(res2=>{
         this.ruleForm = res.data.data[0];
         this.ruleForm.PACKING_NOTE = res2.data.PACKING_NOTE;//先这样处理，后台换了后台就不需要了
+        this.ruleForm.BUYUSER_ADDRESS = res2.data.BUYUSER_ADDRESS;
+        this.ruleForm.BUYUSER_PICTURE = res2.data.BUYUSER_PICTURE;
         for (let i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
           this.ruleForm.ORDERBODY[i].checkStatus = "未修改";
         }

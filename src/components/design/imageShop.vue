@@ -784,16 +784,50 @@ export default {
     //确定新建
     sumbitNEW() {
       //判断是否填完所有信息
-      if (
-        !this.tableData.STORE_ADDRESS ||
-        !this.tableData.STORE_FORM ||
-        !this.tableData.STORE_AREA ||
-        !this.tableData.STORE_PLIE ||
-        !this.tableData.PLAN_DATE ||
-        !this.tableData.IMPLEMENTTATION_FORM ||
-        !this.tableData.PAYMENT
-      ) {
-        this.$alert("请完善信息", "提示", {
+      if (!this.tableData.STORE_ADDRESS) {
+        this.$alert("请输入店面地址", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (!this.tableData.STORE_FORM) {
+        this.$alert("请选择店面形式", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (!this.tableData.STORE_AREA) {
+        this.$alert("请输入店面面积", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (!this.tableData.STORE_PLIE) {
+        this.$alert("请输入店面层数", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (!this.tableData.PLAN_DATE) {
+        this.$alert("请选择计划动工时间", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (!this.tableData.IMPLEMENTTATION_FORM) {
+        this.$alert("请选择实施形式", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (!this.tableData.PAYMENT) {
+        this.$alert("请选择汇款凭证", "提示", {
           confirmButtonText: "确定",
           type: "warning"
         });
@@ -1012,7 +1046,7 @@ export default {
       GetImageCustomer(data).then(res => {
         this.count = res.count;
         this.imageStoreData = res.data;
-        this.$root.$emit('refreshBadgeIcon','imageShop1');
+        this.$root.$emit("refreshBadgeIcon", "imageShop1");
       });
     },
     _getBankList() {
@@ -1109,13 +1143,13 @@ export default {
         confirmButtonText: "确定",
         type: "success"
       });
-    },
+    }
   }
 };
 </script>
 
 <style scoped>
-.centerCard h3{
+.centerCard h3 {
   margin: 0;
 }
 .table-c table {

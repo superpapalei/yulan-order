@@ -224,7 +224,7 @@
         <span>选择配送方式：</span>
         <el-select
           @change="changePeiSong"
-          style="width:30%; display:inline-block;margin-right:30px;"
+          style="width:30%; display:inline-block;"
           v-model="ctm_order.deliveryType"
           placeholder="请选择"
         >
@@ -236,7 +236,7 @@
             :disabled="item.disabled"
           ></el-option>
         </el-select>
-        <span>物流公司：</span>
+        <span style="margin-left:50px;">物流公司：</span>
         <el-input
           style="width:30%;"
           :disabled="this.ctm_order.deliveryType == 3 ? false : true"
@@ -251,17 +251,39 @@
           v-model="ctm_order.buyUser"
           placeholder="请输入购买者姓名"
         ></el-input>
-        <span style=" display:inline-block;margin-left:32px;">联系方式：</span>
+        <span style="display:inline-block;margin-left:50px;">联系方式：</span>
         <el-input
           style="width:30%;"
           v-model="ctm_order.buyUserPhone"
           placeholder="请输入联系方式"
         ></el-input>
         <br />
+        <span>购买人地址：</span>
+        <el-input
+          style="width:76.5%;margin-top:10px;"
+          v-model="ctm_order.buyUserAddress"
+          placeholder="请输入购买人地址"
+        ></el-input>
+        <br />
+        <span>上传购买凭证：</span>
+        <el-upload
+          class="upload-de"
+          :action="Global.baseUrl + '/CTM_ORDER/UploadBuyUserFiles'"
+          list-type="picture-card"
+          :on-change="handleChange"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
+          :before-upload="beforeAvatarUpload"
+          :file-list="fileList"
+          :data="{ cid: cid }"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
         <span>备注：</span>
         <el-input
           type="textarea"
           maxlength="140"
+          style="width:98%"
           :autosize="{ minRows: 3, maxRow: 4 }"
           resize="none"
           v-model="ctm_order.notes"
@@ -290,7 +312,9 @@
           placeholder="请输入工程报备单号"
         ></el-input>
       </div>
-
+      <el-dialog :visible.sync="dialogImageVisible">
+        <img width="100%" :src="dialogImageUrl" alt="" />
+      </el-dialog>
       <el-table
         :data="ORDERBODY"
         border
@@ -558,6 +582,8 @@ export default {
       ctm_order: {
         buyUser: "",
         buyUserPhone: "",
+        buyUserAddress: "",
+        buyUserPicture: "",
         notes: "",
         deliveryNotes: "",
         deliveryType: "1",
@@ -643,7 +669,10 @@ export default {
         transTxtF: "transTxtF",
         roundedRectangle: "roundedRectangle",
         roundedRectangleF: "roundedRectangleF"
-      }
+      },
+      dialogImageUrl: "",
+      dialogImageVisible: false,
+      fileList: []
     };
   },
   filters: {
@@ -1120,9 +1149,18 @@ export default {
                 wlContacts: this.ctm_order.wlContacts,
                 wlTel: this.ctm_order.wlTel,
                 addressId: this.transferData[i].addressId,
-                province: this.ctm_order.reciverArea1 == ''?null:this.ctm_order.reciverArea1,
-                city: this.ctm_order.reciverArea2 == ''?null:this.ctm_order.reciverArea2,
-                country: this.ctm_order.reciverArea3 == ''?null:this.ctm_order.reciverArea3,
+                province:
+                  this.ctm_order.reciverArea1 == ""
+                    ? null
+                    : this.ctm_order.reciverArea1,
+                city:
+                  this.ctm_order.reciverArea2 == ""
+                    ? null
+                    : this.ctm_order.reciverArea2,
+                country:
+                  this.ctm_order.reciverArea3 == ""
+                    ? null
+                    : this.ctm_order.reciverArea3,
                 provinceID: this.transferData[i].provinceID,
                 cityID: this.transferData[i].cityID,
                 countryID: this.transferData[i].countryID
@@ -1385,6 +1423,12 @@ export default {
         for (var i = 0; i < getPush3.length; i++) {
           deleteArray[i] = getPush3[i].cartItemId;
         }
+        //附件拼接
+        this.ctm_order.buyUserPicture = "";
+        for (var i = 0; i < this.fileList.length; i++) {
+          this.ctm_order.buyUserPicture +=
+            "/Files/BuyUser/" + this.cid + "/" + this.fileList[i].name + ";";
+        }
         var data2 = {
           product_group_tpye: "E", //产品类别
           promotion_cost: this.totalPrice, //活动价格【】
@@ -1482,6 +1526,12 @@ export default {
         for (var i = 0; i < getPush3.length; i++) {
           deleteArray[i] = getPush3[i].id; //不像窗帘，这里一个cart_item_id可能对应多个
         }
+        //附件拼接
+        this.ctm_order.buyUserPicture = "";
+        for (var i = 0; i < this.fileList.length; i++) {
+          this.ctm_order.buyUserPicture +=
+            "/Files/BuyUser/" + this.cid + "/" + this.fileList[i].name + ";";
+        }
         var data2 = {
           product_group_tpye: this.product_group_tpye, //产品类别，从购物车出获取
           promotion_cost: this.totalPrice, //活动价格【】
@@ -1572,6 +1622,21 @@ export default {
         this.ctm_order.orderNo = orderItem.ORDER_NO;
         this.ctm_order.buyUser = orderItem.BUYUSER;
         this.ctm_order.buyUserPhone = orderItem.BUYUSERPHONE;
+        this.ctm_order.buyUserAddress = orderItem.BUYUSER_ADDRESS;
+        this.ctm_order.buyUserPicture = orderItem.BUYUSER_PICTURE;
+        if (this.ctm_order.buyUserPicture) {
+          var list = this.ctm_order.buyUserPicture.split(";");
+          for (var i = 0; i < list.length - 1; i++) {
+            var index = list[i].lastIndexOf("/");
+            if(index = -1) index = list[i].lastIndexOf("\\");
+            var fileName = list[i].substr(index + 1);
+            this.fileList.push({
+              name: fileName,
+              url: this.Global.baseUrl + list[i]
+            });
+          }
+        }
+        console.log(this.fileList)
         this.ctm_order.wlContacts = orderItem.WL_CONTACTS;
         this.ctm_order.wlTel = orderItem.WL_TEL;
         this.ctm_order.postAddress = orderItem.POST_ADDRESS;
@@ -1588,6 +1653,24 @@ export default {
         this.ctm_order.invoiceFlag = orderItem.INVOICE_FLAG;
         this.ctm_order.allAddress = orderItem.ALL_ADDRESS;
       }
+    },
+    handleChange(file, fileList) {
+      this.fileList = fileList;
+    },
+    handleRemove(file, fileList) {
+      this.fileList = fileList;
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogImageVisible = true;
+    },
+    beforeAvatarUpload(file) {
+      let types = ["image/jpeg", "image/gif", "image/bmp", "image/png"];
+      const isJPG = types.includes(file.type);
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是图片格式!");
+      }
+      return isJPG;
     }
   },
   created: function() {
@@ -1767,5 +1850,10 @@ export default {
 }
 .couponBody .el-checkbox__inner {
   background: greenyellow;
+}
+.upload-de .el-upload--picture-card {
+  width: 70px;
+  height: 70px;
+  line-height: 80px;
 }
 </style>
