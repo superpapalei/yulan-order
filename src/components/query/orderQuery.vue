@@ -8,7 +8,7 @@
       >
       <div style="font-size:18px">
         <div>客户名称：{{get_CUSTOMER_NAME}}
-          <span style="color:blue;margin-left:10px">汇总金额:{{getMoney}}</span>
+          <span style="color:blue;margin-left:10px">汇总金额:{{getMoney}}元</span>
         </div>
       </div>
         <div>
@@ -284,8 +284,8 @@
           </div>
         </form>
         <hr />
-        <div style="float:left;font-size:15px;color:blue;margin:10px">订单金额汇总：{{moneySum}}元</div>
         <div v-if="query_1">
+          <div style="float:left;font-size:15px;color:blue;margin:10px">订单金额汇总：{{(moneySum).toFixed(2)}}元</div>
           <el-table
           :data="CUSTOMERED"
           border
@@ -396,7 +396,7 @@ export default {
       moneySum:0,
       CUSTOMERED : [],
       CUSTOMERED_1 : [],
-      checked:false,
+      checked:true,
       button_1: false,
       ruleForm: {},
       cid: "",
@@ -827,11 +827,12 @@ export default {
         })
         this.getSomeData = res2.data[0]
         if(res2.data.length == 0){
-          this.$alert("选择客户无订单", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.moneySum = 0
+          // this.$alert("选择客户无订单", "提示", {
+          //   confirmButtonText: "确定",
+          //   type: "success"
+          // });
+          
+          continue
         }
         var sum = this.moneySum + reduce
         this.moneySum = sum
@@ -850,6 +851,13 @@ export default {
         }
 
         this.CUSTOMERED = this.CUSTOMERED_1 
+        if(this.CUSTOMERED.length == 0){
+          this.$alert("选择客户无订单", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          return this.query_1 = false
+        }
         // for(var i = 0; i < this.CUSTOMERED.length;i++){
         //    var money = parseInt(this.CUSTOMERED[i].ORDER_MONEY)
         //     var sum = parseInt(this.moneySum) + money
@@ -958,9 +966,10 @@ export default {
 
     //重置
     reset() {
+      this.query_1 = false
       this.moneySum="0"
       this.CUSTOMERED=[],
-      this.checked=false
+      this.checked=true
       this.currentPage = 1;
       this.customerData = [];
       this.beginTime_1 = "";

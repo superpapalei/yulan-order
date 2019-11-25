@@ -80,9 +80,26 @@ export function getAllVersion(config = {}) {
 }
 
 //获取销售提货单信息
-//获取所选用户总金额
 export function getProductSales(data,config = {}) {
     return post('/PACK_DETAIL/getProductSales',data,config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+//获取销售提货单信息金额汇总
+export function getSumMoneyBySales(data,config = {}) {
+    return post('/PACK_DETAIL/getSumMoneyBySales',data,config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+//获取提货单信息金额汇总
+export function getPackData(data,config = {}) {
+    return post('/PACK_DETAIL/getPackData',data,config).then((res) => {
         return Promise.resolve(res);
     }).catch((err) => {
         return Promise.reject(err);
