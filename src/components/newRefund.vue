@@ -317,7 +317,7 @@
             <td class="grayTD"  style="width:15%;height:15px">质量问题</td>
             <td class="grayTD"  style="width:18%;height:15px">处理意见</td>
           </tr>
-          <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'"  v-for="(item,index) of processDetail" :key="index">
+          <tr  v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'" v-for="(item,index) of processDetail" :key="index">
             <td colspan="1" rowspan="1" style="height:15px">{{submit.PRODUCTION_VERSION}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{submit.ITEM_NO}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{submit.UNIT}}</td>

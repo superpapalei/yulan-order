@@ -281,7 +281,7 @@ import {
   updateRefund
 } from "@/api/refund";
 import {
-  GetCompensationById,
+  GetCompensationByIdBefore,
   InsertCompensation,
   UpdateCompensation,
   DeleteCompensation,
@@ -313,7 +313,7 @@ export default {
       if (method !== "new") {
         let obj = { id: this.baseData.ID };
         //let _data = await getRefundById(obj);
-        let _data = await GetCompensationById(obj);
+        let _data = await GetCompensationByIdBefore(obj);
         _data = _data.data[0];
         _data.method = method;
         _data.rtcbItems.forEach(item => {
@@ -558,7 +558,7 @@ export default {
           this.$root.$emit("updateRefund");
           //成功后，调用查询接口，重新覆盖渲染
           //getRefundById({
-          GetCompensationById({
+          GetCompensationByIdBefore({
             id: this.baseData.ID
           })
             .then(async res => {

@@ -633,18 +633,11 @@ export default {
         });
         return;
       }
-      if (this.submit.DAMAGED_QUANTITY < 0 || this.submit.LOSED_QUANTITY < 0) {
-        this.$alert("填写数量必须为非负数", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      if (
-        this.submit.DAMAGED_QUANTITY == 0 &&
-        this.submit.LOSED_QUANTITY == 0
+      if ((this.submit.TYPE == "破损" || this.submit.TYPE == "丢失")&&
+        this.submit.DAMAGED_QUANTITY <= 0 &&
+        this.submit.LOSED_QUANTITY <= 0
       ) {
-        this.$alert("请输入相应的货物数量", "提示", {
+        this.$alert("填写数量必须为正数", "提示", {
           confirmButtonText: "确定",
           type: "warning"
         });

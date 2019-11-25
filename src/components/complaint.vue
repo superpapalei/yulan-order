@@ -312,7 +312,7 @@ export default {
       beginTime:"",           //查询的开始时间
       finishTime:"",          //查询的结束时间
       SEARCHKEY:"",           //搜索栏关键字
-      SELECT_STATUS:1,       //存储下拉框的值
+      SELECT_STATUS:2,       //存储下拉框的值
       isProcessed: false,     //已处理
       isFeedback: false,      //已评价
       isAdd:false,            //新增记录
