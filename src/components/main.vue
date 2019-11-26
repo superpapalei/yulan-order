@@ -54,7 +54,7 @@
                   <el-dropdown-item>修改登录密码</el-dropdown-item>
                   <el-dropdown-item>修改对账密码</el-dropdown-item>-->
                   <el-dropdown-item
-                    ><a style="color:#606266;" target="_blank" href="http://14.29.221.109:10250/pc/#/"
+                    ><a style="color:#606266;" target="_blank" :href="'http://14.29.221.109:10250/pc/#/?cid='+cid + '&password=' + userInfo.password"
                       >网络协议签订</a
                     ></el-dropdown-item
                   >
@@ -369,6 +369,7 @@ export default {
     return {
       lastClickTime: new Date().getTime(),
       cid: Cookies.get("cid"),
+      userInfo :JSON.parse(Cookies.get("userInfo")),
       isManager: Cookies.get("isManager"),
       customerType: Cookies.get("customerType"),
       realName: Cookies.get("realName"),

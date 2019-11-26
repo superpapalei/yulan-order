@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card shadow="hover">
-      <div id="trans" class="lanJuport">
+      <div id="trans" class="lanJuport3">
         <div class="block">
           <div class="first_1">
               <el-input
@@ -47,6 +47,7 @@
             <hr>
           <el-table
             :data="tableData"
+            border
        :span-method="arraySpanMethod"
             style="width: 100%"
           >
@@ -65,8 +66,8 @@
             <el-table-column
               prop="ITEM_NO"
               label="型号"
-              
-              align="center"
+               header-align="center"
+              align="left"
             ></el-table-column>
             <el-table-column
               prop="BATCH_NO"
@@ -77,25 +78,29 @@
             <el-table-column
               prop="QTY_TRANS"
               label="实际数量"
-              
-              align="center"
+               header-align="center"
+              align="right"
             ></el-table-column>
             <el-table-column
               prop="UNIT_PRICE"
               label="含税单价"
-              
-              align="center"
+               header-align="center"
+              align="right"
             >
            <template slot-scope="scope">
-                  <span>{{ scope.row.UNIT_PRICE | numFilter }}</span>
+                  <span>{{ scope.row.UNIT_PRICE|numFilter }}</span>
                 </template>
             </el-table-column>
             <el-table-column
-              prop="SUM_PRICE_TAX"
+           
               label="含税总价"
-              
-              align="center"
-            ></el-table-column>
+              header-align="center"
+              align="right"
+            >
+             <template slot-scope="scope">
+                  <span>{{ scope.row.SUM_PRICE_TAX|numFilter }}</span>
+                </template>
+            </el-table-column>
             <el-table-column
               
               label="开单日期"
@@ -328,11 +333,20 @@ export default {
       }
     },
 
-      numFilter (value) {
-    // 截取当前数据到小数点后两位
-    let realVal = parseFloat(value).toFixed(2)
-    return realVal
-  },
+      numFilter(value) {
+      var value = Math.round(parseFloat(value) * 100) / 100;
+      var s = value.toString().split(".");
+      if (s.length == 1) {
+        value = value.toString() + ".00";
+        return value;
+      }
+      if (s.length > 1) {
+        if (s[1].length < 2) {
+          value = value.toString() + "0";
+        }
+        return value;
+      }
+    },
 
     datatrans(value) {
       //时间戳转化大法
@@ -387,9 +401,11 @@ export default {
   width: 120px;
   border:3
 }
-.lanJuport .el-table td,
-.lanJuport .el-table th {
+.lanJuport3 .el-table td,
+.lanJuport3 .el-table th {
   padding: 3px 0 !important;
 }
-
+.lanJuport3 .el-input__icon{
+  line-height: 30px;
+}
 </style>
