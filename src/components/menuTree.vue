@@ -114,6 +114,10 @@ export default {
           return this.$store.state.badge.curtainCount;//窗帘
         case "shoppingCar/shopping?softSuit":
           return this.$store.state.badge.softCount;//软装  
+        case "newRefund":
+          return this.$store.state.badge.newRefund1;//新退货赔偿（用户）
+        case "newRefundExamine":
+          return this.$store.state.badge.newRefund2;//新退货赔偿（审核）
         default:
           return 0;
       }

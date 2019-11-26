@@ -358,6 +358,7 @@ import {
   GetImageCustomer,
   GetAllData as GetImageAll
 } from "@/api/imageStoreASP";
+import {GetAllCompensation,GetUserCompensation} from "@/api/paymentASP";
 
 export default {
   name: "Main",
@@ -826,6 +827,52 @@ export default {
           //console.log(err);
         });
     },
+    //新退货赔偿用户可确定单据数量
+    async newRefundUserIcon() {
+      let newRefund = await GetUserCompensation(
+        {
+        CID: Cookies.get("cid"),
+        number: 9999,
+        page: 1,
+        startDate: "0001/1/1",
+        endDate: "9999/12/31",
+        state: "CUSTOMERAFFIRM"
+        },
+        { loading: false }
+      );
+      this.changeBadge({
+        name: "newRefund1",
+        index: newRefund.count
+      });
+    },
+    //新退货赔偿兰居可编辑审核单据数量
+    async newRefundExamineIcon() {
+      let newRefundExamine1 = await GetAllCompensation(
+        {
+          number: 9999,
+          page: 1,
+          startDate: "0001/1/1",
+          endDate: "9999/12/31",
+          state: "SUBMITTED"
+        },
+        { loading: false }
+      );
+      let newRefundExamine2 = await GetAllCompensation(
+        {
+          number: 9999,
+          page: 1,
+          startDate: "0001/1/1",
+          endDate: "9999/12/31",
+          state: "RECEIVE"
+        },
+        { loading: false }
+      );
+      this.changeBadge({
+        name: "newRefund2",
+        index: newRefundExamine1.count+newRefundExamine2.count
+      });
+    },
+
     refreshUserMoney() {
       this.userMoney();
     },
@@ -1243,6 +1290,8 @@ export default {
     this.wallCountIcon();
     this.curtainCountIcon();
     this.softCountIcon();
+    this.newRefundUserIcon();
+    this.newRefundExamineIcon();
     //触发角标刷新
     this.$root.$on("refreshBadgeIcon", value => {
       switch (value) {
@@ -1297,6 +1346,12 @@ export default {
         case "softCount":
           this.softCountIcon();
           break;
+        case "newRefund1":
+          this.newRefundUserIcon();
+          break;
+        case "newRefund2":
+          this.newRefundExamineIcon();
+          break;          
       }
     });
     document.onkeydown = function(event) {

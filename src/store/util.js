@@ -99,6 +99,10 @@ export function tabsName(index) {
       return "付款委托书";
     case "query/salesQuery":
       return "销售提货单查询";
+    case "newRefund":
+        return "退款赔偿";
+    case "newRefundExamine":
+      return "退款赔偿审核";
     default:
       return "xxx";
   }
