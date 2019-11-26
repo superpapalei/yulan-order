@@ -88,7 +88,7 @@
           :data="tableData"
           style="width: 100%"
         >
-          <el-table-column width="130" label="编号" prop="ID"  align="center"> </el-table-column>
+          <el-table-column width="145" label="编号" prop="ID"  align="center"> </el-table-column>
           <el-table-column width="145" label="创建时间"  align="center">
             <template slot-scope="scope">
                {{ scope.row.CREATE_TS | datatrans }}
@@ -114,7 +114,7 @@
           </el-table-column>
 
            <!-- 未做 -->
-          <el-table-column width="100" label="操作" align="center">
+          <el-table-column width="120" label="操作" align="center">
             <template slot-scope="scope">
               <el-tooltip content="查看" placement="top">
                 <el-button
@@ -144,24 +144,6 @@
                 >
                 </el-button>
               </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column
-            width="100"
-            label="打印标记"
-            prop="PRINTED"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <el-checkbox
-                v-if="
-                  scope.row.STATE === 'APPROVED' 
-                "
-                @change="changePrinted(scope.row, scope.$index)"
-                v-model="scope.row.PRINTED"
-              >
-                {{ scope.row.PRINTED === false ? "未打印" : "已打印" }}
-              </el-checkbox>
             </template>
           </el-table-column>
         </el-table>
@@ -938,14 +920,6 @@ export default {
         return "0" + num;
       }
       return num;
-    },
-    //修改打印标记
-    changePrinted(value, index) {
-      //updatePrinted({
-      UpdatePrintedById({
-        id: value.ID,
-        printed: value.PRINTED ? "0" : "1"
-      });
     },
     //执行打印操作
     printRefund() {

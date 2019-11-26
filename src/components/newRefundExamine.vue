@@ -129,7 +129,7 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.STATE == 'SUBMITTED'|| scope.row.STATE == 'RECEIVE'
+                  scope.row.STATE == 'SUBMITTED'|| scope.row.STATE == 'RECEIVE'||scope.row.STATE=='CUSTOMERAFFIRM'
                 "
                 content="编辑"
                 placement="top"
@@ -528,7 +528,7 @@
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
             <td style="height:15px" colspan="6">您的提货单号： {{submit.SALE_NO}}</td>
           </tr>
-          <tr v-if="submit.STATE!='SUBMITTED'">
+          <tr v-if="submit.STATE!='SUBMITTED'">  
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理结果
             </td>
@@ -997,27 +997,26 @@ export default {
             }
             totalMoney=totalMoney.add(this.processDetail[i].P_MONEY);
            }
-          this.submit.TOTALMONEY=totalMoney;
-          this.submit.STATE='CUSTOMERAFFIRM';
-          this.submit.DEALMAN_CODE=this.CID;
-          this.submit.DEALMAN_NAME=this.CNAME;;
-          UpdateProcess({ head: this.submit,details:this.processDetail,totalMoney:this.submit.TOTALMONEY}).then(res => {
-            if (res.code == 0) {
-              this.$alert("修改成功", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            });
-            this.refresh();
-            this.RefundDetail = false;
-            return;
-            } else {
-              this.$alert("修改失败，请稍后重试", "提示", {
-              confirmButtonText: "确定",
-              type: "warning"
-            });
-            return;
-            }
-          });
+           this.submit.TOTALMONEY=totalMoney;
+           this.submit.DEALMAN_CODE=this.CID;
+           this.submit.DEALMAN_NAME=this.CNAME;;
+           UpdateProcess({ head: this.submit,details:this.processDetail,totalMoney:this.submit.TOTALMONEY}).then(res => {
+               if (res.code == 0) {
+                 this.$alert("修改成功", "提示", {
+                 confirmButtonText: "确定",
+                 type: "success"
+               });
+             this.refresh();
+             this.RefundDetail = false;
+             return;
+             } else {
+                this.$alert("修改失败，请稍后重试", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+             });
+             return;
+             }
+             });
         }
     },
     //显示图片
