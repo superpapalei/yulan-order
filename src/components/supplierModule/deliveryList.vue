@@ -79,7 +79,12 @@
             width="100px"
           >
           </el-table-column>
-          <el-table-column
+          <el-table-column label="状态" align="center" width="65px">
+            <template slot-scope="scope">
+              {{ scope.row.INVOICE_STATUS | transStatus }}
+            </template>
+          </el-table-column>
+          <!-- <el-table-column
             prop="CREATE_DATE"
             label="创建时间"
             align="center"
@@ -94,7 +99,7 @@
             label="创建人"
             align="center"
             width="70px"
-          ></el-table-column>
+          ></el-table-column> -->
           <el-table-column
             prop="LOGISTICS_COMPANY"
             label="物流公司"
@@ -156,7 +161,7 @@
                 icon="el-icon-search"
                 circle
                 v-if="
-                  scope.row.INVOICE_STATUS == 0 || scope.row.INVOICE_STATUS == 1 || scope.row.INVOICE_STATUS == 3
+                  scope.row.INVOICE_STATUS == 0 || scope.row.INVOICE_STATUS == 1 || scope.row.INVOICE_STATUS == 3 || scope.row.INVOICE_STATUS == 2
                 "
               ></el-button>
               <el-button
@@ -165,7 +170,7 @@
                 size="mini"
                 icon="el-icon-edit"
                 circle
-                v-if="scope.row.INVOICE_STATUS == 2 "
+                v-if="scope.row.INVOICE_STATUS == 4 "
               ></el-button>
             </template>
           </el-table-column>
@@ -193,7 +198,7 @@
       <!-- 查看区 -->
       <div v-show="isCheck">
         <div style="width:100%;text-align:center;font-size:20px">{{DeliverData_1.PUR_NO}} 送货单明细 ({{DeliverData_1.INVOICE_STATUS | transStatus}})</div>
-        <div v-if="DeliverData_1.INVOICE_STATUS == 3" style="font-size:20px;float:right;">退回说明：{{DeliverData_1.REBACK_NOTES}}
+        <div v-if="DeliverData_1.INVOICE_STATUS == 3" style="font-size:20px;float:right;">未通过说明：{{DeliverData_1.REBACK_NOTES}}
         </div>
         <br>
         <table style="width:100%;text-align:center">
@@ -269,6 +274,12 @@
             align="center"
             width="150px"
           ></el-table-column>
+          <!-- <el-table-column
+            prop="REBACK_QTY"
+            label="退货数量"
+            align="center"
+            width="150px"
+          ></el-table-column> -->
           <el-table-column
             prop="UNIT1"
             label="单位"
@@ -298,7 +309,7 @@
       <!-- 编辑区 -->
       <div v-show="isEdit">
         <div style="width:100%;text-align:center;font-size:20px">{{editData.PUR_NO}} 送货单明细 ({{editData.INVOICE_STATUS | transStatus}})</div>
-        <div v-if="editData.INVOICE_STATUS == 3" style="font-size:20px;float:right;">退回说明：{{editData.REBACK_NOTES}}
+        <div v-if="editData.INVOICE_STATUS == 3" style="font-size:20px;float:right;">未通过说明：{{editData.REBACK_NOTES}}
         </div>
         <br>
         <table style="width:100%;text-align:center">
@@ -491,13 +502,14 @@
             </template>
           </el-table-column>
         </el-table>
+        <div v-if="editData.INVOICE_STATUS == 4">
         <el-button
           style="margin-left:40%;margin-top:10px"
           class="trueButton"
           @click="Delete"
           >删除送货单</el-button
         >
-        <el-button class="trueButton" @click="isTrueEdit">确认修改</el-button>
+        <el-button class="trueButton" @click="isTrueEdit">确认修改</el-button></div>
       </div>
     </el-dialog>
     <el-dialog
@@ -699,7 +711,7 @@
             <td>
               <input
                 v-model="submitForm.LOGISTICS_LINKMAN"
-                placeholder="(客户必填))"
+                placeholder="(客户必填)"
                 clearable
                 class="inputStyle"
               />
@@ -777,7 +789,7 @@
             align="center"
             width="90px"
           ></el-table-column>
-          <el-table-column label="待送货数量" align="center" width="155px">
+          <el-table-column label="送货数量" align="center" width="155px">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.INVOICE_QTY"
@@ -921,7 +933,7 @@ export default {
           value: ""
         },
         {
-          label: "已确认",
+          label: "已通过",
           value: "1"
         },
         {
@@ -929,7 +941,7 @@ export default {
           value: "2"
         },
         {
-          label: "退回",
+          label: "未通过",
           value: "3"
         }
       ],
@@ -972,13 +984,13 @@ export default {
           return "全部";
           break;
         case 1:
-          return "已确认";
+          return "已通过";
           break;
         case 2:
           return "待确认";
           break;
         case 3:
-          return "退回";
+          return "未通过";
           break;
       }
     },
@@ -1056,6 +1068,11 @@ export default {
             type: "success"
           });
           this.search();
+        }else{
+          this.$alert("保存失败，请尝试刷新重试", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
         }
       });
     },
@@ -1093,7 +1110,8 @@ export default {
           PRODUCT_NOTE: this.multipleSelection_1[i].PRODUCT_NOTE,
           QTY: this.multipleSelection_1[i].QTY,
           DATE_REG: this.multipleSelection_1[i].DATE_REG,
-          DATE_DELIVER: this.multipleSelection_1[i].DATE_DELIVER
+          DATE_DELIVER: this.multipleSelection_1[i].DATE_DELIVER,
+          //REBACK_QTY:0
         };
         this.$set(this.multipleSelection_2, i, this.multipleSelection_2[i]);
       }
