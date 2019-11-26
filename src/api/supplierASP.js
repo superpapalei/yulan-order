@@ -169,3 +169,20 @@ export function DeleteDelivery(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//修改已确认单的打印标志
+export function UpdatePrintedById(data, config = {}) {
+    return post('/PUR_HEAD/UpdatePrintedById', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+//查找未打印记录
+export function GetNoPrinted(data, config = {}) {
+    return post('/PUR_HEAD/GetNoPrinted', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
