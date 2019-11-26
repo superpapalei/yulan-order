@@ -697,7 +697,7 @@ import {
   UpdatePrintedById
 } from "@/api/paymentASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
-import { mapMutations, mapActions } from "vuex";
+import { mapMutations } from "vuex";
 import { mapState } from "vuex";
 export default {
   name: "refundExamine",
@@ -847,7 +847,7 @@ export default {
         this.allNum = res.count;
       });
     },
-    //查询满足条件的该用户的退货赔偿
+    //查询满足条件所有用户的退货赔偿
     refresh() {
       let obj = {
         CID: this.CID,
@@ -966,6 +966,7 @@ export default {
               confirmButtonText: "确定",
               type: "success"
             });
+            this.releaseBadge("newRefund2");//刷新角标
             this.refresh();
             this.RefundDetail = false;
             return;
@@ -1006,6 +1007,7 @@ export default {
                  confirmButtonText: "确定",
                  type: "success"
                });
+             this.releaseBadge("newRefund2");//刷新角标
              this.refresh();
              this.RefundDetail = false;
              return;
@@ -1165,8 +1167,7 @@ export default {
         targetStyles: ["*"]
       });
     },
-    ...mapMutations("navTabs", ["addTab"]),
-    ...mapActions("navTabs", ["closeTab", "closeToTab"])
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   },
   computed: {
     //返回大写形式的总金额

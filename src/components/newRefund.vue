@@ -586,7 +586,7 @@ import {
   UpdatePrintedById
 } from "@/api/paymentASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
-import { mapMutations, mapActions } from "vuex";
+import { mapMutations } from "vuex";
 import { mapState } from "vuex";
 export default {
   name: "refundExamine",
@@ -611,7 +611,7 @@ export default {
       isEdit:false,
       RefundDetail:false,
       isRefundAdd:false,
-      SELECT_STATUS: null, //存储下拉框的值
+      SELECT_STATUS: "CUSTOMERAFFIRM", //存储下拉框的值
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
       companyId: Cookies.get("companyId"),
@@ -834,6 +834,7 @@ export default {
               confirmButtonText: "确定",
               type: "success"
             });
+            this.releaseBadge("newRefund1");//刷新角标
             this.refresh();
             this.RefundDetail = false;
             return;
@@ -931,8 +932,7 @@ export default {
         targetStyles: ["*"]
       });
     },
-    ...mapMutations("navTabs", ["addTab"]),
-    ...mapActions("navTabs", ["closeTab", "closeToTab"])
+    ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   },
   computed: {
     //返回大写形式的总金额
