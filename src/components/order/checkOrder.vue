@@ -1620,15 +1620,15 @@ export default {
       if (getPush[0].orderNumber) {
         //窗帘重新提交本身有表头数据，加载默认数据
         this.ctm_order.orderNo = orderItem.ORDER_NO;
-        this.ctm_order.buyUser = orderItem.BUYUSER;
-        this.ctm_order.buyUserPhone = orderItem.BUYUSERPHONE;
-        this.ctm_order.buyUserAddress = orderItem.BUYUSER_ADDRESS;
-        this.ctm_order.buyUserPicture = orderItem.BUYUSER_PICTURE;
+        this.ctm_order.buyUser = orderItem.BUYUSER.trim();
+        this.ctm_order.buyUserPhone = orderItem.BUYUSERPHONE.trim();
+        this.ctm_order.buyUserAddress = orderItem.BUYUSER_ADDRESS.trim();
+        this.ctm_order.buyUserPicture = orderItem.BUYUSER_PICTURE.trim();
         if (this.ctm_order.buyUserPicture) {
           var list = this.ctm_order.buyUserPicture.split(";");
           for (var i = 0; i < list.length - 1; i++) {
             var index = list[i].lastIndexOf("/");
-            if(index = -1) index = list[i].lastIndexOf("\\");
+            if (index == -1) index = list[i].lastIndexOf("\\");
             var fileName = list[i].substr(index + 1);
             this.fileList.push({
               name: fileName,
@@ -1636,14 +1636,13 @@ export default {
             });
           }
         }
-        console.log(this.fileList)
         this.ctm_order.wlContacts = orderItem.WL_CONTACTS;
         this.ctm_order.wlTel = orderItem.WL_TEL;
         this.ctm_order.postAddress = orderItem.POST_ADDRESS;
         this.ctm_order.reciverArea1 = orderItem.RECIVER_AREA1;
         this.ctm_order.reciverArea2 = orderItem.RECIVER_AREA2;
         this.ctm_order.reciverArea3 = orderItem.RECIVER_AREA3;
-        this.ctm_order.notes = orderItem.NOTES;
+        this.ctm_order.notes = orderItem.NOTES.trim();
         this.ctm_order.deliveryNotes = orderItem.DELIVERY_NOTES;
         this.ctm_order.deliveryType = orderItem.DELIVERY_TYPE;
         this.ctm_order.projectNo = orderItem.PROJECT_NO;
