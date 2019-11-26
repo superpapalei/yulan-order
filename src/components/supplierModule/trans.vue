@@ -384,12 +384,6 @@ export default {
   width: 120px;
   border:3
 }
-.lanJuport .el-input__inner{
-  width: 160px;
-  height: 30px;
-  /* margin-left:0px;
-  margin-right:0px; */  
-}
 .lanJuport .el-table td,
 .lanJuport .el-table th {
   padding: 3px 0 !important;
