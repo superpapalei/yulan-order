@@ -7,8 +7,9 @@
               <el-input
                   @keyup.enter.native="SelectClick()"
                   prefix-icon="el-icon-search"
-                  style="width:6%; min-width:200px;padding:200"
+                 style="width:160px;"
                   placeholder=" 原始单号:（精确）"
+                  
                   v-model="po"
                 >
                 </el-input>
@@ -27,6 +28,7 @@
              format="yyyy-MM-dd"
              value-format="yyyy-MM-dd"
             placeholder="选择日期"
+            style="width:140px;"
           >
           </el-date-picker>
           <span class="demonstration">至</span>
@@ -37,6 +39,7 @@
              format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
             placeholder="选择日期"
+            style="width:140px;"
           ></el-date-picker>
           <el-button :id="'test111'" @click="autoSearch()" size="small" icon="el-icon-search" style="margin-left:8px" class="button_2">搜索</el-button>
          <el-button @click="downLoadAll()" size="small" style="margin-left:8px" class="button_2">下载Excel</el-button>
@@ -383,12 +386,6 @@ export default {
   margin: 3px;
   width: 120px;
   border:3
-}
-.lanJuport .el-input__inner{
-  width: 160px;
-  height: 30px;
-  /* margin-left:0px;
-  margin-right:0px; */  
 }
 .lanJuport .el-table td,
 .lanJuport .el-table th {
