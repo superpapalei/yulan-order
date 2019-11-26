@@ -491,14 +491,14 @@
                 <el-input
                   @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
-                  
+                    style="width:160px;"
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-           
+             style="width:140px;"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -508,7 +508,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-            
+              style="width:140px;"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -519,6 +519,7 @@
                     v-model="selvalue"
                     @change="SelectClick"
                     placeholder="全部"
+                      style="width:120px;"
                   >
                     <el-option
                       v-for="item in options"
@@ -603,14 +604,14 @@
                 <el-input
                   @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
-                
+                  style="width:160px;"
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-                
+                  style="width:140px;"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -620,7 +621,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-           
+                  style="width:140px;"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -631,6 +632,7 @@
                     v-model="selvalue"
                     @change="SelectClick"
                     placeholder="全部"
+                      style="width:120px;"
                   >
                     <el-option
                       v-for="item in options"
@@ -742,14 +744,14 @@
                 <el-input
                   @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
-       
+                    style="width:160px;"
                   placeholder=" 采购单号:（精确）"
                   v-model="po"
                 >
                 </el-input>
                 <el-date-picker
                   v-model="date1"
-           
+             style="width:140px;"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -759,7 +761,7 @@
                 <span class="demonstration">至</span>
                 <el-date-picker
                   v-model="date2"
-                 
+                   style="width:140px;"
                   align="right"
                   type="date"
                   format="yyyy-MM-dd"
@@ -1865,7 +1867,6 @@ z-index:9999;
 }
 .lanJuport .el-input__inner{
 
-   width: 160px !important;
   height: 30px;
   /* margin-left:0px;
   margin-right:0px; */
@@ -1882,16 +1883,19 @@ line-height: 30px;
 .tb_font13 .el-input__icon {
     line-height: 30px;
 }
-.lanJuport .el-input,
-.el-date-editor.el-input__inner {
+/* .lanJuport .el-input, */
+/* .el-date-editor.el-input__inner {
      width: 160px !important;
-}
+} */
 
 
 
 .lanJuport .el-table td,
 .lanJuport .el-table th {
   padding: 3px 0 !important;
+}
+.lanJuport .el-input__icon{
+  line-height: 30px;
 }
 .fixedDiv {
   
