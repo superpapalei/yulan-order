@@ -160,13 +160,13 @@
             <template slot-scope="scope">
               <div
                 v-if="scope.row.noteTypeName"
-                style="color:darkred;font-size:15px;margin:10px 20px;"
+                style="color:red;font-size:15px;font-weight:bold;margin:10px 20px;"
               >
                 {{ scope.row.noteTypeName }}
               </div>
               <div
                 v-if="baobei"
-                style="color:darkred;font-size:15px;margin:10px 20px;"
+                style="color:red;font-size:15px;font-weight:bold;margin:10px 20px;"
               >
                 此型号已报备，如果直接下单，有可能不被处理，请先与工厂订单部联系
               </div>
