@@ -440,6 +440,10 @@ export default {
       currentPage: 1,
       statusArray: [
         {
+          label: "全部状态",
+          value: 0
+        },
+        {
           label: "未处理",
           value: 1
         },

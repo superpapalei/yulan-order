@@ -390,6 +390,10 @@ export default {
       rateArray: ["极差", "失望", "一般", "满意", "惊喜"],
       statusArray: [
         {
+          label: "全部状态",
+          value: 0
+        },
+        {
           label: "未审核",
           value: 1
         },
