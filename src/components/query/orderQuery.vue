@@ -371,6 +371,7 @@ import {
   getCustomerName
 } from "@/api/areaInfoASP";
 import { getOrderByAreaCustomer,getOrderInfoByCustomer } from "@/api/orderInfoASP";
+import Vue from 'vue'
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 const Quest = "http://14.29.223.114:10250/yulan-capital";
@@ -727,9 +728,14 @@ export default {
       this.queryQuYu_1();
     },
     async queryQuYu_1() {
-      
+      var loading = Vue.prototype.$loading({
+        lock: true,
+        text: "加载中...",
+        target: document.querySelector('.loading-area')//设置加载动画区域
+    });
       //this.typeFilter=[],
       this.tableData = [];
+      this.query_1 = false
       this.CUSTOMERED = [];
       this.CUSTOMERED_1 = [];
       this.date1="",
@@ -750,6 +756,7 @@ export default {
       let month = this.date1.slice(5, 7);
       let endMonth = this.date2.slice(5, 7);
       if (this.value_4.length == 0) {
+          loading.close();
             this.$alert("未选择用户", "提示", {
             confirmButtonText: "确定",
             type: "success"
@@ -757,7 +764,7 @@ export default {
         
       } else {
         for (var i = 0; i < this.value_4.length; i++) {
-          this.date1=""
+      this.date1=""
       this.date2=""
       this.assignments= ""
       this.assignmentsTarget= ""
@@ -824,7 +831,7 @@ export default {
           this.get_CUSTOMER_NAME = res1.data[0]
         var res2 = await getOrderInfoByCustomer({
           customer: this.value_4[i], //已选用户
-        })
+        },{ loading: false })
         this.getSomeData = res2.data[0]
         if(res2.data.length == 0){
           // this.$alert("选择客户无订单", "提示", {
@@ -851,11 +858,14 @@ export default {
         }
 
         this.CUSTOMERED = this.CUSTOMERED_1 
+
         if(this.CUSTOMERED.length == 0){
+          loading.close();
           this.$alert("选择客户无订单", "提示", {
             confirmButtonText: "确定",
             type: "success"
           });
+
           return this.query_1 = false
         }
         // for(var i = 0; i < this.CUSTOMERED.length;i++){
@@ -864,6 +874,7 @@ export default {
         //     this.moneySum = sum
         // }
         this.query_1 = true;
+        loading.close();
         // var data = {
         //   type:this.typeFilter,//类型筛选
         //   costomerCodes: this.value_4, //已选用户
