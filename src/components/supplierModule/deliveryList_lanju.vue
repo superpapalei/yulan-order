@@ -3,7 +3,7 @@
   <div>
     <el-card shadow="hover">
       <div slot="header">
-        <span class="fstrong f16">送货单(兰居)</span>
+        <span class="fstrong f16">送货单确认</span>
       </div>
 
       <div id="tbar" class="tbarStyle">
@@ -51,13 +51,13 @@
           @click="search()"
           >查询</el-button
         >
-        <el-button
+        <!-- <el-button
           size="medium"
           type="primary"
           style="float:right"
           @click="_addRecord()"
           >新增</el-button
-        >
+        > -->
       </div>
 
       <div style="margin-top:10px">
@@ -79,7 +79,12 @@
             width="100px"
           >
           </el-table-column>
-          <el-table-column
+          <el-table-column label="状态" align="center" width="65px">
+            <template slot-scope="scope">
+              {{ scope.row.INVOICE_STATUS | transStatus }}
+            </template>
+          </el-table-column>
+          <!-- <el-table-column
             prop="CREATE_DATE"
             label="创建时间"
             align="center"
@@ -94,7 +99,7 @@
             label="创建人"
             align="center"
             width="70px"
-          ></el-table-column>
+          ></el-table-column> -->
           <el-table-column
             prop="LOGISTICS_COMPANY"
             label="物流公司"
@@ -156,7 +161,7 @@
                 icon="el-icon-search"
                 circle
                 v-if="
-                 (scope.row.INVOICE_STATUS == 1 || scope.row.CONFIRM_STATUS == 3)  && (scope.row.CONFIRM_STATUS == 0 || scope.row.CONFIRM_STATUS == 1 || scope.row.CONFIRM_STATUS == 3)
+                 (scope.row.INVOICE_STATUS == 1 || scope.row.CONFIRM_STATUS == 3)  && (scope.row.CONFIRM_STATUS == 0 || scope.row.CONFIRM_STATUS == 1 || scope.row.CONFIRM_STATUS == 3 )
                 "
               ></el-button>
               <el-button
@@ -192,27 +197,27 @@
     >
         <el-dialog
         width="30%"
-        
         :visible.sync="rebackVisible"
         append-to-body
         >
-            <div style="width:100%;text-align:center;font-size:20px">{{editData.PUR_NO}} 退回说明</div>
+            <div style="width:100%;text-align:center;font-size:20px">{{editData.PUR_NO}} 未通过说明</div>
             <div style="margin-top:10px">
                 <el-input
                 v-model="reback_notes_1"
-                placeholder="请输入退回说明:"
-                tyle="width:30%;height:50PX"
+                placeholder="请输入未通过说明:"
+                tyle="width:30%;height:150PX"
                 clearable>
                 </el-input>
             </div>
             <el-button 
             style="margin-left:40%;margin-top:10px"
             class="trueButton"
-            @click="rebackTure">确认退回</el-button>
+            @click="rebackTure">确认</el-button>
         </el-dialog>
       <!-- 查看区 -->
       <div v-show="isCheck">
         <div style="width:100%;text-align:center;font-size:20px">{{DeliverData_1.PUR_NO}} 送货单明细 ({{DeliverData_1.CONFIRM_STATUS | transStatus}})</div>
+        <div v-if="DeliverData_1.CONFIRM_STATUS == 3" style="font-size:20px;float:right;">未通过说明：{{DeliverData_1.REBACK_NOTES}}</div>
         <br>
         <table style="width:100%;text-align:center">
         <tr>
@@ -287,6 +292,12 @@
             align="center"
             width="150px"
           ></el-table-column>
+          <!-- <el-table-column
+            prop="REBACK_QTY"
+            label="退货数量"
+            align="center"
+            width="150px"
+          ></el-table-column> -->
           <el-table-column
             prop="UNIT1"
             label="单位"
@@ -467,7 +478,7 @@
             align="center"
             width="180px"
           ></el-table-column>
-          <el-table-column label="发货数量" align="center" width="155px">
+          <el-table-column prop="INVOICE_QTY" label="发货数量" align="center" width="155px">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.INVOICE_QTY"
@@ -478,11 +489,22 @@
               ></el-input-number>
             </template>
           </el-table-column>
+          <!-- <el-table-column label="退货数量" align="center" width="155px">
+            <template slot-scope="scope">
+              <el-input-number
+                v-model="scope.row.REBACK_QTY"
+                size="mini"
+                controls-position="right"
+                :min="0"
+                :max="scope.row.max_qty"
+              ></el-input-number>
+            </template>
+          </el-table-column> -->
           <el-table-column
             prop="UNIT1"
             label="单位"
             align="center"
-            width="100px"
+            width="80px"
           ></el-table-column>
           <el-table-column
             prop="MAT_BRAND"
@@ -507,13 +529,15 @@
             </template>
           </el-table-column>
         </el-table>
+        <div>
         <el-button
-          style="margin-left:40%;margin-top:10px"
-          class="trueButton"
+          style="margin-left:40%;margin-top:10px;"
+          class="trueButton_1"
           @click="reback_show"
-          >退回</el-button
+          >不通过</el-button
         >
-        <el-button class="trueButton" @click="isTrueEdit">确认</el-button>
+        <el-button class="trueButton" @click="isTrueEdit">通过</el-button>
+        </div>
       </div>
     </el-dialog>
     <el-dialog
@@ -561,7 +585,7 @@
           ></el-table-column>
           <el-table-column
             prop="QTY_PUR"
-            label="待送货数量"
+            label="送货数量"
             align="center"
             width="85px"
           ></el-table-column>
@@ -666,7 +690,7 @@
                 value-format="yyyy-MM-dd"
                 placeholder="发货日期"
                 v-model="ruleForm_2.dateValue"
-                style="width:100%"
+                style="width:100%;height:100%"
               ></el-date-picker>
             </td>
             <td>预计到货时间：</td>
@@ -677,7 +701,7 @@
                 value-format="yyyy-MM-dd"
                 placeholder="预计到货时间"
                 v-model="ruleForm_3.dateValue"
-                style="width:100%"
+                style="width:100%;height:100%"
               ></el-date-picker>
             </td>
           </tr>
@@ -939,7 +963,7 @@ export default {
           value: ""
         },
         {
-          label: "已确认",
+          label: "已通过",
           value: "1"
         },
         {
@@ -947,7 +971,7 @@ export default {
           value: "2"
         },
         {
-          label: "退回",
+          label: "未通过",
           value: "3"
         },
       ],
@@ -990,13 +1014,13 @@ export default {
           return "全部";
           break;
         case 1:
-          return "已确认";
+          return "已通过";
           break;
         case 2:
           return "待确认";
           break;
         case 3:
-          return "退回";
+          return "未通过";
           break;
       }
     },
@@ -1232,6 +1256,7 @@ export default {
         LOGISTICS_TEL: val.LOGISTICS_TEL, //物流联系电话
         CONFIRM_STATUS:val.CONFIRM_STATUS,
         REBACK_NOTES:val.REBACK_NOTES,
+
       };
       this.DeliverData_1 = data;
       var data_1 = {
@@ -1313,7 +1338,8 @@ export default {
             PRODUCT_NOTE: this.DetailData[i].PRODUCT_NOTE,
             QTY: this.DetailData[i].QTY,
             DATE_REG: this.DetailData[i].DATE_REG,
-            DATE_DELIVER: this.DetailData[i].DATE_DELIVER
+            DATE_DELIVER: this.DetailData[i].DATE_DELIVER,
+           // REBACK_QTY:this.DetailData[i].REBACK_QTY,
           };
           this.$set(this.DetailData_1, i, this.DetailData_1[i]);
         }
@@ -1322,7 +1348,7 @@ export default {
     //退回
     reback() {
         if (this.reback_notes_1.length == "") {
-        this.$alert("请输入退回说明", "提示", {
+        this.$alert("请输入不通过说明", "提示", {
           confirmButtonText: "确定",
           type: "warning"
         });
@@ -1331,6 +1357,7 @@ export default {
       this.submit.CONFIRM_STATUS = 3;
       this.submit.INVOICE_STATUS = 3;
       this.submit.REBACK_NOTES = this.reback_notes_1;
+      
       if (this.ruleForm_1.dateValue !== this.submit.INVOICE_DATE) {
         this.submit.INVOICE_DATE = this.ruleForm_1.dateValue;
       }
@@ -1392,6 +1419,10 @@ export default {
 .trueButton {
   background: #8bc34a;
   color: rgb(255, 255, 255);
+}
+.trueButton_1 {
+  background: #8bc34a;
+  color: rgb(228, 93, 93);
 }
 .button_1 {
   background: #8bc34a;

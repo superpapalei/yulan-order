@@ -838,7 +838,6 @@ export default {
           //   confirmButtonText: "确定",
           //   type: "success"
           // });
-          
           continue
         }
         var sum = this.moneySum + reduce
