@@ -483,7 +483,7 @@
       </el-dialog>
 
    
-      <div class="lanJuport">
+      <div class="lanJuport2">
           <el-tabs v-model="activeName" @tab-click="handleClick">
   <!-- 待确认页签============================================================================================================== --> 
             <el-tab-pane label="待确认" name="first" align="left" >
@@ -1865,12 +1865,8 @@ z-index:9999;
   width: 120px;
   border:3
 }
-.lanJuport .el-input__inner{
-
+.lanJuport2 .el-input__inner{
   height: 30px;
-  /* margin-left:0px;
-  margin-right:0px; */
-
 }
 
 .tb_font13 .el-input__inner{
@@ -1883,18 +1879,18 @@ line-height: 30px;
 .tb_font13 .el-input__icon {
     line-height: 30px;
 }
-/* .lanJuport .el-input, */
+/* .lanJuport2 .el-input, */
 /* .el-date-editor.el-input__inner {
      width: 160px !important;
 } */
 
 
 
-.lanJuport .el-table td,
-.lanJuport .el-table th {
+.lanJuport2 .el-table td,
+.lanJuport2 .el-table th {
   padding: 3px 0 !important;
 }
-.lanJuport .el-input__icon{
+.lanJuport2 .el-input__icon{
   line-height: 30px;
 }
 .fixedDiv {
