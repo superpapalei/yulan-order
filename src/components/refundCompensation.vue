@@ -289,12 +289,13 @@ export default {
         this.addZeroIfNeed(from.getMonth() + 1) +
         "-" +
         this.addZeroIfNeed(from.getDate());
-      this.dateTo =
+      this.dateTo =              //原来的搜索栏的截止时间为当天的00:00:00
         to.getFullYear() +
         "-" +
         this.addZeroIfNeed(to.getMonth() + 1) +
         "-" +
         this.addZeroIfNeed(to.getDate());
+      
     },
     //展开搜索
     clickSearch() {
@@ -553,7 +554,7 @@ export default {
     //区分客户类型做一些初始化
     if (this.identity === "USER") {
       this.chooseState = null;
-      this.initDate();
+      // this.initDate();    //原来的搜索栏的截止时间为当天的00:00:00
     } else if (this.identity === "ECWEB") {
       this.chooseState = "CUSTOMERAFFIRM";
       this.initBadge();

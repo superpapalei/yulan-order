@@ -184,6 +184,11 @@
                 placeholder="（丢失数量）"
                 clearable
                 class="inputStyle"
+                oninput="value=value.replace(/[^\d.]/g,'')
+                           .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                           .replace('.', '$#$').replace(/\./g, '')
+                           .replace('$#$', '.')
+                           .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
               >
               </el-input>
             </td>
@@ -198,6 +203,11 @@
                 placeholder="（破损数量）"
                 clearable
                 class="inputStyle"
+                oninput="value=value.replace(/[^\d.]/g,'')
+                           .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                           .replace('.', '$#$').replace(/\./g, '')
+                           .replace('$#$', '.')
+                           .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
               >
               </el-input>
             </td>

@@ -282,7 +282,7 @@ import {
 } from "@/api/refund";
 import {
   GetCompensationByIdBefore,
-  InsertCompensation,
+  InsertCompensationOld,
   UpdateCompensation,
   DeleteCompensation,
   UpdateState
@@ -463,7 +463,7 @@ export default {
         //new--新建
         if (this.baseData.method === "new") {
           //addRefund(obj)
-          InsertCompensation({ head: obj, details: _rcbItems })
+          InsertCompensationOld({ head: obj, details: _rcbItems })
             .then(res => {
               if (status === 1) {
                 //直接提交
@@ -644,7 +644,7 @@ export default {
       this.item.forEach(_item => {
         total += Number(_item.TOTALMONEY);
       });
-      return total;
+      return total.toFixed(2);
     },
     //返回大写形式的总金额
     totalMoneyUpper: function() {
