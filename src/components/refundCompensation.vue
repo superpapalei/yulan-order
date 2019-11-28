@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-card shadow="hover">
-      <div slot="header">
+      <!-- <div slot="header">
         <span class="fstrong f16">退款赔偿</span>
-      </div>
+      </div> -->
       <div>
         <div class="search">
           <span>建立日期:</span>
@@ -57,6 +57,7 @@
             @click.native="insertRefund"
             v-if="identity === 'USER'"
             class="fr"
+            style="margin-right:20px;"
             >新 建</el-button
           >
         </div>
@@ -92,8 +93,8 @@
           :data="tableData"
           style="width: 100%"
         >
-          <el-table-column label="编号" prop="ID"> </el-table-column>
-          <el-table-column min-width="130" label="创建时间">
+          <el-table-column label="编号" prop="ID" width="150" align="center"> </el-table-column>
+          <el-table-column label="创建时间" width="170" align="center">
             <template slot-scope="scope">
               {{ toLocale(scope.row.CREATE_TS) }}
             </template>
@@ -102,16 +103,18 @@
             v-if="identity === 'USER'"
             label="客户名称"
             prop="CNAME"
+            align="center"
           >
           </el-table-column>
           <el-table-column
             v-if="identity === 'ECWEB'"
             label="玉兰业务员"
             prop="ERP_CREATORNAME"
+            align="center"
           >
           </el-table-column>
-          <el-table-column label="货品数" prop="ITEM_COUNT"> </el-table-column>
-          <el-table-column label="状态">
+          <el-table-column label="货品数" width="80" prop="ITEM_COUNT" align="center"> </el-table-column>
+          <el-table-column label="状态" width="100" align="center">
             <template slot-scope="scope">
               {{ getNameByState(scope.row.STATE) }}
             </template>
@@ -119,10 +122,12 @@
           <el-table-column
             v-if="identity === 'USER'"
             label="创建人"
+            width="170"
             prop="ERP_CREATORNAME"
+            align="center"
           >
           </el-table-column>
-          <el-table-column min-width="90" label="操作">
+          <el-table-column label="操作" width="130" align="center">
             <template slot-scope="scope">
               <el-tooltip content="查看" placement="top">
                 <el-button
@@ -196,6 +201,8 @@
             v-if="identity === 'USER'"
             label="打印标记"
             prop="PRINTED"
+            align="center"
+            width="90"
           >
             <template slot-scope="scope">
               <el-checkbox
