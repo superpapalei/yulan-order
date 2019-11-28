@@ -31,7 +31,9 @@
               @click="changeAside"
             >
               <i id="asideControll" class="iconfont">&#xe61e;</i>
-              <span class="ml10 mr10">{{asideStatus == true ? '菜单展开' : '菜单收起'}}</span>
+              <span class="ml10 mr10">{{
+                asideStatus == true ? "菜单展开" : "菜单收起"
+              }}</span>
             </li>
             <!-- <li title="主页" @click="dialogFormVisible = true">
               <i class="iconfont">&#xe65e;</i>
@@ -55,7 +57,15 @@
                   <el-dropdown-item>修改登录密码</el-dropdown-item>
                   <el-dropdown-item>修改对账密码</el-dropdown-item>-->
                   <el-dropdown-item
-                    ><a style="color:#606266;" target="_blank" :href="'http://14.29.221.109:10250/pc/#/?cid='+cid + '&password=' + userInfo.password"
+                    ><a
+                      style="color:#606266;"
+                      target="_blank"
+                      :href="
+                        'http://14.29.221.109:10250/pc/#/?cid=' +
+                          cid +
+                          '&password=' +
+                          userInfo.password
+                      "
                       >网络协议签订</a
                     ></el-dropdown-item
                   >
@@ -84,12 +94,24 @@
           <span
             v-if="isManager !== '1'"
             style="color:white;line-height:50px;font-size:12px;margin-left:10px;"
-            >{{ "账户：" + cid + " " + realName + (identity=='ECWEB'? " " + "操作员":" ") }}</span
+            >{{
+              "账户：" +
+                cid +
+                " " +
+                realName +
+                (identity == "ECWEB" ? " " + "操作员" : " ")
+            }}</span
           >
           <span
             v-else
             style="color:white;line-height:50px;font-size:12px;margin-left:10px;"
-            >{{ "账户：" + cid + " " + realName + (identity=='ECWEB'? " " + "管理员" : " ") }}</span
+            >{{
+              "账户：" +
+                cid +
+                " " +
+                realName +
+                (identity == "ECWEB" ? " " + "管理员" : " ")
+            }}</span
           >
         </el-header>
         <el-main style="margin:0;padding:0;background:#ECF5EF;" class="backTop">
@@ -359,7 +381,7 @@ import {
   GetImageCustomer,
   GetAllData as GetImageAll
 } from "@/api/imageStoreASP";
-import {GetAllCompensation,GetUserCompensation} from "@/api/paymentASP";
+import { GetAllCompensation, GetUserCompensation } from "@/api/paymentASP";
 
 export default {
   name: "Main",
@@ -371,7 +393,7 @@ export default {
     return {
       lastClickTime: new Date().getTime(),
       cid: Cookies.get("cid"),
-      userInfo :JSON.parse(Cookies.get("userInfo")),
+      userInfo: JSON.parse(Cookies.get("userInfo")),
       isManager: Cookies.get("isManager"),
       customerType: Cookies.get("customerType"),
       realName: Cookies.get("realName"),
@@ -832,12 +854,12 @@ export default {
     async newRefundUserIcon() {
       let newRefund = await GetUserCompensation(
         {
-        CID: Cookies.get("cid"),
-        number: 9999,
-        page: 1,
-        startDate: "0001/1/1",
-        endDate: "9999/12/31",
-        state: "CUSTOMERAFFIRM"
+          CID: Cookies.get("cid"),
+          number: 9999,
+          page: 1,
+          startDate: "0001/1/1",
+          endDate: "9999/12/31",
+          state: "CUSTOMERAFFIRM"
         },
         { loading: false }
       );
@@ -870,7 +892,7 @@ export default {
       );
       this.changeBadge({
         name: "newRefund2",
-        index: newRefundExamine1.count+newRefundExamine2.count
+        index: newRefundExamine1.count + newRefundExamine2.count
       });
     },
 
@@ -1352,7 +1374,7 @@ export default {
           break;
         case "newRefund2":
           this.newRefundExamineIcon();
-          break;          
+          break;
       }
     });
     document.onkeydown = function(event) {
@@ -1379,15 +1401,15 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width: 1920px) {
+/* @media (min-width: 1920px) {
   .center {
-    width: 1650px;
+    width: 1900px;
     margin: 0 auto;
   }
 }
 @media (max-width: 1920px) {
   .center {
-    width: 1650px;
+    width: 1900px;
     margin: 0 auto;
   }
 }
@@ -1405,7 +1427,7 @@ export default {
 }
 @media (max-width: 1366px) {
   .center {
-    width: 1347px;
+    width: 1346px;
     margin: 0 auto;
   }
 }
@@ -1414,19 +1436,23 @@ export default {
     width: 1260px;
     margin: 0 auto;
   }
-} /*>=1280的设备*/
+}
 @media (max-width: 1100px) {
   .center {
     width: 1080px;
     margin: 0 auto;
   }
-} /*>=1100的设备*/
+}
 @media (max-width: 1024px) {
   .center {
     width: 1000px;
     margin: 0 auto;
   }
-} /*>=1024的设备*/
+} */
+.center {
+  width: 99.5%;
+  margin: 0 auto;
+}
 /*侧边栏样式*/
 #aside-header {
   width: 100%;
