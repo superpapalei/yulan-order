@@ -570,14 +570,26 @@
                   v-model="processDetail[index].P_QTY"
                   placeholder=""
                   clearable
-                  class="inputStyle">
+                  class="inputStyle"
+                   oninput="value=value.replace(/[^\d.]/g,'')
+                           .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                           .replace('.', '$#$').replace(/\./g, '')
+                           .replace('$#$', '.')
+                           .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
+                           >
             </td>
             <td colspan="1" rowspan="1" style="height:15px">
                 <input
                   v-model="processDetail[index].P_MONEY"
                   placeholder=""
                   clearable
-                  class="inputStyle">
+                  class="inputStyle"
+                  oninput="value=value.replace(/[^\d.]/g,'')
+                           .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                           .replace('.', '$#$').replace(/\./g, '')
+                           .replace('$#$', '.')
+                           .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
+                           >
             </td>
             <td colspan="1" rowspan="1" style="height:15px">
                 <input
