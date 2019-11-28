@@ -261,7 +261,7 @@
               </ul>
             </td>
           </tr>        
-          <tr>
+          <tr v-if="submit.STATE!='SUBMITTED'">
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理意见
             </td>

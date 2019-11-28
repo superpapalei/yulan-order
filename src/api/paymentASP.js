@@ -24,6 +24,14 @@ export function InsertCompensation(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//插入退货赔偿记录
+export function InsertCompensationOld(data, config = {}) {
+    return post('/RETURNCOMPENSATIONBILL/InsertCompensationOld', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
 //查找所有的退货赔偿记录（原）
 export function GetAllCompensationOld(data, config = {}) {
     return post('/RETURNCOMPENSATIONBILL/GetAllCompensationOld', data, config).then((res) => {
