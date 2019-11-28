@@ -67,16 +67,16 @@
           class="border-t border-b"
           style="width: 100%;"
         >
-          <el-table-column prop="PRODUCTION_VERSION" label="产品/项目">
+          <el-table-column prop="PRODUCTION_VERSION" width="150" align="center" label="产品/项目">
           </el-table-column>
-          <el-table-column prop="ITEM_NO" label="型号"> </el-table-column>
-          <el-table-column prop="UNIT" label="单位"> </el-table-column>
-          <el-table-column prop="QTY" align="right" label="数量">
+          <el-table-column prop="ITEM_NO" width="150" align="center" label="型号"> </el-table-column>
+          <el-table-column prop="UNIT" width="150" align="center" label="单位"> </el-table-column>
+          <el-table-column prop="QTY" width="150" align="center" label="数量">
           </el-table-column>
-          <el-table-column prop="TOTALMONEY" align="right" label="金额">
+          <el-table-column prop="TOTALMONEY" width="150" header-align="center" align="right" label="金额">
           </el-table-column>
-          <el-table-column prop="NOTES" label="质量问题"> </el-table-column>
-          <el-table-column prop="PROCESS" label="处理意见"> </el-table-column>
+          <el-table-column prop="NOTES" align="center" label="质量问题"> </el-table-column>
+          <el-table-column prop="PROCESS" align="center" label="处理意见"> </el-table-column>
           <el-table-column
             label="操作"
             v-if="baseData.method !== 'see' && baseData.ERP_CREATOR === cid"
@@ -96,16 +96,15 @@
           v-if="item.length > 0"
         >
           <tr>
-            <td width="12.8%">金额（小写）</td>
-            <td width="49.85%" class="tr">{{ totalMoney }}</td>
+            <td width="130.5px" style="text-align:center;">金额（小写）</td>
+            <td width="581px" class="tr">{{ totalMoney }}</td>
             <td
-              :width="baseData.method === 'see' ? '25%' : '37.5%'"
               rowspan="2"
             ></td>
           </tr>
           <tr>
-            <td width="12.8%">金额（大写）</td>
-            <td width="49.85%" class="tr">{{ totalMoneyUpper }}</td>
+            <td width="130.5px" style="text-align:center;">金额（大写）</td>
+            <td width="581px" class="tr">{{ totalMoneyUpper }}</td>
           </tr>
         </table>
 
@@ -119,11 +118,11 @@
             <i class="el-icon-circle-plus success-icon f24 r"></i>
           </p>
           <section class="t-dec" style="padding:10px 0 10px 20px;">
-            注意：1、若您未在我公司发出的《客户确认书》之日起15日内确认、提出异议的，则视为放弃赔偿权利<br />
-            2、玉兰公司支付的退货金额，仅限于本确认书的金额，不承担其他费用；<br />
-            3、请您仔细阅读本确认书相关信息，一旦确认，视为同意我公司的处理本方案。<br />
+            注意：1、若您未在我公司发出的《客户确认书》之日起15日内确认、提出异议的，则视为放弃赔偿权利；<br />
+            &emsp;&emsp;&emsp;2、玉兰公司支付的退货金额，仅限于本确认书的金额，不承担其他费用；<br />
+            &emsp;&emsp;&emsp;3、请您仔细阅读本确认书相关信息，一旦确认，视为同意我公司的处理本方案。<br />
             公司名称：广东玉兰集团股份有限公司&emsp;&emsp;&emsp;&emsp;地址：东莞市莞城莞龙路段狮龙路莞城科技园内<br />
-            电话:0769-23321708&emsp;&emsp;邮政编码:523119&emsp;&emsp;&emsp;&emsp;&emsp;邮箱：yulan315@yulangroup.cn<br />
+            电话:0769-23321708&emsp;&emsp;邮政编码:523119&emsp;&emsp;&nbsp;邮箱：yulan315@yulangroup.cn<br />
           </section>
           <section class="tc ovh">
             <div class="t-com dib border-r l">
@@ -662,7 +661,10 @@ export default {
 #detailRefund .el-card {
   color: #000;
 }
-#refundTable td,
+#refundTable td{
+  border-right: 1px solid #000;
+  border-bottom: 0 !important;
+}
 #refundTable th {
   border-right: 1px solid #000;
   border-bottom: 1px solid #000 !important;
@@ -670,6 +672,13 @@ export default {
 #refundTable tr > td:last-child,
 #refundTable tr > th:nth-last-child(2) {
   border-right: none;
+}
+#detailRefund .el-table,
+#detailRefund .el-table thead{
+  color: #000;
+}
+#detailRefund .el-table::before{
+  height: 0;
 }
 #detailRefund .el-dialog__body {
   padding: 5px 0;

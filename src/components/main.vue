@@ -31,12 +31,13 @@
               @click="changeAside"
             >
               <i id="asideControll" class="iconfont">&#xe61e;</i>
+              <span class="ml10 mr10">{{asideStatus == true ? '菜单展开' : '菜单收起'}}</span>
             </li>
             <!-- <li title="主页" @click="dialogFormVisible = true">
               <i class="iconfont">&#xe65e;</i>
             </li> -->
             <router-link to="/notification/notificationMain" tag="li">
-              <li @click="addTab('notification/notificationMain')">
+              <li title="公告" @click="addTab('notification/notificationMain')">
                 <i class="el-icon-bell"></i>
                 <span class="ml10 mr10">公告</span>
               </li>
@@ -83,12 +84,12 @@
           <span
             v-if="isManager !== '1'"
             style="color:white;line-height:50px;font-size:12px;margin-left:10px;"
-            >{{ "账户：" + cid + " " + realName + " " + "操作员" }}</span
+            >{{ "账户：" + cid + " " + realName + (identity=='ECWEB'? " " + "操作员":" ") }}</span
           >
           <span
             v-else
             style="color:white;line-height:50px;font-size:12px;margin-left:10px;"
-            >{{ "账户：" + cid + " " + realName + " " + "管理员" }}</span
+            >{{ "账户：" + cid + " " + realName + (identity=='ECWEB'? " " + "管理员" : " ") }}</span
           >
         </el-header>
         <el-main style="margin:0;padding:0;background:#ECF5EF;" class="backTop">
@@ -1452,7 +1453,7 @@ export default {
 /*顶部导航样式*/
 .el-header {
   background: #8bc34a;
-  padding: 0 20px 0 10px;
+  padding: 0;
 }
 .el-header li {
   float: left;
