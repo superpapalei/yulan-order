@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="bottomButton">
+      <div class="bottomButton" v-if="Global.webTitle != Global.sysTitle.supply.webTitle">
         <div class="bottomBtn" @click="maskShow = true">
           <img
             src="../assets/img/img/Android.png"
