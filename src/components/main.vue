@@ -1012,7 +1012,7 @@ export default {
           this.startMove();
           for (var i = 0; i < this.newsTextArr.length; i++) {
             if (this.newsTextArr[i].showFlag == 1) {
-              this.newsTextArr[i].CONTENT = this.newsTextArr[i].CONTENT.replace(/\[ReplaceMark\]/g, this.Global.fileCenterUrl)
+              this.newsTextArr[i].CONTENT = this.newsTextArr[i].CONTENT.replace(/\[ReplaceMark\]/g, this.Global.fileCenterUrl);//替换网址
               //将所有需要显示的公告拼接
               this.newsHtmlData +=
                 "<div style='text-align:center;'><span style='font-size:18px;color:#303133;'>" +

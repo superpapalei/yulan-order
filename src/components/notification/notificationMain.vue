@@ -128,6 +128,7 @@ export default {
       });
     },
     showDetail(item) {
+      item.CONTENT = item.CONTENT.replace(/\[ReplaceMark\]/g, this.Global.fileCenterUrl);//替换网址
       this.detailTitle = item.TITLE;
       this.detailData = item.CONTENT;
       this.detailVisible = true;
