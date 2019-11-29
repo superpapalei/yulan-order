@@ -446,7 +446,7 @@ export default {
       FormRight:true,
       RefundDetail:false,
       isRefundAdd:false,
-      companyId: Cookies.get("companyId"), //公司Id
+      companyId: Cookies.get("customerMainId"), //公司Id
       companyName:"",//公司名称
       CONTRACT_NO:"",//ERP订单号
       CID: Cookies.get("cid"),//用户id
