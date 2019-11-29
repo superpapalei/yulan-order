@@ -107,8 +107,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="创建人"
-            prop="ERP_CREATORNAME"
+            label="处理人"
+            prop="DEALMAN_NAME"
             align="center"
           >
           </el-table-column>
