@@ -703,7 +703,7 @@ import {getReturnInfo2 } from "@/api/orderListASP";
 import {
   GetAllCompensation,
   GetCompensationById,
-  GetNoPrinted,
+  GetNoPrinted2,
   UpdateFirstAudition,
   UpdateProcess,
   UpdatePrintedById
@@ -851,7 +851,7 @@ export default {
     },
     //查询未打印的单据
     checkNoPrint() {
-      GetNoPrinted().then(res => {
+      GetNoPrinted2().then(res => {
         this.tableData = res.data;
         this.tableData.forEach(item => {
           item.PRINTED = item.PRINTED === "0" ? true : false;

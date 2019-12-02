@@ -282,7 +282,9 @@
 
       <el-dialog :visible.sync="THdetail" :width="THwidth" :top="THtop">
         <div style="margin:0 auto;width:20%;" v-show="whatType">
-          <span style="font-weight:600">{{ THhead }}明细表</span>
+          <span style="font-weight:600;font-size:15px;"
+            >{{ THhead }}明细表</span
+          >
         </div>
         <el-table
           v-show="whatType"
@@ -295,14 +297,14 @@
         >
           <el-table-column
             prop="itemNo"
-            width="120"
+            width="110"
             header-align="center"
             align="center"
             label="版本型号"
           ></el-table-column>
           <el-table-column
-            min-width="120"
-            header-align="center"
+            width="100"
+            align="center"
             label="名称"
             prop="itemNote"
           >
@@ -310,45 +312,36 @@
               <el-button type="text">{{ scope1.row.itemNote }}</el-button>
             </template> -->
           </el-table-column>
-          <el-table-column
-            header-align="center"
-            min-width="80"
-            align="center"
-            label="版本名称"
-          >
+          <el-table-column width="100" align="center" label="版本名称">
             <template slot-scope="scope">
               <span>{{ scope.row.itemVersion }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            header-align="center"
-            min-width="120"
-            align="center"
-            label="批号"
-          >
+          <el-table-column align="center" label="批号">
             <template slot-scope="scope">
               <span>{{ scope.row.batchNo }}</span>
             </template>
           </el-table-column>
-          <el-table-column min-width="60" label="单价">
+          <el-table-column width="60" label="单价" header-align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.salePrice }}</span>
             </template>
           </el-table-column>
-          <el-table-column width="80" label="物流单价">
+          <el-table-column width="80" label="物流单价" header-align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.transPrice }}</span>
             </template>
           </el-table-column>
-          <el-table-column min-width="60" label="数量">
+          <el-table-column width="60" label="数量" header-align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.qtyDeliver }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            min-width="80"
+            width="90"
             prop="money"
             label="金额"
+            header-align="center"
           ></el-table-column>
         </el-table>
         <div class="TH" v-show="!whatType">
@@ -381,7 +374,7 @@ export default {
       tableToExcel: null,
       CZSK: {},
       THtitle: "对账单明细",
-      THwidth: "70%",
+      THwidth: "",
       THtop: "15vh",
       whatType: true,
       //外面的翻页
@@ -547,7 +540,7 @@ export default {
       } else {
         this.whatType = true;
         // this.THtitle = "对账单明细";
-        this.THwidth = "65%";
+        this.THwidth = "50%";
         this.THtop = "15vh";
       }
       this.THdetail = true;

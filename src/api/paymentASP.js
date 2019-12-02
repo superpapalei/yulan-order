@@ -80,6 +80,14 @@ export function GetNoPrinted(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//查找未打印退货赔偿记录
+export function GetNoPrinted2(data, config = {}) {
+    return post('/RETURNCOMPENSATIONBILL/GetNoPrinted2', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
 //修改退货赔偿记录打印标识
 export function UpdatePrintedById(data, config = {}) {
     return post('/RETURNCOMPENSATIONBILL/UpdatePrintedById', data, config).then((res) => {
