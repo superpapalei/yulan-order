@@ -1342,19 +1342,19 @@
                   style="margin-left:8px"
                   class="button_2"
                   >搜索</el-button>
-               <!-- <el-button
+               <el-button
                   @click="OneStepCheck()"
                   size="small"
                   style="margin-left:8px"
                   class="button_3"
-                  >批量确认</el-button> -->
+                  >批量确认</el-button>
               </div>
               <el-table  @selection-change="handleSelectionChange"  class="th-font14"  border :data="pur_headData" style="width: 100%" highlight-current-row>
-                 <!-- <el-table-column
+                 <el-table-column
                   type="selection"
                   width="55"
                   >
-               </el-table-column> -->
+               </el-table-column>
                 <el-table-column type="index"  label=" "  :index="indexMethod">
                 </el-table-column>
                 <el-table-column
@@ -1866,25 +1866,50 @@ detailCol:[
       },
       //选择或输入条件后搜索
     OneStepCheck() {
-      if(arr_pur.length==0){
+      if(this.multipleSelection.length==0){
         this.$alert("未选定任何项！", "提示", {
             confirmButtonText: "确定",
             type: "warning"
           });
       }
       else {
-        this.batchTip_Visible=true;
+        // this.batchTip_Visible=true;
+      // let arr_pur=[];
+      // for(let i=0; i<this.multipleSelection.length;i++){
+      //   arr_pur.push(this.multipleSelection[i].PUR_NO);
+      // }
+      var data={
+       arr_pur:this.multipleSelection,
+       batchdate_deliver:this.batchdate_deliver
+      };
+      UpdateCheckFlagBatch(data).then(res => {
+          if (res.code == 0) {
+          this.$alert("批量确认成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          this.batchTip_Visible=false;
+          this.autoSearch();
+        } else {
+          this.$alert("批量确认失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        }
+      });
+
       }
     },
    BatchSure(){
-      if (this.batchdate_deliver == "") {
-        this.$alert("请选择一个统一的时间！", "提示", {
-          confirmButtonText: "好的",
-          type: "warning"
-        });
-        return;
-      }
-     else{
+      // if (this.batchdate_deliver == "") {
+      //   this.$alert("请选择一个统一的时间！", "提示", {
+      //     confirmButtonText: "好的",
+      //     type: "warning"
+      //   });
+      //   return;
+      // }
+    //  else{
+
        let arr_pur=[];
       for(let i=0; i<this.multipleSelection.length;i++){
         arr_pur.push(this.multipleSelection[i].PUR_NO);
@@ -1908,7 +1933,7 @@ detailCol:[
           });
         }
       });
-      }
+      // }
    
      
 },
