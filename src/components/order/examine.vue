@@ -62,6 +62,30 @@
         :key="index"
       >
         <div slot="header">
+          <el-tooltip
+            v-if="
+              (item.STATUS_ID == 1 &&
+                (item.CURTAIN_STATUS_ID == '' ||
+                  item.CURTAIN_STATUS_ID == 4)) ||
+                item.STATUS_ID == 2 ||
+                item.STATUS_ID == 4 ||
+                item.STATUS_ID == 7 ||
+                item.STATUS_ID == 12
+            "
+            class="item"
+            effect="dark"
+            content="玉兰·兰居尚品订单查询"
+            placement="top"
+          >
+            <a
+              target="_blank"
+              class="el-icon-position"
+              style="float:right;cursor: pointer;line-height: 35px;"
+              :href="
+                'http://www.luxlano.com/ddkc/DDrs2.asp?DDid=' + item.ORDER_NO
+              "
+            ></a>
+          </el-tooltip>
           <i
             style="float: right;color:#20a0ff;line-height: 35px;cursor: pointer;"
             class="el-icon-caret-bottom"
@@ -186,8 +210,9 @@
           </div>
         </div>
       </el-card>
-      <div v-if="data.length==0" style="text-align:center;margin:20px 0;">{{waitText}}
-        </div>
+      <div v-if="data.length == 0" style="text-align:center;margin:20px 0;">
+        {{ waitText }}
+      </div>
       <div style="margin:0 25%;" class="block">
         <el-pagination
           @size-change="handleSizeChange"
@@ -290,7 +315,7 @@ export default {
           value: "4"
         }
       ],
-      waitText:'加载中。。。'
+      waitText: "加载中。。。"
     };
   },
   filters: {
