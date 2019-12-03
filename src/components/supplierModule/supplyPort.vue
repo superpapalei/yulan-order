@@ -1368,13 +1368,13 @@ this.autoSearchDetail(PUR_NO);
 
       Submit(data).then(res => {
         if (res.code == 0) {
-          this.$alert("确认成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
+          // this.$alert("确认成功", "提示", {
+          //   confirmButtonText: "确定",
+          //   type: "success"
+          // });
           this.autoSearch();
-          this.checkX_Visible = false;
           this.checkY_Visible = false;
+          this.checkedY_Visible = true;
         } else {
           this.$alert("确认失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
