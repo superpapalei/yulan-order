@@ -297,18 +297,6 @@
                       placeholder="选择时间"
                       style="width:18%"
                     ></el-date-picker>
-                    <el-button
-                      style="width:16%"
-                      class="button_clolur"
-                      @click="Unitdeliver"
-                      >统一设置送货期</el-button
-                    >
-                    <el-button
-                      style="width:16%;margin-top:10px"
-                      class="button_clolur"
-                      @click="AllAccordPromise"
-                      >全部设为约定日期</el-button
-                    >
                   </div>
                   <div style="margin-top:20px" >
                     <span class="th-font16">  说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明:</span>
@@ -878,7 +866,7 @@
                     object_class="_Object:GridTable"
                     object_hashcode="6"
                     cellpadding="0"
-                    style="width:905px; float:right"
+                    style="width:903px; float:right"
                     
                    >
                                 <el-table-column  width="80" label="inner名称" align="center"> <template slot-scope="scope">{{getTypeName(scope.row.cl_name)}}</template> </el-table-column>
@@ -1721,6 +1709,7 @@ import {
   GetRelativePo,
   SaveHeadNotes,
   Submit,
+  SubmitX,
   UpdateCheckFlagBatch,
   UpdatePrintedById,
   GetNoPrinted,
@@ -1901,15 +1890,6 @@ detailCol:[
       }
     },
    BatchSure(){
-      // if (this.batchdate_deliver == "") {
-      //   this.$alert("请选择一个统一的时间！", "提示", {
-      //     confirmButtonText: "好的",
-      //     type: "warning"
-      //   });
-      //   return;
-      // }
-    //  else{
-
        let arr_pur=[];
       for(let i=0; i<this.multipleSelection.length;i++){
         arr_pur.push(this.multipleSelection[i].PUR_NO);
@@ -2131,12 +2111,9 @@ detailCol:[
     },
     openDialog1(PUR_NO, ORDER_NO) {
        this.autoSearchDetail(PUR_NO);
-      this.int_add = this.int_add + 1
-      this.detailData[0].cl_place = this.int_add
-      this.forceHandle("checkedX");
-    
-    
-
+      // this.int_add = this.int_add + 1
+      // this.detailData[0].cl_place = this.int_add
+      // this.forceHandle("checkedX");
       //将表头内容填充到明细
     },
     //统一送货日期
@@ -2282,7 +2259,40 @@ detailCol:[
     //确认之前要检查是否填好必要的信息
     SubmitVue() {
       this.pur_headForm.SUPPLY_CHECK_NOTES = this.supply_check_notes;
-      for (let i = 0; i < this.gridData.length; i++) {
+    if(this.pur_headForm.ORDER_NO.substring(0, 1) == "X"){
+       let data = {
+        pur_headForm: this.pur_headForm,
+        date_deliver: this.date_deliver,
+      };
+       if ( this.date_deliver == "9999/12/31 00:00:00" || this.date_deliver == "" )
+       {
+          this.$alert("送货日期不能为空！", "提示", {
+            confirmButtonText: "好的",
+            type: "warning"
+          });
+          return;
+        }
+     SubmitX(data,{ loading: false }).then(res => {
+        if (res.code == 0) {
+          // this.$alert("确认成功", "提示", {
+          //   confirmButtonText: "确定",
+          //   type: "success"
+          // });
+          // this.autoSearch();
+        } else {
+          this.$alert("确认失败，请稍后重试", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        }
+        this.checkX_Visible = false;
+        this.checkedX_Visible = true;
+      },
+      
+      );
+    }
+    else{
+        for (let i = 0; i < this.gridData.length; i++) {
         if (
           this.gridData[i].DATE_DELIVER == "9999/12/31 00:00:00" ||
           this.gridData[i].DATE_DELIVER == ""
@@ -2294,27 +2304,30 @@ detailCol:[
           return;
         }
       }
-      var data = {
+       let data = {
         pur_headForm: this.pur_headForm,
         gridData: this.gridData
       };
-
-      Submit(data).then(res => {
+      Submit(data,{ loading: false }).then(res => {
         if (res.code == 0) {
-          this.$alert("确认成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.autoSearch();
-          this.checkX_Visible = false;
+          // this.$alert("确认成功", "提示", {
+          //   confirmButtonText: "确定",
+          //   type: "success"
+          // });
+          // this.autoSearch();
           this.checkY_Visible = false;
+          this.checkedY_Visible = true;
         } else {
           this.$alert("确认失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
             type: "warning"
           });
         }
-      });
+      },
+     
+      );
+    }
+    this.autoSearch();
     },
     autoSearch() {
       var data = {
@@ -2334,8 +2347,8 @@ detailCol:[
         this.pur_headData.forEach(item => {
             item.PRINTED = item.PRINTED === "1" ? true : false;
           });
-      },
-       { loading: false } //传入参数控制页面是否loading
+      }
+        //传入参数控制页面是否loading
       );
     },
     //       //查询未打印的单据
@@ -2354,7 +2367,7 @@ detailCol:[
             item.PRINTED = item.PRINTED === "1" ? true : false;
           });
       },
-       { loading: false } //传入参数控制页面是否loading
+      
       );
     },
 
