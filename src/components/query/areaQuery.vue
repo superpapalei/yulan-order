@@ -288,6 +288,7 @@
                   value-format="yyyy-MM-dd"
                   placeholder="开始日期区间"
                   v-model="ruleForm_1.dateValue"
+                  @change="getCustomerChangTime"
                   style="width:178px"
                 ></el-date-picker>
                 <span style="margin-left:10px">--</span>
@@ -296,6 +297,7 @@
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   placeholder="结束日期区间"
+                  @change="getCustomerChangTime"
                   v-model="ruleForm_2.dateValue"
                   style="width:210px;margin-left:12px"
                 ></el-date-picker>
@@ -462,6 +464,7 @@ export default {
       theBody: {},
       first: "",
       second: "",
+      third:"",
       activeName: "first",
       query_1: false, //查询显示
       query_2: false,
@@ -666,6 +669,7 @@ export default {
     customer_type(val) {
       this.tableData = [];
       this.value_4 = [];
+      this.third = val;
       var data = {
         areaCode: this.first,
         district: this.second,
@@ -728,6 +732,31 @@ export default {
         this.customerData = res.data;
       });
     },
+    //改变时间查可选用户
+    getCustomerChangTime(){
+      this.customerData = [];
+      this.tableData = [];
+      this.value_4 = [];
+      if(this.first == ""){
+        this.$alert("未选择市场区域", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+        return (this.tableData = []);
+      }else{
+      var data = {
+        beginTime:this.ruleForm_1.dateValue,
+        finishTime:this.ruleForm_2.dateValue,
+        isall:this.checked,
+        areaCode: this.first, //市场
+        district: this.second, //片区
+        customerType: this.third //客户类型
+      };
+      getCustomerByAreaCode(data).then(res => {
+        this.customerData = res.data;
+      });
+      }
+    },
     //提货单查询
     _queryQuYu_1() {
       this.currentPage = 1;
@@ -748,7 +777,13 @@ export default {
             type: "success"
           });
         return (this.tableData = []);
-      } else {
+      } else if(this.first == ""){
+        this.$alert("未选择市场", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+        return (this.tableData = []);
+      } else{
         
         // for (var i = 0; i < this.value_4.length; i++) {
         //   var res = await  getCustomerName({customer:this.value_4[i]},{ loading: false })
