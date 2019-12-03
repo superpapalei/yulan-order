@@ -434,7 +434,6 @@ export default {
     //获取当前的标签页选项
     activeName: {
       get() {
-        console.log(Cookies.get("activeNameSoftSuit"))
         if (Cookies.get("activeNameSoftSuit") === undefined) {
           Cookies.set("activeNameSoftSuit", "ML");
           this.chooseTab = Cookies.get("activeNameSoftSuit");

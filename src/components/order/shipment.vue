@@ -89,7 +89,6 @@
           <el-table-column align="center" label="">
             <template slot-scope="scope">
               <el-button
-                :disabled="scope.row.TRANS_ID === ''"
                 type="primary"
                 size="small"
                 @click="addRecord(scope.row)"
@@ -100,7 +99,6 @@
           <el-table-column align="center" label="">
             <template slot-scope="scope">
               <el-button
-                :disabled="scope.row.TRANS_ID === ''"
                 type="danger"
                 size="small"
                 @click="addRefundRecord(scope.row)"

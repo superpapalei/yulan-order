@@ -361,7 +361,7 @@ import { checkBill } from "@/api/orderList";
 import { GetNewNotification, InserFlag } from "@/api/notificationASP";
 import { GetCustomerMustWriteStudy } from "@/api/studyASP";
 import { QueryWebMenuByUserId } from "@/api/webMenuASP";
-import { getAllOrders } from "@/api/orderListASP";
+import { getAllOrders, GetBalancePeriod } from "@/api/orderListASP";
 import { GetHotSales, GetItemDetailById } from "@/api/itemInfoASP";
 import { GetCartItemCount } from "@/api/shopASP";
 import screenfull from "screenfull";
@@ -536,23 +536,15 @@ export default {
         let data = {
           cid: Cookies.get("cid"),
           limit: 9999,
-          page: 1
+          page: 1,
+          status: "待确认"
         };
-        let statement = await checkBill(url, data, { loading: false });
-        if (statement.customerBalancePeriodList.length) {
-          var unDealNum = 0;
-          for (var i = 0; i < statement.customerBalancePeriodList.length; i++) {
-            if (
-              statement.customerBalancePeriodList[i].customerCheckState ==
-              "待确认"
-            )
-              unDealNum++;
-          }
-          this.changeBadge({
-            name: "statement",
-            index: unDealNum
-          });
-        }
+        //let statement = await checkBill(url, data, { loading: false });
+        let statement = await GetBalancePeriod(data, { loading: false });
+        this.changeBadge({
+          name: "statement",
+          index: statement.count
+        });
       }
     },
     //获取角标待处理付款委托书（客户）
@@ -979,6 +971,9 @@ export default {
               this.addTab(res.data.children[0].MENU_LINK);
             }
           }
+          if (this.isContainAttr("marketInfo")) {
+            this.getStudy(); //有权限才加载调查表
+          }
         } else {
           this.$alert("没有菜单权限，请联系管理员配置", "提示", {
             confirmButtonText: "确定",
@@ -1012,7 +1007,10 @@ export default {
           this.startMove();
           for (var i = 0; i < this.newsTextArr.length; i++) {
             if (this.newsTextArr[i].showFlag == 1) {
-              this.newsTextArr[i].CONTENT = this.newsTextArr[i].CONTENT.replace(/\[ReplaceMark\]/g, this.Global.fileCenterUrl);//替换网址
+              this.newsTextArr[i].CONTENT = this.newsTextArr[i].CONTENT.replace(
+                /\[ReplaceMark\]/g,
+                this.Global.fileCenterUrl
+              ); //替换网址
               //将所有需要显示的公告拼接
               this.newsHtmlData +=
                 "<div style='text-align:center;'><span style='font-size:18px;color:#303133;'>" +
@@ -1390,7 +1388,6 @@ export default {
     this.$root.$on("refreshMoneyEvent", () => {
       this.userMoney();
     });
-    this.getStudy();
     this.getHotSale(); //获得热销榜
   },
   beforeDestroy() {

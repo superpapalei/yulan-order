@@ -71,6 +71,13 @@
             width="80"
             align="center"
           ></el-table-column>
+          <el-table-column
+            v-if="minimumNumberShow"
+            label="起购数量"
+            prop="minimumNumber"
+            width="80"
+            align="center"
+          ></el-table-column>
           <el-table-column :width="numWidth" label="数量" align="center">
             <template slot-scope="scope">
               <div v-if="scope.row.unit === '平方米'">
@@ -299,7 +306,8 @@ export default {
       disableFlag: false, //判断是否禁用选择框
       history: [], //本地存储
       decimalNum: 2, //保留小数的位数
-      baobei: false
+      baobei: false,
+      minimumNumberShow: false
     };
   },
   filters: {
@@ -364,7 +372,9 @@ export default {
             res.data[0].DECIMAL_PLACES == "1"
               ? (this.decimalNum = 1)
               : (this.decimalNum = 2);
-
+            res.data[0].MINIMUM_PURCHASE == 0
+              ? (this.minimumNumberShow = false)
+              : (this.minimumNumberShow = true);
             this.tableData = [];
             this.tableData.push({
               type: res.data[0].ITEM_NO, //型号
@@ -378,7 +388,8 @@ export default {
               noteTypeName: res.data[0].NOTE_TYPE_NAME,
               itemFlag: res.data[0].ITEM_FALG, //不知是啥
               number: "", //数量
-              anotherNumber: "" //辅助数量
+              anotherNumber: "", //辅助数量
+              minimumNumber: res.data[0].MINIMUM_PURCHASE // 起购数量
             });
             if (res.data[0].UNIT == "平方米") this.numWidth = 200;
             else this.numWidth = 100;
@@ -632,6 +643,18 @@ export default {
           type: "warning",
           confirmButtonText: "确定"
         });
+        return;
+      }
+      //判断起购数量
+      if (row.minimumNumber != 0 && val < row.minimumNumber) {
+        this.$alert(
+          "本产品最小起购数量为" + row.minimumNumber + row.unit,
+          "提示",
+          {
+            type: "warning",
+            confirmButtonText: "确定"
+          }
+        );
         return;
       }
       if (this.seletedActivity === "" && this.disableFlag === false) {

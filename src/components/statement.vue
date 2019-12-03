@@ -362,9 +362,9 @@ import {
   checkBill,
   billDetail,
   userReturn,
-  queryCash,
   statementDetail
 } from "@/api/orderList";
+import {GetBalancePeriod} from "@/api/orderListASP";
 import { mapMutations, mapActions } from "vuex";
 import Cookies from "js-cookie";
 export default {
@@ -419,7 +419,6 @@ export default {
         targetStyles: ["*"]
       });
     },
-
     getExplorer() {
       var explorer = window.navigator.userAgent;
       //判断是否为IE浏览器
@@ -458,7 +457,7 @@ export default {
         ""
       );
 
-      var end = doc.substring(doc.length - 1000, doc.length);
+      //var end = doc.substring(doc.length - 1000, doc.length);
 
       doc = doc.replace(
         '<h2 data-v-864abbe2="" style="margin: 0px;">广东玉兰集团股份有限公司对账单</h2>',
@@ -484,7 +483,6 @@ export default {
         window.open("data:application/vnd.ms-excel;" + base64data);
       }
     },
-
     // 导出Excel
     OutExcel() {
       if (this.getExplorer() == "ie") {
@@ -528,7 +526,6 @@ export default {
         this.tableExport("excel");
       }
     },
-
     //打开对账单提货弹窗
     openTHdia(tab) {
       if (tab.billNo == "CZSK" || tab.billNo == "收款") {
@@ -539,7 +536,6 @@ export default {
         this.THtop = "30vh";
       } else {
         this.whatType = true;
-        // this.THtitle = "对账单明细";
         this.THwidth = "50%";
         this.THtop = "15vh";
       }
@@ -564,7 +560,6 @@ export default {
       this.endDate = endDate + " 23:59:59";
       this.theBody = tab;
       this.getBillDetail();
-      //this.detailVisible= true;
     },
     //翻页获取里面的对账单详情
     InnerCurrentChange(val) {
@@ -629,15 +624,16 @@ export default {
       let url = "/customerBalance/getCustomerBalanceInfo.do";
       let data = {
         cid: Cookies.get("cid"),
-        limit: 10,
-        page: this.outerCurrentPage
+        limit: this.outerlimit,
+        page: this.outerCurrentPage,
+        status :''
       };
-      checkBill(url, data).then(res => {
-        this.tableData = res.customerBalancePeriodList;
-        this.theHead = res.customerInfo;
-        this.outercount = res.customerBalancePeriodList.length
-          ? res.customerBalancePeriodList[0].total
-          : 0;
+      //checkBill(url, data).then(res => {
+      GetBalancePeriod(data).then(res => {
+        console.log(res)
+        this.tableData = res.data.customerBalancePeriodList;
+        this.theHead = res.data.customerInfo;
+        this.outercount = res.count;
         this.$root.$emit("refreshBadgeIcon", "statement");
       });
     },
@@ -682,7 +678,6 @@ export default {
               sums[index] = sums[index].toFixed(2);
             } else {
               sums[index] = sums[index].toFixed(2);
-              // sums[index] += " 元";
             }
           }
         } else {
@@ -711,7 +706,6 @@ export default {
           }, 0);
           if (index == 7) {
             sums[index] = sums[index].toFixed(2);
-            // sums[index] += " 元";
           } else {
             sums[index] = "";
           }
@@ -720,36 +714,6 @@ export default {
         }
       });
       return sums;
-    },
-    showMoney() {
-      if (this.CTMmoney >= 0) {
-        this.$alert(`当前余额为${this.CTMmoney}元`, "余额", {
-          confirmButtonText: "确定",
-          type: "success"
-        });
-      } else {
-        this.$alert(
-          `当前欠款${Math.abs(
-            this.CTMmoney
-          )}元,为了不影响发货，请尽快打款，谢谢合作！`,
-          "欠款提醒",
-          {
-            confirmButtonText: "确定",
-            type: "warning"
-          }
-        );
-      }
-    },
-    //查询余额
-    queryMoney() {
-      var url = "/order/getResidemoney.do";
-      var data = {
-        cid: Cookies.get("companyId"), //后面再改回去
-        companyId: Cookies.get("companyId")
-      };
-      queryCash(url, data).then(res => {
-        this.CTMmoney = res.data;
-      });
     },
     //隔行变色
     tableRowClassName({ row, rowIndex }) {
@@ -763,7 +727,6 @@ export default {
   },
   created: function() {
     this.getBill();
-    this.queryMoney();
   },
   filters: {
     cutdate(value) {

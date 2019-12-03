@@ -282,7 +282,7 @@ export default {
           itemNo: itemRes.data.ITEM_NO,
           itemVersion: itemRes.data.ITEM_VERSION,
           productType: itemRes.data.PRODUCT_TYPE,
-          productBrand: itemRes.data.PRODUCT_BRAND
+          productBrand: itemRes.data.PRODUCT_BRAND,
         })
           .then(res => {
             if (res.data.length === 0) {

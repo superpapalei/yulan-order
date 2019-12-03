@@ -122,30 +122,25 @@
               @click="copyCart(item.ORDER_NO)"
             ></i>
           </el-tooltip>
-          <el-tooltip
+          <a
             v-if="
-              (item.STATUS_ID == 1 &&
+              ((item.STATUS_ID == 1 &&
                 (item.CURTAIN_STATUS_ID == '' ||
                   item.CURTAIN_STATUS_ID == 4)) ||
                 item.STATUS_ID == 2 ||
                 item.STATUS_ID == 4 ||
                 item.STATUS_ID == 7 ||
-                item.STATUS_ID == 12
+                item.STATUS_ID == 12) &&
+                (item.ORDER_NO.slice(0, 1) == 'X' ||
+                  item.ORDER_NO.slice(0, 1) == 'Y')
             "
-            class="item"
-            effect="dark"
-            content="玉兰·兰居尚品订单查询"
-            placement="top"
+            target="_blank"
+            style="float:right;cursor: pointer;font-size:13px;"
+            :href="
+              'http://www.luxlano.com/ddkc/DDrs2.asp?DDid=' + item.ORDER_NO
+            "
+            >兰居订单查询</a
           >
-            <a
-              target="_blank"
-              class="el-icon-position"
-              style="float:right;cursor: pointer;"
-              :href="
-                'http://www.luxlano.com/ddkc/DDrs2.asp?DDid=' + item.ORDER_NO
-              "
-            ></a>
-          </el-tooltip>
         </div>
 
         <div class="outDiv" style="float:left;width:90%">

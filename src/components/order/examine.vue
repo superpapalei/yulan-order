@@ -62,7 +62,13 @@
         :key="index"
       >
         <div slot="header">
-          <el-tooltip
+          <i
+            style="float: right;color:#20a0ff;line-height: 35px;cursor: pointer;"
+            class="el-icon-caret-bottom"
+            @click="collapseClick($event, item.ORDER_NO)"
+          ></i>
+
+          <a
             v-if="
               (item.STATUS_ID == 1 &&
                 (item.CURTAIN_STATUS_ID == '' ||
@@ -72,25 +78,13 @@
                 item.STATUS_ID == 7 ||
                 item.STATUS_ID == 12
             "
-            class="item"
-            effect="dark"
-            content="玉兰·兰居尚品订单查询"
-            placement="top"
+            target="_blank"
+            style="float:right;cursor: pointer;font-size:13px;line-height: 35px;margin-right:10px;"
+            :href="
+              'http://www.luxlano.com/ddkc/DDrs2.asp?DDid=' + item.ORDER_NO
+            "
+            >兰居订单查询</a
           >
-            <a
-              target="_blank"
-              class="el-icon-position"
-              style="float:right;cursor: pointer;line-height: 35px;"
-              :href="
-                'http://www.luxlano.com/ddkc/DDrs2.asp?DDid=' + item.ORDER_NO
-              "
-            ></a>
-          </el-tooltip>
-          <i
-            style="float: right;color:#20a0ff;line-height: 35px;cursor: pointer;"
-            class="el-icon-caret-bottom"
-            @click="collapseClick($event, item.ORDER_NO)"
-          ></i>
           <el-button
             :id="'cardBtnDetail' + item.ORDER_NO"
             style="float: right;margin-right:20px;"
