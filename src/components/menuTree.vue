@@ -97,7 +97,9 @@ export default {
         case "design/lanJuMarketExamine":
           return this.$store.state.badge.lanju2; //兰居设计中可审核的单据（市场部）
         case "design/lanJuGMExamine":
-          return this.$store.state.badge.lanju3; //兰居设计中可审核的单据（广美）
+          return this.$store.state.badge.lanju3; //兰居设计中可审核的单据（广美设计）
+        case "design/lanJuFinanceExamine":
+          return this.$store.state.badge.lanju4;//兰居设计中可审核的单据（广美财务）
         case "complaint":
           return this.$store.state.badge.complaint1; //物流投诉中可进行评价的单据个数（用户评价）
         case "complaintReply":

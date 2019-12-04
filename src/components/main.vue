@@ -626,7 +626,8 @@ export default {
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS: "1"
+          STATUS: "1",
+          type: 1
         },
         { loading: false }
       );
@@ -635,7 +636,7 @@ export default {
         index: lanju1.count
       });
     },
-    //获取角标待处理的兰居设计单据（广美）
+    //获取角标待处理的兰居设计单据（广美设计）
     async lanJuGMExamineIcon() {
       let lanju1 = await GetAllUserData(
         {
@@ -645,11 +646,19 @@ export default {
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS: "3"
+          STATUS: "8",
+          type: 2
         },
         { loading: false }
       );
-      let lanju2 = await GetAllUserData(
+      this.changeBadge({
+        name: "lanju3",
+        index: lanju1.count 
+      });
+    },
+    //获取角标待处理的兰居设计单据（广美财务）
+    async lanJuFinanceExamineIcon() {  
+      let lanju1 = await GetAllUserData(
         {
           companyId: Cookies.get("companyId"),
           limit: 9999,
@@ -657,13 +666,14 @@ export default {
           CID: Cookies.get("cid"),
           beginTime: "0001/1/1",
           finishTime: "9999/12/31",
-          STATUS: "5"
+          STATUS: "3",
+          type: 1
         },
         { loading: false }
       );
       this.changeBadge({
-        name: "lanju3",
-        index: lanju1.count + lanju2.count
+        name: "lanju4",
+        index: lanju1.count 
       });
     },
     //获取角标待处理的物流投诉单据（客户评价）
@@ -1304,6 +1314,7 @@ export default {
     this.lanjuIcon();
     this.lanJuMarketExamineIcon();
     this.lanJuGMExamineIcon();
+    this.lanJuFinanceExamineIcon();
     this.complaintIcon();
     this.complaintReplyIcon();
     this.imageShopIcon();
@@ -1343,6 +1354,9 @@ export default {
           break;
         case "lanju3":
           this.lanJuGMExamineIcon();
+          break;
+        case "lanju4":
+          this.lanJuFinanceExamineIcon();
           break;
         case "complaint1":
           this.complaintIcon();

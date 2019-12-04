@@ -50,7 +50,8 @@ import payDelegation from '@/components/supplierModule/payDelegation'
 import payDelegationExamine from '@/components/supplierModule/payDelegationExamine'
 import DeliveryList_lanju from '@/components/supplierModule/deliveryList_lanju'
 import refund from '@/components/newRefund'    
-import refundExamine from '@/components/newRefundExamine'    
+import refundExamine from '@/components/newRefundExamine'   
+import lanJuFinanceExamine from '@/components/design/lanJuFinanceExamine' 
 
 Vue.use(Router)
 
@@ -370,6 +371,11 @@ const router = new Router({
           path: '/newRefundExamine',
           name: 'refundExamine',
           component: refundExamine
+        },
+        {
+          path: '/design/lanJuFinanceExamine',
+          name: 'lanJuFinanceExamine',
+          component: lanJuFinanceExamine
         },
       ]
     }

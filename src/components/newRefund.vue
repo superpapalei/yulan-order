@@ -76,11 +76,11 @@
             placeholder="创建人"
           >
           </el-input>
-          <el-button 
+          <!-- <el-button 
             @click.native="checkNoPrint" 
             style="margin-right:6px;width:168px"
             >查看未打印
-            </el-button >
+          </el-button > -->
         </div>
         <el-table
           border
@@ -727,15 +727,15 @@ export default {
       this.selectCreator = "";
     },
     //查询未打印的单据
-    checkNoPrint() {
-      GetNoPrinted().then(res => {
-        this.tableData = res.data;
-        this.tableData.forEach(item => {
-          item.PRINTED = item.PRINTED === "0" ? true : false;
-        });
-        this.allNum = res.count;
-      });
-    },
+    // checkNoPrint() {
+    //   GetNoPrinted().then(res => {
+    //     this.tableData = res.data;
+    //     this.tableData.forEach(item => {
+    //       item.PRINTED = item.PRINTED === "0" ? true : false;
+    //     });
+    //     this.allNum = res.count;
+    //   });
+    // },
     //查询满足条件的该用户的退货赔偿
     refresh() {
       let obj = {
