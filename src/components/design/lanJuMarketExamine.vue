@@ -332,17 +332,25 @@
              <td style="width:12%">提交时间：</td>
              <td style="width:20%;">{{ submitForm.SUBMIT_DATE| datatransDetail }}</td>
              <td style="width:12%">单据状态：</td>
-             <td v-if="submitForm.STATUS==3||submitForm.STATUS==5||submitForm.STATUS==6" style="width:30%;color:green;">{{ submitForm.STATUS| transStatus }}</td>
-             <td v-if="submitForm.STATUS==2||submitForm.STATUS==4" style="width:30%;color:red;">{{ submitForm.STATUS| transStatus  }}</td>
+             <td v-if="submitForm.STATUS==3||submitForm.STATUS==5||submitForm.STATUS==6||submitForm.STATUS==8" style="width:30%;color:green;">{{ submitForm.STATUS| transStatus }}</td>
+             <td v-if="submitForm.STATUS==2||submitForm.STATUS==4||submitForm.STATUS==7" style="width:30%;color:red;">{{ submitForm.STATUS| transStatus  }}</td>
              <td v-if="submitForm.STATUS==1" style="width:30%;">{{submitForm.STATUS| transStatus }}</td>
              <td style="width:8%;"></td>
              <td style="width:8%;"></td>
           </tr>
           <tr >
-             <td style="width:12%">市场部审核时间：</td>
-             <td style="width:20%;">{{ submitForm.AUDIT_TIME| datatransDetail }}</td>
-             <td style="width:12%">广美审核时间：</td>
-             <td style="width:30%;">{{ submitForm.CHECK_TIME| datatransDetail}}</td>
+             <td style="width:12%"  v-if="submitForm.STATUS!=1&&submitForm.STATUS!=2&&submitForm.STATUS!=4&&submitForm.STATUS!=7">市场部审核时间：</td>
+             <td style="width:20%;" v-if="submitForm.STATUS!=1&&submitForm.STATUS!=2&&submitForm.STATUS!=4&&submitForm.STATUS!=7">{{ submitForm.AUDIT_TIME| datatransDetail }}</td>
+             <td style="width:12%"  v-if="submitForm.STATUS==8||submitForm.STATUS==4||submitForm.STATUS==5||submitForm.STATUS==6">财务审核时间：</td>
+             <td style="width:30%;" v-if="submitForm.STATUS==8||submitForm.STATUS==4||submitForm.STATUS==5||submitForm.STATUS==6">{{ submitForm.FINANCE_AUDIT_TIME| datatransDetail}}</td>
+             <td style="width:8%;"></td>
+             <td style="width:8%;"></td>
+          </tr>
+          <tr >
+             <td style="width:12%"  v-if="submitForm.STATUS==5||submitForm.STATUS==6">广美审核时间：</td>
+             <td style="width:20%;" v-if="submitForm.STATUS==5||submitForm.STATUS==6">{{ submitForm.CHECK_TIME| datatransDetail}}</td>
+             <td style="width:12%" ></td>
+             <td style="width:30%;"></td>
              <td style="width:8%;"></td>
              <td style="width:8%;"></td>
           </tr>
@@ -406,13 +414,17 @@ export default {
           value: 3
         },
         {
+          label: "财务审核通过",
+          value: 8
+        },
+        {
           label: "广美审核通过",
           value: 5
         },
         {
           label: "已完成设计图",
           value: 6
-        }
+        },
       ],
       typeArray: [
         {
@@ -452,6 +464,12 @@ export default {
           break;
         case 6:
           return "已完成设计图";
+          break;
+        case 7:
+          return "财务审核不通过";
+          break;
+        case 8:
+          return "财务审核通过";
           break;
       }
     },
@@ -543,7 +561,8 @@ export default {
         beginTime: this.beginTime,
         finishTime: this.finishTime,
         STATUS: this.SELECT_STATUS,
-        SEARCHKEY: this.SEARCHKEY
+        SEARCHKEY: this.SEARCHKEY,
+        type:1
       };
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";

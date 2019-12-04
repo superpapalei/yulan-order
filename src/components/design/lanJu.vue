@@ -103,15 +103,16 @@
                 size="mini"
                 icon="el-icon-edit"
                 circle
-                v-show="scope.row.STATUS==2||scope.row.STATUS==4"
+                v-if="scope.row.STATUS==2||scope.row.STATUS==4||scope.row.STATUS==7"
               ></el-button>
               <el-button
                 @click="_CheckDetail(scope.row)"
                 type="warning"
                 size="mini"
                 icon="el-icon-search"
+                style="text-align:center"
                 circle
-                v-show="scope.row.STATUS!=2&&scope.row.STATUS!=4"
+                v-if="scope.row.STATUS!=2&&scope.row.STATUS!=4&&scope.row.STATUS!=7"
               ></el-button>
             </template>
           </el-table-column>
@@ -250,13 +251,13 @@
            <tr>
             <td class="grayTD"  colspan="1" :rowspan="this.usedRowspan"  style="width:5%;height:15px" >基本情况</td>
             <td class="grayTD"  colspan="1" rowspan="1" style="width:13%;height:15px">经销商代码</td>
-            <td colspan="1" rowspan="1" style="width:11%;height:15px">(系统带出)</td>
+            <td colspan="1" rowspan="1" style="width:11%;height:15px">{{submitForm.DISTRIBUTOR_CODE}}</td>
             <td colspan="1" rowspan="1" class="grayTD" style="width:10%;height:15px">经销商名称</td>
-            <td colspan="1" rowspan="1" style="width:12%;height:13px">(系统带出)</td>
+            <td colspan="1" rowspan="1" style="width:14%;height:13px">{{submitForm.DISTRIBUTOR_NAME}}</td>
             <td colspan="1" rowspan="1" class="grayTD" style="width:15%;height:15px">联系人</td>
-            <td colspan="1" rowspan="1" style="width:10%;height:10px">(系统带出)</td>
+            <td colspan="1" rowspan="1" style="width:8%;height:10px">{{submitForm.CUSTOMER_AGENT}}</td>
             <td colspan="1" rowspan="1" class="grayTD" style="width:10%;height:15px">联系电话</td>
-            <td colspan="1" rowspan="1" style="width:13%;height:15px">(系统带出)</td> 
+            <td colspan="1" rowspan="1" style="width:14%;height:15px">{{submitForm.OFFICE_TEL}}</td> 
           </tr>
 
           <tr>
@@ -449,17 +450,25 @@
              <td style="width:12%">提交时间：</td>
              <td style="width:20%;">{{ submitForm.SUBMIT_DATE| datatransDetail }}</td>
              <td style="width:12%">单据状态：</td>
-             <td v-if="submitForm.STATUS==3||submitForm.STATUS==5||submitForm.STATUS==6" style="width:30%;color:green;">{{ submitForm.STATUS| transStatus }}</td>
-             <td v-if="submitForm.STATUS==2||submitForm.STATUS==4" style="width:30%;color:red;">{{ submitForm.STATUS| transStatus  }}</td>
+             <td v-if="submitForm.STATUS==3||submitForm.STATUS==5||submitForm.STATUS==6||submitForm.STATUS==8" style="width:30%;color:green;">{{ submitForm.STATUS| transStatus }}</td>
+             <td v-if="submitForm.STATUS==2||submitForm.STATUS==4||submitForm.STATUS==7" style="width:30%;color:red;">{{ submitForm.STATUS| transStatus  }}</td>
              <td v-if="submitForm.STATUS==1" style="width:30%;">{{submitForm.STATUS| transStatus }}</td>
              <td style="width:8%;"></td>
              <td style="width:8%;"></td>
           </tr>
           <tr >
-             <td style="width:12%">市场部审核时间：</td>
-             <td style="width:20%;">{{ submitForm.AUDIT_TIME| datatransDetail }}</td>
-             <td style="width:12%">广美审核时间：</td>
-             <td style="width:30%;">{{ submitForm.CHECK_TIME| datatransDetail}}</td>
+             <td style="width:12%"  v-if="submitForm.STATUS!=1&&submitForm.STATUS!=2&&submitForm.STATUS!=4&&submitForm.STATUS!=7">市场部审核时间：</td>
+             <td style="width:20%;" v-if="submitForm.STATUS!=1&&submitForm.STATUS!=2&&submitForm.STATUS!=4&&submitForm.STATUS!=7">{{ submitForm.AUDIT_TIME| datatransDetail }}</td>
+             <td style="width:12%"  v-if="submitForm.STATUS==8||submitForm.STATUS==4||submitForm.STATUS==5||submitForm.STATUS==6">财务审核时间：</td>
+             <td style="width:30%;" v-if="submitForm.STATUS==8||submitForm.STATUS==4||submitForm.STATUS==5||submitForm.STATUS==6">{{ submitForm.FINANCE_AUDIT_TIME| datatransDetail}}</td>
+             <td style="width:8%;"></td>
+             <td style="width:8%;"></td>
+          </tr>
+          <tr >
+             <td style="width:12%"  v-if="submitForm.STATUS==5||submitForm.STATUS==6">广美审核时间：</td>
+             <td style="width:20%;" v-if="submitForm.STATUS==5||submitForm.STATUS==6">{{ submitForm.CHECK_TIME| datatransDetail}}</td>
+             <td style="width:12%" ></td>
+             <td style="width:30%;"></td>
              <td style="width:8%;"></td>
              <td style="width:8%;"></td>
           </tr>
@@ -542,6 +551,7 @@ import {
   CheckDetailByID,
   addSubmit,
   editByCustomer,
+  GetInitialInfo
  } from "@/api/lanju";
 import {
   UploadFiles,
@@ -568,7 +578,7 @@ export default {
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
       SEARCHKEY: "", //搜索栏关键字
-      SELECT_STATUS: 1, //存储下拉框的值
+      SELECT_STATUS: 2, //存储下拉框的值
       rowPlus:0,//兰居软装设计需求表中的户型编辑项添加数
       isAdd: false, //新增记录
       isEdit: false, //编辑记录
@@ -602,13 +612,17 @@ export default {
           value: 3
         },
         {
+          label: "财务审核通过",
+          value: 8
+        },
+        {
           label: "广美审核通过",
           value: 5
         },
         {
           label: "已完成设计图",
           value: 6
-        }
+        },
       ],
       typeArray: [
         {
@@ -648,6 +662,12 @@ export default {
           break;
         case 6:
           return "已完成设计图";
+          break;
+        case 7:
+          return "财务审核不通过";
+          break;
+        case 8:
+          return "财务审核通过";
           break;
       }
     },
@@ -778,7 +798,7 @@ export default {
         MANAGER_TEL: "", 
         EMAIL: "", 
         SOLUTION_NAME:"",
-        ESTATE_TYPE:1,
+        ESTATE_TYPE:"",
         PAY_NOTE:"",
         PAY_DETAIL: "",
         MEMO:"",
@@ -803,8 +823,16 @@ export default {
         }],
       this.submitForm.USER_CODE = Cookies.get("cid");   
       this.submitForm.USER_NAME = Cookies.get("realName");   
-      this.submitForm.DISTRIBUTOR_CODE = Cookies.get("companyId");   //经销商（公司）的编码和名字不同于账号的编码和名字；
+      // this.submitForm.DISTRIBUTOR_CODE = Cookies.get("companyId");   //经销商（公司）的编码和名字不同于账号的编码和名字；
+      this.submitForm.DISTRIBUTOR_CODE = Cookies.get("customerMainId");  
       this.usedRowspan=this.initRowspan;
+      GetInitialInfo({customerMainId:this.submitForm.DISTRIBUTOR_CODE}).then(res => {
+        if (res.count > 0) {
+          this.submitForm.CUSTOMER_AGENT = res.data[0].CUSTOMER_AGENT;
+          this.submitForm.OFFICE_TEL= res.data[0].OFFICE_TEL;
+          this.submitForm.DISTRIBUTOR_NAME= res.data[0].CUSTOMER_NAME;
+        }
+      });
     },
     //新增记录提交
     _addSubmit() {
@@ -813,7 +841,8 @@ export default {
         this.submitForm.MANAGER == "" ||
         this.submitForm.MANAGER_TEL == ""||
         this.submitForm.EMAIL == ""||
-        this.submitForm.SOLUTION_NAME == ""
+        this.submitForm.SOLUTION_NAME == ""||
+        this.submitForm.ESTATE_TYPE == ""
       ) {
         this.$alert("请完善单据信息", "提示", {
           confirmButtonText: "确定",

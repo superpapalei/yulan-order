@@ -57,3 +57,14 @@ export function CheckDetailByID(data, config = {}) {
     })
 }
 
+//新增单据时得到系统带出的信息
+export function GetInitialInfo(data, config = {}) {
+    return post('/Lanju/GetInitialInfo', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+
+
+

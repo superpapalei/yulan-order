@@ -1,10 +1,10 @@
--<!--广美的兰居设计审核界面-->
+-<!--广美财务的兰居设计审核界面-->
 <template>
   <div class="centerCard">
     <el-card shadow="hover">
 
       <div slot="header">
-        <span class="fstrong f16">兰居设计审核（广美设计）</span>
+        <span class="fstrong f16">兰居设计审核（广美财务）</span>
       </div>
 
       <div id="tbar" class="tbarStyle">
@@ -95,7 +95,7 @@
           <el-table-column align="center" label="操作" width="100px">
             <template slot-scope="scope">
               <el-button
-                v-if="scope.row.STATUS == 8||scope.row.STATUS == 5"
+                v-if="scope.row.STATUS == 3"
                 @click="_EditDetail(scope.row)"
                 type="primary"
                 size="mini"
@@ -103,7 +103,7 @@
                 circle
               ></el-button>
               <el-button
-                v-else
+                v-if="scope.row.STATUS != 3"
                 @click="_CheckDetail(scope.row)"
                 type="warning"
                 size="mini"
@@ -316,59 +316,14 @@
             <td colspan="7" rowspan="1"  style="height:30px" >{{submitForm.MEMO}}</td>
           </tr>
 
-          <tr>
-            <td class="grayTD"  colspan="2" rowspan="1"  style="height:30px" >预计出图日期</td>
-            <td v-if="submitForm.STATUS==8" colspan="3" rowspan="1"  style="height:30px" >
-                  <el-date-picker
-                  type="date"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd"
-                  placeholder="预计出图日期"
-                  v-model="submitForm.EXPECTED_DRAW_DATE"
-                  style="width:60%;"
-                  ></el-date-picker>
-            </td> 
-            <td  v-if="submitForm.STATUS==5" colspan="3" rowspan="1" style="height:30px">{{ submitForm.EXPECTED_DRAW_DATE | datatrans }}</td>
-            <td class="grayTD"  colspan="2" rowspan="1"  style="height:30px" >设计图附件</td>
-            <td colspan="2" rowspan="1" style="height:30px" v-if="submitForm.STATUS==5">
-                <div>
-                  <el-upload
-                     class="upload-de"
-                     :action="Global.baseUrl + '/Lanju/UploadFiles'"
-                     drag
-                     multiple
-                     :on-change="handleChange"
-                     :on-remove="handleRemove"
-                     :on-success="handleSuccess"
-                     :on-error="handleError"
-                     ref="upload"
-                     :auto-upload="false"
-                     :file-list="this.fileListGM"
-                     :data="{ CID: CID, dateStamp: dateStamp }"
-                     >
-                     <div  style="text-align:center">
-                        <i
-                          class="el-icon-upload2"
-                          style="height:30px;margin-top:10px;"
-                        >
-                        <span>上传附件</span>
-                        </i>
-                     </div>
-                  </el-upload>
-                 </div>
-            </td>
-            <td colspan="2" rowspan="1"  style="height:30px" v-if="submitForm.STATUS==8">(出图后记得上传附件)</td>
-          </tr>
         </table>
         <br />      
-        <div style="text-align:center" v-if="submitForm.STATUS==8">
-        <el-button type="success"   @click="_editSubmit(5)" >审核通过</el-button>                    
-        <el-button type="danger"   @click="_editSubmit(4)" >审核不通过</el-button>  
-        </div>      
-        <div style="text-align:center" v-if="submitForm.STATUS==5">
-        <el-button type="success"   @click="_editSubmit(0)" >提交</el-button>                     
-        </div>                 
+        <div style="text-align:center">
+        <el-button type="success"   @click="_editSubmit(8)" >审核通过</el-button>                    
+        <el-button type="danger"   @click="_editSubmit(7)" >审核不通过</el-button>  
+        </div>                     
       </div> 
+
 
 
       <div v-show="isCheck" style="margin-top:5px;font-weight:bold;">
@@ -407,39 +362,38 @@
 </template>
 
 <script>
-import {
+import { 
   GetAllData,
   GetAllUserData,
   CheckDetailByID,
   addSubmit,
-  editSubmit
-} from "@/api/lanju";
+  editSubmit,
+ } from "@/api/lanju";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 export default {
-  name: "lanJuGMExamine",
+  name: "lanJuFinanceExamine",
   data() {
     return {
-      companyId:Cookies.get("companyId"),//公司id      
-      CID:Cookies.get("cid"), //客户账号
-      CNAME:Cookies.get("realName"),//客户名
-      dateStamp:"",
+      companyId: "",
+      CID: "", //客户账号
+      CNAME: "", //客户名
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
       SEARCHKEY: "", //搜索栏关键字
-      SELECT_STATUS: 8, //存储下拉框的值
-      rowPlus: 0, //兰居软装设计需求表中的户型编辑项添加数
+      SELECT_STATUS: 3, //存储下拉框的值
+      rowPlus:0,//兰居软装设计需求表中的户型编辑项添加数
       isAdd: false, //新增记录
       isEdit: false, //编辑记录
       isCheck: false, //查看记录
-      initRowspan: 5, //基本信息中的初始行数
-      usedRowspan: 5, //基本信息中的行数
+      initRowspan:5,//基本信息中的初始行数
+      usedRowspan:5,//基本信息中的行数
       fileListGM:[],//广美上传的文件集合
       lanjuDetail: false,
       limit: 10,
       count: 0,
-      detailCount: 0, //新增户型记录数
+      detailCount:0,//新增户型记录数
       currentPage: 1,
       rateArray: ["极差", "失望", "一般", "满意", "惊喜"],
       statusArray: [
@@ -460,8 +414,12 @@ export default {
           value: 3
         },
         {
-          label: "待处理",
+          label: "财务审核通过",
           value: 8
+        },
+        {
+          label: "广美审核通过",
+          value: 5
         },
         {
           label: "已完成设计图",
@@ -476,11 +434,11 @@ export default {
         {
           label: "豪宅",
           value: "2"
-        }
+        },
       ],
       lanjuData: [],
-      submitForm: [], //提交的表头信息
-      submitDetailForm: [] //提交的明细信息
+      submitForm:[],//提交的表头信息
+      submitDetailForm:[], //提交的明细信息
     };
   },
   created: function() {
@@ -604,7 +562,7 @@ export default {
         finishTime: this.finishTime,
         STATUS: this.SELECT_STATUS,
         SEARCHKEY: this.SEARCHKEY,
-        type:2
+        type:1
       };
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";
@@ -680,10 +638,6 @@ export default {
             this.detailCount=res.count;
             this.submitForm.CUSTOMER_AGENT = this.submitDetailForm[0].CUSTOMER_AGENT;
             this.submitForm.OFFICE_TEL= this.submitDetailForm[0].OFFICE_TEL;
-            if(this.submitForm.STATUS==8)
-            {
-                this.submitForm.EXPECTED_DRAW_DATE= "";
-            }
           }
           //将数据库里文件路径集合数据拆解，拆分成可以访问的路径
           for (let j = 0; j < this.submitDetailForm.length; j++) {
@@ -698,8 +652,8 @@ export default {
           });
           }
           }
-         this.usedRowspan=this.initRowspan+this.detailCount-1;    
-         this.dateStamp = new Date().getTime();   
+         this.usedRowspan=this.initRowspan+this.detailCount-1;
+         console.log(this.usedRowspan);
          this.isAdd = false;
          this.isEdit = true;
          this.isCheck = false;
@@ -708,34 +662,9 @@ export default {
     },
     //列表详情审核
     _editSubmit(val) {
-      //广美上传设计图
-      if(val==0)
-      {
-        this.$refs.upload.submit();
-        return;
-      }
-      //判断是否填完所有信息
-      if (
-        this.submitForm.EXPECTED_DRAW_DATE == ""&&val!=0 &&val!=4
-      ) {
-        this.$alert("请填写预计出图日期", "提示", {
-          confirmButtonText: "确定",
-          type: "warning"
-        });
-        return;
-      }
-      if(val!=0)
-      {
-         this.submitForm.STATUS = val;
-      }
-      if (val == 2 || val == 3) {
-        this.submitForm.AUDITOR_NAME = Cookies.get("realName");
-        this.submitForm.AUDITOR_CODE = Cookies.get("cid");
-      }
-      if (val == 4 || val == 5) {
-        this.submitForm.ARTS_NAME = Cookies.get("realName");
-        this.submitForm.ARTS_CODE = Cookies.get("cid");
-      }
+      this.submitForm.FINANCE_AUDITOR_NAME = Cookies.get("realName");
+      this.submitForm.FINANCE_AUDITOR_CODE = Cookies.get("cid");
+      this.submitForm.STATUS=val;
       editSubmit({model:this.submitForm,detailModels:this.submitDetailForm}).then(res => {
         if (res.code == 0) {
           this.$alert("修改成功", "提示", {
@@ -743,10 +672,7 @@ export default {
             type: "success"
           });
           this.currentPage = 1;
-          if(this.submitForm.STATUS==4)                
-          {
-              this.releaseBadge("lanju3");//刷新角标
-          }
+          this.releaseBadge("lanju4");//刷新角标
           this.refresh();
         } else {
           this.$alert("修改失败，请稍后重试", "提示", {
@@ -756,103 +682,6 @@ export default {
         }
       });
       this.lanjuDetail = false;
-    },
-    handleChange(file, fileList) {
-      this.submitForm.fileListGM = fileList;
-      this.fileChange = true;
-    },
-    handleRemove(file, fileList) {
-      this.submitForm.fileListGM = fileList;
-      if (file.status = "success") {
-        this.deleteFile.push(file.url);
-      }
-    },
-    handleSuccess(res, file, fileList) {
-      var successCount = fileList.filter(item=>item.status == "success").length;
-      if (successCount == fileList.length) {
-        this.submitEDITANSYC();
-      }
-    },
-    submitEDITANSYC() {
-      //相当于同步，等提交成功后再执行
-      //附件拼接
-      for (let j = 0; j < this.submitForm.fileListGM.length; j++) {
-               this.submitForm.GM_FILE +=
-                "/Files/LANJU_STORE/" +
-               this.CID +
-               "/" +
-               this.dateStamp +
-                "/" +
-               this.submitForm.fileListGM[j].name +
-                ";"; 
-      }
-      this.submitForm.GM_FILE_FOLDER =
-        "/Files/LANJU_STORE/" + this.CID + "/" + this.dateStamp;
-      this.submitForm.STATUS=6;
-      editSubmit({model:this.submitForm,detailModels:this.submitDetailForm}).then(res => {
-        if (res.code == 0) {
-          this.$alert("修改成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.currentPage = 1;
-          this.releaseBadge("lanju3");//刷新角标
-          this.refresh();
-        } else {
-          this.$alert("修改失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-        }
-      });
-      this.lanjuDetail = false;
-    },
-    sumbitNEWANSYC() {
-      //相当于同步，等提交成功后再执行
-      //附件拼接
-      for (let i = 0; i < this.submitDetailForm.length; i++) {
-          for (let j = 0; j < this.submitDetailForm[i].fileList.length; j++) {
-               this.submitDetailForm[i].ATTACHMENT_FILE +=
-                "/Files/LANJU_STORE/" +
-               this.CID +
-               "/" +
-               this.dateStamp +
-                "/" +
-               this.submitDetailForm[i].fileList[j].name +
-                ";"; 
-              }
-          this.submitDetailForm[i].ATTACHMENT_FILE_FOLDER =
-        "/Files/LANJU_STORE/" + this.CID + "/" + this.dateStamp;
-      }
-      addSubmit({model:this.submitForm,detailModels:this.submitDetailForm}).then(res => {
-        if (res.code == 0) {
-          this.$alert("提交成功", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-          this.currentPage = 1;
-          this.refresh();
-        } else {
-          this.$alert("提交失败，请稍后重试", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-          });
-        }
-      });
-      this.usedRowspan=5;
-      this.currentPage = 1;
-      this.refresh();
-      this.lanjuDetail = false;
-    },
-    handleError(err, file, fileList) {
-      this.$refs.upload.clearFiles();
-      this.fileList = [];
-      this.dateStamp = new Date().getTime();
-      this.btnDisable = false;
-      this.$alert("文件上传失败", "提示", {
-        confirmButtonText: "确定",
-        type: "success"
-      });
     },
     downLoad(path) {
       downLoadFile(
@@ -872,7 +701,7 @@ export default {
 
  <style scoped>
  .centerCard h4{
-   margin: 0;
+   margin:0;
  }
 .table-c table {
   border-right: 1px solid black;
@@ -962,9 +791,5 @@ export default {
   width: 100%;
   font-size: 16px;
   text-align: center;
-}
-.upload-de .el-upload-dragger {
-  height: 30px;
-  width:220px;
 }
 </style>
