@@ -198,6 +198,7 @@
                   value-format="yyyy-MM-dd"
                   placeholder="开始日期区间"
                   v-model="ruleForm_1.dateValue"
+                  @change="getCustomerChangTime"
                   style="width:210px"
                 ></el-date-picker>
                 <span style="margin-left:10px">--</span>
@@ -207,6 +208,7 @@
                   value-format="yyyy-MM-dd"
                   placeholder="结束日期区间"
                   v-model="ruleForm_2.dateValue"
+                  @change="getCustomerChangTime"
                   style="width:210px;margin-left:12px"
                 ></el-date-picker>
               </div>
@@ -721,6 +723,31 @@ export default {
       getCustomerByAreaCode(data).then(res => {
         this.customerData = res.data;
       });
+    },
+        //改变时间查可选用户
+    getCustomerChangTime(){
+      this.customerData = [];
+      this.tableData = [];
+      this.value_4 = [];
+      if(this.first == ""){
+        this.$alert("未选择区域", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+        return (this.tableData = []);
+      }else{
+      var data = {
+        beginTime:this.ruleForm_1.dateValue,
+        finishTime:this.ruleForm_2.dateValue,
+        isall:this.checked,
+        areaCode: this.first, //市场
+        district: this.second, //片区
+        customerType: this.third //客户类型
+      };
+      getCustomerByAreaCode(data).then(res => {
+        this.customerData = res.data;
+      });
+      }
     },
     //订单查询
     _queryQuYu_1() {
