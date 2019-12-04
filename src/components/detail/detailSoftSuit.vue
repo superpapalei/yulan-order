@@ -90,6 +90,10 @@
               </span>
             </td>
           </tr>
+          <tr v-if="data.item.minimumPurchase">
+            <td>起购数量：</td>
+            <td>{{ data.item.minimumPurchase }}</td>
+          </tr>
           <tr>
             <td>数量<span v-if="data.unit === '平方米'">(宽*高)</span>：</td>
             <td>
@@ -335,6 +339,18 @@ export default {
           });
           return;
         }
+      }
+      //判断起购数量
+      if (this.data.item.minimumPurchase != 0 && newNum < this.data.item.minimumPurchase) {
+        this.$alert(
+          "本产品最小起购数量为" + this.data.item.minimumPurchase + this.data.unit,
+          "提示",
+          {
+            type: "warning",
+            confirmButtonText: "确定"
+          }
+        );
+        return;
       }
       newNum = newNum.toString();
       let changeArr = [];

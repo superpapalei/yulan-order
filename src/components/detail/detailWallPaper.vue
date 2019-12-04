@@ -80,6 +80,10 @@
               </span>
             </td>
           </tr>
+          <tr v-if="data.item.minimumPurchase">
+            <td>起购数量：</td>
+            <td>{{ data.item.minimumPurchase }}</td>
+          </tr>
           <tr>
             <td>
               数量
@@ -445,6 +449,18 @@ export default {
         });
         return;
       }
+      //判断起购数量
+      if (this.data.item.minimumPurchase != 0 && newNum < this.data.item.minimumPurchase) {
+        this.$alert(
+          "本产品最小起购数量为" + this.data.item.minimumPurchase + this.data.unit,
+          "提示",
+          {
+            type: "warning",
+            confirmButtonText: "确定"
+          }
+        );
+        return;
+      }
       newNum = newNum.toString();
       let actRe = this.activity.some(item => {
         if (item.value === this.data.activityId) {
@@ -478,33 +494,8 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    },
-    //判断修改后是否库存满足
-    getNum(value) {
-      // var total = 0;
-      // for(var i = 0; i < this.store.length; i++){
-      //     total += parseFloat(this.store[i].stock);
-      // }
-      // if(this.useStatus == 0 || this.useStatus == 2){
-      //     if(total < parseFloat(value)){
-      //         this.$alert('您输入的计量已超过当前库存'+total+',自动为您调整为最大值', '提示', {
-      //             confirmButtonText: '确定',
-      //         });
-      //         this.buyNum = total;
-      //     }
-      // }
-      // else{
-      //     if(total < parseFloat(value * this.numParam)){
-      //         this.$alert('您输入的计量已超过当前库存,请输入合适的值', '提示', {
-      //                 confirmButtonText: '确定',
-      //         });
-      //         this.buyNum = '';
-      //         this.numParam = '';
-      //     }
-      // }
     }
-  },
-  watch: {}
+  }
 };
 </script>
 

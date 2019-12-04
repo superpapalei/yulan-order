@@ -54,6 +54,13 @@
                     <span v-else>--</span>
                 </template>
             </el-table-column> -->
+      <el-table-column
+        v-if="minimumPurchaseShow"
+        label="起购数量"
+        prop="minimumPurchase"
+        width="80"
+        align="center"
+      ></el-table-column>
       <el-table-column width="100" label="数量" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.unit === '平方米'" align="center">
@@ -215,7 +222,8 @@ export default {
       ],
       storeMsg: [], //储存当前页面的库存信息
       dialogTableVisible: false,
-      disableFlag: false //判断是否禁用选择框
+      disableFlag: false, //判断是否禁用选择框
+      minimumPurchaseShow: false
     };
   },
   props: ["tableData", "numberList"],
@@ -256,6 +264,7 @@ export default {
       this.activity = [];
       this.seletedActivity = "";
       this.remark = "";
+      this.minimumPurchaseShow = false;
     },
     //获取row的key值
     getRowKeys(row) {
@@ -275,6 +284,13 @@ export default {
       var productType = row.productType ? row.productType : "";
       var productBrand = row.productBrand ? row.productBrand : "";
       getItemById({ itemNo: row.itemNo }).then(itemRes => {
+        itemRes.data.MINIMUM_PURCHASE == 0
+          ? (this.minimumPurchaseShow = false)
+          : (this.minimumPurchaseShow = true);
+        row.minimumPurchase =
+          itemRes.data.MINIMUM_PURCHASE == 0
+            ? ""
+            : itemRes.data.MINIMUM_PURCHASE;
         //findItemActivity({
         GetPromotionByItem({
           cid: this.cid,
@@ -282,7 +298,7 @@ export default {
           itemNo: itemRes.data.ITEM_NO,
           itemVersion: itemRes.data.ITEM_VERSION,
           productType: itemRes.data.PRODUCT_TYPE,
-          productBrand: itemRes.data.PRODUCT_BRAND,
+          productBrand: itemRes.data.PRODUCT_BRAND
         })
           .then(res => {
             if (res.data.length === 0) {
@@ -345,6 +361,18 @@ export default {
           type: "warning",
           confirmButtonText: "确定"
         });
+        return;
+      }
+      //判断起购数量
+      if (row.minimumPurchase != 0 && val < row.minimumPurchase) {
+        this.$alert(
+          "本产品最小起购数量为" + row.minimumPurchase + row.unit,
+          "提示",
+          {
+            type: "warning",
+            confirmButtonText: "确定"
+          }
+        );
         return;
       }
       //判断数字合理性

@@ -72,9 +72,9 @@
             align="center"
           ></el-table-column>
           <el-table-column
-            v-if="minimumNumberShow"
+            v-if="minimumPurchaseShow"
             label="起购数量"
-            prop="minimumNumber"
+            prop="minimumPurchase"
             width="80"
             align="center"
           ></el-table-column>
@@ -307,7 +307,7 @@ export default {
       history: [], //本地存储
       decimalNum: 2, //保留小数的位数
       baobei: false,
-      minimumNumberShow: false
+      minimumPurchaseShow: false
     };
   },
   filters: {
@@ -373,8 +373,8 @@ export default {
               ? (this.decimalNum = 1)
               : (this.decimalNum = 2);
             res.data[0].MINIMUM_PURCHASE == 0
-              ? (this.minimumNumberShow = false)
-              : (this.minimumNumberShow = true);
+              ? (this.minimumPurchaseShow = false)
+              : (this.minimumPurchaseShow = true);
             this.tableData = [];
             this.tableData.push({
               type: res.data[0].ITEM_NO, //型号
@@ -389,7 +389,7 @@ export default {
               itemFlag: res.data[0].ITEM_FALG, //不知是啥
               number: "", //数量
               anotherNumber: "", //辅助数量
-              minimumNumber: res.data[0].MINIMUM_PURCHASE // 起购数量
+              minimumPurchase: res.data[0].MINIMUM_PURCHASE // 起购数量
             });
             if (res.data[0].UNIT == "平方米") this.numWidth = 200;
             else this.numWidth = 100;
@@ -646,9 +646,9 @@ export default {
         return;
       }
       //判断起购数量
-      if (row.minimumNumber != 0 && val < row.minimumNumber) {
+      if (row.minimumPurchase != 0 && val < row.minimumPurchase) {
         this.$alert(
-          "本产品最小起购数量为" + row.minimumNumber + row.unit,
+          "本产品最小起购数量为" + row.minimumPurchase + row.unit,
           "提示",
           {
             type: "warning",

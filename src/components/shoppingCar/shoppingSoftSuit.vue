@@ -72,25 +72,23 @@
                     {{ scope1.row.width }} × {{ scope1.row.height }} =
                     {{ (scope1.row.width * scope1.row.height) | dosageFilter }}
                   </span>
-                  <!-- <el-input size="mini"
-                                    style="width: 70px;"
-                                    @change="squareChange($event,scope1.$index,scope.$index,0)"
-                                    v-model="scope1.row.width">
-                                </el-input>
-                                    X
-                                <el-input size="mini"
-                                    style="width: 70px;"
-                                    @change="squareChange($event,scope1.$index,scope.$index,1)"
-                                    v-model="scope1.row.height">
-                  </el-input>-->
+
+                  <span
+                    style="color: red;"
+                    v-if="
+                      scope1.row.width * scope1.row.height <
+                        scope1.row.item.minimumPurchase
+                    "
+                    >(最小起购数量{{ scope1.row.item.minimumPurchase }})</span
+                  >
                 </div>
                 <div v-else>
-                  <span>{{ scope1.row.quantity }}</span>
-                  <!-- <el-input size="mini"
-                                    style="width: 100px;"
-                                    @change="numberChange($event,scope1.$index,scope.$index)"
-                                    v-model="scope1.row.quantity">
-                  </el-input>-->
+                  <span>{{ scope1.row.quantity }}</span
+                  ><span
+                    style="color: red;"
+                    v-if="scope1.row.quantity < scope1.row.item.minimumPurchase"
+                    >(最小起购数量{{ scope1.row.item.minimumPurchase }})</span
+                  >
                 </div>
               </template>
             </el-table-column>
@@ -522,6 +520,19 @@ export default {
     //判断商品是否可选(活动是否有效)
     checkActiviyEffect(row, index) {
       if (row.activityEffective === false) {
+        return false;
+      } else {
+        return this.checkMinimumNumber(row);
+      }
+    },
+    checkMinimumNumber(row) {
+      let val;
+      if (row.unit === "平方米") {
+        val = row.width * row.height;
+      } else {
+        val = row.quantity;
+      }
+      if (val < row.item.minimumPurchase) {
         return false;
       } else {
         return true;

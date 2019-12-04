@@ -48,9 +48,6 @@
                   scope.row.activityName ? scope.row.activityName : "不参与活动"
                 }}
               </template>
-              <!-- <template slot-scope="scope1">
-                            {{scope1.row.activityName?scope1.row.activityName:'--'}}
-              </template>-->
             </el-table-column>
             <el-table-column
               label="发货说明"
@@ -61,7 +58,7 @@
               <template slot-scope="scope">
                 <span v-if="scope.row.splitShipment === 0">等生产</span>
                 <span v-else-if="scope.row.splitShipment === 1">分批发货</span>
-                <span style="margin-left:20px;" v-else>--</span>
+                <span v-else>--</span>
               </template>
             </el-table-column>
             <el-table-column label="单价" align="center">
@@ -77,25 +74,19 @@
                     {{ scope1.row.width }} × {{ scope1.row.height }} =
                     {{ (scope1.row.width * scope1.row.height) | dosageFilter }}
                   </span>
-                  <!-- <el-input size="mini"
-                                    style="width: 70px;"
-                                    @change="squareChange($event,scope1.$index,scope.$index,0)"
-                                    v-model="scope1.row.width">
-                                </el-input>
-                                    ×
-                                <el-input size="mini"
-                                    style="width: 70px;"
-                                    @change="squareChange($event,scope1.$index,scope.$index,1)"
-                                    v-model="scope1.row.height">
-                  </el-input>-->
+                  <span
+                  style="color: red;"
+                  v-if="(scope1.row.width * scope1.row.height) < scope1.row.item.minimumPurchase"
+                  >(最小起购数量{{scope1.row.item.minimumPurchase}})</span
+                >
                 </div>
                 <div v-else>
                   <span>{{ scope1.row.quantity }}</span>
-                  <!-- <el-input size="mini"
-                                    style="width: 100px;"
-                                    @change="numberChange($event,scope1.$index,scope.$index)"
-                                    v-model="scope1.row.quantity">
-                  </el-input>-->
+                  <span
+                  style="color: red;"
+                  v-if="scope1.row.quantity < scope1.row.item.minimumPurchase"
+                  >(最小起购数量{{scope1.row.item.minimumPurchase}})</span
+                >
                 </div>
               </template>
             </el-table-column>
@@ -105,17 +96,6 @@
               prop="unit"
               align="center"
             >
-              <!-- <template slot-scope="scope">
-                            <div v-if="scope.row.status === '0'">
-                                <span>个</span>
-                            </div>
-                            <div v-else-if="scope.row.status === '1'">
-                                <span>m²(长X宽)</span>
-                            </div>
-                            <div v-else-if="scope.row.status === '2'">
-                                <span>卷</span>
-                            </div>
-              </template>-->
             </el-table-column>
             <el-table-column label="小计" align="center">
               <template slot-scope="scope">
@@ -160,15 +140,11 @@
               >删除分组</a
             >
           </div>
-          <!-- {{scope.$index}}
-          {{shopsData.cartItems.wallPaper[scope.$index]}}-->
-          <!-- {{typeof(shopsData.cartItems.wallPaper[scope.$index])}} -->
         </template>
       </el-table-column>
       <el-table-column>
         <template slot-scope="scope">
           <div class="r">
-            <!-- <a class="ml20" @click="changeChoose(scope.$index)" style="color: #606266;">切换选择项</a> -->
             <a
               class="ml20"
               @click="deleteChoose(scope.$index)"
@@ -180,7 +156,6 @@
       </el-table-column>
     </el-table>
     <div id="accountBox">
-      <!-- style="width:1050px;position:fixed;bottom:10px;left:240px;z-index:999;" -->
       <div class="r">
         <div>
           <span>已选择</span>
@@ -545,16 +520,27 @@ export default {
       if (row.activityEffective === false) {
         return false;
       } else {
+        return this.checkMinimumNumber(row);
+      }
+    },
+    checkMinimumNumber(row) {
+      let val;
+      if (row.unit === "平方米") {
+        val = row.width * row.height;
+      } else {
+        val = row.quantity;
+      }
+      if (val < row.item.minimumPurchase) {
+        return false;
+      } else {
         return true;
       }
     },
     //切换选中项
     changeChoose(index) {
       var re = "multipleTable" + index;
-      // if(this.multipleSelection.length !== this.shopsData[index].commodities.length)
       for (var i = 0; i < this.shopsData[index].commodities.length; i++)
         this.$refs[re].toggleRowSelection(this.shopsData[index].commodities[i]);
-      // else    this.$refs.multipleTable.clearSelection();
     },
     //删除单件商品
     deleteSingle(data) {
@@ -745,17 +731,6 @@ export default {
   created() {
     this.init();
   }
-  // watch: {
-  //   wallpaperData(data) {
-  //     this.shopsData = [];
-  //     this.activityData = [];
-  //     this.multipleSelection = [];
-  //     this.expands = [];
-  //     this.totalMoney = 0;
-  //     this.tempData = data;
-  //     if (this.tempData.length > 0) this.dataDeal(this.tempData);
-  //   }
-  // }
 };
 </script>
 
