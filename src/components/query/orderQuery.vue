@@ -345,6 +345,8 @@
               prop="flag"
               label="任务完成标记"
               align="center"
+              :filters="[{text: '未完成', value: ''}, {text: '已完成', value: '完成'}]"
+              :filter-method="filterHandler"
             >
             </el-table-column>
           </el-table>
@@ -583,6 +585,11 @@ export default {
       }  
   },
   methods: {
+    filterHandler(value, row, column) {
+        const property = column['property'];
+        return row[property] === value;
+      },
+      
     openDialog(val) {
       this.cid = Cookies.get("cid");
       this.order_no = val;
