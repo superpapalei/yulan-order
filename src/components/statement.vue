@@ -364,7 +364,7 @@ import {
   userReturn,
   statementDetail
 } from "@/api/orderList";
-import {GetBalancePeriod} from "@/api/orderListASP";
+import { GetBalancePeriod } from "@/api/orderListASP";
 import { mapMutations, mapActions } from "vuex";
 import Cookies from "js-cookie";
 export default {
@@ -626,11 +626,11 @@ export default {
         cid: Cookies.get("cid"),
         limit: this.outerlimit,
         page: this.outerCurrentPage,
-        status :''
+        status: ""
       };
       //checkBill(url, data).then(res => {
       GetBalancePeriod(data).then(res => {
-        console.log(res)
+        console.log(res);
         this.tableData = res.data.customerBalancePeriodList;
         this.theHead = res.data.customerInfo;
         this.outercount = res.count;

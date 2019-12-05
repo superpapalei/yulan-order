@@ -21,8 +21,9 @@
         <template slot-scope="scope">
           <span v-if="scope.row.fixType === '01'">
             <span v-if="scope.row.rzGrade">
-              定宽{{ scope.row.rzGrade }}
-              <!-- {{scope.row.fixGrade/1000 + (scope.row.unit?scope.row.unit:'米')}} -->
+              定宽
+              <!-- {{ scope.row.rzGrade }} -->
+              {{scope.row.fixGrade/1000 + (scope.row.unit?scope.row.unit:'米')}}
             </span>
             <span v-else>
               定宽
@@ -30,16 +31,17 @@
           </span>
           <span v-else-if="scope.row.fixType === '02'">
             <span v-if="scope.row.rzGrade">
-              定高{{ scope.row.rzGrade }}
-              <!-- {{scope.row.fixGrade/1000 + (scope.row.unit?scope.row.unit:'米')}} -->
+              定高
+              <!-- {{ scope.row.rzGrade }} -->
+              {{scope.row.fixGrade/1000 + (scope.row.unit?scope.row.unit:'米')}}
             </span>
             <span v-else>
               定高
             </span>
           </span>
           <span v-else-if="scope.row.rzGrade">
-            {{ scope.row.rzGrade }}
-            <!-- {{scope.row.fixGrade/1000 + (scope.row.unit?scope.row.unit:'米')}} -->
+            <!-- {{ scope.row.rzGrade }} -->
+            {{scope.row.fixGrade/1000 + (scope.row.unit?scope.row.unit:'米')}}
           </span>
           <span v-else>--</span>
         </template>
