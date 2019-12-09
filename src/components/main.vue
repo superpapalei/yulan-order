@@ -1587,7 +1587,7 @@ export default {
 .hoverAlink {
   cursor: pointer;
 }
-hoverAlink:hover {
+.hoverAlink:hover {
   text-decoration: underline !important;
 }
 </style>

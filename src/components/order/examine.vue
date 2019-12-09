@@ -246,6 +246,7 @@ export default {
       currentPage: 1,
       buttonShow: true,
       isAll: false,
+      orderBy:'',
       canOptionValue: ["0", "3"],
       options: [
         {
@@ -434,7 +435,8 @@ export default {
         beginTime: this.date1,
         finishTime: this.date2,
         curtainStatusId: this.orderType || this.canOptionValue,
-        isAll: this.isAll
+        isAll: this.isAll,
+        orderBy : this.orderBy
       };
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";
@@ -462,22 +464,26 @@ export default {
           this.options = this.options1;
           this.canOptionValue = ["0", "3"];
           this.isAll = false;
+          this.orderBy = '';
           break;
         case "customCheck":
           this.options = this.options2;
           this.canOptionValue = ["1", "2", "8"];
           this.isAll = false;
+          this.orderBy = ' DESC';
           break;
         case "checked":
           this.options = this.options3;
           this.canOptionValue = ["4"];
           this.isAll = false;
+          this.orderBy = ' DESC';
           break;
         case "allOrder":
           this.options = this.options4;
           //this.canOptionValue = ["0","1", "2", "3","4"];
           this.canOptionValue = [];
           this.isAll = true;
+          this.orderBy = ' DESC';
           break;
       }
       this.getorderList();
