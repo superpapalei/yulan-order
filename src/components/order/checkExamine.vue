@@ -270,8 +270,8 @@
           <span class="timeRight">{{ ruleForm.USER_NO }}</span>
         </span>
       </div>
-      <div style="margin-top:30px;">
-        <el-divider></el-divider>
+      <el-divider></el-divider>
+      <!-- <div style="margin-top:30px;">
         <span style="margin-left:10px;color:red;"
           >订单修改说明：当修改数量不超过200卷时，双方可通过电话在原订单上进行修改，当修改数量超过200卷时，乙方应向甲方提供书面修改说明。</span
         >
@@ -279,8 +279,7 @@
         <span style="margin-left:10px;color:red;"
           >法律效力：本订单是双方合作协议不可分割的一部分，是乙方向甲方订货的凭证，具法力效力。</span
         >
-        <el-divider></el-divider>
-      </div>
+      </div> -->
       <div
         v-if="operationRecords.length > 0"
         style="width:800px;margin-bottom:20px;"

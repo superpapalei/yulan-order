@@ -295,7 +295,7 @@
               <el-input
                 class="inputWidth"
                 v-model="sumbit.payerAccount"
-                 oninput="value=value.replace(/[^\d]/g,'')"
+                oninput="value=value.replace(/[^\d]/g,'')"
                 placeholder="请输入付款银行账号"
               ></el-input>
             </td>
