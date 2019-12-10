@@ -670,8 +670,6 @@ export default {
     },
      //新建一条售后记录
     addRefundRecord(data) {
-      this.isRefundAdd = true;
-      this.RefundDetail = true;
       this.dateStamp = new Date().getTime();
       this.FormRight=true;
       this.submitHead = {
@@ -722,6 +720,8 @@ export default {
           this.companyName=res.data[0].CUSTOMER_NAME;
           this.CONTRACT_NO=res.data[0].CONTRACT_NO;
           this.submit.PRODUCTION_VERSION = res.data[0].PRODUCTVERSION_NAME;
+          this.isRefundAdd = true;
+          this.RefundDetail = true;
           for (var i = 0; i < res.data.length; i++) {  //这一部分应该在编辑里使用（可以进行初审的时候使用）
           this.returnInfo[i] = new Object();
           this.returnInfo[i].label =
@@ -858,8 +858,7 @@ export default {
       }
     },
     handleSuccess(res, file, fileList) {
-      var successCount = this.submit.fileList.filter(item => item.status == "success")
-        .length;
+      var successCount = this.submit.fileList.filter(item => item.status == "success").length;
       if (successCount == fileList.length) {
         if (this.isRefundAdd) {
           this.sumbitNEWANSYC();
