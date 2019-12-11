@@ -289,6 +289,7 @@
                 v-model="submit.CONTACT_PHONE"
                 placeholder=""
                 clearable
+                oninput="value=value.replace(/[^\d]/g,'')"
                 class="inputStyle"
               >
               </el-input>
@@ -326,6 +327,11 @@
                 clearable
                 class="inputStyle"
                 style="height:25px"
+                oninput="value=value.replace(/[^\d.]/g,'')
+                           .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                           .replace('.', '$#$').replace(/\./g, '')
+                           .replace('$#$', '.')
+                           .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
               >
               </el-input>
             </td> <!-- 要小于发货数量 -->
@@ -424,7 +430,8 @@ import { getShipment } from "@/api/orderList";
 import { getPackDetailInfo,getReturnInfo,getCompanyInfo} from "@/api/orderListASP";
 import {
   InsertCompensation,
-  UpdateState
+  UpdateState,
+  CheckOrderAndItemNo
 } from "@/api/paymentASP";
 import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
@@ -670,71 +677,70 @@ export default {
     },
      //新建一条售后记录
     addRefundRecord(data) {
-      this.dateStamp = new Date().getTime();
-      this.FormRight=true;
-      this.submitHead = {
-          ID:"",
-          ERP_CREATOR: "", //创建人编号
-          ERP_CREATORNAME: "", //创建人姓名
-          CID: "", //客户编号
-          CNAME: "", //客户姓名
-          SENDBACK_REASON: "", //退回理由
-          ITEM_COUNT: "", //总货品数量
-          ITEM_MAX_INDEX:"",//最大索引
-          STATE:"",//状态
-          PRINTED:"",//打印方式
-          FIRST_AUDITION:"",//初审意见
-          RETURN_TYPE:"",//退货类型
-          RETURN_ADDRESS:"",//退货地址
-          REASSURE_TS:"",//签订日期
-          DEALMAN_CODE:"",
-          DEAL_TS:"",
-          DEALMAN_NAME:"",
-      };
-      this.submit = {
-          RTCB_ID: "", //退货单ID
-          ITEM_NO: "", //产品型号
-          PRODUCTION_VERSION: "", //版本（项目、产品）
-          UNIT: "", //单位
-          QTY: "", //数量
-          NOTES: "", //问题描述
-          CONTACT_MAN:"",//联系人
-          CONTACT_PHONE:"",//联系方式
-          SALE_NO:"",//提货单号
-          orderNo:"",//B2B订单号
-          ITEM_NO:"",//产品型号
-          C_TRANSBILL:"",//物流单号
-          UNIT:"",//单位
-          NOTE:"",//类型
-          fileList:[],//附件列表
-          ATTACHMENT_FILE:"",//附件
-          ATTACHMENT_FILE_FOLDER:"",//附件文件夹
-      };
-      this.submit.orderNo = this.orderNo;
-      this.submit.ITEM_NO = this.itemNo;
-      this.submit.UNIT = this.UNIT;
-      this.submit.SALE_NO = data.SALE_NO;
-      this.submit.C_TRANSBILL = data.TRANS_ID;
-      getReturnInfo({companyId:this.companyId,SALE_NO:this.submit.SALE_NO,ITEM_NO:this.submit.ITEM_NO}).then(res => {
-        if (res.code == 0) {
-          this.companyName=res.data[0].CUSTOMER_NAME;
-          this.CONTRACT_NO=res.data[0].CONTRACT_NO;
-          this.submit.PRODUCTION_VERSION = res.data[0].PRODUCTVERSION_NAME;
-          this.isRefundAdd = true;
-          this.RefundDetail = true;
-          for (var i = 0; i < res.data.length; i++) {  //这一部分应该在编辑里使用（可以进行初审的时候使用）
-          this.returnInfo[i] = new Object();
-          this.returnInfo[i].label =
-            "地址:" +
-            res.data[i].ADDRESS +
-            "   收件人:" +
-            res.data[i].ADDRESSEE +
-            "   电话:" +
-            res.data[i].TEL;
-          this.returnInfo[i].value = res.data[i].ID;
-        }
-        } 
-      });
+        CheckOrderAndItemNo({SALE_NO:data.SALE_NO,ITEM_NO:this.itemNo}).then(res => {
+          if (res.code == 0) {
+             this.$confirm("此前已对该订单该型号发起退货赔偿申请，是否要再次申请", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning"
+             }).then(() => {
+                this.dateStamp = new Date().getTime();
+                this.FormRight=true;
+                this.submitHead = {
+                    ID:"",
+                    ERP_CREATOR: "", //创建人编号
+                    ERP_CREATORNAME: "", //创建人姓名
+                    CID: "", //客户编号
+                    CNAME: "", //客户姓名
+                    SENDBACK_REASON: "", //退回理由
+                    ITEM_COUNT: "", //总货品数量
+                    ITEM_MAX_INDEX:"",//最大索引
+                    STATE:"",//状态
+                    PRINTED:"",//打印方式
+                    FIRST_AUDITION:"",//初审意见
+                    RETURN_TYPE:"",//退货类型
+                    RETURN_ADDRESS:"",//退货地址
+                    REASSURE_TS:"",//签订日期
+                    DEALMAN_CODE:"",
+                    DEAL_TS:"",
+                    DEALMAN_NAME:"",
+                };
+                this.submit = {
+                    RTCB_ID: "", //退货单ID
+                    ITEM_NO: "", //产品型号
+                    PRODUCTION_VERSION: "", //版本（项目、产品）
+                    UNIT: "", //单位
+                    QTY: "", //数量
+                    NOTES: "", //问题描述
+                    CONTACT_MAN:"",//联系人
+                    CONTACT_PHONE:"",//联系方式
+                    SALE_NO:"",//提货单号
+                    orderNo:"",//B2B订单号
+                    ITEM_NO:"",//产品型号
+                    C_TRANSBILL:"",//物流单号
+                    UNIT:"",//单位
+                    NOTE:"",//类型
+                    fileList:[],//附件列表
+                    ATTACHMENT_FILE:"",//附件
+                    ATTACHMENT_FILE_FOLDER:"",//附件文件夹
+                };
+                this.submit.orderNo = this.orderNo;
+                this.submit.ITEM_NO = this.itemNo;
+                this.submit.UNIT = this.UNIT;
+                this.submit.SALE_NO = data.SALE_NO;
+                this.submit.C_TRANSBILL = data.TRANS_ID;
+                getReturnInfo({companyId:this.companyId,SALE_NO:this.submit.SALE_NO,ITEM_NO:this.submit.ITEM_NO}).then(res => {
+                    if (res.code == 0) {
+                        this.companyName=res.data[0].CUSTOMER_NAME;
+                        this.CONTRACT_NO=res.data[0].CONTRACT_NO;
+                        this.submit.PRODUCTION_VERSION = res.data[0].PRODUCTVERSION_NAME;
+                        this.isRefundAdd = true;
+                        this.RefundDetail = true;
+                } 
+                });
+            });
+          } 
+        });
     },
     //新增售后记录提交
     _addRefundSubmit() {

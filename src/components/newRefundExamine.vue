@@ -100,6 +100,8 @@
             align="center"
           >
           </el-table-column>
+          <el-table-column width="90" label="联系人" prop="CONTACT_MAN"  align="center"> </el-table-column>
+          <el-table-column width="120" label="联系电话" prop="CONTACT_PHONE"  align="center"> </el-table-column>  
           <el-table-column width="70" label="货品数" prop="ITEM_COUNT"  align="center"> </el-table-column>
           <el-table-column width="120" label="状态"  align="center">
             <template slot-scope="scope">
@@ -107,8 +109,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="创建人"
-            prop="ERP_CREATORNAME"
+            label="处理人"
+            prop="DEALMAN_NAME"
             align="center"
           >
           </el-table-column>
@@ -203,10 +205,14 @@
             <td style="font-size:10px;height:15px;text-align:left;width:15%;" colspan="1">{{submit.ID}}</td>
             <td style="font-size:10px;height:15px;width:9%;" colspan="1">创建时间：</td>
             <td style="font-size:10px;height:15px;text-align:left;width:17%;" colspan="3">{{submit.CREATE_TS|datatrans}}</td>
-            <td style="font-size:10px;height:15px;width:8%;" colspan="1">处理人：</td>
-            <td style="font-size:10px;height:15px;text-align:left;width:19%;" colspan="1">{{submit.DEALMAN_NAME}}</td>
-            <td style="font-size:10px;height:15px;width:9%;" colspan="1">处理时间：</td>
-            <td style="font-size:10px;height:15px;text-align:left;width:17%;" colspan="3">{{submit.DEAL_TS|datatrans}}</td>
+            <td style="font-size:10px;height:15px;width:8%;" colspan="1" v-if="submit.STATE!='SUBMITTED'">处理人：</td>
+            <td style="font-size:10px;height:15px;width:8%;" colspan="1" v-else></td>
+            <td style="font-size:10px;height:15px;text-align:left;width:19%;" colspan="1" v-if="submit.STATE!='SUBMITTED'">{{submit.DEALMAN_NAME}}</td>
+            <td style="font-size:10px;height:15px;width:19%;" colspan="1" v-else></td>
+            <td style="font-size:10px;height:15px;width:9%;" colspan="1" v-if="submit.STATE!='SUBMITTED'">处理时间：</td>
+            <td style="font-size:10px;height:15px;width:9%;" colspan="1" v-else></td>
+            <td style="font-size:10px;height:15px;text-align:left;width:17%;" colspan="3" v-if="submit.STATE!='SUBMITTED'">{{submit.DEAL_TS|datatrans}}</td>
+            <td style="font-size:10px;height:15px;width:17%;" colspan="1" v-else></td>
           </tr>
          </table>
       </div>
@@ -302,6 +308,10 @@
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
             <td style="height:15px" colspan="6">您的提货单号为{{submit.SALE_NO}}</td>
+          </tr>
+          <tr v-if="submit.STATE=='APPROVED'&&submit.RETURN_TYPE=='客户邮寄'">
+            <td class="grayTD" style="height:15px">物流备注信息</td>
+            <td style="height:15px" colspan="6">{{submit.RETURN_TRANSINFO}}</td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
@@ -972,6 +982,8 @@ export default {
                }
            }
           this.submit.STATE='RECEIVE';
+          this.submit.DEALMAN_CODE=this.CID;
+          this.submit.DEALMAN_NAME=this.CNAME;
           UpdateFirstAudition({ head: this.submit }).then(res => {
             if (res.code == 0) {
               this.$alert("修改成功", "提示", {
@@ -1011,8 +1023,6 @@ export default {
             totalMoney=totalMoney.add(this.processDetail[i].P_MONEY);
            }
            this.submit.TOTALMONEY=totalMoney;
-           this.submit.DEALMAN_CODE=this.CID;
-           this.submit.DEALMAN_NAME=this.CNAME;;
            UpdateProcess({ head: this.submit,details:this.processDetail,totalMoney:this.submit.TOTALMONEY}).then(res => {
                if (res.code == 0) {
                  this.$alert("修改成功", "提示", {
