@@ -129,6 +129,23 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
+                  scope.row.STATE == 'SUBMITTED'
+                "
+                content="删除"
+                placement="top"
+              >
+                <el-button
+                  circle
+                  style="padding: 7px;"
+                  @click="_Delete(scope.row.ID)"
+                  type="danger"
+                  icon="el-icon-close"
+                  size="mini"
+                >
+                </el-button>
+              </el-tooltip>
+              <el-tooltip
+                v-if="
                   scope.row.STATE == 'CUSTOMERAFFIRM'
                 "
                 content="编辑"
@@ -185,10 +202,14 @@
             <td style="font-size:10px;height:15px;text-align:left;width:15%;" colspan="1">{{submit.ID}}</td>
             <td style="font-size:10px;height:15px;width:9%;" colspan="1">创建时间：</td>
             <td style="font-size:10px;height:15px;text-align:left;width:17%;" colspan="3">{{submit.CREATE_TS|datatrans}}</td>
-            <td style="font-size:10px;height:15px;width:8%;" colspan="1">处理人：</td>
-            <td style="font-size:10px;height:15px;text-align:left;width:19%;" colspan="1">{{submit.DEALMAN_NAME}}</td>
-            <td style="font-size:10px;height:15px;width:9%;" colspan="1">处理时间：</td>
-            <td style="font-size:10px;height:15px;text-align:left;width:17%;" colspan="3">{{submit.DEAL_TS|datatrans}}</td>
+            <td style="font-size:10px;height:15px;width:8%;" colspan="1" v-if="submit.STATE!='SUBMITTED'">处理人：</td>
+            <td style="font-size:10px;height:15px;width:8%;" colspan="1" v-else></td>
+            <td style="font-size:10px;height:15px;text-align:left;width:19%;" colspan="1" v-if="submit.STATE!='SUBMITTED'">{{submit.DEALMAN_NAME}}</td>
+            <td style="font-size:10px;height:15px;width:19%;" colspan="1" v-else></td>
+            <td style="font-size:10px;height:15px;width:9%;" colspan="1" v-if="submit.STATE!='SUBMITTED'">处理时间：</td>
+            <td style="font-size:10px;height:15px;width:9%;" colspan="1" v-else></td>
+            <td style="font-size:10px;height:15px;text-align:left;width:17%;" colspan="3" v-if="submit.STATE!='SUBMITTED'">{{submit.DEAL_TS|datatrans}}</td>
+            <td style="font-size:10px;height:15px;width:17%;" colspan="1" v-else></td>
           </tr>
          </table>
       </div>
@@ -284,6 +305,10 @@
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
             <td style="height:15px" colspan="6">您的提货单号为{{submit.SALE_NO}}</td>
+          </tr>
+          <tr v-if="submit.STATE=='APPROVED'&&submit.RETURN_TYPE=='客户邮寄'">
+            <td class="grayTD" style="height:15px">物流备注信息</td>
+            <td style="height:15px" colspan="6">{{submit.RETURN_TRANSINFO}}</td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
@@ -471,6 +496,18 @@
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
             <td style="height:15px" colspan="6">您的提货单号： {{submit.SALE_NO}}</td>
           </tr>
+          <tr v-if="submit.STATE=='CUSTOMERAFFIRM'&&submit.RETURN_TYPE=='客户邮寄'">
+            <td class="grayTD" style="height:15px">物流备注信息</td>
+            <td style="height:15px" colspan="6">
+              <el-input
+                v-model="submit.RETURN_TRANSINFO"
+                placeholder="请填写邮寄的物流公司和物流单号"
+                clearable
+                class="inputStyle"
+              >
+              </el-input>
+            </td>
+          </tr>
           <tr>
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理结果
@@ -583,7 +620,8 @@ import {
   GetCompensationById,
   GetNoPrinted,
   ApprovedUpdate,
-  UpdatePrintedById
+  UpdatePrintedById,
+  DeleteCompensation
 } from "@/api/paymentASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import { mapMutations } from "vuex";
@@ -827,6 +865,16 @@ export default {
     },
     //保存修改
     _EditDetail(){
+          //判断是否填完所有信息
+          if (
+            this.submit.RETURN_TRANSINFO == "" 
+           ) {
+            this.$alert("请填写退货邮寄的物流信息", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+           });
+          return;
+          }
           this.submit.STATE='APPROVED';
           ApprovedUpdate({ head: this.submit }).then(res => {
             if (res.code == 0) {
@@ -846,6 +894,32 @@ export default {
             return;
             }
           });
+    },
+    //删除
+    _Delete(val){
+      this.$confirm("是否删除该条记录？删除后将不可恢复！", "提示", {
+        confirmButtonText: "确定删除",
+        cancelButtonText: "我再想想",
+        type: "warning"
+      }).then(() => {
+          DeleteCompensation({id:val}).then(res => {
+            if (res.code == 0) {
+              this.$alert("删除成功", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.refresh();
+            return;
+            } else {
+              this.$alert("删除失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            return;
+            }
+          });
+       });
+
     },
     //显示图片
     showImage(url) {
