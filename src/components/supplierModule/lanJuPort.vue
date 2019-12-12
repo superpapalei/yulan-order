@@ -2375,7 +2375,7 @@ detailCol:[
        var current_id= Cookies.get("cid");
           var customer=(this.customer == null || this.customer == "") ? "all" : this.customer;
         var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
-       var   check_flag= this.check_flag;
+       var   check_flag= 1;
   var beginTime= this.getBegintime(this.date1);
       var finishTime= this.getEndtime(this.date2);
         var po= this.po;
@@ -2493,25 +2493,31 @@ detailCol:[
         //  console.log(this.items);
             for (let k=0;k<this.items.length;k++){
                    let arr=this.items[k].tab2[k];
-                    // console.log("arr");
+                    //  console.log("arr");
                     //  console.log(arr);
                      let let_intSpana=[];
                      let let_index=[];
                    var intSpan=1;
                    var intIndex=0;
-               for (let i=1;i<arr.length;i++){
-                if (arr[i].cl_name === arr[i - 1].cl_name ) {
+                   
+               for (let i=0;i<arr.length;i++){
+                if (i==0&&arr.length==1){
+                     let_index.push(intIndex);
+                     let_intSpana.push(intSpan);
+                     
+                }
+               else if (i>0&&arr[i].cl_name === arr[i - 1].cl_name ) {
                   intSpan = intSpan + 1;//如果相同,该合并的rowSpan+1
                   intIndex = i +1- intSpan;//row
                }
-                 else if (arr[i].cl_name != arr[i - 1].cl_name  ) {
+                 else if (i>0&&arr[i].cl_name != arr[i - 1].cl_name  ) {
                   let_index.push(intIndex);
                   let_intSpana.push(intSpan);
                   
                   intSpan = 1;
                   intIndex = i; 
                 }
-                 if (i==arr.length -1){
+                 if (i>0&& i==arr.length -1){
                       let_index.push(intIndex);
                   let_intSpana.push(intSpan);
               }  
@@ -2532,7 +2538,7 @@ detailCol:[
         //     this.$set(this.items[i].tab1,j,this.items[i].tab1[j])
         //   }
         // }
-        this.pur_headForm.PUR_NO = this.gridData[0].PUR_NO;
+        this.pur_headForm.PUR_NO = PUR_NO;
         this.pur_headForm.LINKMAN = this.gridData[0].LINKMAN;
         this.pur_headForm.DATE_PUR = this.gridData[0].DATE_PUR;
         this.pur_headForm.DATE_DELIVER = this.gridData[0].DATE_DELIVER;
