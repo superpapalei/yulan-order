@@ -859,7 +859,7 @@
 
                 <el-table
                     :data="item.tab2[index]"
-                   :show-header="true"
+                   :show-header="false"
                    :span-method="function(col){ return arraySpanMethod(col,index)}"
                    class="tb_font13"
                     border
@@ -2493,8 +2493,8 @@ detailCol:[
         //  console.log(this.items);
             for (let k=0;k<this.items.length;k++){
                    let arr=this.items[k].tab2[k];
-                     console.log("arr");
-                     console.log(arr);
+                    //  console.log("arr");
+                    //  console.log(arr);
                      let let_intSpana=[];
                      let let_index=[];
                    var intSpan=1;
@@ -2526,10 +2526,10 @@ detailCol:[
                 this.arr_span.push(let_intSpana);
             }
            
-           console.log("this.arr_index"); 
-          console.log(this.arr_index);
-            console.log("this.arr_span"); 
-           console.log(this.arr_span);
+          //  console.log("this.arr_index"); 
+          // console.log(this.arr_index);
+          //   console.log("this.arr_span"); 
+          //  console.log(this.arr_span);
           
        
         //无效
