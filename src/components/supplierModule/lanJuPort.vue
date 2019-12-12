@@ -859,7 +859,7 @@
 
                 <el-table
                     :data="item.tab2[index]"
-                   :show-header="false"
+                   :show-header="true"
                    :span-method="function(col){ return arraySpanMethod(col,index)}"
                    class="tb_font13"
                     border
@@ -2493,25 +2493,31 @@ detailCol:[
         //  console.log(this.items);
             for (let k=0;k<this.items.length;k++){
                    let arr=this.items[k].tab2[k];
-                    // console.log("arr");
-                    //  console.log(arr);
+                     console.log("arr");
+                     console.log(arr);
                      let let_intSpana=[];
                      let let_index=[];
                    var intSpan=1;
                    var intIndex=0;
-               for (let i=1;i<arr.length;i++){
-                if (arr[i].cl_name === arr[i - 1].cl_name ) {
+                   
+               for (let i=0;i<arr.length;i++){
+                if (i==0&&arr.length==1){
+                     let_index.push(intIndex);
+                     let_intSpana.push(intSpan);
+                     
+                }
+               else if (i>0&&arr[i].cl_name === arr[i - 1].cl_name ) {
                   intSpan = intSpan + 1;//如果相同,该合并的rowSpan+1
                   intIndex = i +1- intSpan;//row
                }
-                 else if (arr[i].cl_name != arr[i - 1].cl_name  ) {
+                 else if (i>0&&arr[i].cl_name != arr[i - 1].cl_name  ) {
                   let_index.push(intIndex);
                   let_intSpana.push(intSpan);
                   
                   intSpan = 1;
                   intIndex = i; 
                 }
-                 if (i==arr.length -1){
+                 if (i>0&& i==arr.length -1){
                       let_index.push(intIndex);
                   let_intSpana.push(intSpan);
               }  
@@ -2520,10 +2526,10 @@ detailCol:[
                 this.arr_span.push(let_intSpana);
             }
            
-          //  console.log("this.arr_index"); 
-          // console.log(this.arr_index);
-          //   console.log("this.arr_span"); 
-          //  console.log(this.arr_span);
+           console.log("this.arr_index"); 
+          console.log(this.arr_index);
+            console.log("this.arr_span"); 
+           console.log(this.arr_span);
           
        
         //无效
