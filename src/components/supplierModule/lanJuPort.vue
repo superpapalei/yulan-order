@@ -2375,7 +2375,7 @@ detailCol:[
        var current_id= Cookies.get("cid");
           var customer=(this.customer == null || this.customer == "") ? "all" : this.customer;
         var po_type= this.po_type; //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
-       var   check_flag= this.check_flag;
+       var   check_flag= 1;
   var beginTime= this.getBegintime(this.date1);
       var finishTime= this.getEndtime(this.date2);
         var po= this.po;
@@ -2532,7 +2532,7 @@ detailCol:[
         //     this.$set(this.items[i].tab1,j,this.items[i].tab1[j])
         //   }
         // }
-        this.pur_headForm.PUR_NO = this.gridData[0].PUR_NO;
+        this.pur_headForm.PUR_NO = PUR_NO;
         this.pur_headForm.LINKMAN = this.gridData[0].LINKMAN;
         this.pur_headForm.DATE_PUR = this.gridData[0].DATE_PUR;
         this.pur_headForm.DATE_DELIVER = this.gridData[0].DATE_DELIVER;
