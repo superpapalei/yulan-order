@@ -1353,7 +1353,7 @@ export default {
 
         //this.array2[i].qtyRequired = this.array2[i].qtyRequired.toFixed(2);
         //this.array2[i].finalPrice = (this.array[i].questPrice/this.array2[i].qtyRequired).toFixed(2);
-        this.array2[i].finalPrice = this.array[i].questPrice;
+        this.array2[i].finalPrice = this.array[i].questPrice.toFixed(2);
       }
       this.ORDERBODY = this.array2;
     },
