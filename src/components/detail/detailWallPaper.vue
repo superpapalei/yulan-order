@@ -140,6 +140,7 @@
                 class="pl10 t-red"
                 v-if="
                   data.activityId === data.activityName &&
+                    data.activityEffective != null &&
                     !data.activityEffective
                 "
                 >此活动已经过期，请重新选择</span
@@ -223,6 +224,7 @@ export default {
     });
     //查找活动
     this.findShopsActivity();
+    console.log(this.data);
   },
   computed: {
     //库存总数
@@ -450,9 +452,14 @@ export default {
         return;
       }
       //判断起购数量
-      if (this.data.item.minimumPurchase != 0 && newNum < this.data.item.minimumPurchase) {
+      if (
+        this.data.item.minimumPurchase != 0 &&
+        newNum < this.data.item.minimumPurchase
+      ) {
         this.$alert(
-          "本产品最小起购数量为" + this.data.item.minimumPurchase + this.data.unit,
+          "本产品最小起购数量为" +
+            this.data.item.minimumPurchase +
+            this.data.unit,
           "提示",
           {
             type: "warning",

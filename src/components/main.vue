@@ -56,7 +56,7 @@
                   <!-- <el-dropdown-item>历年经销设计书</el-dropdown-item>
                   <el-dropdown-item>修改登录密码</el-dropdown-item>
                   <el-dropdown-item>修改对账密码</el-dropdown-item>-->
-                  <el-dropdown-item
+                  <el-dropdown-item v-if="identity == 'ECWEB'"
                     ><a
                       style="color:#606266;"
                       target="_blank"

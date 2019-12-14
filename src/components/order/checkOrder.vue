@@ -26,7 +26,7 @@
           ></el-table-column>
           <el-table-column
             prop="wlTel"
-            label="联系方式"
+            label="联系电话"
             align="center"
           ></el-table-column>
           <el-table-column label="收货地址">

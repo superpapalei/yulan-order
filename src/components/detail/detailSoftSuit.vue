@@ -145,6 +145,7 @@
                 class="pl10 t-red"
                 v-if="
                   data.activityId === data.activityName &&
+                    data.activityEffective != null &&
                     !data.activityEffective
                 "
               >
@@ -341,9 +342,14 @@ export default {
         }
       }
       //判断起购数量
-      if (this.data.item.minimumPurchase != 0 && newNum < this.data.item.minimumPurchase) {
+      if (
+        this.data.item.minimumPurchase != 0 &&
+        newNum < this.data.item.minimumPurchase
+      ) {
         this.$alert(
-          "本产品最小起购数量为" + this.data.item.minimumPurchase + this.data.unit,
+          "本产品最小起购数量为" +
+            this.data.item.minimumPurchase +
+            this.data.unit,
           "提示",
           {
             type: "warning",
