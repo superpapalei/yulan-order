@@ -76,6 +76,9 @@
     <div class="loginTitle">
       <img width="100%" src="../assets/img/loginTitle.png" alt />
     </div>
+    <div class="kuaidi100">
+      <a href="https://m.kuaidi100.com/" target="_blank">快递查询</a>
+    </div>
     <div v-if="maskShow" class="photoMask" @click="maskShow = false">
       <div class="photoMaskContain">
         <img style="width:320px;" src="../assets/img/QRCode.png" alt="" />
@@ -217,6 +220,11 @@ export default {
   position: fixed;
   bottom: 3.5%;
   right: 2%;
+}
+.kuaidi100{
+  position: fixed;
+  bottom: 3.5%;
+  left: 2%;
 }
 .centerDiv {
   position: fixed;

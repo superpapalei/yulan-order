@@ -44,7 +44,11 @@
         >&nbsp;{{ item.FILE_NAME }}>&nbsp;</a
       >
     </div>
-    <el-table :data="fileData" @selection-change="handleSelectionChange">
+    <el-table
+      :data="fileData"
+      @selection-change="handleSelectionChange"
+      @row-dblclick="handleDbclikc"
+    >
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
       <el-table-column label="文件名" header-align="center">
         <template slot-scope="scope">
@@ -61,14 +65,20 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="150">
+      <el-table-column width="150">
         <template slot-scope="scope">
           <el-button
-            v-if="scope.row.FILE_TYPE != 1"
-            @click="downLoad(scope.row.FILE_ID)"
+            @click="downLoad(scope.row)"
             type="primary"
             size="mini"
             icon="el-icon-download"
+            circle
+          ></el-button>
+          <el-button
+            v-if="isImage(scope.row)"
+            @click="previewPic(scope.row.FILE_PATH)"
+            size="mini"
+            icon="el-icon-search"
             circle
           ></el-button>
         </template>
@@ -85,7 +95,11 @@
         width="200"
         align="center"
       ></el-table-column>
-      <el-table-column v-if="dirShow" label="所在目录" width="200" align="center"
+      <el-table-column
+        v-if="dirShow"
+        label="所在目录"
+        width="200"
+        align="center"
         ><template slot-scope="scope">
           <a
             style="text-decoration: underline;cursor:pointer;"
@@ -95,6 +109,13 @@
         </template></el-table-column
       >
     </el-table>
+    <el-dialog
+      title="图片预览(因图片过大，若显示上一张图片请耐心等待刷新)"
+      :visible.sync="picShow"
+      top="5vh"
+    >
+      <img width="100%" :src="imgUrl" />
+    </el-dialog>
   </div>
 </template>
 
@@ -107,10 +128,12 @@ export default {
   data() {
     return {
       refreshClass: "el-icon-refresh-left",
-      downLoadUrl: "http://47.107.56.156:1001/",//测试
+      downLoadUrl: "http://47.107.56.156:1001/", //测试
       //downLoadUrl: "http://14.29.223.114:1001/",//正式
       find: "",
       dirShow: false,
+      picShow: false,
+      imgUrl: "",
       fileData: [],
       multipleSelection: [],
       navigationList: [
@@ -122,14 +145,14 @@ export default {
       allData: []
     };
   },
-  filters:{
-    fileSizeFilter(size){
-       var unit;
-       var units = ['B', 'KB', 'MB', 'GB', 'TB'];
-       while ( (unit = units.shift()) && size > 1024 ) {
-         size = size / 1024;
-       }
-       return (unit === 'B' ? size : size.toFixed(1)) +' ' + unit;
+  filters: {
+    fileSizeFilter(size) {
+      var unit;
+      var units = ["B", "KB", "MB", "GB", "TB"];
+      while ((unit = units.shift()) && size > 1024) {
+        size = size / 1024;
+      }
+      return (unit === "B" ? size : size.toFixed(1)) + " " + unit;
     }
   },
   methods: {
@@ -291,11 +314,40 @@ export default {
       }
       return result;
     },
-    downLoad(id) {
-      downLoadFile(this.Global.fileCenterUrl + `FILE_CENTERAPI/DownloadFile?FILE_ID=${id}`);
+    downLoad(file) {
+      if (file.FILE_TYPE == 0) {
+        downLoadFile(
+          this.Global.fileCenterUrl +
+            `FILE_CENTERAPI/DownloadFile?FILE_ID=${file.FILE_ID}`
+        );
+      } else if (file.FILE_TYPE == 1) {
+        //如果是文件夹变成压缩包
+        downLoadFile(
+          this.Global.fileCenterUrl +
+            `FILE_CENTERAPI/DownloadFileCompress?FILE_ID=${file.FILE_ID}&`
+        );
+      }
+    },
+    isImage(file) {
+      if (
+        file.FILE_POSTFIX == "jpg" ||
+        file.FILE_POSTFIX == "png" ||
+        file.FILE_POSTFIX == "jpeg"
+      )
+        return true;
+    },
+    previewPic(url) {
+      this.imgUrl = "";
+      this.imgUrl = this.Global.fileCenterUrl + url;
+      this.picShow = true;
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    handleDbclikc(row, column, event) {
+      if (row.FILE_TYPE == 1) {
+        this.gotoNext(row);
+      }
     }
   },
   created() {
