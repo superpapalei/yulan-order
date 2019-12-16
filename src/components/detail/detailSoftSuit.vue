@@ -200,6 +200,7 @@ import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 import { findItemActivity } from "@/api/findActivity";
 import { updateShoppingCar, updateShopPrice } from "@/api/shop";
+import { getItemById, GetPromotionByItem } from "@/api/orderListASP";
 
 export default {
   name: "DetailSoftSuit",
@@ -223,16 +224,6 @@ export default {
     this.data = JSON.parse(Cookies.get("softSuit"));
     this.findShopsActivity();
   },
-  computed: {
-    //库存总数
-    totalStore() {
-      //     var total = 0;
-      //     for(var i = 0; i < this.store.length; i++){
-      //         total += parseInt(this.store[i].stock);
-      //     }
-      //     return total;
-    }
-  },
   methods: {
     ...mapMutations("navTabs", ["addTab"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"]),
@@ -245,30 +236,28 @@ export default {
       var itemVersion = this.data.item.itemVersion
         ? this.data.item.itemVersion
         : "";
-      findItemActivity({
-        CID: this.cid,
+      //findItemActivity({
+      GetPromotionByItem({
+        //CID: this.cid,
+        cid: this.cid,
         customerType: this.customerType,
         itemNo: this.data.item.itemNo,
-        itemVersion: itemVersion,
+        itemVersion: this.data.item.itemVersion,
         productType: this.data.item.productType,
         productBrand: this.data.item.productBrand
       })
         .then(res => {
-          this.activity = [];
-          if (res.length === 0 && this.data.activityEffective !== false) {
+          if (res.data.length === 0 && this.data.activityEffective !== false) {
             this.disableFlag = true;
           } else {
             this.disableFlag = false;
           }
-          for (var i = 0; i < res.length; i++) {
-            for (var j = 0; j < res[i].second.length; j++) {
-              var obj = {
-                label:
-                  res[i].second[j].orderType + " " + res[i].second[j].orderName,
-                value: res[i].second[j].pId
-              };
-              this.activity.push(obj);
-            }
+          for (var i = 0; i < res.data.length; i++) {
+            var obj = {
+              label: res.data[i].ORDER_TYPE + " -- " + res.data[i].ORDER_NAME,
+              value: res.data[i].P_ID
+            };
+            this.activity.push(obj);
           }
           this.activity.push({
             label: "不参与活动",
@@ -407,33 +396,8 @@ export default {
           });
           console.log(err);
         });
-    },
-    //判断修改后是否库存满足
-    getNum(value) {
-      // var total = 0;
-      // for(var i = 0; i < this.store.length; i++){
-      //     total += parseFloat(this.store[i].stock);
-      // }
-      // if(this.useStatus == 0 || this.useStatus == 2){
-      //     if(total < parseFloat(value)){
-      //         this.$alert('您输入的计量已超过当前库存'+total+',自动为您调整为最大值', '提示', {
-      //             confirmButtonText: '确定',
-      //         });
-      //         this.buyNum = total;
-      //     }
-      // }
-      // else{
-      //     if(total < parseFloat(value * this.numParam)){
-      //         this.$alert('您输入的计量已超过当前库存,请输入合适的值', '提示', {
-      //                 confirmButtonText: '确定',
-      //         });
-      //         this.buyNum = '';
-      //         this.numParam = '';
-      //     }
-      // }
     }
-  },
-  watch: {}
+  }
 };
 </script>
 

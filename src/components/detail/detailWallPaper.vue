@@ -193,7 +193,7 @@ import { mapState } from "vuex";
 import { findItemActivity } from "@/api/findActivity";
 import { updateShoppingCar, updateShopPrice } from "@/api/shop";
 import { checkStore } from "@/api/searchStore";
-import { getItemById } from "@/api/orderListASP";
+import { getItemById, GetPromotionByItem } from "@/api/orderListASP";
 
 export default {
   name: "DetailWallPaper",
@@ -224,17 +224,6 @@ export default {
     });
     //查找活动
     this.findShopsActivity();
-    console.log(this.data);
-  },
-  computed: {
-    //库存总数
-    totalStore() {
-      //     var total = 0;
-      //     for(var i = 0; i < this.store.length; i++){
-      //         total += parseInt(this.store[i].stock);
-      //     }
-      //     return total;
-    }
   },
   methods: {
     ...mapMutations("navTabs", ["addTab"]),
@@ -245,8 +234,10 @@ export default {
       if (this.data.activityEffective === false) {
         this.data.activityId = this.data.activityName;
       }
-      findItemActivity({
-        CID: this.cid,
+      //findItemActivity({
+      GetPromotionByItem({
+        //CID: this.cid,
+        cid: this.cid,
         customerType: this.customerType,
         itemNo: this.data.item.itemNo,
         itemVersion: this.data.item.itemVersion,
@@ -254,20 +245,17 @@ export default {
         productBrand: this.data.item.productBrand
       })
         .then(res => {
-          if (res.length === 0 && this.data.activityEffective !== false) {
+          if (res.data.length === 0 && this.data.activityEffective !== false) {
             this.disableFlag = true;
           } else {
             this.disableFlag = false;
           }
-          for (var i = 0; i < res.length; i++) {
-            for (var j = 0; j < res[i].second.length; j++) {
-              var obj = {
-                label:
-                  res[i].second[j].orderType + " " + res[i].second[j].orderName,
-                value: res[i].second[j].pId
-              };
-              this.activity.push(obj);
-            }
+          for (var i = 0; i < res.data.length; i++) {
+            var obj = {
+              label: res.data[i].ORDER_TYPE + " -- " + res.data[i].ORDER_NAME,
+              value: res.data[i].P_ID
+            };
+            this.activity.push(obj);
           }
           this.activity.push({
             label: "不参与活动",

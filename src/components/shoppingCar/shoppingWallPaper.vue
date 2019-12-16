@@ -419,7 +419,6 @@ export default {
         this.shopsData[groupIndex].commodities[index].quantity = "";
         return;
       }
-      console.log(typeof Number(value));
       updateShoppingCar({
         commodityID: this.shopsData[groupIndex].commodities[index].id,
         activityID: this.shopsData[groupIndex].commodities[index].activityId,
