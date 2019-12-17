@@ -68,12 +68,12 @@
             placeholder="客户名"
           >
           </el-input>
-          <span style="font-size:15px;margin-right:5px">创建人：</span>
+          <span style="font-size:15px;margin-right:5px">处理人：</span>
           <el-input
             clearable
             style="width:14%;margin-right:10px;"
-            v-model="selectCreator"
-            placeholder="创建人"
+            v-model="selectDealor"
+            placeholder="处理人"
           >
           </el-input>
           <el-button 
@@ -192,7 +192,7 @@
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr >
             <td style="font-size:20px;height:30px;text-align:center;" colspan="7">
-              退货/赔偿申请书【{{submit.STATE | transStatus}}】
+              退货/赔偿电子申请书【{{submit.STATE | transStatus}}】
               <i class="icon-print el-icon-printer cpoi" style="float:right" @click="printRefund"></i>
             </td>
           </tr>
@@ -285,27 +285,27 @@
               </ul>
             </td>
           </tr>        
-          <tr v-if="submit.STATE!='SUBMITTED'">
+          <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'">
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理意见
             </td>
           </tr>
-          <tr v-if="submit.STATE!='SUBMITTED'">
-            <td class="grayTD" style="height:15px"  colspan="1">初审意见</td>
+          <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'">
+            <td class="grayTD" style="height:15px"  colspan="1">初审意见<span style="color:red;">*</span></td>
             <td style="height:15px" colspan="2">{{submit.RETURN_TYPE}}</td>
             <td style="height:15px" colspan="4">{{submit.FIRST_AUDITION}}</td>
           </tr>
-          <tr v-if="submit.STATE!='SUBMITTED'&&submit.RETURN_TYPE!='无需退货'"> 
+          <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE!='无需退货'"> 
             <td class="grayTD" style="height:15px">备注信息</td>
             <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
             <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
             <td style="height:15px" colspan="6" v-else></td>
           </tr>
-          <tr v-if="submit.STATE!='SUBMITTED'&&submit.RETURN_TYPE=='客户邮寄'">
+          <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">退货或寄样信息</td>
             <td style="height:15px" colspan="6">  {{submit.RETURN_ADDRESS}}</td>
           </tr>
-          <tr v-if="submit.STATE!='SUBMITTED'&&submit.RETURN_TYPE=='客户邮寄'">
+          <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
             <td style="height:15px" colspan="6">您的提货单号为{{submit.SALE_NO}}</td>
           </tr>
@@ -350,9 +350,9 @@
               style="font-size:13px;color:gray;text-align:left;"
             >
             <div style="margin:4px 0px 4px 4px">
-               注意：1.若您未在我公司对您的《退货/赔偿申请书》提交处理意见之日起15日内确认、提出异议的，则视为放弃赔偿权利；<br />
-               2.玉兰公司支付的退货金额，仅限于本《退货/赔偿申请书》的金额，不承担其他费用；<br />
-               3.请您仔细阅读本《退货/赔偿申请书》相关信息，一旦确认，视为同意我公司的处理方案。<br />
+               注意：1.若您未在我公司对您的《退货/赔偿电子申请书》提交处理意见之日起15日内确认、提出异议的，则视为放弃赔偿权利；<br />
+               2.玉兰公司支付的退货金额，仅限于本《退货/赔偿电子申请书》的金额，不承担其他费用；<br />
+               3.请您仔细阅读本《退货/赔偿电子申请书》相关信息，一旦确认，视为同意我公司的处理方案。<br />
                公司名称：广东玉兰集团股份有限公司&emsp; &emsp;&emsp;&emsp;地址：东莞市莞城莞龙路段狮龙路莞城科技园内<br />
                电话:0769-23321708&emsp;&emsp;邮政编码:523119&emsp;&emsp;邮箱：yulan315@yulangroup.cn<br />
             </div>
@@ -380,7 +380,7 @@
               <span v-if="submit.STATE == 'APPROVED'"
                 >:{{ submit.CNAME }}</span
               ><br />
-              （盖章）<br />
+
               <span v-if="submit.STATE != 'APPROVED'"> 年 月 日</span>
               <span v-else>
                 {{ new Date(submit.REASSURE_TS).getFullYear() }}年
@@ -402,7 +402,7 @@
       <div>
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr >
-            <td style="font-size:20px;height:30px;text-align:center;" colspan="7">退货/赔偿申请书【{{submit.STATE | transStatus}}】</td>
+            <td style="font-size:20px;height:30px;text-align:center;" colspan="7">退货/赔偿电子申请书【{{submit.STATE | transStatus}}】</td>
           </tr>
          </table>
       </div>
@@ -633,9 +633,9 @@
               style="font-size:13px;color:gray;text-align:left;"
             >
             <div style="margin:4px 0px 4px 4px">
-               注意：1.若您未在我公司对您的《退货/赔偿申请书》提交处理意见之日起15日内确认、提出异议的，则视为放弃赔偿权利；<br />
-               2.玉兰公司支付的退货金额，仅限于本《退货/赔偿申请书》的金额，不承担其他费用；<br />
-               3.请您仔细阅读本《退货/赔偿申请书》相关信息，一旦确认，视为同意我公司的处理方案。<br />
+               注意：1.若您未在我公司对您的《退货/赔偿电子申请书》提交处理意见之日起15日内确认、提出异议的，则视为放弃赔偿权利；<br />
+               2.玉兰公司支付的退货金额，仅限于本《退货/赔偿电子申请书》的金额，不承担其他费用；<br />
+               3.请您仔细阅读本《退货/赔偿电子申请书》相关信息，一旦确认，视为同意我公司的处理方案。<br />
                公司名称：广东玉兰集团股份有限公司&emsp; &emsp;&emsp;&emsp;地址：东莞市莞城莞龙路段狮龙路莞城科技园内<br />
                电话:0769-23321708&emsp;&emsp;邮政编码:523119&emsp;&emsp;邮箱：yulan315@yulangroup.cn<br />
             </div>
@@ -663,7 +663,6 @@
               <span v-if="submit.STATE == 'APPROVED'"
                 >:{{ submit.CNAME }}</span
               ><br />
-              （盖章）<br />
               <span v-if="submit.STATE != 'APPROVED'"> 年 月 日</span>
               <span v-else>
                 {{ new Date(submit.REASSURE_TS).getFullYear() }}年
@@ -678,7 +677,8 @@
         </table>
 
         <div style="text-align:center;margin-top:5px" v-if="isEdit">           
-          <el-button type="primary" size="mini" @click="_EditDetail(submit.STATE)">保存修改</el-button>
+          <el-button type="primary" size="mini" @click="_EditDetail(submit.STATE,1)">保存修改</el-button>
+          <el-button type="danger" size="mini" v-if="submit.STATE == 'SUBMITTED'" @click="_EditDetail(submit.STATE,2)">退回修改</el-button>
           <el-button type="info"   size="mini" @click="isEdit=false;RefundDetail=false">返回</el-button>  
         </div> 
       </div>
@@ -752,7 +752,7 @@ export default {
       CNAME :Cookies.get("realName"),
       selectItemNo: "", //搜索栏产品型号
       selectCNAME: "", //搜索栏姓名
-      selectCreator: "", //搜索栏创建人名
+      selectDealor: "", //搜索栏处理人名
       zongshuliang: "",
       daifashuliang: "",
       kuaidi100: "",
@@ -760,7 +760,9 @@ export default {
       //单据状态
       statusArray: [
         { value: null, label: "全部状态" },
+        { value: "NEEDPROCESSING", label: "待处理" },
         { value: "SUBMITTED", label: "已提交" },
+        { value: "SENDBACK", label: "退回修改" },
         { value: "RECEIVE", label: "已接收" },
         { value: "CUSTOMERAFFIRM", label: "客户确认中" },
         { value: "APPROVED", label: "客户同意" }
@@ -832,6 +834,9 @@ export default {
         case "SUBMITTED":
           return "已提交";
           break;
+        case "SENDBACK":
+          return "退回修改";
+          break;
         case "RECEIVE":
           return "已接收";
           break;
@@ -857,7 +862,7 @@ export default {
       this.SELECT_STATUS="";
       this.selectItemNo = "";
       this.selectCNAME = "";
-      this.selectCreator = "";
+      this.selectDealor = "";
     },
     //查询未打印的单据
     checkNoPrint() {
@@ -878,7 +883,7 @@ export default {
         startDate: this.beginTime, //开始日期
         endDate: this.finishTime, //结束日期
         state: this.SELECT_STATUS, //状态
-        createName: this.selectCreator, //创建者名称
+        DEALMAN_NAME: this.selectDealor, //创建者名称
         cName: this.selectCNAME, //客户名称
         itemNo: this.selectItemNo //产品号
       };
@@ -954,7 +959,9 @@ export default {
       });
     },
     //保存修改
-    _EditDetail(val){
+    _EditDetail(val,type){
+      if(type==1)
+      {
         if(val=="SUBMITTED")
         {
            //判断信息是否填写完整
@@ -984,7 +991,7 @@ export default {
           this.submit.STATE='RECEIVE';
           this.submit.DEALMAN_CODE=this.CID;
           this.submit.DEALMAN_NAME=this.CNAME;
-          UpdateFirstAudition({ head: this.submit }).then(res => {
+          UpdateFirstAudition({ head: this.submit,type:type }).then(res => {
             if (res.code == 0) {
               this.$alert("修改成功", "提示", {
               confirmButtonText: "确定",
@@ -1042,6 +1049,30 @@ export default {
              }
              });
         }
+      }
+      else{
+          this.submit.STATE='SENDBACK';
+          this.submit.DEALMAN_CODE=this.CID;
+          this.submit.DEALMAN_NAME=this.CNAME;
+          UpdateFirstAudition({ head: this.submit,type:type }).then(res => {
+            if (res.code == 0) {
+              this.$alert("退回成功", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.releaseBadge("newRefund2");//刷新角标
+            this.refresh();
+            this.RefundDetail = false;
+            return;
+            } else {
+              this.$alert("退回失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            return;
+            }
+          });
+      }
     },
     //显示图片
     showImage(url) {

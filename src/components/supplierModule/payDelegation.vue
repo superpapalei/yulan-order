@@ -729,13 +729,6 @@ export default {
         this.Global.baseUrl + `DownLoadAPI/DownloadFile?path=${path}&`
       );
     },
-    // beforeAvatarUpload(file) {
-    //     this.isPicture = (file.type === 'jpeg'||file.type === 'jpg'||file.type === 'bmp'||file.type === 'png');
-    //     if (!this.isPicture) {
-    //       this.$message.error('抱歉，附件仅能上传图片');
-    //     }
-    //     return this.isPicture;
-    // },
     //显示图片
     showImage(url) {
       var list1=url.split('png');

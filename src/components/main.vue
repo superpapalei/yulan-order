@@ -861,7 +861,7 @@ export default {
           page: 1,
           startDate: "0001/1/1",
           endDate: "9999/12/31",
-          state: "CUSTOMERAFFIRM"
+          state: "NEEDPROCESSING"
         },
         { loading: false }
       );
@@ -878,23 +878,13 @@ export default {
           page: 1,
           startDate: "0001/1/1",
           endDate: "9999/12/31",
-          state: "SUBMITTED"
-        },
-        { loading: false }
-      );
-      let newRefundExamine2 = await GetAllCompensation(
-        {
-          number: 9999,
-          page: 1,
-          startDate: "0001/1/1",
-          endDate: "9999/12/31",
-          state: "RECEIVE"
+          state: "NEEDPROCESSING"
         },
         { loading: false }
       );
       this.changeBadge({
         name: "newRefund2",
-        index: newRefundExamine1.count + newRefundExamine2.count
+        index: newRefundExamine1.count 
       });
     },
 

@@ -144,6 +144,14 @@ export function ApprovedUpdate(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//退回修改
+export function SendBackUpdate(data, config = {}) {
+    return post('/RETURNCOMPENSATIONBILL/SendBackUpdate', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
 //检查某订单某型号的产品是否有退货赔偿的记录
 export function CheckOrderAndItemNo(data, config = {}) {
     return post('/PACK_DETAIL/CheckOrderAndItemNo', data, config).then((res) => {

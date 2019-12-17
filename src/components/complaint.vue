@@ -620,7 +620,7 @@ export default {
       }
       editSubmit(this.submit).then(res => {
         if (res.code == 0) {
-          this.$alert("修改成功", "提示", {
+          this.$alert("评价成功", "提示", {
             confirmButtonText: "确定", 
             type: "success"
           });
@@ -628,7 +628,7 @@ export default {
           this.releaseBadge("complaint1");//刷新角标
           this.refresh();
         } else {
-          this.$alert("修改失败，请稍后重试", "提示", {
+          this.$alert("评价失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
             type: "warning"
           });
