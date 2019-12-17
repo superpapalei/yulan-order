@@ -248,7 +248,7 @@
       <div  v-show="isRefundAdd" >
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr >
-            <td style="font-size:20px;height:30px;text-align:center;" colspan="6">退货/赔偿申请书【新增】</td>
+            <td style="font-size:20px;height:30px;text-align:center;" colspan="6">退货/赔偿电子申请书【新增】</td>
           </tr>
          </table>
       </div>
@@ -277,7 +277,7 @@
             <td style="height:15px" colspan="1">
                <el-input
                 v-model="submit.CONTACT_MAN"
-                placeholder=""
+                placeholder="请填写"
                 clearable
                 class="inputStyle"
               >
@@ -287,7 +287,7 @@
             <td style="height:15px" colspan="1">
               <el-input
                 v-model="submit.CONTACT_PHONE"
-                placeholder=""
+                placeholder="请填写"
                 clearable
                 oninput="value=value.replace(/[^\d]/g,'')"
                 class="inputStyle"
@@ -368,9 +368,9 @@
               style="font-size:13px;color:gray;text-align:left;"
             >
             <div style="margin:0 5px;">
-               注意：1.若您未在我公司对您的《退货/赔偿申请书》提交处理意见之日起15日内确认、提出异议的，则视为放弃赔偿权利；<br />
-               2.玉兰公司支付的退货金额，仅限于本《退货/赔偿申请书》的金额，不承担其他费用；<br />
-               3.请您仔细阅读本《退货/赔偿申请书》相关信息，一旦确认，视为同意我公司的处理方案。<br />
+               注意：1.若您未在我公司对您的《退货/赔偿电子申请书》提交处理意见之日起15日内确认、提出异议的，则视为放弃赔偿权利；<br />
+               2.玉兰公司支付的退货金额，仅限于本《退货/赔偿电子申请书》的金额，不承担其他费用；<br />
+               3.请您仔细阅读本《退货/赔偿电子申请书》相关信息，一旦确认，视为同意我公司的处理方案。<br />
                公司名称：广东玉兰集团股份有限公司&emsp; &emsp;&emsp;&emsp;地址：东莞市莞城莞龙路段狮龙路莞城科技园内<br />
                电话:0769-23321708&emsp;&emsp;邮政编码:523119&emsp;&emsp;邮箱：yulan315@yulangroup.cn<br />
             </div>
@@ -398,15 +398,7 @@
               <span
                 >:{{ }}</span
               ><br />
-              （盖章）<br />
               <span > 年 月 日</span>
-              <!-- <span v-else>
-                {{ new Date(baseData.REASSURE_TS).getFullYear() }}年
-                {{
-                  addZeroIfNeed(new Date(baseData.REASSURE_TS).getMonth() + 1)
-                }}月
-                {{ addZeroIfNeed(new Date(baseData.REASSURE_TS).getDate()) }}日
-              </span> -->
             </div>
             </td>
           </tr>
@@ -456,7 +448,7 @@ export default {
       CONTRACT_NO:"",//ERP订单号
       CID: Cookies.get("cid"),//用户id
       CNAME :Cookies.get("realName"),//用户名称
-      
+      AlreadyRefund:false,//是否已经进行过退货赔偿
       //itemNo: "", //产品型号
       //orderNo: "",
       //lineNo: "",
@@ -675,15 +667,8 @@ export default {
       });
       this.complaintDetail = false;
     },
-     //新建一条售后记录
-    addRefundRecord(data) {
-        CheckOrderAndItemNo({SALE_NO:data.SALE_NO,ITEM_NO:this.itemNo}).then(res => {
-          if (res.code == 0) {
-             this.$confirm("此前已对该订单该型号发起退货赔偿申请，是否要再次申请", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning"
-             }).then(() => {
+    //初始化新增记录的信息
+    addRefund(data){
                 this.dateStamp = new Date().getTime();
                 this.FormRight=true;
                 this.submitHead = {
@@ -738,8 +723,23 @@ export default {
                         this.RefundDetail = true;
                 } 
                 });
+    },
+    //新建一条售后记录
+    addRefundRecord(data) {
+       CheckOrderAndItemNo({SALE_NO:data.SALE_NO,ITEM_NO:this.itemNo}).then(res => {
+          if (res.data.length!= 0) {
+             this.$confirm("此前已对该订单该型号发起退货赔偿申请，是否要再次申请", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning"
+             }).then(() => {
+                   this.addRefund(data);
             });
           } 
+          else{
+             this.addRefund(data);
+          }
+          console.log(res)
         });
     },
     //新增售后记录提交
