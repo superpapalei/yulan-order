@@ -147,7 +147,7 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.STATE == 'CUSTOMERAFFIRM'||scope.row.STATE == 'SENDBACK'
+                  scope.row.STATE == 'CUSTOMERAFFIRM'||scope.row.STATE == 'SENDBACK'||scope.row.STATE == 'RECEIVE'
                 "
                 content="编辑"
                 placement="top"
@@ -416,12 +416,12 @@
             </td>
           </tr>
           <tr>
-            <td class="grayTD" style="height:15px;width:10%;">提货单号</td>
+            <td class="grayTD" style="height:15px;width:12%;">提货单号</td>
             <td style="height:15px;width:17%;">{{ submit.SALE_NO }}</td>
-            <td class="grayTD" style="height:15px;width:13%;">B2B订单号</td>
-            <td style="height:15px;width:25%;" colspan="2">{{ submit.ORDER_NO }}</td>
+            <td class="grayTD" style="height:15px;width:12%;">B2B订单号</td>
+            <td style="height:15px;width:22%;" colspan="2">{{ submit.ORDER_NO }}</td>
             <td class="grayTD" style="height:15px;width:12%;">ERP订单号</td>
-            <td  style="height:15px;width:23%;" colspan="2">{{ submit.CONTRACT_NO }}</td>
+            <td  style="height:15px;width:25%;" colspan="2">{{ submit.CONTRACT_NO }}</td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">联系人<span style="color:red;">*</span></td>
@@ -464,11 +464,11 @@
             </td>
           </tr>
           <tr>
-            <td class="grayTD"  colspan="1" style="height:15px;width:15%;">产品/项目</td>
-            <td class="grayTD"  colspan="2" style="height:15px;width:25%;" >型号</td>
-            <td class="grayTD"  colspan="1" style="height:15px;width:10%;">单位</td>
-            <td class="grayTD"  colspan="1" style="height:15px;width:15%;">数量<span style="color:red;">*</span></td>
-            <td class="grayTD"  colspan="2" style="height:15px;width:25%;">上传相关信息<span style="color:red;">*</span></td>
+            <td class="grayTD"  colspan="1" style="height:15px;">产品/项目</td>
+            <td class="grayTD"  colspan="2" style="height:15px;" >型号</td>
+            <td class="grayTD"  colspan="1" style="height:15px;width:11%;">单位</td>
+            <td class="grayTD"  colspan="1" style="height:15px;width:11%;">数量<span style="color:red;">*</span></td>
+            <td class="grayTD"  colspan="2" style="height:15px;">上传相关信息<span style="color:red;">*</span></td>
           </tr>
           <tr>
             <td  colspan="1" style="height:21px">{{submit.PRODUCTION_VERSION}}</td>
@@ -478,7 +478,7 @@
             <td  colspan="1" style="height:21px" v-else>
               <el-input
                 v-model="submit.QTY"
-                placeholder="请填写"
+                placeholder="必填"
                 clearable
                 class="inputStyle"
                  oninput="value=value.replace(/[^\d.]/g,'')
@@ -562,7 +562,7 @@
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
             <td style="height:15px" colspan="6">您的提货单号： {{submit.SALE_NO}}</td>
           </tr>
-          <tr v-if="submit.STATE=='CUSTOMERAFFIRM'&&submit.RETURN_TYPE=='客户邮寄'">
+          <tr v-if="submit.STATE=='RECEIVE'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">物流备注信息<span style="color:red;">*</span></td>
             <td style="height:15px" colspan="6">
               <el-input
@@ -574,12 +574,12 @@
               </el-input>
             </td>
           </tr>
-          <tr v-if="submit.STATE!='SENDBACK'"> 
+          <tr v-if="submit.STATE=='CUSTOMERAFFIRM'"> 
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理结果
             </td>
           </tr>
-          <tr v-if="submit.STATE!='SENDBACK'">
+          <tr v-if="submit.STATE=='CUSTOMERAFFIRM'">
             <td class="grayTD"  style="width:17%;height:15px">产品/项目</td>
             <td class="grayTD"  style="width:18%;height:15px">型号</td>
             <td class="grayTD"  style="width:12%;height:15px">单位</td>
@@ -588,7 +588,7 @@
             <td class="grayTD"  style="width:15%;height:15px">质量问题</td>
             <td class="grayTD"  style="width:18%;height:15px">处理意见</td>
           </tr>
-          <tr v-if="submit.STATE!='SENDBACK'" v-for="(item,index) of processDetail" :key="index" >
+          <tr v-if="submit.STATE=='CUSTOMERAFFIRM'" v-for="(item,index) of processDetail" :key="index" >
             <td colspan="1" rowspan="1" style="height:15px">{{submit.PRODUCTION_VERSION}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{submit.ITEM_NO}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{submit.UNIT}}</td>
@@ -649,8 +649,9 @@
         </table>
 
         <div style="text-align:center;margin-top:5px" v-if="isEdit">           
-          <el-button type="success" size="mini" v-if="submit.STATE!='SENDBACK'" @click="_EditDetail(1)">同意</el-button>
+          <el-button type="success" size="mini" v-if="submit.STATE=='CUSTOMERAFFIRM'" @click="_EditDetail(1)">同意</el-button>
           <el-button type="primary" size="mini" v-if="submit.STATE=='SENDBACK'" @click="_EditDetail(2)">提交</el-button>
+          <el-button type="primary" size="mini" v-if="submit.STATE=='RECEIVE'" @click="_EditDetail(3)">保存</el-button>
           <el-button type="info"   size="mini" @click="isEdit=false;RefundDetail=false">返回</el-button>  
         </div> 
       </div>
@@ -875,7 +876,8 @@ import {
   CheckOrderAndItemNo,
   InsertCompensation,
   UpdateState,
-  SendBackUpdate
+  SendBackUpdate,
+  UpdateFirstAudition
 } from "@/api/paymentASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import { mapMutations } from "vuex";
@@ -1124,16 +1126,6 @@ export default {
           //客户确认中的修改
           if(val==1)
           {
-             //判断是否填完所有信息
-             if (
-             this.submit.RETURN_TYPE=="客户邮寄"&&this.submit.RETURN_TRANSINFO == "" 
-             ) {
-                this.$alert("请填写退货邮寄的物流信息", "提示", {
-               confirmButtonText: "确定",
-               type: "warning"
-             });
-               return;
-             }
              this.submit.STATE='APPROVED';
              ApprovedUpdate({ head: this.submit }).then(res => {
              if (res.code == 0) {
@@ -1154,7 +1146,7 @@ export default {
             }
             });
           }
-          else{   //退回修改
+          else if(val==2){   //退回修改
           //判断是否填完所有信息
           if (
                 !this.submit.CONTACT_MAN ||
@@ -1212,8 +1204,40 @@ export default {
             }
           }
           this.submitEDITANSYC();
-         }
-         }
+          }
+          }
+          else if(val==3)
+          {
+             //判断是否填完所有信息
+             if (
+                !this.submit.RETURN_TRANSINFO 
+             ) {
+                this.$alert("请完善退货邮寄物流信息", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+            });
+            return;
+            }
+            UpdateFirstAudition({ head: this.submit,type:val }).then(res => {
+            if (res.code == 0) {
+              this.$alert("退货邮寄信息保存成功", "提示", {
+              confirmButtonText: "确定",
+              type: "success"
+            });
+            this.releaseBadge("");//刷新角标
+            this.refresh();
+            this.RefundDetail = false;
+            return;
+            } else {
+              this.$alert("保存失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            return;
+            }
+          });
+
+          }
     },
     //删除
     _Delete(val){

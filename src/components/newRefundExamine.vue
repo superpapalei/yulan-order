@@ -993,7 +993,7 @@ export default {
           this.submit.DEALMAN_NAME=this.CNAME;
           UpdateFirstAudition({ head: this.submit,type:type }).then(res => {
             if (res.code == 0) {
-              this.$alert("修改成功", "提示", {
+              this.$alert("处理成功", "提示", {
               confirmButtonText: "确定",
               type: "success"
             });
@@ -1002,7 +1002,7 @@ export default {
             this.RefundDetail = false;
             return;
             } else {
-              this.$alert("修改失败，请稍后重试", "提示", {
+              this.$alert("处理失败，请稍后重试", "提示", {
               confirmButtonText: "确定",
               type: "warning"
             });
@@ -1032,7 +1032,7 @@ export default {
            this.submit.TOTALMONEY=totalMoney;
            UpdateProcess({ head: this.submit,details:this.processDetail,totalMoney:this.submit.TOTALMONEY}).then(res => {
                if (res.code == 0) {
-                 this.$alert("修改成功", "提示", {
+                 this.$alert("处理成功", "提示", {
                  confirmButtonText: "确定",
                  type: "success"
                });
@@ -1041,7 +1041,7 @@ export default {
              this.RefundDetail = false;
              return;
              } else {
-                this.$alert("修改失败，请稍后重试", "提示", {
+                this.$alert("处理失败，请稍后重试", "提示", {
                 confirmButtonText: "确定",
                 type: "warning"
              });
