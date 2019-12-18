@@ -204,9 +204,9 @@
           </div>
         </div>
       </el-card>
-      <div v-if="data.length == 0" style="text-align:center;margin:20px 0;">
+      <!-- <div v-if="data.length == 0" style="text-align:center;margin:20px 0;">
         {{ waitText }}
-      </div>
+      </div> -->
       <div style="margin:0 25%;" class="block">
         <el-pagination
           @size-change="handleSizeChange"

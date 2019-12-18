@@ -385,7 +385,7 @@ import {
   GetAllData as GetImageAll
 } from "@/api/imageStoreASP";
 import { GetAllCompensation, GetUserCompensation } from "@/api/paymentASP";
-import Axios from 'axios'
+import Axios from "axios";
 
 export default {
   name: "Main",
@@ -473,7 +473,7 @@ export default {
     ...mapActions("navTabs", ["closeTab", "closeToTab"]),
     //获取角标情况【退货】
     async addBadgeIcon() {
-      if (Cookies.get("identity") === "ECWEB") {
+      if (this.isContainAttr("refundCompensation")) {
         //let _refund = await getAllRefund({
         let _refund = await GetAllCompensationOld(
           {
@@ -494,25 +494,27 @@ export default {
     },
     //获取角标情况【委托】
     async PaintingIcon() {
-      let _refund = await getIconNumber(
-        {
-          cid: this.cid,
-          page: 1,
-          limit: 999,
-          startDate: "",
-          endDate: "",
-          state: "CUSTOMERAFFIRM"
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "painting",
-        index: _refund.airbrushDesignerAssureList.length
-      });
+      if (this.isContainAttr("painting")) {
+        let _refund = await getIconNumber(
+          {
+            cid: this.cid,
+            page: 1,
+            limit: 999,
+            startDate: "",
+            endDate: "",
+            state: "CUSTOMERAFFIRM"
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "painting",
+          index: _refund.airbrushDesignerAssureList.length
+        });
+      }
     },
     //获取角标待处理订单
     async OrderDealIcon() {
-      if (Cookies.get("identity") === "ECWEB") {
+      if (this.isContainAttr("order/myOrder")) {
         let order = await getAllOrders(
           {
             companyId: Cookies.get("companyId"),
@@ -535,7 +537,7 @@ export default {
     },
     //获取角标待确认对账单
     async getStatementIcon() {
-      if (Cookies.get("identity") === "ECWEB") {
+      if (this.isContainAttr("statement")) {
         let url = "/customerBalance/getCustomerBalanceInfo.do";
         let data = {
           cid: Cookies.get("cid"),
@@ -553,281 +555,348 @@ export default {
     },
     //获取角标待处理付款委托书（客户）
     async payDelegationIcon1() {
-      let payDelegation1 = await GetCurrentDelegation(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: "1"
-        },
-        { loading: false }
-      );
-      let payDelegation2 = await GetCurrentDelegation(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: "4"
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "payDelegation1",
-        index: payDelegation1.count + payDelegation2.count
-      });
+      if (this.isContainAttr("supplierModule/payDelegation")) {
+        let payDelegation1 = await GetCurrentDelegation(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: "1"
+          },
+          { loading: false }
+        );
+        let payDelegation2 = await GetCurrentDelegation(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: "4"
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "payDelegation1",
+          index: payDelegation1.count + payDelegation2.count
+        });
+      }
     },
     //获取角标待处理付款委托书（公司审核）
     async payDelegationIcon2() {
-      let payDelegation1 = await GetAllDelegation(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: "2"
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "payDelegation2",
-        index: payDelegation1.count
-      });
+      if (this.isContainAttr("supplierModule/payDelegationExamine")) {
+        let payDelegation1 = await GetAllDelegation(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: "2"
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "payDelegation2",
+          index: payDelegation1.count
+        });
+      }
     },
     //获取角标待处理的兰居设计单据（客户）
     async lanjuIcon() {
-      let lanju1 = await GetAllData(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: "2"
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "lanju1",
-        index: lanju1.count
-      });
+      if (this.isContainAttr("design/lanJu")) {
+        let lanju1 = await GetAllData(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: "2"
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "lanju1",
+          index: lanju1.count
+        });
+      }
     },
     //获取角标待处理的兰居设计单据（市场部）
     async lanJuMarketExamineIcon() {
-      let lanju1 = await GetAllUserData(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: "1",
-          type: 1
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "lanju2",
-        index: lanju1.count
-      });
+      if (this.isContainAttr("design/lanJuMarketExamine")) {
+        let lanju1 = await GetAllUserData(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: "1",
+            type: 1
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "lanju2",
+          index: lanju1.count
+        });
+      }
     },
     //获取角标待处理的兰居设计单据（广美设计）
     async lanJuGMExamineIcon() {
-      let lanju1 = await GetAllUserData(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: "8",
-          type: 2
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "lanju3",
-        index: lanju1.count 
-      });
+      if (this.isContainAttr("design/lanJuGMExamine")) {
+        let lanju1 = await GetAllUserData(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: "8",
+            type: 2
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "lanju3",
+          index: lanju1.count
+        });
+      }
     },
     //获取角标待处理的兰居设计单据（广美财务）
-    async lanJuFinanceExamineIcon() {  
-      let lanju1 = await GetAllUserData(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: "3",
-          type: 1
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "lanju4",
-        index: lanju1.count 
-      });
+    async lanJuFinanceExamineIcon() {
+      if (this.isContainAttr("design/lanJuFinanceExamine")) {
+        let lanju1 = await GetAllUserData(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: "3",
+            type: 1
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "lanju4",
+          index: lanju1.count
+        });
+      }
     },
     //获取角标待处理的物流投诉单据（客户评价）
     async complaintIcon() {
-      let complaint = await GetAllComplaint(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: 2
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "complaint1",
-        index: complaint.count
-      });
+      if (this.isContainAttr("complaint")) {
+        let complaint = await GetAllComplaint(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: 2
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "complaint1",
+          index: complaint.count
+        });
+      }
     },
     //获取角标待处理的物流投诉单据（公司处理反馈）
     async complaintReplyIcon() {
-      let complaint = await GetAllUserComplaint(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: 1
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "complaint2",
-        index: complaint.count
-      });
+      if (this.isContainAttr("complaintReply")) {
+        let complaint = await GetAllUserComplaint(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: 1
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "complaint2",
+          index: complaint.count
+        });
+      }
     },
     //获取角标待处理的形象店设计单据（客户编辑）
     async imageShopIcon() {
-      let imageShop1 = await GetImageCustomer(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: 4
-        },
-        { loading: false }
-      );
-      let imageShop2 = await GetImageCustomer(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: 5
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "imageShop1",
-        index: imageShop1.count + imageShop2.count
-      });
+      if (this.isContainAttr("design/imageShop")) {
+        let imageShop1 = await GetImageCustomer(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: 4
+          },
+          { loading: false }
+        );
+        let imageShop2 = await GetImageCustomer(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: 5
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "imageShop1",
+          index: imageShop1.count + imageShop2.count
+        });
+      }
     },
     //获取角标待处理的形象店设计单据（兰居审核）
     async ISExamineMarketIcon() {
-      let imageShop1 = await GetImageAll(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: 1
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "imageShop2",
-        index: imageShop1.count
-      });
+      if (this.isContainAttr("design/ISExamineMarket")) {
+        let imageShop1 = await GetImageAll(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: 1
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "imageShop2",
+          index: imageShop1.count
+        });
+      }
     },
     //获取角标待处理的形象店设计单据（广美审核）
     async ISExamineGMIcon() {
-      let imageShop1 = await GetImageAll(
-        {
-          companyId: Cookies.get("companyId"),
-          limit: 9999,
-          page: 1,
-          CID: Cookies.get("cid"),
-          beginTime: "0001/1/1",
-          finishTime: "9999/12/31",
-          STATUS: 2
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "imageShop3",
-        index: imageShop1.count
-      });
+      if (this.isContainAttr("design/ISExamineGM")) {
+        let imageShop1 = await GetImageAll(
+          {
+            companyId: Cookies.get("companyId"),
+            limit: 9999,
+            page: 1,
+            CID: Cookies.get("cid"),
+            beginTime: "0001/1/1",
+            finishTime: "9999/12/31",
+            STATUS: 2
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "imageShop3",
+          index: imageShop1.count
+        });
+      }
     },
     //购物车墙纸数量
     async wallCountIcon() {
-      let wallpaper = await GetCartItemCount(
-        {
-          cid: Cookies.get("cid"),
-          commodityType: "wallpaper"
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "wallCount",
-        index: wallpaper.count
-      });
+      if (this.isContainAttr("shoppingCar/shopping?wallPaper")) {
+        let wallpaper = await GetCartItemCount(
+          {
+            cid: Cookies.get("cid"),
+            commodityType: "wallpaper"
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "wallCount",
+          index: wallpaper.count
+        });
+      }
     },
     //购物车窗帘数量
     async curtainCountIcon() {
-      let curtain = await GetCartItemCount(
-        {
-          cid: Cookies.get("cid"),
-          commodityType: "curtain"
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "curtainCount",
-        index: curtain.count
-      });
+      if (this.isContainAttr("shoppingCar/shopping?curtain")) {
+        let curtain = await GetCartItemCount(
+          {
+            cid: Cookies.get("cid"),
+            commodityType: "curtain"
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "curtainCount",
+          index: curtain.count
+        });
+      }
     },
     //购物车软装数量
     async softCountIcon() {
-      let soft = await GetCartItemCount(
-        {
-          cid: Cookies.get("cid"),
-          commodityType: "soft"
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "softCount",
-        index: soft.count
-      });
+      if (this.isContainAttr("shoppingCar/shopping?softSuit")) {
+        let soft = await GetCartItemCount(
+          {
+            cid: Cookies.get("cid"),
+            commodityType: "soft"
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "softCount",
+          index: soft.count
+        });
+      }
+    },
+    //新退货赔偿用户可确定单据数量
+    async newRefundUserIcon() {
+      if (this.isContainAttr("newRefund")) {
+        let newRefund = await GetUserCompensation(
+          {
+            CID: Cookies.get("cid"),
+            number: 9999,
+            page: 1,
+            startDate: "0001/1/1",
+            endDate: "9999/12/31",
+            state: "NEEDPROCESSING"
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "newRefund1",
+          index: newRefund.count
+        });
+      }
+    },
+    //新退货赔偿兰居可编辑审核单据数量
+    async newRefundExamineIcon() {
+      if (this.isContainAttr("newRefundExamine")) {
+        let newRefundExamine1 = await GetAllCompensation(
+          {
+            number: 9999,
+            page: 1,
+            startDate: "0001/1/1",
+            endDate: "9999/12/31",
+            state: "NEEDPROCESSING"
+          },
+          { loading: false }
+        );
+        this.changeBadge({
+          name: "newRefund2",
+          index: newRefundExamine1.count
+        });
+      }
     },
     //获取用户余额情况
     async userMoney() {
@@ -856,42 +925,6 @@ export default {
           //console.log(err);
         });
     },
-    //新退货赔偿用户可确定单据数量
-    async newRefundUserIcon() {
-      let newRefund = await GetUserCompensation(
-        {
-          CID: Cookies.get("cid"),
-          number: 9999,
-          page: 1,
-          startDate: "0001/1/1",
-          endDate: "9999/12/31",
-          state: "NEEDPROCESSING"
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "newRefund1",
-        index: newRefund.count
-      });
-    },
-    //新退货赔偿兰居可编辑审核单据数量
-    async newRefundExamineIcon() {
-      let newRefundExamine1 = await GetAllCompensation(
-        {
-          number: 9999,
-          page: 1,
-          startDate: "0001/1/1",
-          endDate: "9999/12/31",
-          state: "NEEDPROCESSING"
-        },
-        { loading: false }
-      );
-      this.changeBadge({
-        name: "newRefund2",
-        index: newRefundExamine1.count 
-      });
-    },
-
     refreshUserMoney() {
       this.userMoney();
     },
@@ -978,6 +1011,7 @@ export default {
           if (this.isContainAttr("marketInfo")) {
             this.getStudy(); //有权限才加载调查表
           }
+          this.getIconAll();
         } else {
           this.$alert("没有菜单权限，请联系管理员配置", "提示", {
             confirmButtonText: "确定",
@@ -1200,20 +1234,49 @@ export default {
         }
       });
     },
-    test(){
-      var customer = '58E0D26BA5693DBC743D6CB3F38BD410';
-      var key = 'oYJVLdqm2831';
-      var param={
-           com:'yuantong',
-           num:'123456'
-      }
+    //获取角标在获取权限之后
+    getIconAll() {
+      this.addBadgeIcon();
+      this.PaintingIcon();
+      this.OrderDealIcon();
+      this.getStatementIcon();
+      this.payDelegationIcon1();
+      this.payDelegationIcon2();
+      this.lanjuIcon();
+      this.lanJuMarketExamineIcon();
+      this.lanJuGMExamineIcon();
+      this.lanJuFinanceExamineIcon();
+      this.complaintIcon();
+      this.complaintReplyIcon();
+      this.imageShopIcon();
+      this.ISExamineMarketIcon();
+      this.ISExamineGMIcon();
+      this.wallCountIcon();
+      this.curtainCountIcon();
+      this.softCountIcon();
+      this.newRefundUserIcon();
+      this.newRefundExamineIcon();
+    },
+    test() {
+      var customer = "58E0D26BA5693DBC743D6CB3F38BD410";
+      var key = "oYJVLdqm2831";
+      var param = {
+        com: "yuantong",
+        num: "123456"
+      };
       var md5Str = JSON.stringify(param);
       Axios.defaults.withCredentials = false;
-      Axios.post(this.Global.baseUrl + "PACK_DETAIL/GetKuaiDi",{customer:customer,key:key,param:md5Str}).then(res=>{
-             console.log(res.data.data)
-      }).catch(err=>{
-            console.log(err)
+      Axios.post(this.Global.baseUrl + "PACK_DETAIL/GetKuaiDi", {
+        customer: customer,
+        key: key,
+        param: md5Str
       })
+        .then(res => {
+          console.log(res.data.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   computed: {
@@ -1307,33 +1370,13 @@ export default {
     }
   },
   created() {
-    this.getMenuTree(); //获得菜单权限树
-    this.userMoney(); //获得用户余额
+    this.getMenuTree(); //获得菜单权限树,获取角标在后去权限之后
     this.getPath();
     this.addTab("main");
     this.addTab(this.defaultUrl); //刷新之后添加的
     //获得最新公告
     if (this.customerType != "110") this.getNews();
-    this.addBadgeIcon();
-    this.PaintingIcon();
-    this.OrderDealIcon();
-    this.getStatementIcon();
-    this.payDelegationIcon1();
-    this.payDelegationIcon2();
-    this.lanjuIcon();
-    this.lanJuMarketExamineIcon();
-    this.lanJuGMExamineIcon();
-    this.lanJuFinanceExamineIcon();
-    this.complaintIcon();
-    this.complaintReplyIcon();
-    this.imageShopIcon();
-    this.ISExamineMarketIcon();
-    this.ISExamineGMIcon();
-    this.wallCountIcon();
-    this.curtainCountIcon();
-    this.softCountIcon();
-    this.newRefundUserIcon();
-    this.newRefundExamineIcon();
+    if (this.identity == "ECWEB") this.userMoney(); //获得用户余额
     //触发角标刷新
     this.$root.$on("refreshBadgeIcon", value => {
       switch (value) {
@@ -1422,54 +1465,6 @@ export default {
 </script>
 
 <style scoped>
-/* @media (min-width: 1920px) {
-  .center {
-    width: 1900px;
-    margin: 0 auto;
-  }
-}
-@media (max-width: 1920px) {
-  .center {
-    width: 1900px;
-    margin: 0 auto;
-  }
-}
-@media (max-width: 1680px) {
-  .center {
-    width: 1525px;
-    margin: 0 auto;
-  }
-}
-@media (max-width: 1440px) {
-  .center {
-    width: 1400px;
-    margin: 0 auto;
-  }
-}
-@media (max-width: 1366px) {
-  .center {
-    width: 1346px;
-    margin: 0 auto;
-  }
-}
-@media (max-width: 1280px) {
-  .center {
-    width: 1260px;
-    margin: 0 auto;
-  }
-}
-@media (max-width: 1100px) {
-  .center {
-    width: 1080px;
-    margin: 0 auto;
-  }
-}
-@media (max-width: 1024px) {
-  .center {
-    width: 1000px;
-    margin: 0 auto;
-  }
-} */
 .center {
   width: 99.5%;
   margin: 0 auto;
@@ -1639,4 +1634,3 @@ export default {
   background: #f0f9eb;
 }
 </style>
-
