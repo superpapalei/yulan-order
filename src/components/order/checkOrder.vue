@@ -135,7 +135,7 @@
                 ></el-input>
               </el-form-item>
               <el-form-item
-                label="联系方式"
+                label="联系电话"
                 :label-width="formLabelWidth"
                 prop="telephone"
               >
@@ -251,11 +251,11 @@
           v-model="ctm_order.buyUser"
           placeholder="请输入购买者姓名"
         ></el-input>
-        <span style="display:inline-block;margin-left:50px;">联系方式：</span>
+        <span style="display:inline-block;margin-left:50px;">联系电话：</span>
         <el-input
           style="width:30%;"
           v-model="ctm_order.buyUserPhone"
-          placeholder="请输入联系方式"
+          placeholder="请输入联系电话"
         ></el-input>
         <br />
         <span>购买人地址：</span>
@@ -348,6 +348,12 @@
           :formatter="formatRole"
           label="发货说明"
         ></el-table-column>
+        <el-table-column align="center" label="实际金额">
+          <template slot-scope="scope1">
+            <span v-if="isManager === '0'">***</span>
+            <span v-else>{{ scope1.row.prime_cost }}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="折后金额">
           <template slot-scope="scope1">
             <span v-if="isManager === '0'">***</span>
@@ -1334,6 +1340,7 @@ export default {
         //this.array2[i].qtyRequired=getPush2[i].quantity;
         this.array2[i].notes = getPush2[i].note;
         this.array2[i].unitPrice = getPush2[i].price;
+        this.array2[i].prime_cost = this.array[i].prime_cost;
         this.array2[i].promotionCost = this.array[i].questPrice.toFixed(2);
         this.array2[i].promotion = getPush2[i].activityName;
         if (this.array2[i].promotion == undefined) {

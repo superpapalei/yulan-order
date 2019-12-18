@@ -115,6 +115,38 @@
                 </div>
               </template>
             </el-table-column>
+            <el-table-column label="折后金额" align="center">
+              <template slot-scope="scope">
+                <div v-if="isManager === '0'">***</div>
+                <div v-else-if="scope.row.unit === '平方米'">
+                  {{
+                    scope.row.salPromotion
+                      ? scope.row.salPromotion.discount *
+                        subtotal(
+                          scope.row.width,
+                          scope.row.height,
+                          scope.row.price
+                        )
+                      : subtotal(
+                          scope.row.width,
+                          scope.row.height,
+                          scope.row.price
+                        )
+                  }}
+                </div>
+                <div v-else>
+                  {{
+                    scope.row.salPromotion
+                      ? scope.row.salPromotion.discount *
+                        (parseFloat(scope.row.price) *
+                          parseFloat(scope.row.quantity))
+                      : (parseFloat(scope.row.price) *
+                          parseFloat(scope.row.quantity))
+                        | dosageFilter
+                  }}
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" width="170px" align="center">
               <template slot-scope="scope">
                 <a

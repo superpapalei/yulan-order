@@ -83,7 +83,7 @@
                   :step="1"
                   step-strictly
                 ></el-input-number> -->
-                {{scope1.row.count}}
+                {{ scope1.row.count }}
               </template>
             </el-table-column>
             <el-table-column label="小计" width="100" align="center">
@@ -91,6 +91,17 @@
                 <span v-if="isManager === '0'">***</span>
                 <span v-else>{{
                   (scope1.row.price * scope1.row.count) | dosageFilter
+                }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="折后金额" width="100" align="center">
+              <template slot-scope="scope1">
+                <span v-if="isManager === '0'">***</span>
+                <span v-else>{{
+                  scope1.row.salPromotion
+                    ? scope1.row.salPromotion.discount *
+                      (scope1.row.price * scope1.row.count)
+                    : (scope1.row.price * scope1.row.count) | dosageFilter
                 }}</span>
               </template>
             </el-table-column>

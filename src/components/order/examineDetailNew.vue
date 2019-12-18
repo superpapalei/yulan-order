@@ -1024,7 +1024,7 @@ export default {
         var recordData = {
           orderNo: this.orderNumber
         };
-        getOperationRecord(recordData).then(res => {
+        getOperationRecord(recordData,{loading:false}).then(res => {
           this.operationRecords = res.data;
         });
       });
@@ -1127,7 +1127,7 @@ export default {
           multiple: headerDataTemp.drape.toString(),
           location: headerDataTemp.location
         };
-        getCurtainDetailMsg(obj).then(async res => {
+        getCurtainDetailMsg(obj,{loading:false}).then(async res => {
           let _data = res.itemList;
           let itemIndex = 0;
           for (var i = 0; i < this.ruleForm.headerData.length; i++) {
@@ -1135,7 +1135,7 @@ export default {
               this.ruleForm.headerData[i].modelNumber ==
               _data[0].itemMLGY.parentItemNo
             ) {
-              itemIndex = 0;
+              itemIndex = i;
               break;
             }
           }
@@ -1162,7 +1162,7 @@ export default {
                     limit: 1,
                     page: 1
                   };
-                  let ress = await changeItemBlur(_itemObj);
+                  let ress = await changeItemBlur(_itemObj,{loading:false});
                   if (ress.data.length > 0) {
                     this.compareData[itemIndex][index].certainHeightWidth =
                       ress.data[0].fixType === "02" ? 0 : 1;
@@ -1698,7 +1698,7 @@ export default {
         fixType: _fixType
       };
       //changeDosageByNo(obj)
-      GetDosageByNo(obj)
+      GetDosageByNo(obj,{loading:false})
         .then(res => {
           if (res.data.length == 0) {
             this.$alert("用量获取失败", "提示", {
@@ -1909,6 +1909,7 @@ export default {
       return false;
     },
     getLJSuggest() {
+      this.ctmOrderDetails = [];
       for (var i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
         var data = this.ruleForm.ORDERBODY[i];
         let transData = {};
@@ -2321,6 +2322,9 @@ export default {
 .curtainTable .el-input__inner {
   padding: 0 5px;
   height: 24px;
+}
+.curtainTable .el-input__icon{
+  line-height: 24px;
 }
 .curtainTable .el-textarea__inner {
   padding: 5px;

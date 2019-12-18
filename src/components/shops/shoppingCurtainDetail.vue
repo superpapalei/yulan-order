@@ -1513,6 +1513,9 @@ export default {
   padding: 0 5px;
   height: 24px;
 }
+.curtainTable .el-input__icon{
+  line-height: 24px;
+}
 .curtainTable .el-textarea__inner {
   padding: 5px;
 }
