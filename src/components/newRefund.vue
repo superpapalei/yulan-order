@@ -419,7 +419,15 @@
             <td class="grayTD" style="height:15px;width:12%;">提货单号</td>
             <td style="height:15px;width:17%;">{{ submit.SALE_NO }}</td>
             <td class="grayTD" style="height:15px;width:12%;">B2B订单号</td>
-            <td style="height:15px;width:22%;" colspan="2">{{ submit.ORDER_NO }}</td>
+            <td style="height:15px;width:22%;" colspan="2">
+              <el-input
+                v-model="submit.ORDER_NO"
+                placeholder="请填写"
+                clearable
+                class="inputStyle"
+              >
+              </el-input>
+            </td>
             <td class="grayTD" style="height:15px;width:12%;">ERP订单号</td>
             <td  style="height:15px;width:25%;" colspan="2">{{ submit.CONTRACT_NO }}</td>
           </tr>
@@ -448,7 +456,15 @@
               </el-input>
             </td>
             <td class="grayTD" style="height:15px">物流单号</td>
-            <td style="height:15px" >{{ submit.TRANS_ID  }}</td>
+            <td style="height:15px" >
+              <el-input
+                v-model="submit.TRANS_ID"
+                placeholder="请填写"
+                clearable
+                class="inputStyle"
+              >
+              </el-input>
+          </td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">问题描述<span style="color:red;">*</span></td>
@@ -1561,7 +1577,7 @@ export default {
       //相当于同步，等提交成功后再执行
       SendBackUpdate({updateState:'SUBMITTED',detail:this.submit, attchmentChange: this.fileChange,deleteFile: this.deleteFile}).then(res => {
         if (res.code == 0) {
-          this.$alert("修改成功", "提示", {
+          this.$alert("重新提交成功", "提示", {
             confirmButtonText: "确定",
             type: "success"
           });
@@ -1571,7 +1587,7 @@ export default {
           this.RefundDetail = false;
           return;
         } else {
-          this.$alert("修改失败，请稍后重试", "提示", {
+          this.$alert("提交失败，请稍后重试", "提示", {
             confirmButtonText: "确定",
             type: "warning"
           });
