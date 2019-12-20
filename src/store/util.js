@@ -103,6 +103,8 @@ export function tabsName(index) {
         return "退款赔偿";
     case "newRefundExamine":
       return "退款赔偿审核";
+    case "expressSearch":
+      return "快递签收查询";  
     default:
       return "xxx";
   }
