@@ -50,13 +50,15 @@
               <el-dropdown trigger="hover">
                 <span class="el-dropdown-link">
                   个人中心
+                  <el-badge v-if="wangqian > 0" :value="wangqian"></el-badge>
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
+
                 <el-dropdown-menu slot="dropdown" style="min-width: 150px;">
                   <!-- <el-dropdown-item>历年经销设计书</el-dropdown-item>
                   <el-dropdown-item>修改登录密码</el-dropdown-item>
                   <el-dropdown-item>修改对账密码</el-dropdown-item>-->
-                  <el-dropdown-item v-if="identity == 'ECWEB'"
+                  <el-dropdown-item v-if="identity != 'SUPLY'"
                     ><a
                       style="color:#606266;"
                       target="_blank"
@@ -67,8 +69,13 @@
                           userInfo.password
                       "
                       >网络协议签订</a
-                    ></el-dropdown-item
-                  >
+                    >
+                    <el-badge
+                      v-if="wangqian > 0"
+                      style="margin-top:5px;"
+                      :value="wangqian"
+                    ></el-badge
+                  ></el-dropdown-item>
                   <router-link
                     v-if="isContainAttr('myZone/myCoupon')"
                     to="/myZone/myCoupon"
@@ -898,6 +905,186 @@ export default {
         });
       }
     },
+    //网签系统
+    async getWangQianIcon() {
+      var allCount = 0;
+      if (this.identity != "SUPLY") {
+        if (this.identity == "ECWEB") {
+          //用户获取需要处理的资料卡和协议书数量
+          //资料卡
+          let cardsCount = await Axios.post(
+            this.Global.wangqianUrl + "/yulan/customerInfo/getCustomerInfo.do",
+            {
+              CID: Cookies.get("cid")
+            },
+            { loading: false }
+          );
+          if (cardsCount.data != null && cardsCount.data.code == 0) {
+            var state = cardsCount.data.data.state;
+            if (
+              state == "CUSTOMERPORCESSING" ||
+              state == "CUSTOMERPORCESSING2"
+            ) {
+              allCount++;
+            }
+          }
+          //协议书
+          let contractCount = await Axios.post(
+            this.Global.wangqianUrl +
+              "/yulan/infoState/getYLcontractentryState.do",
+            {
+              cid: Cookies.get("cid"),
+              cyear: new Date().getFullYear()
+            },
+            { loading: false }
+          );
+          if (contractCount.data != null) {
+            var state = contractCount.data.yLcontractInfo;
+            if (state == "客户查看确认协议数据中") {
+              allCount++;
+            }
+          }
+        } else {
+          //审核人员
+          let posList = await Axios.post(
+            this.Global.wangqianUrl + "/yulan/web_user/login.do?",
+            {
+              loginName: this.userInfo.loginName,
+              password: this.userInfo.password,
+              year: new Date().getFullYear()
+            },
+            { loading: false }
+          );
+          if (posList.data != null && posList.data.pos.length > 0) {
+            for (var i = 0; i < posList.data.pos.length; i++) {
+              var pos = posList.data.pos[i].position;
+              var state = "";
+              var YLState = "";
+              //资料卡：IT=>客户=>业务员(办事处,业务经理,中心总经理)=>订单部
+              //协议书：业务员(办事处,业务经理)=>客户=>业务员(中心总经理)=>内部人员
+              switch (pos) {
+                case "SALEMAN_M": //办事处经理(审核资料卡,填写修改协议)
+                  state = "BUSINESSCHECKING"; //业务员审核中
+                  YLState = "SALEMANMODIFYING";
+                  break;
+                case "SALEMAN_S": //业务经理(审核资料卡,填写修改协议)
+                  state = "BUSINESSCHECKING";
+                  YLState = "SALEMANMODIFYING";
+                  break;
+                case "MANAGER": //中心总经理(审核协议)
+                  YLState = "ASM_CHECKING";
+                  break;
+                case "MARKETCHECKER": //市场部(审核协议)
+                  YLState = "DEP_MARKET_CHECK";
+                  break;
+                case "VSMAPPROVEXII": //销售总监(审核协议)
+                  YLState = "CSA_CHECK";
+                  break;
+                case "BILLDEP_APPROVE": //订单部(审核资料卡)
+                  state = "BIILDEPCHECKING"; //订单部审核中
+                  break;
+              }
+              //获得可操作的资料卡
+              if (state != "") {
+                let cardsCount = await Axios.post(
+                  this.Global.wangqianUrl +
+                    "/yulan/customerInfo/getNcustomerinfo.do",
+                  {
+                    page: "1",
+                    limit: "99",
+                    year: new Date().getFullYear(),
+                    state: state,
+                    find: "",
+                    area_1: "",
+                    area_2: "",
+                    cid: Cookies.get("cid"),
+                    position: pos,
+                    ylcstate: ""
+                  },
+                  { loading: false }
+                );
+                if (cardsCount.data != null) {
+                  allCount += cardsCount.data.count;
+                }
+              }
+              //可操作得协议书
+              if (YLState != "") {
+                if (YLState == "SALEMANMODIFYING") {
+                  //可以创建和修改协议
+                  //需创建数量
+                  let cardsCount2 = await Axios.post(
+                    this.Global.wangqianUrl +
+                      "/yulan/customerInfo/getNcustomerinfo.do",
+                    {
+                      page: "1",
+                      limit: "99",
+                      year: new Date().getFullYear(),
+                      state: "APPROVED",
+                      find: "",
+                      area_1: "",
+                      area_2: "",
+                      cid: Cookies.get("cid"),
+                      position: pos,
+                      ylcstate: "SALEMANFILLING"
+                    },
+                    { loading: false }
+                  );
+                  if (cardsCount2.data != null) {
+                    allCount += cardsCount2.data.count;
+                  }
+                  //需修改数量
+                  let cardsCount3 = await Axios.post(
+                    this.Global.wangqianUrl +
+                      "/yulan/customerInfo/getNcustomerinfo.do",
+                    {
+                      page: "1",
+                      limit: "99",
+                      year: new Date().getFullYear(),
+                      state: "",
+                      find: "",
+                      area_1: "",
+                      area_2: "",
+                      cid: Cookies.get("cid"),
+                      position: pos,
+                      ylcstate: "SALEMANMODIFYING"
+                    },
+                    { loading: false }
+                  );
+                  if (cardsCount3.data != null) {
+                    allCount += cardsCount3.data.count;
+                  }
+                } else {
+                  //审核协议
+                  let contractCount = await Axios.post(
+                    this.Global.wangqianUrl +
+                      "/yulan/YLcontractentry/getYlcsbysigned.do",
+                    {
+                      limit: "99",
+                      page: "1",
+                      year: new Date().getFullYear(),
+                      area_1: "",
+                      area_2: "",
+                      find: "",
+                      need: "checking",
+                      cid: Cookies.get("cid"),
+                      position: pos
+                    },
+                    { loading: false }
+                  );
+                  if (contractCount.data != null) {
+                    allCount += contractCount.data.count;
+                  }
+                }
+              }
+            }
+          }
+        }
+        this.changeBadge({
+          name: "wangqian",
+          index: allCount
+        });
+      }
+    },
     //获取用户余额情况
     async userMoney() {
       this.refreshMoneyClass = "el-icon-loading";
@@ -1256,6 +1443,7 @@ export default {
       this.softCountIcon();
       this.newRefundUserIcon();
       this.newRefundExamineIcon();
+      this.getWangQianIcon();
     },
     test() {
       var customer = "58E0D26BA5693DBC743D6CB3F38BD410";
@@ -1281,6 +1469,7 @@ export default {
   },
   computed: {
     ...mapState("navTabs", ["tabList", "menuTreeList", "menuTreeListFlatten"]),
+    ...mapState("badge", ["wangqian"]),
     key() {
       return this.$route.name !== undefined ? this.$route.name : this.$route;
     },

@@ -32,7 +32,8 @@ Vue.prototype.Global = {
   baseUrl: baseUrl,//订单url
   fileCenterUrl: fileCenterUrl,//下载中心url
   webTitle: webTitle,//网页标题
-  sysTitle: sysTitle
+  sysTitle: sysTitle,
+  wangqianUrl: wangqianUrl
 }
 
 //请求拦截
