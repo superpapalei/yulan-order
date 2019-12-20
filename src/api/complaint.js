@@ -53,3 +53,19 @@ export function CheckDetailByID(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//得到公司名
+export function GetCustomerName(data, config = {}) {
+    return post('/Complaint/GetCustomerName', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+//获得pack_detail中某单据出货的总数量
+export function GetQtyDeliver(data, config = {}) {
+    return post('/Complaint/GetQtyDeliver', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
