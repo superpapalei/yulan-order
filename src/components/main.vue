@@ -88,9 +88,6 @@
                   <el-dropdown-item @click.native="changePasswordVisible = true"
                     >修改密码</el-dropdown-item
                   >
-                  <!-- <el-dropdown-item divided @click.native="test()"
-                    >快递100测试</el-dropdown-item
-                  > -->
                   <el-dropdown-item divided @click.native="logout"
                     >退出登录</el-dropdown-item
                   >
@@ -1444,27 +1441,6 @@ export default {
       this.newRefundUserIcon();
       this.newRefundExamineIcon();
       this.getWangQianIcon();
-    },
-    test() {
-      var customer = "58E0D26BA5693DBC743D6CB3F38BD410";
-      var key = "oYJVLdqm2831";
-      var param = {
-        com: "yuantong",
-        num: "123456"
-      };
-      var md5Str = JSON.stringify(param);
-      Axios.defaults.withCredentials = false;
-      Axios.post(this.Global.baseUrl + "PACK_DETAIL/GetKuaiDi", {
-        customer: customer,
-        key: key,
-        param: md5Str
-      })
-        .then(res => {
-          console.log(res.data.data);
-        })
-        .catch(err => {
-          console.log(err);
-        });
     }
   },
   computed: {

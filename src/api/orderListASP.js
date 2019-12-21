@@ -208,3 +208,11 @@ export function GetBalancePeriod(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//获取并更新快递状态
+export function GetPackExpressState(data, config = {}) {
+    return post('/PACK_DETAIL/GetPackExpressState', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
