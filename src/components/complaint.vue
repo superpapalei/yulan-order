@@ -43,6 +43,7 @@
       >
       </el-input>
       <el-button size="medium" type="success" style="margin-left:10px" @click="search()">查询</el-button>
+      <el-button size="medium" type="primary" style="float:right;" @click="GetSaleNoAndItemNo()">无物流单号投诉新增</el-button>
 
       </div>
       
@@ -197,26 +198,46 @@
           </tr>
 
           <tr>
-            <td class="grayTD" style="width:16%;height:15px">客户代码</td>
-            <td v-if="isEdit" style="width:34%;height:15px" class="grayTD">{{submit.CUSTOMER_CODE}}</td>
-            <td v-else style="width:34%;height:15px" class="grayTD">(系统带出)</td>
-            <td class="grayTD" style="width:16%;height:15px">客户名称</td>
-            <td v-if="isEdit" style="width:34%;height:15px" class="grayTD">{{submit.CUSTOMER_NAME}}</td>
-            <td v-else style="width:34%;height:15px" class="grayTD">(系统带出)</td>
+            <td class="grayTD" style="width:16%;height:20px">客户代码</td>
+            <td  style="width:32%;height:20px" >{{submit.CUSTOMER_CODE}}</td>
+            <td class="grayTD" style="width:16%;height:20px">客户名称</td>
+            <td  style="width:40%;height:20px"  v-if="isEdit">{{submit.CUSTOMER_NAME}}</td>   
+            <td  style="width:40%;height:20px"  v-else>{{this.CUSTOMER_NAME}}</td>   
           </tr>
 
            <tr>
-            <td class="grayTD" style="height:15px">提货单号</td>
-            <td class="grayTD" style="height:15px">{{submit.SALE_NO}}</td>
+            <td class="grayTD" style="height:20px">提货单号</td>
+            <td  style="height:20px" v-if="isEdit" >{{submit.SALE_NO}}</td>
+            <td  style="height:20px" v-else>{{this.SALE_NO}}</td>
 
-            <td class="grayTD" style="height:15px">物流单号</td>
-            <td class="grayTD" style="height:15px">{{submit.C_TRANSBILL}}</td>
+            <td class="grayTD" style="height:20px">物流单号</td>
+            <td style="height:20px" v-if="isEdit" >{{submit.C_TRANSBILL}}</td>
+            <td style="height:20px" v-else>
+              <el-input
+                v-model="submit.C_TRANSBILL"
+                placeholder="请输入"
+                clearable
+                class="inputStyle"
+                oninput="value=value.replace(/[^\d]/g,'')"
+              >
+              </el-input>
+
+            </td>
           </tr>          
            <tr>
-            <td class="grayTD" style="height:15px">订单号</td>
-            <td class="grayTD" style="height:15px">{{submit.DINGDANHAO}}</td>
-            <td class="grayTD" style="height:15px">产品型号</td>
-            <td class="grayTD" style="height:15px">{{submit.SALENO}}</td>
+            <td class="grayTD" style="height:20px">订单号</td>
+            <td style="height:20px" v-if="isEdit" >{{submit.DINGDANHAO}}</td>
+            <td style="height:20px" v-else>
+              <el-input
+                v-model="submit.DINGDANHAO"
+                placeholder="请输入"
+                clearable
+                class="inputStyle"
+              >
+              </el-input>
+            <td class="grayTD" style="height:20px">产品型号</td>
+            <td style="height:20px" v-if="isEdit" >{{submit.SALENO}}</td>
+            <td style="height:20px" v-else>{{this.SALENO}}</td>
           </tr>
 
           <tr>
@@ -224,25 +245,90 @@
           </tr>
 
           <tr>
-            <td class="grayTD" colspan="1" style="height:20px">投诉类型</td>
-            <td class="grayTD" colspan="1" style="height:20px">{{submit.TYPE}}</td>
+            <td class="grayTD" colspan="1" style="height:20px">投诉类型<span style="color:red;">*</span></td>
+            <td  colspan="1" style="height:20px"  v-if="isEdit">{{submit.TYPE}}</td>
+            <td colspan="1" style="text-align:left;height:20px" v-else>
+              <el-select
+                style="height:20px;width:100%;padding:0px 0px 0px 0px;"
+                v-model="submit.TYPE"
+                filterable
+                placeholder="选择相应类型"
+              >
+                <el-option
+                  v-for="item in typeArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </td>
+
             
-            <td class="grayTD" colspan="1" style="height:20px">数量</td>
-            <td v-if="submit.TYPE=='丢失'"  class="grayTD" colspan="1" style="height:20px">{{submit.LOSED_QUANTITY}}</td>
+            <td class="grayTD" colspan="1" style="height:20px">数量<span style="color:red;">*</span></td>
+            <td v-if="isEdit&&submit.TYPE=='丢失'"  colspan="1" style="height:20px">{{submit.LOSED_QUANTITY}}</td>
+            <td
+              v-if="isAdd&&submit.TYPE=='丢失'"
+              colspan="1"
+              style="height:20px"
+            >
+              <el-input
+                v-model="submit.LOSED_QUANTITY"
+                placeholder="（丢失数量）"
+                clearable
+                class="inputStyle"
+                oninput="value=value.replace(/[^\d.]/g,'')
+                           .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                           .replace('.', '$#$').replace(/\./g, '')
+                           .replace('$#$', '.')
+                           .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
+              >
+              </el-input>
+            </td>
   
-            <td v-if="submit.TYPE=='破损'"  class="grayTD" colspan="1" style="height:20px">{{submit.DAMAGED_QUANTITY}}</td>
+            <td v-if="isEdit&&submit.TYPE=='破损'"  class="grayTD" colspan="1" style="height:20px">{{submit.DAMAGED_QUANTITY}}</td>
+            <td
+              v-if="isAdd&&submit.TYPE=='破损'"
+              colspan="1"
+              style="height:20px"
+            >
+              <el-input
+                v-model="submit.DAMAGED_QUANTITY"
+                placeholder="（破损数量）"
+                clearable
+                class="inputStyle"
+                oninput="value=value.replace(/[^\d.]/g,'')
+                           .replace(/^\./g, '').replace(/\.{2,}/g, '.')
+                           .replace('.', '$#$').replace(/\./g, '')
+                           .replace('$#$', '.')
+                           .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
+              >
+              </el-input>
+            </td>
+
             <td v-else  class="grayTD" colspan="1" style="height:20px"> </td>
           </tr>
 
           <tr>
-            <td class="grayTD"  colspan="1" rowspan="1" style="height:50px;" >投诉内容</td>
-            <td colspan="3"  rowspan="1"  style="height:60px" class="grayTD" >{{submit.MEMO}}</td>
+            <td class="grayTD"  colspan="1" rowspan="1" style="height:50px;" >投诉内容<span style="color:red;">*</span></td>
+            <td colspan="3"  rowspan="1"  style="height:50px" class="grayTD" v-if="isEdit" >{{submit.MEMO}}</td>
+            <td colspan="3" rowspan="1" style="height:50px;" v-else>
+              <el-input
+                v-model="submit.MEMO"
+                type="textarea"
+                maxlength="200"
+                placeholder="（请输入投诉内容和要求）"
+                clearable
+                class="inputStyle"
+              >
+              </el-input>
+            </td>
           </tr>
 
 
           <tr v-if="submit.STATUS==2||submit.STATUS==3" >
             <td class="grayTD" colspan="1"  rowspan="1" border="0px" style="height:35px" >处理结果</td>
-            <td colspan="3"  rowspan="1"  style="height:35px" class="grayTD" >{{submit.PROCESSDESC}}</td>
+            <td colspan="3"  rowspan="1"  style="height:35px" >{{submit.PROCESSDESC}}</td>
           </tr>
 
 
@@ -296,8 +382,12 @@ import {
     GetAllComplaint,
     addSubmit,
     editSubmit,
-    CheckDetailByID
+    CheckDetailByID,
+    GetCustomerName,
+    GetQtyDeliver,
+    CheckOrderAndItemNo
 } from "@/api/complaint";
+import {getReturnInfo } from "@/api/orderListASP";
 import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 export default {
@@ -306,9 +396,8 @@ export default {
     return {
       tableData:[],
       submit:[],
-      companyId:"",
-      CID:"",                 //客户账号
-      CNAME:"",               //客户名
+      CID:Cookies.get("cid"),     //账号id
+      CNAME: Cookies.get("realName"),    //账号名
       beginTime:"",           //查询的开始时间
       finishTime:"",          //查询的结束时间
       SEARCHKEY:"",           //搜索栏关键字
@@ -318,6 +407,11 @@ export default {
       isAdd:false,            //新增记录
       isEdit:false,           //编辑记录
       isCheck:false,          //查看记录
+      companyId:Cookies.get("customerMainId"),//公司账号
+      CUSTOMER_NAME:"",//公司名称  
+      SALE_NO:"",//提货单号
+      SALENO:"",//产品型号
+      zongshuliang:"",//总数量
       complaintDetail:false,
       limit: 10,
       count: 0,
@@ -368,6 +462,7 @@ export default {
   },
   created: function() {
     this.refresh();
+    this._GetCustomerName();
   },
   filters: {
     transStatus(value) {
@@ -466,7 +561,7 @@ export default {
       //查询满足条件的该用户的投诉信息
       refresh() {
       var data = {
-        companyId: Cookies.get("companyId"),
+        companyId: Cookies.get("customerMainId"),
         limit: this.limit,
         page: this.currentPage,
         CID: Cookies.get("cid"),
@@ -488,58 +583,97 @@ export default {
         this.complaintData = res.data;
       });
     },
-    //新建记录
-    _addRecord() {
-      this.isAdd=true,
-      this.isEdit=false;
-      this.isCheck=false;
-      this.complaintDetail=true,
-      this.CNAME=Cookies.get("realName"), //客户名
+    //初始化新建投诉记录
+    addRecord() {
       this.submit = {
-        SID: 0, //投诉单id
-        SALE_NO:"",//销售单号
-        CUSTOMER_CODE: "", //客户编码
-        SUBMITTS: "", //提交时间
-        TYPE: "", //投诉类型
-        MEMO: "", //备注——投诉内容
-        OPERATOR: "", //处理人
-        PROCESSTS: "", //处理时间
-        PROCESSDESC:"",//处理结果——回复
-        WLTS_THINK:"",//服务评价
-        FEEDBACKTS:"",//评价时间
-        STATUS: 1,
-        TELEPHONE:"",
-        IMGURL:"",
-        LOSED_QUANTITY:0, //货物丢失数量
-        DAMAGED_QUANTITY:0,//货物损坏数量
-        C_TRANSBILL:"",//物流单号
-      },
-      this.submit.CUSTOMER_CODE = Cookies.get("companyId");
+          SID: "", //投诉单id
+          SALE_NO: "", //销售单号
+          CUSTOMER_CODE: "", //客户编码
+          SUBMITTS: "", //提交时间
+          TYPE: "", //投诉类型
+          MEMO: "", //备注——投诉内容
+          OPERATOR: "", //处理人
+          PROCESSTS: "", //处理时间
+          PROCESSDESC: "", //处理结果——回复
+          WLTS_THINK: "", //服务评价
+          FEEDBACKTS: "", //评价时间
+          STATUS: 1,
+          TELEPHONE: "",
+          IMGURL: "",
+          LOSED_QUANTITY: "", //货物丢失数量
+          DAMAGED_QUANTITY: "", //货物损坏数量
+          C_TRANSBILL: "", //物流单号
+          DINGDANHAO: "",  //b2b订单号
+          SALENO: ""//产品型号
+        },
+      this.submit.SALE_NO = this.SALE_NO;
+      this.submit.SALENO = this.SALENO;
+      this.submit.CUSTOMER_CODE = Cookies.get("customerMainId");
+      this.CNAME = Cookies.get("realName"); //客户名
+      this.isAdd = true;
+      this.complaintDetail = true;
+     
     },
-    //新增记录提交
+    //新建一条投诉记录
+    _addRecord(){
+       CheckOrderAndItemNo({companyId:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.SALENO}).then(res => {
+          if (res.data.length!= 0) {
+             this.$confirm("此前已对该订单该型号发起物流投诉，是否要再次投诉", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning"
+             }).then(() => {
+                   this.addRecord();
+            });
+          } 
+          else{
+             this.addRecord();
+          }
+        });
+    },
+    //新增投诉记录提交
     _addSubmit() {
       let data = this.submit;
       //判断是否填完所有信息
       if (
-        this.submit.SALE_NO == "" ||
-        this.submit.C_TRANSBILL == "" ||
         this.submit.TYPE == "" ||
         this.submit.MEMO == ""
-      )
-      {
+      ) {
         this.$alert("请完善信息", "提示", {
           confirmButtonText: "确定",
           type: "warning"
         });
         return;
       }
-      if(this.submit.DAMAGED_QUANTITY==""||this.submit.DAMAGED_QUANTITY == null)
-      {
+      if (this.submit.TYPE == "丢失") {
         this.submit.DAMAGED_QUANTITY = 0;
       }
-      if(this.submit.LOSED_QUANTITY==""||this.submit.LOSED_QUANTITY == null)
-      {
+      if (this.submit.TYPE == "破损") {
         this.submit.LOSED_QUANTITY = 0;
+      }
+      if (this.submit.TYPE != "破损" && this.submit.TYPE != "丢失") {
+        this.submit.LOSED_QUANTITY = 0;
+        this.submit.DAMAGED_QUANTITY = 0;
+      }
+      if (
+        this.submit.DAMAGED_QUANTITY > this.zongshuliang ||
+        this.submit.LOSED_QUANTITY > this.zongshuliang
+      ) {
+        this.$alert("填写数量必须小于下单数量", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if ((this.submit.TYPE == "破损" || this.submit.TYPE == "丢失")&&
+        this.submit.DAMAGED_QUANTITY <= 0 &&
+        this.submit.LOSED_QUANTITY <= 0
+      ) {
+        this.$alert("填写数量必须为正数", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
       }
       addSubmit(data).then(res => {
         if (res.code == 0) {
@@ -547,7 +681,6 @@ export default {
             confirmButtonText: "确定",
             type: "success"
           });
-          this.currentPage = 1;
           this.refresh();
         } else {
           this.$alert("提交失败，请稍后重试", "提示", {
@@ -556,7 +689,7 @@ export default {
           });
         }
       });
-      this.complaintDetail=false;
+      this.complaintDetail = false;
     },
     //查看列表详情
     _CheckDetail(val) {
@@ -635,6 +768,38 @@ export default {
         }
       });
       this.complaintDetail=false;
+    },
+    //获取提货单号和产品型号
+    GetSaleNoAndItemNo() {
+      this.$prompt("请输入提货单号", "请确保输入的信息无误(注意空格)", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(({ value }) => {
+          this.SALE_NO=value.toUpperCase();
+          this.$prompt("请输入产品型号", "请确保输入的信息无误(注意空格)", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消"
+          }).then(({ value } )=>{
+              this.SALENO=value.toUpperCase();
+              GetQtyDeliver({CUSTOMER_CODE:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.SALENO}).then(res => {
+                if (res.code == 0) {
+                        this.zongshuliang=res.data[0].QTY_DELIVER;
+                };
+              });
+          }).then(()=>{
+             this._addRecord();
+          });
+        })
+        .catch(() => {});
+    },
+    _GetCustomerName(){
+              GetCustomerName({companyId:this.companyId}).then(res => {
+                if (res.code == 0) {
+                        this.CUSTOMER_NAME=res.data[0].CUSTOMER_NAME;
+                };
+              });
+
     },
     ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   },
@@ -737,5 +902,57 @@ export default {
      width:100%;
      font-size:16px;
      text-align:center;
+}
+.table-c .el-input__inner {
+  height: 19px;
+  width: 100%;
+  font-size: 15px;
+  box-shadow: none;
+  text-align: center;
+}
+
+.table-c .el-input__inner:hover {
+  border-color: #e9e9e9;
+}
+
+.table-c .el-input__inner:focus {
+  border-color: #42a5f5;
+  box-shadow: none;
+  transition-duration: 0.5s;
+}
+
+.table-c .el-input__inner::-webkit-input-placeholder {
+  line-height: 19px;
+}
+
+.table-c .el-input__inner,
+.el-checkbox__inner,
+.el-textarea__inner {
+  border-radius: 0 !important;
+}
+.table-c .el-input__icon {
+  height: 100%;
+  width: 22px;
+  text-align: center;
+  line-height: 19px;
+}
+.table-c .el-textarea__inner {
+  height: 48px;
+  display: block;
+  resize: vertical;
+  padding: 1px 1px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: inherit;
+  background-image: none;
+  border: 1px solid #dcdfe6;
+  border-top-color: rgb(220, 223, 230);
+  border-right-color: rgb(220, 223, 230);
+  border-bottom-color: rgb(220, 223, 230);
+  border-left-color: rgb(220, 223, 230);
+  border-radius: 4px;
+  -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 </style>

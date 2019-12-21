@@ -307,9 +307,11 @@
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
             <td style="height:15px" colspan="6">您的提货单号为{{submit.SALE_NO}}</td>
           </tr>
-          <tr v-if="submit.STATE=='APPROVED'&&submit.RETURN_TYPE=='客户邮寄'">
+          <tr v-if="(submit.STATE=='APPROVED'||submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='RECEIVE')&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">物流备注信息</td>
-            <td style="height:15px" colspan="6">{{submit.RETURN_TRANSINFO}}</td>
+            <td style="height:15px;color:red;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="6" else>{{submit.RETURN_TRANSINFO}}</td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
@@ -590,6 +592,15 @@
               </el-input>
             </td>
           </tr>
+          <tr v-if="(submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED')&&submit.RETURN_TYPE=='客户邮寄'">
+            <td class="grayTD" style="height:15px">物流备注信息<span style="color:red;">*</span></td>
+            <td style="height:15px;color:red;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="6" else>{{submit.RETURN_TRANSINFO}}</td>
+          </tr>
+
+
+
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'"> 
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理结果
@@ -1035,6 +1046,16 @@ export default {
           break;
       }
     },
+    //物流备注信息未填写的提示
+    transInfoTip(val){
+       if(val==null||val=="")
+       {
+         return "客户尚未填写该内容"
+       }
+       else{
+         return val
+       }
+    }
   },
   methods: {
     //展开搜索
@@ -1419,7 +1440,7 @@ export default {
     },
     //旧系统提单售后新增
     addRefundRecord() {
-       CheckOrderAndItemNo({SALE_NO:this.SALE_NO,ITEM_NO:this.ITEM_NO}).then(res => {
+       CheckOrderAndItemNo({CID:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.ITEM_NO}).then(res => {
           if (res.data.length!= 0) {
              this.$confirm("此前已对该订单该型号发起退货赔偿申请，是否要再次申请", "提示", {
                 confirmButtonText: "确定",
