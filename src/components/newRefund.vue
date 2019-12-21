@@ -1440,7 +1440,7 @@ export default {
     },
     //旧系统提单售后新增
     addRefundRecord() {
-       CheckOrderAndItemNo({SALE_NO:this.SALE_NO,ITEM_NO:this.ITEM_NO}).then(res => {
+       CheckOrderAndItemNo({CID:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.ITEM_NO}).then(res => {
           if (res.data.length!= 0) {
              this.$confirm("此前已对该订单该型号发起退货赔偿申请，是否要再次申请", "提示", {
                 confirmButtonText: "确定",

@@ -69,3 +69,12 @@ export function GetQtyDeliver(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//查询是否已经对该订单该型号产品进行投诉
+export function CheckOrderAndItemNo(data, config = {}) {
+    return post('/Complaint/CheckOrderAndItemNo', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+

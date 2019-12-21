@@ -384,7 +384,8 @@ import {
     editSubmit,
     CheckDetailByID,
     GetCustomerName,
-    GetQtyDeliver
+    GetQtyDeliver,
+    CheckOrderAndItemNo
 } from "@/api/complaint";
 import {getReturnInfo } from "@/api/orderListASP";
 import { mapMutations } from "vuex";
@@ -582,7 +583,7 @@ export default {
         this.complaintData = res.data;
       });
     },
-    //新建一条投诉记录
+    //初始化新建投诉记录
     addRecord() {
       this.submit = {
           SID: "", //投诉单id
@@ -612,6 +613,23 @@ export default {
       this.isAdd = true;
       this.complaintDetail = true;
      
+    },
+    //新建一条投诉记录
+    _addRecord(){
+       CheckOrderAndItemNo({companyId:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.SALENO}).then(res => {
+          if (res.data.length!= 0) {
+             this.$confirm("此前已对该订单该型号发起物流投诉，是否要再次投诉", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning"
+             }).then(() => {
+                   this.addRecord();
+            });
+          } 
+          else{
+             this.addRecord();
+          }
+        });
     },
     //新增投诉记录提交
     _addSubmit() {
@@ -770,7 +788,7 @@ export default {
                 };
               });
           }).then(()=>{
-             this.addRecord();
+             this._addRecord();
           });
         })
         .catch(() => {});
