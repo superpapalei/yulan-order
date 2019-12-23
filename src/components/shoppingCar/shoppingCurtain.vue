@@ -48,7 +48,7 @@
                 <span v-else>--</span>
               </template>
             </el-table-column>
-            <el-table-column label="褶皱倍数" width="100" align="center">
+            <el-table-column label="褶皱倍数" width="90" align="center">
               <template slot-scope="scope1">{{ scope1.row.drape }}</template>
             </el-table-column>
             <el-table-column label="位置" width="100" align="center">
@@ -58,7 +58,7 @@
                   : scope1.row.location
               }}</template>
             </el-table-column>
-            <el-table-column label="活动" align="center">
+            <el-table-column label="活动" align="center" show-overflow-tooltip>
               <template slot-scope="scope1">
                 <span
                   style="color: red;"
@@ -71,7 +71,7 @@
                 {{ scope1.row.activity }}
               </template>
             </el-table-column>
-            <el-table-column width="120" label="数量" align="center">
+            <el-table-column width="80" label="数量" align="center">
               <template slot-scope="scope1">
                 <!-- <el-input-number
                   size="mini"

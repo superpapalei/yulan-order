@@ -39,7 +39,7 @@
         style="width:12%;"
       ></el-date-picker>
       <el-select
-        style="width:140px;"
+        style="width:150px;"
         v-model="CommodityType"
         placeholder="请选择商品类型"
       >
@@ -66,7 +66,7 @@
         @keyup.enter.native="search()"
         placeholder="订单号,型号,购买人,联系方式"
         v-model="find"
-        style="width:300px;"
+        style="width:310px;"
       >
         <el-button @click="search()" slot="append" icon="el-icon-search"
           >搜索</el-button

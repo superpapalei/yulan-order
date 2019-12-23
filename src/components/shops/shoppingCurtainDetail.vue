@@ -135,7 +135,7 @@
             <div v-else>{{ getTypeName(scope.row.itemType) }}</div>
           </template>
         </el-table-column>
-      <el-table-column v-if="isManager != '0'" label="单价" header-align="center" width="40">
+      <el-table-column v-if="isManager != '0'" label="单价" header-align="center" width="50">
           <template slot-scope="scope">
             <span>
               {{ scope.row.price }}
