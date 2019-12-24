@@ -131,21 +131,20 @@
                   :row-style="rowClass"
                 >
                   <el-table-column
-                    property="stockNo"
+                    property="STOCK_NO"
                     label="库房"
                     align="center"
                   ></el-table-column>
                   <el-table-column
-                    property="batchNo"
+                    property="BATCH_NO"
                     label="批号"
                     width="200"
                     show-overflow-tooltip
                     align="center"
                   ></el-table-column>
                   <el-table-column
-                    property="qty"
+                    property="QTY"
                     label="库存"
-                    width="70"
                     align="center"
                   ></el-table-column>
                 </el-table>
@@ -247,7 +246,7 @@ import { addShoppingCar } from "@/api/shop";
 import { getItemById, GetPromotionByItem } from "@/api/orderListASP";
 import Vue from "vue";
 import Cookies from "js-cookie";
-import { GetWallpaperInfo, GetSalPutonRecord } from "@/api/itemInfoASP";
+import { GetWallpaperInfo, GetSalPutonRecord, GetItemStock } from "@/api/itemInfoASP";
 
 export default {
   name: "WallPaper",
@@ -680,13 +679,14 @@ export default {
     numberChange(value, index) {},
     //查看该商品的库存
     seeStore(scope) {
-      this.dialogTableVisible = true;
       this.produceStore = [];
-      getWallPaperStore({
+      //getWallPaperStore({
+      GetItemStock({
         itemNo: scope.row.type
       })
         .then(res => {
           this.produceStore = res.data;
+          this.dialogTableVisible = true;
         })
         .catch(err => {
           console.log(err.data);

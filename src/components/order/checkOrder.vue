@@ -1,10 +1,6 @@
 <template>
   <el-card class="centerCard">
-    <div slot="header">
-      <span class="headSpan">填写并核对订单信息</span>
-      <p @click="dialogOpen" class="charge" style="float:right;">
-        管理收货地址
-      </p>
+    <div>
       <!-- 地址管理信息 -->
       <el-dialog
         width="70%"
@@ -189,8 +185,7 @@
         </span>
       </el-dialog>
     </div>
-
-    <el-card class="childCard" shadow="hover">
+    <el-card shadow="hover">
       <div slot="header">
         <span class="zoomLeft">甲方：</span>
         <span class="zoomRight">广东玉兰集团股份有限公司</span>
@@ -201,96 +196,114 @@
           >{{ chargeData.CUSTOMER_AGENT }}({{ chargeData.OFFICE_TEL }})</span
         >
       </div>
-      <div :class="overflow">
-        <!-- style="height:160px; overflow:auto;"用三元运算改变高度 -->
-        <p v-for="(item, index) of data" :key="index">
-          <el-radio @change="showAddress" v-model="radio" :label="index" border
-            >{{ item.wlContacts }} ({{ item.wlTel }}) {{ item.province
-            }}{{ item.city }}{{ item.country }}{{ item.postAddress }}</el-radio
-          >
-          <span
-            v-if="item.addressId === 0"
-            style="color:tomato; font-weight:bold;"
-            >默认地址</span
-          >
-        </p>
-      </div>
-      <p class="charge" style="font-weight:bold;" @click="showAddress">
-        {{ addressAppear }}
-      </p>
 
       <div class="grayDiv">
-        <!-- 配送信息 -->
-        <span>选择配送方式：</span>
-        <el-select
-          @change="changePeiSong"
-          style="width:30%; display:inline-block;"
-          v-model="ctm_order.deliveryType"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.deliveryType"
-            :label="item.label"
-            :value="item.deliveryType"
-            :disabled="item.disabled"
-          ></el-option>
-        </el-select>
-        <span style="margin-left:50px;">物流公司：</span>
-        <el-input
-          style="width:30%;"
-          :disabled="this.ctm_order.deliveryType == 3 ? false : true"
-          v-model="ctm_order.deliveryNotes"
-          placeholder="物流备注"
-        ></el-input>
-        <br />
-        <br />
-        <span>购买人：</span>
-        <el-input
-          style="width:35%;"
-          v-model="ctm_order.buyUser"
-          placeholder="请输入购买者姓名"
-        ></el-input>
-        <span style="display:inline-block;margin-left:50px;">联系电话：</span>
-        <el-input
-          style="width:30%;"
-          v-model="ctm_order.buyUserPhone"
-          placeholder="请输入联系电话"
-        ></el-input>
-        <br />
-        <span>购买人地址：</span>
-        <el-input
-          style="width:76.5%;margin-top:10px;"
-          v-model="ctm_order.buyUserAddress"
-          placeholder="请输入购买人地址"
-        ></el-input>
-        <br />
-        <span>上传购买凭证：</span>
-        <el-upload
-          class="upload-de"
-          :action="Global.baseUrl + '/CTM_ORDER/UploadBuyUserFiles'"
-          list-type="picture-card"
-          :on-change="handleChange"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove"
-          :before-upload="beforeAvatarUpload"
-          :file-list="fileList"
-          :data="{ cid: cid }"
-        >
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <span>备注：</span>
-        <el-input
-          type="textarea"
-          maxlength="140"
-          style="width:98%"
-          :autosize="{ minRows: 3, maxRow: 4 }"
-          resize="none"
-          v-model="ctm_order.notes"
-          placeholder="请输入订单备注(140字符以内，任何发货信息写在备注无效！)"
-        ></el-input>
-        <span style="color:#ccc">{{ ctm_order.notes | calLength }}/140</span>
-        <br />
+        <fieldset>
+          <legend>发货信息</legend>
+          <div :class="overflow">
+            <p v-for="(item, index) of data" :key="index">
+              <el-radio
+                @change="showAddress"
+                v-model="radio"
+                :label="index"
+                border
+                >{{ item.wlContacts }} ({{ item.wlTel }}) {{ item.province
+                }}{{ item.city }}{{ item.country
+                }}{{ item.postAddress }}</el-radio
+              >
+              <span
+                v-if="item.addressId === 0"
+                style="color:tomato; font-weight:bold;"
+                >默认地址</span
+              >
+            </p>
+          </div>
+          <p class="charge" style="font-weight:bold;" @click="showAddress">
+            {{ addressAppear }}
+            <span
+              @click="dialogOpen"
+              class="charge"
+              style="float:right;margin-right:20px;"
+            >
+              管理收货地址
+            </span>
+          </p>
+
+          <!-- 配送信息 -->
+          <span>选择配送方式：</span>
+          <el-select
+            @change="changePeiSong"
+            style="width:300px; display:inline-block;"
+            v-model="ctm_order.deliveryType"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.deliveryType"
+              :label="item.label"
+              :value="item.deliveryType"
+              :disabled="item.disabled"
+            ></el-option>
+          </el-select>
+          <span style="margin-left:50px;">物流公司：</span>
+          <el-input
+            style="width:300px;"
+            :disabled="this.ctm_order.deliveryType == 3 ? false : true"
+            v-model="ctm_order.deliveryNotes"
+            placeholder="物流备注"
+          ></el-input>
+        </fieldset>
+        <fieldset>
+          <legend>购买用户信息</legend>
+          <span>用户姓名：</span>
+          <el-input
+            style="width:330px;"
+            v-model="ctm_order.buyUser"
+            placeholder="请输入用户姓名"
+          ></el-input>
+          <span style="display:inline-block;margin-left:50px;">用户电话：</span>
+          <el-input
+            style="width:300px;"
+            v-model="ctm_order.buyUserPhone"
+            placeholder="请输入用户电话"
+          ></el-input>
+          <br />
+          <span>用户地址：</span>
+          <el-input
+            style="width:770px;margin-top:10px;"
+            v-model="ctm_order.buyUserAddress"
+            placeholder="请输入用户地址"
+          ></el-input>
+          <br />
+          <span style="vertical-align:middle;">上传购买凭证：</span>
+          <el-upload
+            class="upload-de"
+            style="display:inline-block;vertical-align:middle;margin-top:10px;"
+            :action="Global.baseUrl + '/CTM_ORDER/UploadBuyUserFiles'"
+            list-type="picture-card"
+            :on-change="handleChange"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+            :before-upload="beforeAvatarUpload"
+            :file-list="fileList"
+            :data="{ cid: cid }"
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
+        </fieldset>
+        <fieldset>
+          <legend>备注信息</legend>
+          <el-input
+            type="textarea"
+            maxlength="140"
+            style="width:100%"
+            :autosize="{ minRows: 3, maxRow: 4 }"
+            resize="none"
+            v-model="ctm_order.notes"
+            placeholder="请输入订单备注(140字符以内，任何发货信息写在备注无效！)"
+          ></el-input>
+          <span style="color:#ccc">{{ ctm_order.notes | calLength }}/140</span>
+        </fieldset>
         <!-- <div v-if="packingShow">
           <span>分包提示：<span style="color:red;">*</span></span>
           <el-radio-group
@@ -305,12 +318,14 @@
           </el-radio-group>
         </div>
         <br /> -->
-        <span>工程报备单号：</span>
-        <el-input
-          style="width:40%;"
-          v-model="ctm_order.projectNo"
-          placeholder="请输入工程报备单号"
-        ></el-input>
+        <fieldset>
+          <legend>工程报备单号</legend>
+          <el-input
+            style="width:400px"
+            v-model="ctm_order.projectNo"
+            placeholder="请输入工程报备单号"
+          ></el-input>
+        </fieldset>
       </div>
       <el-dialog :visible.sync="dialogImageVisible">
         <img width="100%" :src="dialogImageUrl" alt="" />
@@ -341,6 +356,7 @@
           prop="promotion"
           align="center"
           label="活动类型"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="partSendId"
@@ -387,7 +403,7 @@
       </el-table>
     </el-card>
     <!-- 使用优惠券 -->
-    <el-card class="childCard" shadow="never">
+    <el-card shadow="never">
       <el-collapse v-model="activeNames">
         <el-collapse-item title="使用优惠券/礼品卡" name="1">
           <div
@@ -1219,7 +1235,7 @@ export default {
       } else {
         this.addressIt = false;
         this.overflow = "";
-        this.addressAppear = "其它地址⇣";
+        this.addressAppear = "更多地址⇣";
         var cutPoint = this.radio;
         var abc = this.transferData.splice(cutPoint, 1);
         this.transferData.unshift(abc[0]);
@@ -1714,9 +1730,6 @@ export default {
 .centerCard p {
   margin: 0;
 }
-.childCard {
-  margin: 0 2%;
-}
 .zoomRight {
   font-weight: 400;
   font-size: 15px;
@@ -1737,7 +1750,6 @@ export default {
   background: rgb(244, 245, 245);
   padding: 20px;
   line-height: 25px;
-  width: 80%;
 }
 .rightDiv {
   float: right;
