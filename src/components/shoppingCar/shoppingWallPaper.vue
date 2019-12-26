@@ -72,12 +72,12 @@
                 <div v-if="scope1.row.unit === '平方米'">
                   <span>
                     {{ scope1.row.width }} × {{ scope1.row.height }} =
-                    {{ (scope1.row.width * scope1.row.height) | dosageFilter }}
+                    {{ (scope1.row.width.mul(scope1.row.height)) | dosageFilter }}
                   </span>
                   <span
                     style="color: red;"
                     v-if="
-                      scope1.row.width * scope1.row.height <
+                      scope1.row.width.mul(scope1.row.height) <
                         scope1.row.item.minimumPurchase
                     "
                     >(最小起购数量{{ scope1.row.item.minimumPurchase }})</span
@@ -560,7 +560,7 @@ export default {
     checkMinimumNumber(row) {
       let val;
       if (row.unit === "平方米") {
-        val = row.width * row.height;
+        val = row.width.mul(row.height);
       } else {
         val = row.quantity;
       }
@@ -758,8 +758,8 @@ export default {
       let _width = parseFloat(width);
       let _height = parseFloat(height);
       let _price = parseFloat(price);
-      let square = Math.round(_width * _height * 100) / 100;
-      return Math.round(price * square * 100) / 100;
+      let square = Math.round(_width.mul(_height) * 100) / 100;
+      return Math.round(price.mul(square) * 100) / 100;
     }
   },
   created() {

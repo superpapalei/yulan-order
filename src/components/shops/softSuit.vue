@@ -403,6 +403,7 @@ export default {
       })
         .then(res => {
           this.tableData = this.unique(res.data);
+          console.log(this.tableData)
           this.tableData = this.changeUnit(this.tableData);
           this.totalNumber = this.tableData[0].total;
           this.createNumberList(this.tableData.length);

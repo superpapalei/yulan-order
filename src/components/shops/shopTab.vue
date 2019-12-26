@@ -40,8 +40,7 @@
             </span>
           </span>
           <span v-else-if="scope.row.rzGrade">
-            <!-- {{ scope.row.rzGrade }} -->
-            {{scope.row.fixGrade/1000 + (scope.row.unit?scope.row.unit:'米')}}
+            {{ scope.row.rzGrade }}
           </span>
           <span v-else>--</span>
         </template>
