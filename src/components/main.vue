@@ -912,7 +912,7 @@ export default {
           let cardsCount = await Axios.post(
             this.Global.wangqianUrl + "/yulan/customerInfo/getCustomerInfo.do",
             {
-              CID: Cookies.get("cid")
+              CID: Cookies.get("companyId")
             },
             { loading: false }
           );
@@ -920,7 +920,8 @@ export default {
             var state = cardsCount.data.data.state;
             if (
               state == "CUSTOMERPORCESSING" ||
-              state == "CUSTOMERPORCESSING2"
+              state == "CUSTOMERPORCESSING2" ||
+              state == "ONCREATE"
             ) {
               allCount++;
             }
