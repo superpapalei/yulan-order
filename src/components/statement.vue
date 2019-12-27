@@ -12,6 +12,11 @@
             label="广东玉兰集团股份有限公司对账单"
             align="center"
           >
+            <template slot="header">
+              <span style="font-size:20px;"
+                >广东玉兰集团股份有限公司对账单</span
+              >
+            </template>
             <el-table-column
               prop="dateStart"
               label="起始日期"

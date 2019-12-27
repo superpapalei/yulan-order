@@ -943,133 +943,127 @@ export default {
           }
         } else {
           //审核人员
-          let posList = await Axios.post(
-            this.Global.wangqianUrl + "/yulan/web_user/login.do?",
-            {
-              loginName: this.userInfo.loginName,
-              password: this.userInfo.password,
-              year: new Date().getFullYear()
-            },
-            { loading: false }
-          );
-          if (posList.data != null && posList.data.pos.length > 0) {
-            for (var i = 0; i < posList.data.pos.length; i++) {
-              var pos = posList.data.pos[i].position;
-              var state = "";
-              var YLState = "";
-              //资料卡：IT=>客户=>业务员(办事处,业务经理,中心总经理)=>订单部
-              //协议书：业务员(办事处,业务经理)=>客户=>业务员(中心总经理)=>内部人员
-              switch (pos) {
-                case "SALEMAN_M": //办事处经理(审核资料卡,填写修改协议)
-                  state = "BUSINESSCHECKING"; //业务员审核中
-                  YLState = "SALEMANMODIFYING";
-                  break;
-                case "SALEMAN_S": //业务经理(审核资料卡,填写修改协议)
-                  state = "BUSINESSCHECKING";
-                  YLState = "SALEMANMODIFYING";
-                  break;
-                case "MANAGER": //中心总经理(审核协议)
-                  YLState = "ASM_CHECKING";
-                  break;
-                case "MARKETCHECKER": //市场部(审核协议)
-                  YLState = "DEP_MARKET_CHECK";
-                  break;
-                case "VSMAPPROVEXII": //销售总监(审核协议)
-                  YLState = "CSA_CHECK";
-                  break;
-                case "BILLDEP_APPROVE": //订单部(审核资料卡)
-                  state = "BIILDEPCHECKING"; //订单部审核中
-                  break;
-              }
-              //获得可操作的资料卡
-              if (state != "") {
-                let cardsCount = await Axios.post(
-                  this.Global.wangqianUrl +
-                    "/yulan/customerInfo/getNcustomerinfo.do",
-                  {
-                    page: "1",
-                    limit: "99",
-                    year: new Date().getFullYear(),
-                    state: state,
-                    find: "",
-                    area_1: "",
-                    area_2: "",
-                    cid: Cookies.get("cid"),
-                    position: pos,
-                    ylcstate: ""
-                  },
-                  { loading: false }
-                );
-                if (cardsCount.data != null) {
-                  allCount += cardsCount.data.count;
+          if (this.userInfo.pos) {
+            let posList = this.userInfo.pos;//获得职位
+            if (posList != null && posList.length > 0) {
+              for (var i = 0; i < posList.length; i++) {
+                var pos = posList[i].position;
+                var state = "";
+                var YLState = "";
+                //资料卡：IT=>客户=>业务员(办事处,业务经理,中心总经理)=>订单部
+                //协议书：业务员(办事处,业务经理)=>客户=>业务员(中心总经理)=>内部人员
+                switch (pos) {
+                  case "SALEMAN_M": //办事处经理(审核资料卡,填写修改协议)
+                    state = "BUSINESSCHECKING"; //业务员审核中
+                    YLState = "SALEMANMODIFYING";
+                    break;
+                  case "SALEMAN_S": //业务经理(审核资料卡,填写修改协议)
+                    state = "BUSINESSCHECKING";
+                    YLState = "SALEMANMODIFYING";
+                    break;
+                  case "MANAGER": //中心总经理(审核协议)
+                    YLState = "ASM_CHECKING";
+                    break;
+                  case "MARKETCHECKER": //市场部(审核协议)
+                    YLState = "DEP_MARKET_CHECK";
+                    break;
+                  case "VSMAPPROVEXII": //销售总监(审核协议)
+                    YLState = "CSA_CHECK";
+                    break;
+                  case "BILLDEP_APPROVE": //订单部(审核资料卡)
+                    state = "BIILDEPCHECKING"; //订单部审核中
+                    break;
                 }
-              }
-              //可操作得协议书
-              if (YLState != "") {
-                if (YLState == "SALEMANMODIFYING") {
-                  //可以创建和修改协议
-                  //需创建数量
-                  let cardsCount2 = await Axios.post(
+                //获得可操作的资料卡
+                if (state != "") {
+                  let cardsCount = await Axios.post(
                     this.Global.wangqianUrl +
                       "/yulan/customerInfo/getNcustomerinfo.do",
                     {
                       page: "1",
                       limit: "99",
                       year: new Date().getFullYear(),
-                      state: "APPROVED",
+                      state: state,
                       find: "",
                       area_1: "",
                       area_2: "",
                       cid: Cookies.get("cid"),
                       position: pos,
-                      ylcstate: "SALEMANFILLING"
+                      ylcstate: ""
                     },
                     { loading: false }
                   );
-                  if (cardsCount2.data != null) {
-                    allCount += cardsCount2.data.count;
+                  if (cardsCount.data != null) {
+                    allCount += cardsCount.data.count;
                   }
-                  //需修改数量
-                  let cardsCount3 = await Axios.post(
-                    this.Global.wangqianUrl +
-                      "/yulan/customerInfo/getNcustomerinfo.do",
-                    {
-                      page: "1",
-                      limit: "99",
-                      year: new Date().getFullYear(),
-                      state: "",
-                      find: "",
-                      area_1: "",
-                      area_2: "",
-                      cid: Cookies.get("cid"),
-                      position: pos,
-                      ylcstate: "SALEMANMODIFYING"
-                    },
-                    { loading: false }
-                  );
-                  if (cardsCount3.data != null) {
-                    allCount += cardsCount3.data.count;
-                  }
-                } else {
-                  //审核协议
-                  let contractCount = await Axios.post(
-                    this.Global.wangqianUrl +
-                      "/yulan/YLcontractentry/getYlcsbysigned.do",
-                    {
-                      limit: "99",
-                      page: "1",
-                      year: new Date().getFullYear(),
-                      area_1: "",
-                      area_2: "",
-                      find: "",
-                      need: "checking",
-                      cid: Cookies.get("cid"),
-                      position: pos
-                    },
-                    { loading: false }
-                  );
-                  if (contractCount.data != null) {
-                    allCount += contractCount.data.count;
+                }
+                //可操作得协议书
+                if (YLState != "") {
+                  if (YLState == "SALEMANMODIFYING") {
+                    //可以创建和修改协议
+                    //需创建数量
+                    let cardsCount2 = await Axios.post(
+                      this.Global.wangqianUrl +
+                        "/yulan/customerInfo/getNcustomerinfo.do",
+                      {
+                        page: "1",
+                        limit: "99",
+                        year: new Date().getFullYear(),
+                        state: "APPROVED",
+                        find: "",
+                        area_1: "",
+                        area_2: "",
+                        cid: Cookies.get("cid"),
+                        position: pos,
+                        ylcstate: "SALEMANFILLING"
+                      },
+                      { loading: false }
+                    );
+                    if (cardsCount2.data != null) {
+                      allCount += cardsCount2.data.count;
+                    }
+                    //需修改数量
+                    let cardsCount3 = await Axios.post(
+                      this.Global.wangqianUrl +
+                        "/yulan/customerInfo/getNcustomerinfo.do",
+                      {
+                        page: "1",
+                        limit: "99",
+                        year: new Date().getFullYear(),
+                        state: "",
+                        find: "",
+                        area_1: "",
+                        area_2: "",
+                        cid: Cookies.get("cid"),
+                        position: pos,
+                        ylcstate: "SALEMANMODIFYING"
+                      },
+                      { loading: false }
+                    );
+                    if (cardsCount3.data != null) {
+                      allCount += cardsCount3.data.count;
+                    }
+                  } else {
+                    //审核协议
+                    let contractCount = await Axios.post(
+                      this.Global.wangqianUrl +
+                        "/yulan/YLcontractentry/getYlcsbysigned.do",
+                      {
+                        limit: "99",
+                        page: "1",
+                        year: new Date().getFullYear(),
+                        area_1: "",
+                        area_2: "",
+                        find: "",
+                        need: "checking",
+                        cid: Cookies.get("cid"),
+                        position: pos
+                      },
+                      { loading: false }
+                    );
+                    if (contractCount.data != null) {
+                      allCount += contractCount.data.count;
+                    }
                   }
                 }
               }
@@ -1106,7 +1100,7 @@ export default {
           this.refreshMoneyClass = "el-icon-refresh-left";
         })
         .catch(err => {
-          //console.log(err);
+          console.log(err);
         });
     },
     refreshUserMoney() {

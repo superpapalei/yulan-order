@@ -153,6 +153,7 @@ export default {
           let companyId;
           Cookies.set("cid", cid);
           sessionStorage.setItem("_userId", cid);
+          if(res.pos) res.data.pos = res.pos;
           Cookies.set("userInfo", res.data);
           Cookies.set("isManager", res.data.isManager);
           Cookies.set("realName", res.data.realName);
