@@ -745,7 +745,7 @@ export default {
                 dateEnd = dateEnd.setDate(dateEnd.getDate() + 1);
                 if (new Date(dateEnd) < new Date() || res.data.USE_ID == "0") {
                   this.$alert(
-                    `活动‘&${this.ruleForm.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
+                    `活动‘${this.ruleForm.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
                     "提示",
                     {
                       confirmButtonText: "确定",
@@ -814,7 +814,7 @@ export default {
         if (index == 0) {
           sums[index] = "总计";
           return;
-        } else if (index == 5 || index == 6 || index == 7 || index == 8) {
+        } else if (index == 6 || index == 7 || index == 8 || index == 9) {
           var values = data.map(item => Number(item[column.property]));
           var cancelIndex = data.map(item => Number(item["STATUS_ID"])); //取得状态判断是否是作废的
           if (!values.every(value => isNaN(value))) {

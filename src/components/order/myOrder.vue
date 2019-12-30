@@ -853,7 +853,7 @@ export default {
                 dateEnd = dateEnd.setDate(dateEnd.getDate() + 1);
                 if (new Date(dateEnd) < new Date() || res.data.USE_ID == "0") {
                   this.$alert(
-                    `活动‘&${item.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
+                    `活动‘${item.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
                     "提示",
                     {
                       confirmButtonText: "确定",
