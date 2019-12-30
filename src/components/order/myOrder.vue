@@ -849,10 +849,9 @@ export default {
                   );
                   return;
                 }
-                if (
-                  new Date(res.data.DATE_END) < new Date() ||
-                  res.data.USE_ID == "0"
-                ) {
+                var dateEnd = new Date(res.data.DATE_END);
+                dateEnd = dateEnd.setDate(dateEnd.getDate() + 1);
+                if (new Date(dateEnd) < new Date() || res.data.USE_ID == "0") {
                   this.$alert(
                     `活动‘&${item.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
                     "提示",

@@ -327,7 +327,7 @@ import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 import Cookies from "js-cookie";
 import DetailCurtainTable from "../detail/detailCurtainTable";
-import { async } from 'q';
+import { async } from "q";
 export default {
   name: "examineDatail",
   props: ["isShowButton"],
@@ -663,21 +663,21 @@ export default {
         order_no: Cookies.get("ORDER_NO")
       };
       orderDetail(url, data).then(res => {
-        GetCtmOrder({orderNo: Cookies.get("ORDER_NO")}).then(res2=>{
-        this.ruleForm = res.data.data[0];
-        this.ruleForm.PACKING_NOTE = res2.data.PACKING_NOTE;//先这样处理，后台换了后台就不需要了
-        this.ruleForm.BUYUSER_ADDRESS = res2.data.BUYUSER_ADDRESS;
-        this.ruleForm.BUYUSER_PICTURE = res2.data.BUYUSER_PICTURE;
-        for (let i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
-          this.ruleForm.ORDERBODY[i].checkStatus = "未修改";
-        }
-        var recordData = {
-          orderNo: this.orderNum
-        };
-        getOperationRecord(recordData).then(res => {
-          this.operationRecords = res.data;
+        GetCtmOrder({ orderNo: Cookies.get("ORDER_NO") }).then(res2 => {
+          this.ruleForm = res.data.data[0];
+          this.ruleForm.PACKING_NOTE = res2.data.PACKING_NOTE; //先这样处理，后台换了后台就不需要了
+          this.ruleForm.BUYUSER_ADDRESS = res2.data.BUYUSER_ADDRESS;
+          this.ruleForm.BUYUSER_PICTURE = res2.data.BUYUSER_PICTURE;
+          for (let i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
+            this.ruleForm.ORDERBODY[i].checkStatus = "未修改";
+          }
+          var recordData = {
+            orderNo: this.orderNum
+          };
+          getOperationRecord(recordData).then(res => {
+            this.operationRecords = res.data;
+          });
         });
-        })
       });
     },
     //返回指定
@@ -722,7 +722,10 @@ export default {
           if (this.ruleForm.STATUS_ID == 5 || this.ruleForm.STATUS_ID == 6) {
             //欠款可提交判断活动和优惠券是否过期
             for (var i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
-              if (this.ruleForm.ORDERBODY[i].PROMOTION_TYPE && this.ruleForm.ORDERBODY[i].PROMOTION_TYPE!=' ') {
+              if (
+                this.ruleForm.ORDERBODY[i].PROMOTION_TYPE &&
+                this.ruleForm.ORDERBODY[i].PROMOTION_TYPE != " "
+              ) {
                 var res = await GetPromotionByType({
                   proType: this.ruleForm.ORDERBODY[i].PROMOTION_TYPE,
                   cid: Cookies.get("cid")
@@ -738,7 +741,9 @@ export default {
                   );
                   return;
                 }
-                if (new Date(res.data.DATE_END) < new Date() || res.data.USE_ID == "0") {
+                var dateEnd = new Date(res.data.DATE_END);
+                dateEnd = dateEnd.setDate(dateEnd.getDate() + 1);
+                if (new Date(dateEnd) < new Date() || res.data.USE_ID == "0") {
                   this.$alert(
                     `活动‘&${this.ruleForm.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
                     "提示",
