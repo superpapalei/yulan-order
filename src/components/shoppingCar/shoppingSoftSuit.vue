@@ -208,7 +208,7 @@
             >***</span
           >
           <span v-else style="color:red; font-size:20px;" class="mr10"
-            >￥{{ totalMoney | dosageFilter }}</span
+            >￥{{ totalPriceMoney | dosageFilter }}</span
           >
         </div>
         <div
@@ -264,6 +264,7 @@ export default {
         { value: "活动四" }
       ],
       totalMoney: 0,
+      totalPriceMoney: 0,
       expands: [], //控制展开行
       //展开行的标识
       getRowKeys(row) {
@@ -447,7 +448,6 @@ export default {
     numberChange(value, index, groupIndex) {
       return;
       var re = /^[1-9]\d*$/;
-      console.log(re.test(value));
       if (re.test(value) === false) {
         this.$alert("请填写正确的数字", "提示", {
           type: "warning",
@@ -456,7 +456,6 @@ export default {
         this.shopsData[groupIndex].commodities[index].quantity = "";
         return;
       }
-      console.log(typeof Number(value));
       updateShoppingCar({
         commodityID: this.shopsData[groupIndex].commodities[index].id,
         activityID: this.shopsData[groupIndex].commodities[index].activityId,
@@ -523,16 +522,26 @@ export default {
         }
       }
       var total = 0;
+      var totalPrice = 0;
       this.multipleSelection = val;
       for (var i = 0; i < this.multipleSelection.length; i++) {
         let _data = this.multipleSelection[i];
-        if (_data.quantity) total += parseFloat(_data.price * _data.quantity);
-        else {
+        if (_data.quantity) {
+          let sub = parseFloat(_data.price * _data.quantity);
+          total += sub;
+          totalPrice += _data.salPromotion
+            ? _data.salPromotion.discount * sub
+            : sub;
+        } else {
           let sub = this.subtotal(_data.width, _data.height, _data.price);
           total += sub;
+          totalPrice += _data.salPromotion
+            ? _data.salPromotion.discount * sub
+            : sub;
         }
       }
       this.totalMoney = total;
+      this.totalPriceMoney = totalPrice;
       if (this.multipleSelection.length === 0) {
         this.commitBtn.background = "gray";
       } else {
@@ -572,8 +581,6 @@ export default {
     },
     //切换选中项
     changeChoose(index) {
-      console.log(index);
-      console.log(this.shopsData[index].commodities.length);
       var re = "multipleTable" + index;
       // if(this.multipleSelection.length !== this.shopsData[index].commodities.length)
       for (var i = 0; i < this.shopsData[index].commodities.length; i++)

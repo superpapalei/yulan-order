@@ -477,29 +477,20 @@
       </el-collapse>
 
       <div class="rightDiv">
-        <p v-if="isManager === '0'">
+        <p>
           折后总金额：
-          <span>***</span>
+          <span v-if="isManager === '0'">***</span>
+          <span v-else>{{ totalPrice | priceFilter }}</span>
         </p>
-        <p v-else>
-          折后总金额：
-          <span>{{ totalPrice | priceFilter }}</span>
-        </p>
-        <p v-if="isManager === '0'">
+        <p>
           总返利：
-          <span>***</span>
+          <span v-if="isManager === '0'">***</span>
+          <span v-else>{{ backPrice | priceFilter }}</span>
         </p>
-        <p v-else>
-          总返利：
-          <span>{{ backPrice | priceFilter }}</span>
-        </p>
-        <p v-if="isManager === '0'">
+        <p>
           应付总金额：
-          <span>***</span>
-        </p>
-        <p v-else>
-          应付总金额：
-          <span>{{ allSpend | priceFilter }}</span>
+          <span v-if="isManager === '0'">***</span>
+          <span v-else>{{ allSpend | priceFilter }}</span>
         </p>
         <el-button @click="backToOrder" size="medium" type="success" plain
           >返回订单</el-button
@@ -1365,7 +1356,7 @@ export default {
         this.array2[i].unit = getPush2[i].unit;
         if (getPush2[i].unit == "平方米") {
           this.array2[i].qtyRequired =
-            Math.round(getPush2[i].height * getPush2[i].width * 100) / 100;
+            Math.round(getPush2[i].height.mul(getPush2[i].width) * 100) / 100;
         } else {
           this.array2[i].qtyRequired = getPush2[i].quantity;
         }

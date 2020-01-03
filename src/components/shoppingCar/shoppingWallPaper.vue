@@ -72,7 +72,7 @@
                 <div v-if="scope1.row.unit === '平方米'">
                   <span>
                     {{ scope1.row.width }} × {{ scope1.row.height }} =
-                    {{ (scope1.row.width.mul(scope1.row.height)) | dosageFilter }}
+                    {{ scope1.row.width.mul(scope1.row.height) | dosageFilter }}
                   </span>
                   <span
                     style="color: red;"
@@ -206,7 +206,7 @@
             >***</span
           >
           <span v-else style="color:red; font-size:20px;" class="mr10"
-            >￥{{ totalMoney | dosageFilter }}</span
+            >￥{{ totalPriceMoney | dosageFilter }}</span
           >
         </div>
         <div
@@ -262,6 +262,7 @@ export default {
         { value: "活动四" }
       ],
       totalMoney: 0,
+      totalPriceMoney: 0,
       expands: [], //控制展开行
       //展开行的标识
       getRowKeys(row) {
@@ -445,7 +446,6 @@ export default {
     numberChange(value, index, groupIndex) {
       return;
       var re = /((^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$))/;
-      console.log(re.test(value));
       if (re.test(value) === false) {
         this.$alert("请填写正确的数字", "提示", {
           type: "warning",
@@ -523,16 +523,26 @@ export default {
         }
       }
       var total = 0;
+      var totalPrice = 0;
       this.multipleSelection = val;
       for (var i = 0; i < this.multipleSelection.length; i++) {
         let _data = this.multipleSelection[i];
-        if (_data.quantity) total += parseFloat(_data.price * _data.quantity);
-        else {
+        if (_data.quantity) {
+          let sub = parseFloat(_data.price * _data.quantity);
+          total += sub;
+          totalPrice += _data.salPromotion
+            ? _data.salPromotion.discount * sub
+            : sub;
+        } else {
           let sub = this.subtotal(_data.width, _data.height, _data.price);
           total += sub;
+          totalPrice += _data.salPromotion
+            ? _data.salPromotion.discount * sub
+            : sub;
         }
       }
       this.totalMoney = total;
+      this.totalPriceMoney = totalPrice;
       if (this.multipleSelection.length === 0) {
         this.commitBtn.background = "gray";
       } else {
@@ -835,4 +845,3 @@ a:hover {
   display: inline;
 }
 </style>
-

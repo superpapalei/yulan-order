@@ -167,7 +167,7 @@
             >***</span
           >
           <span v-else style="color:red; font-size:20px;" class="mr10"
-            >￥{{ totalMoney | dosageFilter }}</span
+            >￥{{ totalPriceMoney | dosageFilter }}</span
           >
         </div>
         <div
@@ -218,6 +218,7 @@ export default {
       numberList: [],
       multipleSelection: [], //选中的数据
       totalMoney: 0,
+      totalPriceMoney: 0,
       expands: [], //控制展开行
       //展开行的标识
       getRowKeys(row) {
@@ -380,11 +381,17 @@ export default {
       this.multipleSelection = val;
       //价格计算
       let total = 0;
+      let totalPrice = 0;
       for (let i = 0; i < val.length; i++) {
         let index = val[i].unNullNum;
-        total += val[i].price * val[i].count;
+        let sub = val[i].price * val[i].count;
+        total += sub;
+        totalPrice += val[i].salPromotion
+          ? val[i].salPromotion.discount * sub
+          : sub;
       }
       this.totalMoney = total;
+      this.totalPriceMoney = totalPrice;
       //无勾选时按钮黯淡
       if (this.multipleSelection.length === 0) {
         this.commitBtn.background = "gray";
