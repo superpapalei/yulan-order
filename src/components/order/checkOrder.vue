@@ -1625,8 +1625,8 @@ export default {
       let _width = parseFloat(width);
       let _height = parseFloat(height);
       let _price = parseFloat(price);
-      let square = Math.round(_width * _height * 100) / 100;
-      return Math.round(price * square * 100) / 100;
+      let square = Math.round(_width.mul(_height) * 100) / 100;
+      return Math.round(price.mul(square) * 100) / 100;
     },
     getOrderHead() {
       var getPush = JSON.parse(sessionStorage.getItem("shopping"));
