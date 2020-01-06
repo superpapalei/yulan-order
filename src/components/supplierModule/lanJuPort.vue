@@ -1283,7 +1283,7 @@
                   @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
                   
-                  placeholder=" 采购单号:（精确）"
+                  placeholder=" 采购单号:（模糊）"
                   v-model="po"
                    style="width:160px;"
                 >
@@ -1403,8 +1403,8 @@
               </el-table>
             </el-tab-pane>
 <!-- /待确认页签============================================================================================================== -->         
-<!-- 已确认页签============================================================================================================== -->
-       <el-tab-pane label="已确认" name="second" align="left">
+<!-- 采购单已确认页签============================================================================================================== -->
+       <el-tab-pane label="采购已确认" name="second" align="left">
               <div  style="margin-bottom:10px;">
               <el-input
                   @keyup.enter.native="SelectByCustomer()"
@@ -1417,7 +1417,7 @@
                 <el-input
                   @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
-                  placeholder=" 采购单号:（精确）"
+                  placeholder=" 采购单号:（模糊）"
                   v-model="po"
                    style="width:160px;"
                 >
@@ -1577,7 +1577,7 @@
                   @keyup.enter.native="SelectByPo()"
                   prefix-icon="el-icon-search"
        
-                  placeholder=" 采购单号:（精确）"
+                  placeholder=" 采购单号:（模糊）"
                   v-model="po"
                    style="width:160px;"
                 >
@@ -1684,6 +1684,168 @@
             </el-tab-pane>
             
 <!-- /已取消页签============================================================================================================== -->
+<!-- 退货已确认页签============================================================================================================== -->
+       <el-tab-pane label="退货已确认" name="forth" align="left">
+              <div  style="margin-bottom:10px;">
+              <el-input
+                  @keyup.enter.native="SelectByCustomer()"
+                  prefix-icon="el-icon-search"
+                  placeholder=" 客户(输入后回车)"
+                  v-model="customer"
+                  style="width:160px;"
+                >
+                </el-input>
+                <el-input
+                  @keyup.enter.native="SelectByPo()"
+                  prefix-icon="el-icon-search"
+                  placeholder=" 采购单号:（模糊）"
+                  v-model="po"
+                   style="width:160px;"
+                >
+                </el-input>
+                <el-date-picker
+                  v-model="date1"
+                  placeholder="开始时间"
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                   style="width:140px;"
+                >
+                </el-date-picker>
+                <span class="demonstration">至</span>
+                <el-date-picker
+                  v-model="date2"
+             placeholder="结束时间"
+                  align="right"
+                  type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                   style="width:140px;"
+                ></el-date-picker>
+                <template>
+                  <el-select
+                  style="width:120px"
+                    v-model="selvalue"
+                    @change="SelectClick"
+                    placeholder="全部">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </template>
+                <el-button
+                  @click="SelectClick()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_2"
+                  >搜索</el-button>
+                <el-button
+                  @click="downLoadAll()"
+                  size="small"
+                  style="margin-left:8px"
+                  class="button_1"
+                  >下载表头及明细</el-button>
+                 
+                  <el-button 
+            @click="checkNoPrint()" 
+             size="small"
+             style="margin-left:8px"
+             class="button_1"
+            >查看全部未打印
+            </el-button >
+                  
+              </div>
+              <el-table
+                border
+                @selection-change="handleSelectionChange" 
+                :data="pur_headData"
+                class="th-font14"
+                style="width: 100%"
+                cellpadding="0"
+                highlight-current-row
+              >
+              
+                <el-table-column   label=" "  type="index" :index="indexMethod">
+                </el-table-column>
+                <el-table-column
+                  prop="PUR_NO"
+                  width="100"
+                  label="单号"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  prop="CUSTOMER_NAME"
+                  min-width="150"
+                  header-align="center"
+                  label="客户名称"
+                  align="left"
+                ></el-table-column>
+                <el-table-column label="状态" width="60" align="center">
+                  <template slot-scope="scope"
+                    ><span>{{
+                      scope.row.STATUS | pur_headStatus
+                    }}</span></template>
+                </el-table-column>
+                <el-table-column label="产品类型" width="90" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ getProductType(scope.row.ORDER_NO) }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  fomate="yyyy-MM-dd"
+                  width="100"
+                  label="建立日期"
+                  align="center"
+                >
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.DATE_PUR | datatrans }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="NOTES"
+                  min-width="200"
+                  header-align="center"
+                  label="备注"
+                  align="left"
+                ></el-table-column>
+                <el-table-column
+                  prop="LJ_SUGGESTION"
+                  label="兰居备注"
+                  min-width="50"
+                  align="left"
+                ></el-table-column>
+                <el-table-column label="操作" width="120" align="center">
+                  <template slot-scope="scope">
+                    <button
+                      @click="openDialog1(scope.row.PUR_NO, scope.row.ORDER_NO)"   
+                      class="btn-style"
+                    >
+                      查看详情
+                    </button>
+                  </template>
+                </el-table-column>
+                  <el-table-column
+            width="100"
+            label="打印标记"
+            prop="PRINTED"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-checkbox
+                @change="changePrinted(scope.row, scope.$index)"
+                v-model="scope.row.PRINTED"
+              >
+                {{ scope.row.PRINTED === false ? "未打印" : "已打印" }}
+              </el-checkbox>
+            </template>
+          </el-table-column>
+              </el-table>
+            </el-tab-pane>
+<!-- /已确认页签============================================================================================================== -->
             <div style="margin:0 25%;" class="block">
               <el-pagination
                 @size-change="handleSizeChange"
@@ -1721,6 +1883,7 @@ export default {
   name: "supplyJuPort",
   data() {
     return {
+      bill_type:"POT",
       arr_index: [],
       arr_span: [],
       arr_group:[],
@@ -2185,6 +2348,7 @@ detailCol:[
       this.currentPage = 1;
       switch (tabName) {
         case "first":
+          this.bill_type="POT";
           this.check_flag = 0;
           this.selvalue = "all";
           this.po_type = "all";
@@ -2193,6 +2357,7 @@ detailCol:[
           this.date2 = this.getTodayMaxTime();
           break;
         case "second":
+          this.bill_type="PO";
           this.check_flag = 1;
           this.selvalue = "all";
           this.po_type = "all";
@@ -2201,9 +2366,19 @@ detailCol:[
           this.date2 = this.getTodayMaxTime();
           break;
         case "third":
+          this.bill_type="POT";
           this.check_flag = -99;
           this.selvalue = "cancel";
           this.po_type = "cancel";
+          this.po = "";
+          this.date1 = this.getCurrentWeek();
+           this.date2 = this.getTodayMaxTime();
+          break;
+            case "forth":
+              this.bill_type="PT";
+          this.check_flag = -99;
+          this.selvalue = "all";
+          this.po_type = "all";
           this.po = "";
           this.date1 = this.getCurrentWeek();
            this.date2 = this.getTodayMaxTime();
@@ -2334,12 +2509,13 @@ detailCol:[
         limit: this.limit,
         page: this.currentPage,
         current_id: Cookies.get("cid"),
-       customer:(this.customer == null || this.customer == "") ? "all" : this.customer,
+        customer:(this.customer == null || this.customer == "") ? "all" : this.customer,
         po_type: this.po_type, //  status状态   cancel    efficient 生效（新采购单）   enforce 已执行（已确认）   fulfill 已完成
         check_flag: this.check_flag,
         beginTime:  this.getBegintime(this.date1),
         finishTime: this.getEndtime(this.date2),
         po: this.po,
+        bill_type:this.bill_type,
       };
       GetRelativePo(data).then(res => {
         this.count = res.count;
@@ -2405,8 +2581,9 @@ detailCol:[
      var finishTime=this.getEndtime(this.date2);
       var po_type = (this.po_type == null || this.po_type == "") ? "all" : this.po_type;
       var selvalue = this.selvalue;
+      var bill_type=this.bill_type;
       downLoadFile(
-        this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}&po=${po}&customer=${customer}&beginTime=${beginTime}&finishTime=${finishTime}&po_type=${po_type}&selvalue=${selvalue}`,
+        this.Global.baseUrl + `PUR_HEAD/HeadAndDetailExcel?cid=${cid}&po=${po}&customer=${customer}&beginTime=${beginTime}&finishTime=${finishTime}&po_type=${po_type}&bill_type=${bill_type}`,
 
 
       );
