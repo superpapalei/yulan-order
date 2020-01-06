@@ -40,7 +40,7 @@
       ></el-date-picker>
       <el-select
         style="width:150px;"
-        v-model="CommodityType"
+        v-model="commodityType"
         placeholder="请选择商品类型"
       >
         <el-option
@@ -328,7 +328,7 @@ export default {
       date1: "",
       date2: "",
       find: "",
-      CommodityType: "",
+      commodityType: "",
       orderStatus: "",
       state_id: "",
       activeName: "pending",
@@ -620,7 +620,7 @@ export default {
       //   find: this.find /* "W1610030066", */,
       //   beginTime: this.date1,
       //   finishTime: this.date2,
-      //   orderType: this.CommodityType,
+      //   orderType: this.commodityType,
       //   curtainStatusId: ""
       // };
       // if (this.date1 != "" || this.date2 != "") {
@@ -646,7 +646,7 @@ export default {
         find: this.find,
         beginTime: this.date1,
         finishTime: this.date2,
-        orderType: this.CommodityType
+        orderType: this.commodityType
       };
       if (!data.beginTime) {
         data.beginTime = "0001/1/1";
@@ -684,7 +684,7 @@ export default {
     handleClick(tab) {
       var tabName = tab.name;
       this.orderStatus = "";
-      this.CommodityType = "";
+      this.commodityType = "";
       this.currentPage = 1;
       switch (tabName) {
         case "pending":
