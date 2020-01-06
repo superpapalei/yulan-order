@@ -115,7 +115,7 @@
           </el-table-column>
 
            <!-- 未做 -->
-          <el-table-column width="120" label="操作" align="center">
+          <el-table-column width="150" label="操作" align="center">
             <template slot-scope="scope">
               <el-tooltip content="查看" placement="top">
                 <el-button
@@ -130,7 +130,7 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.STATE == 'SUBMITTED'
+                  scope.row.STATE == 'SUBMITTED'||scope.row.STATE == 'SENDBACK'
                 "
                 content="删除"
                 placement="top"
@@ -147,7 +147,7 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.STATE == 'CUSTOMERAFFIRM'||scope.row.STATE == 'SENDBACK'||scope.row.STATE == 'RECEIVE'
+                  scope.row.STATE == 'CUSTOMERAFFIRM'||scope.row.STATE == 'SENDBACK'||(scope.row.STATE == 'RECEIVE'&&scope.row.RETURN_TYPE == '客户邮寄') 
                 "
                 content="编辑"
                 placement="top"
@@ -283,7 +283,7 @@
               </ul>
             </td>
           </tr>        
-          <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'">
+          <tr v-if="submit.STATE!='SUBMITTED'">
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理意见
             </td>
@@ -293,6 +293,16 @@
             <td style="height:15px" colspan="2">{{submit.RETURN_TYPE}}</td>
             <td style="height:15px" colspan="4">{{submit.FIRST_AUDITION}}</td>
           </tr>
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="height:15px"  colspan="1">初审意见及退回原因</td>
+            <td style="height:15px" colspan="6">{{submit.FIRST_AUDITION}}</td>
+          </tr>
+          <!-- 初审意见附件下载 -->
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="height:15px"  colspan="1">附件</td>
+            <td style="height:15px" colspan="6">{{submit.FIRST_AUDITION_FILE}}</td>
+          </tr>
+
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE!='无需退货'"> 
             <td class="grayTD" style="height:15px">备注信息</td>
             <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
@@ -311,7 +321,7 @@
             <td class="grayTD" style="height:15px">物流备注信息</td>
             <td style="height:15px;color:red;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
             <td style="height:15px;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" else>{{submit.RETURN_TRANSINFO}}</td>
+            <td style="height:15px;" colspan="6" v-if="submit.RETURN_TRANSINFO!==''">{{submit.RETURN_TRANSINFO}}</td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
@@ -421,7 +431,8 @@
             <td class="grayTD" style="height:15px;width:12%;">提货单号</td>
             <td style="height:15px;width:17%;">{{ submit.SALE_NO }}</td>
             <td class="grayTD" style="height:15px;width:12%;">B2B订单号</td>
-            <td style="height:15px;width:22%;" colspan="2">
+            <td style="height:15px;width:22%;" colspan="2" v-if="submit.STATE!='SENDBACK'" >{{ submit.ORDER_NO  }}</td>
+            <td style="height:15px;width:22%;" colspan="2" v-else>
               <el-input
                 v-model="submit.ORDER_NO"
                 placeholder="请填写"
@@ -431,7 +442,7 @@
               </el-input>
             </td>
             <td class="grayTD" style="height:15px;width:12%;">ERP订单号</td>
-            <td  style="height:15px;width:25%;" colspan="2">{{ submit.CONTRACT_NO }}</td>
+            <td  style="height:15px;width:25%;" >{{ submit.CONTRACT_NO }}</td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">联系人<span style="color:red;">*</span></td>
@@ -458,7 +469,8 @@
               </el-input>
             </td>
             <td class="grayTD" style="height:15px">物流单号</td>
-            <td style="height:15px" >
+            <td style="height:15px" v-if="submit.STATE!='SENDBACK'">{{ submit.TRANS_ID  }}</td>
+            <td style="height:15px" v-else>
               <el-input
                 v-model="submit.TRANS_ID"
                 placeholder="请填写"
@@ -467,6 +479,7 @@
               >
               </el-input>
           </td>
+          <td style="height:15px" ></td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">问题描述<span style="color:red;">*</span></td>
@@ -557,9 +570,24 @@
             </td>
           </tr>
           <tr>
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="7" v-if="submit.STATE!='SENDBACK'">
+          <td class="grayTD" style="font-size:20px;height:30px" colspan="7" v-if="submit.STATE=='SENDBACK'">
               玉兰处理意见
-            </td>
+          </td>
+          </tr>
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="height:15px"  colspan="1">初审意见或退回原因</td>
+            <td style="height:15px" colspan="6" >{{submit.FIRST_AUDITION}}</td>
+          </tr>
+          <!-- 初审意见附件下载 -->
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="height:15px"  colspan="1">附件</td>
+            <td style="height:15px" colspan="6">{{submit.FIRST_AUDITION_FILE}}</td>
+          </tr>
+
+          <tr>
+          <td class="grayTD" style="font-size:20px;height:30px" colspan="7" v-if="submit.STATE!='SENDBACK'">
+              玉兰处理意见
+          </td>
           </tr>
           <tr v-if="submit.STATE!='SENDBACK'">
             <td class="grayTD" style="height:15px"  colspan="1">初审意见</td>
@@ -596,11 +624,8 @@
             <td class="grayTD" style="height:15px">物流备注信息<span style="color:red;">*</span></td>
             <td style="height:15px;color:red;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
             <td style="height:15px;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" else>{{submit.RETURN_TRANSINFO}}</td>
+            <td style="height:15px;" colspan="6" v-if="submit.RETURN_TRANSINFO!==''">{{submit.RETURN_TRANSINFO}}</td>
           </tr>
-
-
-
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'"> 
             <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
               玉兰处理结果
@@ -684,6 +709,7 @@
       </div>
       </div>
 
+      <!-- 旧系统提货单新增 -->
       <div v-show="isRefundAdd">
       <div>
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -868,6 +894,88 @@
       </div>
       </div>
     </el-dialog>
+    
+
+
+
+    <!-- 旧系统提货单新增，提货单号输入界面 -->
+    <el-dialog
+      title= "请确保输入的信息准确无误"
+      :visible.sync="getItemFromSaleNo"
+      :close-on-click-modal="false"
+      width="20%"
+      top="20%"
+      append-to-body
+    >
+     <div v-if="inputItemNo">
+      <div>
+         <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr >
+            <td style="font-size:15px;height:16px;text-align:left;" colspan="1">请选择产品型号</td> 
+          </tr>
+         </table>
+      </div>
+      <div class="table-c" >
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="1" rowspan="1" style="height:15px">
+              <el-select
+                style="width:99%;"
+                v-model="ITEM_NO"
+                filterable
+                placeholder=""
+              >
+                <el-option
+                  v-for="item in ItemNoArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </td>
+          </tr>
+        </table>
+        <div style="text-align:center;margin-top:5px">           
+          <el-button type="success" size="mini" @click="_AddRefundForSaleNoAndItemNo()">确定</el-button>  
+          <el-button type="info"   size="mini" @click="getItemFromSaleNo=false;ITEM_NO='';SALE_NO='';">取消</el-button>  
+        </div> 
+      </div>
+      </div>  
+            <!-- 旧系统提货单新增，产品型号选择界面，再来个div-->
+      <div v-if="inputSaleNo">
+      <div>
+         <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr >
+            <td style="font-size:15px;height:16px;text-align:left;" colspan="1">请输入提货单号（注意空格）</td> 
+          </tr>
+         </table>
+      </div>
+      <div class="table-c" >
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="1" rowspan="1" style="height:15px">
+              <el-input
+                v-model="SALE_NO"
+                placeholder=""
+                clearable
+                class="inputStyle"
+              >
+              </el-input>
+            </td>
+          </tr>
+        </table>
+        <div style="text-align:center;margin-top:5px">           
+          <el-button type="success" size="mini" @click="_GetItemArray()">确定</el-button>  
+          <el-button type="info"   size="mini" @click="getItemFromSaleNo=false;SALE_NO=''">取消</el-button>  
+        </div> 
+      </div>
+      </div>  
+    </el-dialog>
+
+ 
+
+    
 
     <div v-if="MiniPic" style="z-index:99999;position:fixed;" :style="{left:picX,top:picY}">
         <img class="BIGimg2" :src="imgUrl" />
@@ -904,7 +1012,8 @@ import {
   InsertCompensation,
   UpdateState,
   SendBackUpdate,
-  UpdateFirstAudition
+  UpdateFirstAudition,
+  GetItemArray
 } from "@/api/paymentASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import { mapMutations } from "vuex";
@@ -934,6 +1043,7 @@ export default {
       isEdit:false,
       RefundDetail:false,
       isRefundAdd:false,
+      getItemFromSaleNo:false,//旧系统提单-获取产品型号的界面
       SELECT_STATUS: "NEEDPROCESSING", //存储下拉框的值
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
@@ -956,6 +1066,8 @@ export default {
       FormRight:false,
       dateStamp:"",
       fileChange:false,
+      inputSaleNo:false,//是否处于输入提货单号状态
+      inputItemNo:false,//是否处于输入产品型号状态
       //单据状态
       statusArray: [
         { value: null, label: "全部状态" },
@@ -980,7 +1092,7 @@ export default {
           value: "无需退货"
         },
       ],
-      processArray: [   //退货方式
+      processArray: [   //处理意见
         {
           label: "赔偿",
           value: "赔偿"
@@ -994,6 +1106,9 @@ export default {
           value: "无质量问题"
         },
       ],
+      //旧系统提货-输入提货单号，弹出相应的产品型号
+      ItemNoArray:[],
+
     };
   },
   filters: {
@@ -1261,7 +1376,6 @@ export default {
               confirmButtonText: "确定",
               type: "success"
             });
-            this.releaseBadge("");//刷新角标
             this.refresh();
             this.RefundDetail = false;
             return;
@@ -1523,7 +1637,7 @@ export default {
             type: "warning"
             });
             return ;
-      }
+    }
     },
     handleRemove(file, fileList) {
       this.fileList = fileList;
@@ -1616,31 +1730,64 @@ export default {
         }
       });
     },
-    //获取提货单号和产品型号
+    //获取提货单号
     GetSaleNoAndItemNo() {
-      this.$prompt("请输入提货单号", "请确保输入的信息无误(注意空格)", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      })
-        .then(({ value }) => {
-          this.SALE_NO=value.toUpperCase();
-          this.$prompt("请输入产品型号", "请确保输入的信息无误(注意空格)", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消"
-          }).then(({ value } )=>{
-              this.ITEM_NO=value.toUpperCase();
-              getReturnInfo({companyId:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.ITEM_NO}).then(res => {
+      //初始化参数
+      this.getItemFromSaleNo=true;
+      this.SALE_NO='';
+      this.ITEM_NO='';
+      this.inputSaleNo=true;
+      this.inputItemNo=false;
+      this.ItemNoArray=[];
+    },
+    //获得输入提货单号对应的产品型号
+    _GetItemArray(){
+        if(this.SALE_NO=='')
+        {
+             this.$alert("提货单号不能为空", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+             });
+             return;
+        }
+        this.SALE_NO=this.SALE_NO.toUpperCase();
+        GetItemArray({SALE_NO:this.SALE_NO}).then(res => {
+          if (res.code == 0) {
+              for (var i = 0; i < res.data.length; i++) {  //这一部分应该在编辑里使用（可以进行初审的时候使用）
+                 this.ItemNoArray[i] = new Object();
+                 this.ItemNoArray[i].label = res.data[i].ITEM_NO;
+                 this.ItemNoArray[i].value = res.data[i].ITEM_NO;
+              }  
+          } 
+        }).then(()=>{
+               if(this.ItemNoArray.length==0)
+               {
+                 this.$alert("输入的提货单号有误", "提示", {
+                    confirmButtonText: "确定",
+                    type: "warning"
+                 })
+                 return;
+               }
+               else{
+                 this.inputSaleNo=false;
+                 this.inputItemNo=true;
+               }
+        });
+    },
+    //输入提货单号和产品型号后，弹出退货赔偿界面
+    _AddRefundForSaleNoAndItemNo(){
+        getReturnInfo({companyId:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.ITEM_NO}).then(res => {
                 if (res.code == 0) {
                         this.companyName=res.data[0].CUSTOMER_NAME;
                         this.CONTRACT_NO=res.data[0].CONTRACT_NO;
                         this.PRODUCTION_VERSION = res.data[0].PRODUCTVERSION_NAME;
                         this.UNIT=res.data[0].NOTE;
                 };
-              });
-          }).then(()=>{
+              }).then(()=>{
+             this.getItemFromSaleNo=false;
+             this.inputItemNo=false;
              this.addRefundRecord();
-          });
-        })
+          })
         .catch(() => {});
     },
 
