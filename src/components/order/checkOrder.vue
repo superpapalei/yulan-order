@@ -218,10 +218,14 @@
               >
             </p>
           </div>
-          <p class="charge" style="font-weight:bold;" @click="showAddress">
-            {{ addressAppear }}
+          <p style="font-weight:bold;">
+            <span class="charge" @click.prevent="showAddress"
+              ><div style="width:250px;display:inline-block;">
+                {{ addressAppear }}
+              </div></span
+            >
             <span
-              @click="dialogOpen"
+              @click.prevent="dialogOpen"
               class="charge"
               style="float:right;margin-right:20px;"
             >
@@ -1220,7 +1224,7 @@ export default {
       //this.addressIt=!this.addressIt;
       if (this.addressIt == false) {
         this.overflow = "overflow";
-        this.addressAppear = "确定";
+        this.addressAppear = "收起↑";
         this.data = this.transferData;
         this.addressIt = true;
       } else {
