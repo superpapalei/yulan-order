@@ -200,6 +200,14 @@ export function getCompanyInfo(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//获取单据下单数量
+export function GetQtyDelivery(data, config = {}) {
+    return post('/PACK_DETAIL/GetQtyDelivery', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
 //获取对账单
 export function GetBalancePeriod(data, config = {}) {
     return post('/CUSTOMER_BALANCE_PERIOD/GetBalancePeriod', data, config).then((res) => {

@@ -131,7 +131,7 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.STATE == 'SUBMITTED'|| scope.row.STATE == 'RECEIVE'||scope.row.STATE=='CUSTOMERAFFIRM'
+                  scope.row.STATE == 'SUBMITTED'|| scope.row.STATE == 'RECEIVE'||scope.row.STATE=='CUSTOMERAFFIRM'||scope.row.STATE=='SENDBACK'
                 "
                 content="编辑"
                 placement="top"
@@ -191,7 +191,7 @@
       <div style="margin-bottom:5px;">
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr >
-            <td style="font-size:20px;height:30px;text-align:center;" colspan="7">
+            <td style="font-size:20px;height:30px;text-align:center;" colspan="8">
               退货/赔偿电子申请书【{{submit.STATE | transStatus}}】
               <i class="icon-print el-icon-printer cpoi" style="float:right" @click="printRefund"></i>
             </td>
@@ -224,7 +224,7 @@
               {{submit.CID}}
             </td>
             <td class="grayTD" style="height:15px" colspan="1">客户名称</td>
-            <td style="height:15px" colspan="4">
+            <td style="height:15px" colspan="5">
               {{submit.CNAME}}     
             </td>
           </tr>
@@ -242,25 +242,25 @@
             <td class="grayTD" style="height:15px">联系电话</td>
             <td style="height:15px" colspan="2">{{ submit.CONTACT_PHONE  }}</td>
             <td class="grayTD" style="height:15px">物流单号</td>
-            <td style="height:15px" >{{ submit.TRANS_ID  }}</td>   <!-- 连表查询 -->
+            <td style="height:15px" colspan="2">{{ submit.TRANS_ID  }}</td>   <!-- 连表查询 -->
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">问题描述</td>
-            <td style="height:15px" colspan="6">{{ submit.NOTES  }}</td>
+            <td style="height:15px" colspan="7">{{ submit.NOTES  }}</td>
           </tr>
           <tr>
             <td class="grayTD"  colspan="1" style="height:15px">产品/项目</td>
             <td class="grayTD"  colspan="2" style="height:15px" >型号</td>
             <td class="grayTD"  colspan="1" style="height:15px">单位</td>
             <td class="grayTD"  colspan="1" style="height:15px">数量</td>
-            <td class="grayTD"  colspan="2" style="height:15px">上传相关信息</td>
+            <td class="grayTD"  colspan="3" style="height:15px">上传相关信息</td>
           </tr>
           <tr>
             <td  colspan="1" style="height:21px">{{submit.PRODUCTION_VERSION}}</td>                      
             <td  colspan="2" style="height:21px" >{{submit.ITEM_NO}}</td>
             <td  colspan="1" style="height:21px">{{submit.UNIT}}</td>
             <td  colspan="1" style="height:21px">{{submit.QTY}}</td> 
-            <td  colspan="2" style="height:21px">
+            <td  colspan="3" style="height:21px">
               <ul  class="el-upload-list el-upload-list--text" >
               <li 
                   v-for="(file, index) in fileList"
@@ -284,50 +284,88 @@
               </li>
               </ul>
             </td>
-          </tr>        
+          </tr> 
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="8">
+              玉兰处理意见
+            </td>
+          </tr>
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="height:15px"  colspan="1">初审意见或退回原因<span style="color:red;">*</span></td>
+            <td style="height:15px" colspan="7">{{submit.FIRST_AUDITION}}</td>
+          </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'">
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="8">
               玉兰处理意见
             </td>
           </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'">
             <td class="grayTD" style="height:15px"  colspan="1">初审意见<span style="color:red;">*</span></td>
             <td style="height:15px" colspan="2">{{submit.RETURN_TYPE}}</td>
-            <td style="height:15px" colspan="4">{{submit.FIRST_AUDITION}}</td>
+            <td style="height:15px" colspan="5">{{submit.FIRST_AUDITION}}</td>
           </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE!='无需退货'"> 
             <td class="grayTD" style="height:15px">备注信息</td>
-            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
-            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
-            <td style="height:15px" colspan="6" v-else></td>
+            <td style="height:15px" colspan="7" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
+            <td style="height:15px" colspan="7" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
+            <td style="height:15px" colspan="7" v-else></td>
           </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">退货或寄样信息</td>
-            <td style="height:15px" colspan="6">  {{submit.RETURN_ADDRESS}}</td>
+            <td style="height:15px" colspan="7">  {{submit.RETURN_ADDRESS}}</td>
           </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
-            <td style="height:15px" colspan="6">您的提货单号为{{submit.SALE_NO}}</td>
+            <td style="height:15px" colspan="7">您的提货单号为{{submit.SALE_NO}}</td>
           </tr>
            <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">物流备注信息</td>
-            <td style="height:15px;color:red;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" else>{{submit.RETURN_TRANSINFO}}</td>
+            <td style="height:15px;color:red;" colspan="7" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="7" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="7" v-if="submit.RETURN_TRANSINFO!==''">{{submit.RETURN_TRANSINFO}}</td>
+          </tr>
+          <!-- 初审意见附件下载 -->
+          <tr v-if="submit.STATE!='SUBMITTED'">
+            <td class="grayTD" style="height:15px"  colspan="1">附件</td>
+            <td style="height:15px" colspan="7">
+                <ul  class="el-upload-list el-upload-list--text" >
+                <li 
+                  v-for="(file, index) in fileListForAudition"
+                  :key="index"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
+                >
+                  <a class="el-upload-list__item-name" >
+                      <el-link
+                         type="primary"
+                         size="mini"
+                         @click="showImage(file.url )"
+                         @mouseenter.native="showMiniImage($event,file.url)"
+                         @mouseout.native="MiniPic=false"
+                      >{{ file.name }}
+                      </el-link>
+                  </a>
+                  <label style="display:block;position:absolute;top:1px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
+                  </label>
+              </li>
+              </ul>
+            </td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="8">
               玉兰处理结果
             </td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
-            <td class="grayTD"  style="width:17%;height:15px">产品/项目</td>
-            <td class="grayTD"  style="width:18%;height:15px">型号</td>
-            <td class="grayTD"  style="width:12%;height:15px">单位</td>
-            <td class="grayTD"  style="width:10%;height:15px">数量</td>
-            <td class="grayTD"  style="width:10%;height:15px">金额</td>
-            <td class="grayTD"  style="width:15%;height:15px">质量问题</td>
-            <td class="grayTD"  style="width:18%;height:15px">处理意见</td>
+            <td class="grayTD"  style="width:12%;height:15px">产品/项目</td>
+            <td class="grayTD"  style="width:14%;height:15px">型号</td>
+            <td class="grayTD"  style="width:10%;height:15px">单位</td>
+            <td class="grayTD"  style="width:8%;height:15px">数量</td>
+            <td class="grayTD"  style="width:8%;height:15px">金额</td>
+            <td class="grayTD"  style="width:13%;height:15px">质量问题</td>
+            <td class="grayTD"  style="width:15%;height:15px">处理意见</td>
+            <td class="grayTD"  style="width:20%;height:15px">附件</td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'" v-for="(item,index) of processDetail" :key="index">
             <td colspan="1" rowspan="1" style="height:15px">{{submit.PRODUCTION_VERSION}}</td>
@@ -337,17 +375,41 @@
             <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_MONEY}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_NOTES}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_RESULT}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">
+                <ul  class="el-upload-list el-upload-list--text" >
+                <li 
+                  v-for="(file, index) in processDetail[index].fileListForProcess"
+                  :key="index"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
+                >
+                  <a class="el-upload-list__item-name" >
+                      <el-link
+                         type="primary"
+                         size="mini"
+                         @click="showImage(file.url )"
+                         @mouseenter.native="showMiniImage($event,file.url)"
+                         @mouseout.native="MiniPic=false"
+                      >{{ file.name }}
+                      </el-link>
+                  </a>
+                  <label style="display:block;position:absolute;top:1px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
+                  </label>
+              </li>
+              </ul>
+            </td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
             <td class="grayTD"  style="height:15px">金额小写</td>
             <td style="height:15px" colspan="3">{{submit.TOTALMONEY}}</td>
             <td class="grayTD"  style="height:15px">金额大写</td>
-            <td style="height:15px" colspan="2">{{totalMoneyUpper}}</td>
+            <td style="height:15px" colspan="3">{{totalMoneyUpper}}</td>
           </tr>
 
            <tr style="height:90px">
             <td
-              colspan="7"
+              colspan="8"
               border="0px"
               style="font-size:13px;color:gray;text-align:left;"
             >
@@ -374,7 +436,7 @@
             </div>
             </td>
             <td 
-              colspan="3"
+              colspan="4"
               border="0px"
               style="font-size:13px;color:gray;text-align:center;">
               <div>
@@ -416,7 +478,7 @@
               {{submit.CID}}
             </td>
             <td class="grayTD" style="height:15px" colspan="1">客户名称</td>
-            <td style="height:15px" colspan="4">
+            <td style="height:15px" colspan="5">
               {{submit.CNAME}}    
             </td>
           </tr>
@@ -434,25 +496,25 @@
             <td class="grayTD" style="height:15px">联系电话</td>
             <td style="height:15px" colspan="2">{{ submit.CONTACT_PHONE  }}</td>
             <td class="grayTD" style="height:15px">物流单号</td>
-            <td style="height:15px" >{{ submit.TRANS_ID  }}</td>
+            <td style="height:15px" colspan="2">{{ submit.TRANS_ID  }}</td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">问题描述</td>
-            <td style="height:15px" colspan="6">{{ submit.NOTES  }}</td>
+            <td style="height:15px" colspan="7">{{ submit.NOTES  }}</td>
           </tr>
           <tr>
             <td class="grayTD"  colspan="1" style="height:15px">产品/项目</td>
             <td class="grayTD"  colspan="2" style="height:15px" >型号</td>
             <td class="grayTD"  colspan="1" style="height:15px">单位</td>
             <td class="grayTD"  colspan="1" style="height:15px">数量</td>
-            <td class="grayTD"  colspan="2" style="height:15px">上传相关信息</td>
+            <td class="grayTD"  colspan="3" style="height:15px">上传相关信息</td>
           </tr>
           <tr>
             <td  colspan="1" style="height:21px">{{submit.PRODUCTION_VERSION}}</td>
             <td  colspan="2" style="height:21px" >{{submit.ITEM_NO}}</td>
             <td  colspan="1" style="height:21px">{{submit.UNIT}}</td>
             <td  colspan="1" style="height:21px">{{submit.QTY}}</td>
-            <td  colspan="2" style="height:21px">
+            <td  colspan="3" style="height:21px">
               <ul  class="el-upload-list el-upload-list--text" >
               <li 
                   v-for="(file, index) in fileList"
@@ -477,14 +539,30 @@
               </ul>
             </td>
           </tr>
-          <tr>
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="8">
               玉兰处理意见
             </td>
           </tr>
-          <tr>
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="height:15px"  colspan="1">初审意见或退回原因<span style="color:red;">*</span></td>
+            <td style="height:15px" colspan="7">
+                <el-input
+                  v-model="submit.FIRST_AUDITION"
+                  placeholder="请填写处理意见或退回原因"
+                  clearable
+                  class="inputStyle">
+                </el-input>
+            </td>
+          </tr>
+          <tr  v-if="submit.STATE!='SENDBACK'">
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="8">
+              玉兰处理意见
+            </td>
+          </tr>
+          <tr v-if="submit.STATE!='SENDBACK'">
             <td class="grayTD" style="height:15px"  colspan="1">初审意见</td>
-            <td style="height:15px" colspan="2" v-if="submit.STATE=='SUBMITTED'">     
+            <td style="height:15px" colspan="2" v-if="submit.STATE=='SUBMITTED'||submit.STATE=='RECEIVE'">     
               <el-select
                 style="height:16px;width:100%;padding:0px 0px 0px 0px;"
                 v-model="submit.RETURN_TYPE"
@@ -501,24 +579,25 @@
               </el-select>
             </td>
             <td style="height:15px" colspan="2" v-else>{{submit.RETURN_TYPE}}</td>
-            <td style="height:15px" colspan="4" v-if="submit.STATE=='SUBMITTED'">
-                <input
+            <td style="height:15px" colspan="5" v-if="submit.STATE=='SUBMITTED'||submit.STATE=='RECEIVE'">
+                <el-input
                   v-model="submit.FIRST_AUDITION"
-                  placeholder="请填写相关处理意见"
+                  placeholder="请填写处理意见或退回原因"
                   clearable
                   class="inputStyle">
+                </el-input>
             </td>
-            <td style="height:15px" colspan="4" v-else>{{submit.FIRST_AUDITION}}</td>
+            <td style="height:15px" colspan="5" v-else>{{submit.FIRST_AUDITION}}</td>
           </tr>
-          <tr v-if="submit.RETURN_TYPE!='无需退货'"> 
+          <tr v-if="submit.STATE!='SENDBACK'&&submit.RETURN_TYPE!='无需退货'"> 
             <td class="grayTD" style="height:15px">备注信息</td>
-            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
-            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
-            <td style="height:15px" colspan="6" v-else></td>
+            <td style="height:15px" colspan="7" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
+            <td style="height:15px" colspan="7" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
+            <td style="height:15px" colspan="7" v-else></td>
           </tr>
-          <tr v-if="submit.RETURN_TYPE=='客户邮寄'">
+          <tr v-if="submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">退货或寄样信息</td>
-            <td style="height:15px" colspan="6" v-if="submit.STATE=='SUBMITTED'">       
+            <td style="height:15px" colspan="7" v-if="submit.STATE=='SUBMITTED'||submit.STATE=='RECEIVE'">       
               <el-select
                 style="width:99%;"
                 v-model="submit.RETURN_ADDRESS"
@@ -534,25 +613,80 @@
                 </el-option>
               </el-select>
             </td>
-            <td style="height:15px" colspan="6" v-else>{{submit.RETURN_ADDRESS}}</td>
+            <td style="height:15px" colspan="7" v-else>{{submit.RETURN_ADDRESS}}</td>
           </tr>
-          <tr v-if="submit.RETURN_TYPE=='客户邮寄'">
+          <tr v-if="submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
-            <td style="height:15px" colspan="6">您的提货单号： {{submit.SALE_NO}}</td>
+            <td style="height:15px" colspan="7">您的提货单号： {{submit.SALE_NO}}</td>
           </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">物流备注信息</td>
-            <td style="height:15px;color:red;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" else>{{submit.RETURN_TRANSINFO}}</td>
+            <td style="height:15px;color:red;" colspan="7" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="7" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="7" v-if="submit.RETURN_TRANSINFO!==''">{{submit.RETURN_TRANSINFO}}</td>
           </tr>
-          <tr v-if="submit.STATE!='SUBMITTED'">  
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
+          <!-- 初审意见附件上传 -->          <!-- fileList是否需要改成fileListForAudition -->
+          <tr v-if="submit.STATE!='CUSTOMERAFFIRM'">  
+            <td class="grayTD" style="height:15px"  colspan="1">附件</td>
+            <td style="height:15px" colspan="7">
+                <div>
+                <el-upload
+                class="upload-de"
+                :action="Global.baseUrl + '/RETURNCOMPENSATIONBILL/UploadFiles'"
+                drag
+                multiple
+                :on-change="function(file,fileList){return  handleChange(file,fileList)}"         
+                :on-remove="function(file,fileList){return  handleRemove(file,fileList)}"
+                :on-success="function(res,file,fileList){return  handleSuccess(res,file,fileList)}"
+                ref="upload"
+                :auto-upload="false"
+                :file-list="fileListForAudition"
+                :data="{ CID: CID, dateStamp: dateStamp,dateString:this.dateString,fileNameList:this.fileNameList}"
+              >
+                <i
+                  class="el-icon-upload2"
+                  style="margin-top:5px;"
+                >
+                <span style="font-size:15px;">上传附件</span>
+                </i>
+              </el-upload>
+              </div>
+            </td>
+          </tr>
+          <tr v-else>
+            <td class="grayTD" style="height:15px"  colspan="1">附件</td>
+            <td style="height:15px" colspan="7">
+                <ul  class="el-upload-list el-upload-list--text" >
+                <li 
+                  v-for="(file, index) in fileListForAudition"
+                  :key="index"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
+                >
+                  <a class="el-upload-list__item-name" >
+                      <el-link
+                         type="primary"
+                         size="mini"
+                         @click="showImage(file.url )"
+                         @mouseenter.native="showMiniImage($event,file.url)"
+                         @mouseout.native="MiniPic=false"
+                      >{{ file.name }}
+                      </el-link>
+                  </a>
+                  <label style="display:block;position:absolute;top:1px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
+                  </label>
+              </li>
+              </ul>
+            </td>
+          </tr>
+          <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'">  
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="8">
               玉兰处理结果
             </td>
           </tr>
-          <tr v-if="submit.STATE!='SUBMITTED'">
-            <td class="grayTD"  style="width:17%;height:15px">
+          <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'">
+            <td class="grayTD"  style="width:12%;height:15px">
               <el-button 
                  type="primary" 
                  size="mini" 
@@ -563,14 +697,15 @@
                  >
               </el-button>
               产品/项目</td>
-            <td class="grayTD"  style="width:18%;height:15px">型号</td>
+            <td class="grayTD"  style="width:13%;height:15px">型号</td>
             <td class="grayTD"  style="width:12%;height:15px">单位</td>
-            <td class="grayTD"  style="width:10%;height:15px">数量</td>
-            <td class="grayTD"  style="width:10%;height:15px">金额</td>
-            <td class="grayTD"  style="width:15%;height:15px">质量问题</td>
-            <td class="grayTD"  style="width:18%;height:15px">处理意见</td>
+            <td class="grayTD"  style="width:8%;height:15px">数量</td>
+            <td class="grayTD"  style="width:8%;height:15px">金额</td>
+            <td class="grayTD"  style="width:13%;height:15px">质量问题</td>
+            <td class="grayTD"  style="width:14%;height:15px">处理意见</td>
+            <td class="grayTD"  style="width:20%;height:15px">附件</td>
           </tr>
-          <tr  v-if="submit.STATE!='SUBMITTED'" v-for="(item,index) of processDetail" :key="index">
+          <tr  v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'" v-for="(item,index) of processDetail" :key="index">
             <td colspan="1" rowspan="1" style="height:15px" >
                   <el-button 
                      type="danger" 
@@ -632,11 +767,36 @@
                 </el-option>
               </el-select>
             </td>
+            <!--注意ref，两处上传的ref应该不同-->
+            <td colspan="1" rowspan="1" style="height:15px">
+                <div>
+                <el-upload
+                class="upload-de2"
+                :action="Global.baseUrl + '/RETURNCOMPENSATIONBILL/UploadFilesForProcesss'"
+                drag
+                multiple
+                :on-change="function(file,fileList){return  handleChangeForProcess(file,fileList,index)}"         
+                :on-remove="function(file,fileList){return  handleRemoveForProcess(file,fileList,index)}"
+                :on-success="function(res,file,fileList){return  handleSuccessForProcess(res,file,fileList,index)}"
+                ref="upload2"
+                :auto-upload="false"
+                :file-list="processDetail[index].fileListForProcess"
+                :data="{ CID: CID, dateStamp: dateStamp,dateString:this.dateString,fileNameList:this.processDetail[index].fileNameList}"
+              >
+                <i
+                  class="el-icon-upload2"
+                  style="margin-top:5px;"
+                >
+                <span style="font-size:15px;">上传附件</span>
+                </i>
+              </el-upload>
+              </div>
+            </td>
           </tr>
 
            <tr style="height:90px">
             <td
-              colspan="7"
+              colspan="8"
               border="0px"
               style="font-size:13px;color:gray;text-align:left;"
             >
@@ -663,7 +823,7 @@
             </div>
             </td>
             <td 
-              colspan="3"
+              colspan="4"
               border="0px"
               style="font-size:13px;color:gray;text-align:center;">
               <div>
@@ -685,7 +845,10 @@
         </table>
 
         <div style="text-align:center;margin-top:5px" v-if="isEdit">           
-          <el-button type="primary" size="mini" @click="_EditDetail(submit.STATE,1)">保存修改</el-button>
+          <el-button type="primary" size="mini" v-if="submit.STATE == 'SENDBACK'" @click="_EditDetail(submit.STATE,5)">保存退回意见</el-button>
+          <el-button type="primary" size="mini" v-if="submit.STATE == 'SUBMITTED'" @click="_EditDetail(submit.STATE,1)">保存初审意见</el-button>
+          <el-button type="success" size="mini" v-if="submit.STATE == 'RECEIVE'" @click="_EditDetail(submit.STATE,4)">修改初审意见</el-button>
+          <el-button type="primary" size="mini" v-if="submit.STATE == 'RECEIVE'||submit.STATE == 'CUSTOMERAFFIRM'" @click="_EditDetail(submit.STATE,3)">保存处理结果</el-button>
           <el-button type="danger" size="mini" v-if="submit.STATE == 'SUBMITTED'" @click="_EditDetail(submit.STATE,2)">退回修改</el-button>
           <el-button type="info"   size="mini" @click="isEdit=false;RefundDetail=false">返回</el-button>  
         </div> 
@@ -745,13 +908,19 @@ export default {
       submit: [],
       returnInfo:[],
       processDetail:[],//玉兰处理结果表明细
-      fileList:[],//存储附件
+      fileList:[],//存储用户上传附件
+      fileListForAudition:[],//存储初审意见附件
       complaintDetail: false,
+      deleteIndex:[],//记录处理结果删除文件的行
       isAdd: false,
       isCheck:false,
       isEdit:false,
       RefundDetail:false,
       isRefundAdd:false,
+      FormRight:true,
+      dateStamp:"",
+      fileChangeForAudition:false,
+      fileChangeForProcess:[],
       SELECT_STATUS: null, //存储下拉框的值
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
@@ -765,6 +934,14 @@ export default {
       daifashuliang: "",
       kuaidi100: "",
       kuaididanhao: "",
+      kind:"",//编辑的种类
+      dateString:"",
+      uploadSuccess:false,
+      fileNumber:0,
+      fileNameList:[],
+      deleteFileForAudition:[],//删除的初审意见附件
+      deleteFileForProcess:[],//删除的处理结果附件
+      firstAddAudition:false,//是否是第一次添加初审意见的附件
       //单据状态
       statusArray: [
         { value: null, label: "全部状态" },
@@ -929,9 +1106,20 @@ export default {
     },
     //查看详情
     _CheckDetail(val,type) {
+      //初始化
       this.submit = [];
       this.fileList=[];
+      this.fileListForAudition=[];
+      this.uploadSuccess=false;
+      this.fileNumber=0;
+      this.fileNameList=[];
+      this.deleteFileForAudition=[];
+      this.deleteFileForProcess=[];
       this.processDetail=[];
+      this.fileChangeForAudition=false;
+      this.fileChangeForProcess=[];
+      this.firstAddAudition=false;
+      this.dateStamp = new Date().getTime();
       let data = {
         ID: val.ID,
         STATE:val.STATE
@@ -943,15 +1131,65 @@ export default {
               this.processDetail = res.data;
           };
         }
-          var list = this.submit.ATTACHMENT_FILE.split(";");
-          for (var i = 0; i < list.length - 1; i++) {
+        //查询时，将对应用户附件的字段拆解开来，并作为对象传入文件集合中
+        var list = this.submit.ATTACHMENT_FILE.split(";");
+        for (var i = 0; i < list.length - 1; i++) {
             var index = list[i].lastIndexOf("/");
             var fileName = list[i].substr(index + 1);
             this.fileList.push({
               name: fileName,
               url: list[i]
             });
+        }
+        //查询时，将对应初审意见的附件的字段拆解开来，并作为对象传入文件集合中
+        var list2 = this.submit.FIRST_AUDITION_FILE.split(";");
+        for (var i = 0; i < list2.length - 1; i++) {
+            var index = list2[i].lastIndexOf("/");
+            var fileName = list2[i].substr(index + 1);
+            this.fileListForAudition.push({
+              name: fileName,
+              url: list2[i]
+            });
+        }
+        //查询附件名称的末尾最大编号
+        if(list2.length>=2)
+        {
+            var findIndex=list2[list2.length - 2].lastIndexOf("-");
+            this.fileNumber = parseInt(list2[list2.length - 2].substr(findIndex+1,1));
+        }
+        //添加附件前是否已经存在附件
+        if(list2.length==1)
+        {
+          this.firstAddAudition=true;
+        }
+        else{
+          this.firstAddAudition=false;
+        }
+        //查询时，将对应处理结果的附件的字段拆解开来，并作为对象传入文件集合中
+        for (let j = 0; j < this.processDetail.length; j++) {
+          //初始化
+          this.processDetail[j].fileListForProcess = [];
+          this.processDetail[j].deleteFileForProcess = [];
+          this.processDetail[j].fileChangeForProcess = false;
+          this.processDetail[j].firstAddProcess = false;
+          this.deleteFileForProcess.push("");
+          this.fileChangeForProcess.push(false);
+          var list3 = this.processDetail[j].PROCESS_FILE.split(";");
+          for (var i = 0; i < list3.length - 1; i++) {
+            var index = list3[i].lastIndexOf("/");
+            var fileName = list3[i].substr(index + 1);
+            this.processDetail[j].fileListForProcess.push({
+              name: fileName,
+              url: list3[i]
+            });
           }
+          //查询附件名称的末尾最大编号
+          if(list3.length>=2)
+          {
+            var findIndex=list3[list3.length - 2].lastIndexOf("-");
+            this.processDetail[j].fileNumber= parseInt(list3[list3.length - 2].substr(findIndex+1,1));
+          }
+        }
         if(type==1)
         {
             this.isEdit = false;
@@ -968,7 +1206,16 @@ export default {
                   P_NOTES: "", 
                   P_RESULT: "", 
                   P_MONEY: "", 
+                  deleteFileForProcess:[],
+                  fileChangeForProcess:[],
+                  PROCESS_FILE:"",
+                  PROCESS_FILE_FOLDER:"",
+                  fileNumber:0,
+                  fileNameList:[],
+                  uploadSuccess:false,
                 });
+                this.deleteFileForProcess.push("");
+                this.fileChangeForProcess.push(false);
             }
             this.isEdit = true;
             this.isCheck = false;
@@ -978,13 +1225,90 @@ export default {
     },
     //保存修改
     _EditDetail(val,type){
-      if(type==1)
+      this.kind=type;
+      if(type==3)
       {
-        if(val=="SUBMITTED")
+        if(this.deleteFileForAudition.length!=0||this.fileChangeForAudition)
         {
+              this.$alert("若要对初审处理意见的附件进行修改，请点击保存初审意见", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+              });
+              return;
+        }
+        var totalMoney=0;
+        for (var i = 0; i < this.processDetail.length; i++) {
+            //判断是否填完所有信息  
+            if ( 
+              !this.processDetail[i].P_QTY ||
+              !this.processDetail[i].P_NOTES ||
+              !this.processDetail[i].P_RESULT ||
+              !this.processDetail[i].P_MONEY 
+            ) {
+              this.$alert("请完善处理结果", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+              });
+              return;
+            }
+            //判断上传附件的形式为图片或视频
+            if(this.processDetail[i].fileListForProcess.length!=0&&this.FormRight==false)
+           {
+            this.$alert("提交失败，附件仅能上传图片或视频", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+            });
+            return ;
+            }
+            totalMoney=totalMoney.add(this.processDetail[i].P_MONEY);
+        }
+        this.submit.TOTALMONEY=totalMoney;
+        //查看哪行记录文件发生改变，重新上传一次
+        for (let i = 0; i < this.processDetail.length; i++) {
+              if(this.processDetail[i].fileChangeForProcess){
+                  this.$refs.upload2[i].submit();
+                  this.processDetail[i].PROCESS_FILE = "";
+                  for (let j = 0; j < this.processDetail[i].fileListForProcess.length; j++) {
+                        this.processDetail[i].PROCESS_FILE +=
+                        "/Files/RTCB_PROCESS/" +
+                        this.CID +
+                        "/" +
+                        this.dateStamp +
+                        "/" +
+                        this.processDetail[i].fileListForProcess[j].name +
+                        ";"; 
+                  }
+                  this.processDetail[i].PROCESS_FILE_FOLDER =
+                        "/Files/RTCB_PROCESS/" + this.CID + "/" + this.dateStamp;
+              }
+              else{
+                   if (this.processDetail[i].deleteFileForProcess.length > 0) {
+                      for (let j = 0; j < this.processDetail[i].deleteFileForProcess.length; j++) {  
+                          this.processDetail[this.deleteIndex[j]].PROCESS_FILE="";
+                          for (var k = 0; k < this.processDetail[this.deleteIndex[j]].fileListForProcess.length; k++) {
+                               this.processDetail[this.deleteIndex[j]].PROCESS_FILE += this.processDetail[this.deleteIndex[j]].fileListForProcess[k].url + ";";
+                          }
+                      }
+                   }
+                   this.submitEDITANSYCCForProcess();
+              }
+        }
+      }
+      else{  //初审意见
+        //先判断填写的信息是否完整
+        if(type==2||type==5){
+           if (!this.submit.FIRST_AUDITION ) {
+              this.$alert("请填写初审意见或退回原因", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+           });
+              return;
+           }
+        }
+        else if(type==1||type==4){
            //判断信息是否填写完整
            if (!this.submit.FIRST_AUDITION ) {
-              this.$alert("请填写相关的初审意见", "提示", {
+              this.$alert("请填写初审意见或退回原因", "提示", {
               confirmButtonText: "确定",
               type: "warning"
            });
@@ -1006,91 +1330,52 @@ export default {
               return;
                }
            }
-          this.submit.STATE='RECEIVE';
-          this.submit.DEALMAN_CODE=this.CID;
-          this.submit.DEALMAN_NAME=this.CNAME;
-          UpdateFirstAudition({ head: this.submit,type:type }).then(res => {
-            if (res.code == 0) {
-              this.$alert("处理成功", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            });
-            this.releaseBadge("newRefund2");//刷新角标
-            this.refresh();
-            this.RefundDetail = false;
-            return;
-            } else {
-              this.$alert("处理失败，请稍后重试", "提示", {
-              confirmButtonText: "确定",
-              type: "warning"
-            });
-            return;
-            }
-          });
         }
-        else
+        //第一次添加文件
+        if(this.fileListForAudition.length==0&&this.deleteFileForAudition.length==0)
         {
-          var totalMoney=0;
-          //判断是否填完所有信息  
-          for (var i = 0; i < this.processDetail.length; i++) {
-            if ( 
-              !this.processDetail[i].P_QTY ||
-              !this.processDetail[i].P_NOTES ||
-              !this.processDetail[i].P_RESULT ||
-              !this.processDetail[i].P_MONEY 
-            ) {
-              this.$alert("请完善处理结果", "提示", {
-              confirmButtonText: "确定",
-              type: "warning"
-              });
-              return;
-            }
-            totalMoney=totalMoney.add(this.processDetail[i].P_MONEY);
-           }
-           this.submit.TOTALMONEY=totalMoney;
-           UpdateProcess({ head: this.submit,details:this.processDetail,totalMoney:this.submit.TOTALMONEY}).then(res => {
-               if (res.code == 0) {
-                 this.$alert("处理成功", "提示", {
-                 confirmButtonText: "确定",
-                 type: "success"
-               });
-             this.releaseBadge("newRefund2");//刷新角标
-             this.refresh();
-             this.RefundDetail = false;
-             return;
-             } else {
-                this.$alert("处理失败，请稍后重试", "提示", {
-                confirmButtonText: "确定",
-                type: "warning"
-             });
-             return;
-             }
-             });
+            this.submitEDITANSYC(this.kind);
+            return;
         }
-      }
-      else{
-          this.submit.STATE='SENDBACK';
-          this.submit.DEALMAN_CODE=this.CID;
-          this.submit.DEALMAN_NAME=this.CNAME;
-          UpdateFirstAudition({ head: this.submit,type:type }).then(res => {
-            if (res.code == 0) {
-              this.$alert("退回成功", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
+        //判断上传附件的形式为图片或视频
+        if(this.fileListForAudition.length!=0&&this.FormRight==false)
+        {
+            this.$alert("提交失败，附件仅能上传图片或视频", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
             });
-            this.releaseBadge("newRefund2");//刷新角标
-            this.refresh();
-            this.RefundDetail = false;
-            return;
-            } else {
-              this.$alert("退回失败，请稍后重试", "提示", {
-              confirmButtonText: "确定",
-              type: "warning"
-            });
-            return;
+            return ;
+        }
+        if (this.fileChangeForAudition||this.firstAddAudition) {
+          //文件发生改变，重新上传一次(仅选中修改后的文件，而不是所有文件效率会更高)
+            this.$refs.upload.submit();
+            //附件拼接
+            this.submit.FIRST_AUDITION_FILE = "";
+            for (let j = 0; j < this.fileListForAudition.length; j++) {
+               this.submit.FIRST_AUDITION_FILE +=
+                "/Files/RETURNCOMPENSATIONBILL/" +
+               this.CID +
+               "/" +
+               this.dateStamp +
+                "/" +
+               this.fileListForAudition[j].name +
+                ";"; 
+              }
+            this.submit.FIRST_AUDITION_FILE_FOLDER =
+           "/Files/RETURNCOMPENSATIONBILL/" + this.CID + "/" + this.dateStamp;
+          } 
+          else {
+            if (this.deleteFileForAudition.length > 0) {
+            for (let i = 0; i < this.deleteFileForAudition.length; i++) {
+               this.submit.FIRST_AUDITION_FILE="";
+               for (var j = 0; j < this.fileListForAudition.length; j++) {
+                  this.submit.FIRST_AUDITION_FILE += this.fileListForAudition[j].url + ";";
+               }
             }
-          });
-      }
+            }
+            this.submitEDITANSYC(this.kind);
+          }
+        }
     },
     //显示图片
     showImage(url) {
@@ -1172,13 +1457,22 @@ export default {
         }
         else{
         this.processDetail.push({
-           P_RTCB_ID: this.submit.RTCB_ID, 
-           LINE_NO:"",
-           P_QTY: "", 
-           P_NOTES: "", 
-           P_RESULT: "", 
-           P_MONEY: "", 
+                  P_RTCB_ID: this.submit.RTCB_ID, 
+                  LINE_NO:"",
+                  P_QTY: "", 
+                  P_NOTES: "", 
+                  P_RESULT: "", 
+                  P_MONEY: "", 
+                  deleteFileForProcess:[],
+                  fileChangeForProcess:[],
+                  PROCESS_FILE:"",
+                  PROCESS_FILE_FOLDER:"",
+                  fileNumber:0,
+                  fileNameList:[],
+                  uploadSuccess:false,
         });
+        this.deleteFileForProcess.push("");
+        this.fileChangeForProcess.push(false);
         }
     },
     //减少兰居处理结果中的明细数目
@@ -1193,6 +1487,8 @@ export default {
         }
         else{
               this.processDetail.splice(index,1);
+              this.deleteFileForProcess.splice(index,1);
+              this.fileChangeForProcess.splice(index,1);
         }
     },
     //获得退货或寄样信息
@@ -1238,6 +1534,271 @@ export default {
         targetStyles: ["*"]
       });
     },
+    handleChange(file, fileList) {
+      var point = file.name.lastIndexOf('.');
+      var suffix=file.name.substr(point);
+      var list1=suffix.split('png');
+      var list2=suffix.split('jpg');
+      var list3=suffix.split('jpeg');
+      var list4=suffix.split('bmp');
+      var list5=suffix.split('avi');
+      var list6=suffix.split('rmvb');
+      var list7=suffix.split('mp4');
+      var list8=suffix.split('flv');
+      var list9=suffix.split('rm');
+      var list10=suffix.split('mpg');
+      if(list1.length>1||list2.length>1||list3.length>1||list4.length>1||list5.length>1||list6.length>1||list7.length>1||list8.length>1||list9.length>1||list10.length>1)
+      {     
+            if(this.uploadSuccess)
+            {   
+
+            }
+            else{           //第一次新增附件时，修改并保存前端输入的附件名
+                var number=this.fileNumber+1;
+                this.fileNumber=this.fileNumber+1;
+                var prefix=this.dateString+'-'+ number;
+                var fileName = prefix + suffix;
+                file.name=fileName;
+                this.fileNameList.push(fileName);
+            }
+            this.FormRight=true;
+            this.fileListForAudition = fileList;
+            this.fileChangeForAudition = true;
+      }
+      else{
+            this.FormRight=false;
+            this.fileListForAudition=[];
+            this.$alert("请上传图片或视频，否则无法成功提交", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+            });
+            return ;
+      }
+    },
+    handleRemove(file, fileList) {
+      this.fileListForAudition = fileList;
+      if ((file.status = "success")) {
+      this.deleteFileForAudition.push(file.url);  
+      this.fileNameList.splice(this.fileNameList.length-1,1);
+      }
+    },
+    handleSuccess(res, file, fileList) {
+         this.fileListForAudition = fileList;
+         this.uploadSuccess=true;
+         var successCount = this.fileListForAudition.filter(item => item.status == "success").length;
+         if (successCount == fileList.length) {
+             if (this.firstAddAudition) { //如果第一次提交附件
+                   this.sumbitNEWANSYC(this.kind);
+             } else {
+                   this.submitEDITANSYC(this.kind);
+             }    
+          }
+    },
+    handleError(err, file, fileList) {
+      this.$refs.upload.clearFiles();
+      this.fileListForAudition = [];
+      this.dateStamp = new Date().getTime();
+      this.$alert("文件上传失败", "提示", {
+        confirmButtonText: "确定",
+        type: "success"
+      });
+    },
+    sumbitNEWANSYC(type) {
+      //相当于同步，等提交成功后再执行
+      //附件拼接
+      this.submit.FIRST_AUDITION_FILE = "";
+      for (let j = 0; j < this.fileListForAudition.length; j++) {
+               this.submit.FIRST_AUDITION_FILE +=
+                "/Files/RETURNCOMPENSATIONBILL/" +
+               this.CID +
+               "/" +
+               this.dateStamp +
+                "/" +
+               this.fileListForAudition[j].name +
+                ";"; 
+              }
+            this.submit.FIRST_AUDITION_FILE_FOLDER =
+           "/Files/RETURNCOMPENSATIONBILL/" + this.CID + "/" + this.dateStamp;
+      this.submitEDITANSYC(type);
+    },
+    //待修改
+    submitEDITANSYC(type){
+      //相当于同步，等提交成功后再执行
+      if(type==2||type==5){
+          if(type==2)
+          {
+            this.submit.STATE='SENDBACK';
+          }
+          this.submit.DEALMAN_CODE=this.CID;
+          this.submit.DEALMAN_NAME=this.CNAME;
+          UpdateFirstAudition({ head: this.submit,type:type,attchmentChange: this.fileChangeForAudition,deleteFile: this.deleteFileForAudition,firstAddFile:this.firstAddAudition}).then(res => {
+            if (res.code == 0) {
+              if(type==2)
+              {
+                  this.$alert("退回成功", "提示", {
+                  confirmButtonText: "确定",
+                  type: "success"
+                  });
+              }
+             else if(type==5)
+              {
+                  this.$alert("成功修改退回意见", "提示", {
+                  confirmButtonText: "确定",
+                  type: "success"
+                  });
+              }
+            this.releaseBadge("newRefund2");//刷新角标
+            this.refresh();
+            this.RefundDetail = false;
+            return;
+            } else {
+              this.$alert("退回失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            return;
+            }
+          });
+      }
+      else if(type==1||type==4){
+          if(type==1)
+          {
+            this.submit.STATE='RECEIVE';
+          }
+          this.submit.DEALMAN_CODE=this.CID;
+          this.submit.DEALMAN_NAME=this.CNAME;
+          UpdateFirstAudition({ head: this.submit,type:type, attchmentChange: this.fileChangeForAudition,deleteFile: this.deleteFileForAudition,firstAddFile:this.firstAddAudition }).then(res => {
+            if (res.code == 0) {
+              if(type==1)
+              {
+                  this.$alert("成功提交初审意见", "提示", {
+                  confirmButtonText: "确定",
+                  type: "success"
+                  });
+              }
+              else if(type==4)
+              {
+                  this.$alert("成功修改初审意见", "提示", {
+                  confirmButtonText: "确定",
+                  type: "success"
+                  });
+              }
+            this.releaseBadge("newRefund2");//刷新角标
+            this.refresh();
+            this.RefundDetail = false;
+            return;
+            } else {
+              this.$alert("提交失败，请稍后重试", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+            return;
+            }
+          });
+      }
+    },
+    handleChangeForProcess(file, fileList,index) {
+      var point = file.name.lastIndexOf('.');
+      var suffix=file.name.substr(point);
+      var list1=suffix.split('png');
+      var list2=suffix.split('jpg');
+      var list3=suffix.split('jpeg');
+      var list4=suffix.split('bmp');
+      var list5=suffix.split('avi');
+      var list6=suffix.split('rmvb');
+      var list7=suffix.split('mp4');
+      var list8=suffix.split('flv');
+      var list9=suffix.split('rm');
+      var list10=suffix.split('mpg');
+      if(list1.length>1||list2.length>1||list3.length>1||list4.length>1||list5.length>1||list6.length>1||list7.length>1||list8.length>1||list9.length>1||list10.length>1)
+      {
+            if(this.processDetail[index].uploadSuccess)
+            {   
+            }
+            else{
+                var number=this.processDetail[index].fileNumber+1;
+                this.processDetail[index].fileNumber=this.processDetail[index].fileNumber+1;
+                var prefix=this.dateString+'-'+ number;
+                var fileName = prefix + suffix;
+                file.name=fileName;
+                this.processDetail[index].fileNameList.push(fileName);
+            }
+            this.FormRight=true;
+            this.processDetail[index].fileListForProcess = fileList;
+            this.processDetail[index].fileChangeForProcess = true;
+            this.fileChangeForProcess[index]=true;
+      }
+      else{
+            this.FormRight=false;
+            this.processDetail[index].fileListForProcess=[];
+            this.fileChangeForProcess[index]=false;
+            this.$alert("请上传图片或视频，否则无法成功提交", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+            });
+            return ;
+      }
+    },
+    handleRemoveForProcess(file, fileList,index) {
+      this.processDetail[index].fileListForProcess = fileList;
+      if ((file.status = "success")) {
+        this.processDetail[index].deleteFileForProcess.push(file.url);
+        this.deleteFileForProcess[index]=file.url;
+        this.deleteIndex.push(index);
+      }
+    },
+    handleSuccessForProcess(res, file, fileList,index) {
+      this.processDetail[index].fileListForProcess = fileList;
+      this.processDetail[index].uploadSuccess = true;
+      var flag=true;
+      for (let i = 0; i < this.processDetail.length; i++) {
+         if(this.processDetail[i].fileListForProcess.filter(item=>item.status == "success").length == this.processDetail[i].fileListForProcess.length)
+         {
+         }   
+         else{
+           flag=false;
+           break;
+         }
+      }
+      if (flag) {
+          this.submitEDITANSYCCForProcess();
+      }
+    },
+    submitEDITANSYCCForProcess(){             
+            UpdateProcess({ head: this.submit,details:this.processDetail,totalMoney:this.submit.TOTALMONEY,attchmentChange: this.fileChangeForProcess,deleteFiles: this.deleteFileForProcess}).then(res => {
+               if (res.code == 0) {
+                 this.$alert("处理成功", "提示", {
+                 confirmButtonText: "确定",
+                 type: "success"
+               });
+             this.releaseBadge("newRefund2");//刷新角标
+             this.refresh();
+             this.RefundDetail = false;
+             return;
+             } else {
+                this.$alert("处理失败，请稍后重试", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+             });
+             return;
+             }
+           });
+    },
+    //获取当前年月日
+    GetNowDate(){
+       var date =new Date();
+       var year = date.getFullYear(); 
+       var month =(date.getMonth() + 1).toString(); 
+       var day = (date.getDate()).toString();  
+       if (month.length == 1) { 
+               month = "0" + month; 
+       } 
+       if (day.length == 1) { 
+              day = "0" + day; 
+       }
+       var dateTime = year + "-" + month + "-" + day;
+       this.dateString=dateTime;
+    },
     ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   },
   computed: {
@@ -1248,6 +1809,7 @@ export default {
   },
   created() {
     this._getReturnInfo();
+    this.GetNowDate();
     this.refresh();
   },
   activated: function() {
@@ -1377,5 +1939,13 @@ export default {
 .icon-print {
   font-size: 25px;
   color: gray;
+}
+.upload-de .el-upload-dragger {
+  height: 25px;
+  width:400px;
+}
+.upload-de2 .el-upload-dragger {
+  height: 25px;
+  width:200px;
 }
 </style>

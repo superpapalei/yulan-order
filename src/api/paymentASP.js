@@ -160,6 +160,14 @@ export function CheckOrderAndItemNo(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//根据输入的订单号获取相应的产品型号集合
+export function GetItemArray(data, config = {}) {
+    return post('/PACK_DETAIL/GetItemArray', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
 
 
 

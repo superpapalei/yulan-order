@@ -625,7 +625,7 @@ export default {
                 "/" +
                this.submitDetailForm[i].fileList[j].name +
                 ";"; 
-              }
+            }
           this.submitDetailForm[i].ATTACHMENT_FILE_FOLDER =
         "/Files/payDelegation/" + this.CID + "/" + this.dateStamp;
         }

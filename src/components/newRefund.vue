@@ -115,7 +115,7 @@
           </el-table-column>
 
            <!-- 未做 -->
-          <el-table-column width="120" label="操作" align="center">
+          <el-table-column width="150" label="操作" align="center">
             <template slot-scope="scope">
               <el-tooltip content="查看" placement="top">
                 <el-button
@@ -130,7 +130,7 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.STATE == 'SUBMITTED'
+                  scope.row.STATE == 'SUBMITTED'||scope.row.STATE == 'SENDBACK'
                 "
                 content="删除"
                 placement="top"
@@ -147,7 +147,7 @@
               </el-tooltip>
               <el-tooltip
                 v-if="
-                  scope.row.STATE == 'CUSTOMERAFFIRM'||scope.row.STATE == 'SENDBACK'||scope.row.STATE == 'RECEIVE'
+                  scope.row.STATE == 'CUSTOMERAFFIRM'||scope.row.STATE == 'SENDBACK'||(scope.row.STATE == 'RECEIVE'&&scope.row.RETURN_TYPE == '客户邮寄') 
                 "
                 content="编辑"
                 placement="top"
@@ -222,7 +222,7 @@
               {{submit.CID}}
             </td>
             <td class="grayTD" style="height:15px" colspan="1">客户名称</td>
-            <td style="height:15px" colspan="4">
+            <td style="height:15px" colspan="5">
               {{submit.CNAME}}     
             </td>
           </tr>
@@ -240,25 +240,25 @@
             <td class="grayTD" style="height:15px">联系电话</td>
             <td style="height:15px" colspan="2">{{ submit.CONTACT_PHONE  }}</td>
             <td class="grayTD" style="height:15px">物流单号</td>
-            <td style="height:15px" >{{ submit.TRANS_ID  }}</td>   <!-- 连表查询 -->
+            <td style="height:15px" colspan="2">{{ submit.TRANS_ID  }}</td>   <!-- 连表查询 -->
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">问题描述</td>
-            <td style="height:15px" colspan="6">{{ submit.NOTES  }}</td>
+            <td style="height:15px" colspan="7">{{ submit.NOTES  }}</td>
           </tr>
           <tr>
             <td class="grayTD"  colspan="1" style="height:15px">产品/项目</td>
             <td class="grayTD"  colspan="2" style="height:15px" >型号</td>
             <td class="grayTD"  colspan="1" style="height:15px">单位</td>
             <td class="grayTD"  colspan="1" style="height:15px">数量</td>
-            <td class="grayTD"  colspan="2" style="height:15px">上传相关信息</td>
+            <td class="grayTD"  colspan="3" style="height:15px">上传相关信息</td>
           </tr>
           <tr>
             <td  colspan="1" style="height:21px">{{submit.PRODUCTION_VERSION}}</td>                      
             <td  colspan="2" style="height:21px" >{{submit.ITEM_NO}}</td>
             <td  colspan="1" style="height:21px">{{submit.UNIT}}</td>
             <td  colspan="1" style="height:21px">{{submit.QTY}}</td> 
-            <td  colspan="2" style="height:21px">
+            <td  colspan="3" style="height:21px">
               <ul  class="el-upload-list el-upload-list--text" >
               <li 
                   v-for="(file, index) in fileList"
@@ -283,49 +283,82 @@
               </ul>
             </td>
           </tr>        
-          <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'">
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
+          <tr v-if="submit.STATE!='SUBMITTED'">
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="8">
               玉兰处理意见
             </td>
           </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'">
             <td class="grayTD" style="height:15px"  colspan="1">初审意见</td>
             <td style="height:15px" colspan="2">{{submit.RETURN_TYPE}}</td>
-            <td style="height:15px" colspan="4">{{submit.FIRST_AUDITION}}</td>
+            <td style="height:15px" colspan="5">{{submit.FIRST_AUDITION}}</td>
+          </tr>
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="height:15px"  colspan="1">初审意见及退回原因</td>
+            <td style="height:15px" colspan="7">{{submit.FIRST_AUDITION}}</td>
           </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE!='无需退货'"> 
             <td class="grayTD" style="height:15px">备注信息</td>
-            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
-            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
-            <td style="height:15px" colspan="6" v-else></td>
+            <td style="height:15px" colspan="7" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
+            <td style="height:15px" colspan="7" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
+            <td style="height:15px" colspan="7" v-else></td>
           </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">退货或寄样信息</td>
-            <td style="height:15px" colspan="6">  {{submit.RETURN_ADDRESS}}</td>
+            <td style="height:15px" colspan="7">  {{submit.RETURN_ADDRESS}}</td>
           </tr>
           <tr v-if="submit.STATE!='SUBMITTED'&&submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
-            <td style="height:15px" colspan="6">您的提货单号为{{submit.SALE_NO}}</td>
+            <td style="height:15px" colspan="7">您的提货单号为{{submit.SALE_NO}}</td>
           </tr>
           <tr v-if="(submit.STATE=='APPROVED'||submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='RECEIVE')&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">物流备注信息</td>
-            <td style="height:15px;color:red;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" else>{{submit.RETURN_TRANSINFO}}</td>
+            <td style="height:15px;color:red;" colspan="7" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="7" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="7" v-if="submit.RETURN_TRANSINFO!==''">{{submit.RETURN_TRANSINFO}}</td>
           </tr>
+           <!-- 初审意见附件下载 -->
+          <tr v-if="submit.STATE!='SUBMITTED'">
+            <td class="grayTD" style="height:15px"  colspan="1">附件</td>
+            <td style="height:15px" colspan="7">
+                <ul  class="el-upload-list el-upload-list--text" >
+                <li 
+                  v-for="(file, index) in fileListForAudition"
+                  :key="index"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
+                >
+                  <a class="el-upload-list__item-name" >
+                      <el-link
+                         type="primary"
+                         size="mini"
+                         @click="showImage(file.url )"
+                         @mouseenter.native="showMiniImage($event,file.url)"
+                         @mouseout.native="MiniPic=false"
+                      >{{ file.name }}
+                      </el-link>
+                  </a>
+                  <label style="display:block;position:absolute;top:1px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
+                  </label>
+              </li>
+              </ul>
+            </td>
+          </tr>        
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="8">
               玉兰处理结果
             </td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
-            <td class="grayTD"  style="width:17%;height:15px">产品/项目</td>
-            <td class="grayTD"  style="width:18%;height:15px">型号</td>
-            <td class="grayTD"  style="width:12%;height:15px">单位</td>
-            <td class="grayTD"  style="width:10%;height:15px">数量</td>
-            <td class="grayTD"  style="width:10%;height:15px">金额</td>
-            <td class="grayTD"  style="width:15%;height:15px">质量问题</td>
-            <td class="grayTD"  style="width:18%;height:15px">处理意见</td>
+            <td class="grayTD"  style="width:12%;height:15px">产品/项目</td>
+            <td class="grayTD"  style="width:14%;height:15px">型号</td>
+            <td class="grayTD"  style="width:10%;height:15px">单位</td>
+            <td class="grayTD"  style="width:8%;height:15px">数量</td>
+            <td class="grayTD"  style="width:8%;height:15px">金额</td>
+            <td class="grayTD"  style="width:13%;height:15px">质量问题</td>
+            <td class="grayTD"  style="width:15%;height:15px">处理意见</td>
+            <td class="grayTD"  style="width:20%;height:15px">附件</td>
           </tr>
           <tr  v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'" v-for="(item,index) of processDetail" :key="index">
             <td colspan="1" rowspan="1" style="height:15px">{{submit.PRODUCTION_VERSION}}</td>
@@ -335,17 +368,41 @@
             <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_MONEY}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_NOTES}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_RESULT}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">
+                <ul  class="el-upload-list el-upload-list--text" >
+                <li 
+                  v-for="(file, index) in processDetail[index].fileListForProcess"
+                  :key="index"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
+                >
+                  <a class="el-upload-list__item-name" >
+                      <el-link
+                         type="primary"
+                         size="mini"
+                         @click="showImage(file.url )"
+                         @mouseenter.native="showMiniImage($event,file.url)"
+                         @mouseout.native="MiniPic=false"
+                      >{{ file.name }}
+                      </el-link>
+                  </a>
+                  <label style="display:block;position:absolute;top:1px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
+                  </label>
+              </li>
+              </ul>
+            </td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED'">
             <td class="grayTD"  style="height:15px">金额小写</td>
             <td style="height:15px" colspan="3">{{submit.TOTALMONEY}}</td>
             <td class="grayTD"  style="height:15px">金额大写</td>
-            <td style="height:15px" colspan="2">{{totalMoneyUpper}}</td>
+            <td style="height:15px" colspan="3">{{totalMoneyUpper}}</td>
           </tr>
 
            <tr style="height:90px">
             <td
-              colspan="7"
+              colspan="8"
               border="0px"
               style="font-size:13px;color:gray;text-align:left;"
             >
@@ -372,7 +429,7 @@
             </div>
             </td>
             <td 
-              colspan="3"
+              colspan="4"
               border="0px"
               style="font-size:13px;color:gray;text-align:center;">
               <div>
@@ -401,7 +458,7 @@
       <div>
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr >
-            <td style="font-size:20px;height:30px;text-align:center;" colspan="7">退货/赔偿电子申请书【{{submit.STATE | transStatus}}】</td>
+            <td style="font-size:20px;height:30px;text-align:center;" colspan="8">退货/赔偿电子申请书【{{submit.STATE | transStatus}}】</td>
           </tr>
          </table>
       </div>
@@ -413,15 +470,16 @@
               {{submit.CID}}
             </td>
             <td class="grayTD" style="height:15px" colspan="1">客户名称</td>
-            <td style="height:15px" colspan="4">
+            <td style="height:15px" colspan="5">
               {{submit.CNAME}}    
             </td>
           </tr>
           <tr>
-            <td class="grayTD" style="height:15px;width:12%;">提货单号</td>
-            <td style="height:15px;width:17%;">{{ submit.SALE_NO }}</td>
-            <td class="grayTD" style="height:15px;width:12%;">B2B订单号</td>
-            <td style="height:15px;width:22%;" colspan="2">
+            <td class="grayTD" style="height:15px;">提货单号</td>
+            <td style="height:15px;">{{ submit.SALE_NO }}</td>
+            <td class="grayTD" style="height:15px;">B2B订单号</td>
+            <td style="height:15px;" colspan="2" v-if="submit.STATE!='SENDBACK'" >{{ submit.ORDER_NO  }}</td>
+            <td style="height:15px;" colspan="2" v-else>
               <el-input
                 v-model="submit.ORDER_NO"
                 placeholder="请填写"
@@ -430,8 +488,8 @@
               >
               </el-input>
             </td>
-            <td class="grayTD" style="height:15px;width:12%;">ERP订单号</td>
-            <td  style="height:15px;width:25%;" colspan="2">{{ submit.CONTRACT_NO }}</td>
+            <td class="grayTD" style="height:15px;">ERP订单号</td>
+            <td  style="height:15px;"  colspan="2">{{ submit.CONTRACT_NO }}</td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">联系人<span style="color:red;">*</span></td>
@@ -458,7 +516,8 @@
               </el-input>
             </td>
             <td class="grayTD" style="height:15px">物流单号</td>
-            <td style="height:15px" >
+            <td style="height:15px"  colspan="2" v-if="submit.STATE!='SENDBACK'" >{{ submit.TRANS_ID  }}</td>
+            <td style="height:15px"  colspan="2" v-else >
               <el-input
                 v-model="submit.TRANS_ID"
                 placeholder="请填写"
@@ -467,11 +526,12 @@
               >
               </el-input>
           </td>
+          <td style="height:15px" ></td>
           </tr>
           <tr>
             <td class="grayTD" style="height:15px">问题描述<span style="color:red;">*</span></td>
-            <td style="height:15px" colspan="6" v-if="submit.STATE!='SENDBACK'">{{ submit.NOTES  }}</td>
-            <td style="height:15px" colspan="6" v-else>
+            <td style="height:15px" colspan="7" v-if="submit.STATE!='SENDBACK'">{{ submit.NOTES  }}</td>
+            <td style="height:15px" colspan="7" v-else>
               <el-input
                 v-model="submit.NOTES"
                 placeholder="请填写问题描述"
@@ -484,9 +544,9 @@
           <tr>
             <td class="grayTD"  colspan="1" style="height:15px;">产品/项目</td>
             <td class="grayTD"  colspan="2" style="height:15px;" >型号</td>
-            <td class="grayTD"  colspan="1" style="height:15px;width:11%;">单位</td>
-            <td class="grayTD"  colspan="1" style="height:15px;width:11%;">数量<span style="color:red;">*</span></td>
-            <td class="grayTD"  colspan="2" style="height:15px;">上传相关信息<span style="color:red;">*</span></td>
+            <td class="grayTD"  colspan="1" style="height:15px;">单位</td>
+            <td class="grayTD"  colspan="1" style="height:15px;">数量<span style="color:red;">*</span></td>
+            <td class="grayTD"  colspan="3" style="height:15px;">上传相关信息<span style="color:red;">*</span></td>
           </tr>
           <tr>
             <td  colspan="1" style="height:21px">{{submit.PRODUCTION_VERSION}}</td>
@@ -494,7 +554,7 @@
             <td  colspan="1" style="height:21px">{{submit.UNIT}}</td>
             <td  colspan="1" style="height:21px" v-if="submit.STATE!='SENDBACK'">{{submit.QTY}}</td>
             <td  colspan="1" style="height:21px" v-else>
-              <el-input
+              <input
                 v-model="submit.QTY"
                 placeholder="必填"
                 clearable
@@ -505,9 +565,8 @@
                            .replace('$#$', '.')
                            .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
               >
-              </el-input>
             </td>
-            <td  colspan="2" style="height:21px" v-if="submit.STATE!='SENDBACK'">
+            <td  colspan="3" style="height:21px" v-if="submit.STATE!='SENDBACK'">
               <ul  class="el-upload-list el-upload-list--text" >
               <li 
                   v-for="(file, index) in fileList"
@@ -531,11 +590,11 @@
               </li>
               </ul>
             </td>
-            <td  colspan="2" style="height:21px" v-else>
+            <td  colspan="3" style="height:21px" v-else>
                 <div>
                 <el-upload
                 class="upload-de"
-                :action="Global.baseUrl + '/RTCB_ITEM/UploadFiles'"
+                :action="Global.baseUrl + '/RETURNCOMPENSATIONBILL/UploadFiles'"
                 drag
                 multiple
                 :on-change="function(file,fileList){return  handleChange(file,fileList)}"
@@ -544,7 +603,7 @@
                 ref="upload"
                 :auto-upload="false"
                 :file-list="fileList"
-                :data="{ CID: CID, dateStamp: dateStamp }"
+                :data="{ CID: companyId, dateStamp: dateStamp,dateString:this.dateString,fileNameList:this.fileNameList }"
               >
                 <i
                   class="el-icon-upload2"
@@ -557,32 +616,41 @@
             </td>
           </tr>
           <tr>
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="7" v-if="submit.STATE!='SENDBACK'">
+          <td class="grayTD" style="font-size:20px;height:30px" colspan="8" v-if="submit.STATE=='SENDBACK'">
               玉兰处理意见
-            </td>
+          </td>
+          </tr>
+          <tr v-if="submit.STATE=='SENDBACK'">
+            <td class="grayTD" style="height:15px"  colspan="1">初审意见或退回原因</td>
+            <td style="height:15px" colspan="7" >{{submit.FIRST_AUDITION}}</td>
+          </tr>
+          <tr>
+          <td class="grayTD" style="font-size:20px;height:30px" colspan="8" v-if="submit.STATE!='SENDBACK'">
+              玉兰处理意见
+          </td>
           </tr>
           <tr v-if="submit.STATE!='SENDBACK'">
             <td class="grayTD" style="height:15px"  colspan="1">初审意见</td>
             <td style="height:15px" colspan="2" >{{submit.RETURN_TYPE}}</td>
-            <td style="height:15px" colspan="4" >{{submit.FIRST_AUDITION}}</td>
+            <td style="height:15px" colspan="5" >{{submit.FIRST_AUDITION}}</td>
           </tr>
           <tr v-if="submit.STATE!='SENDBACK'&&submit.RETURN_TYPE!='无需退货'"> 
             <td class="grayTD" style="height:15px">备注信息</td>
-            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
-            <td style="height:15px" colspan="6" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
-            <td style="height:15px" colspan="6" v-else></td>
+            <td style="height:15px" colspan="7" v-if="submit.RETURN_TYPE=='玉兰取货'">我公司已安排物流公司上门取货，请保持电话畅通</td>
+            <td style="height:15px" colspan="7" v-if="submit.RETURN_TYPE=='客户邮寄'">请您在快递单上备注提货单号</td>
+            <td style="height:15px" colspan="7" v-else></td>
           </tr>
           <tr v-if="submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">退货或寄样信息</td>
-            <td style="height:15px" colspan="6" >{{submit.RETURN_ADDRESS}}</td>
+            <td style="height:15px" colspan="7" >{{submit.RETURN_ADDRESS}}</td>
           </tr>
           <tr v-if="submit.STATE!='SENDBACK'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">邮寄备注信息</td>
-            <td style="height:15px" colspan="6">您的提货单号： {{submit.SALE_NO}}</td>
+            <td style="height:15px" colspan="7">您的提货单号： {{submit.SALE_NO}}</td>
           </tr>
           <tr v-if="submit.STATE=='RECEIVE'&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">物流备注信息<span style="color:red;">*</span></td>
-            <td style="height:15px" colspan="6">
+            <td style="height:15px" colspan="7">
               <el-input
                 v-model="submit.RETURN_TRANSINFO"
                 placeholder="请填写邮寄的物流公司和物流单号"
@@ -594,26 +662,52 @@
           </tr>
           <tr v-if="(submit.STATE=='CUSTOMERAFFIRM'||submit.STATE=='APPROVED')&&submit.RETURN_TYPE=='客户邮寄'">
             <td class="grayTD" style="height:15px">物流备注信息<span style="color:red;">*</span></td>
-            <td style="height:15px;color:red;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
-            <td style="height:15px;" colspan="6" else>{{submit.RETURN_TRANSINFO}}</td>
+            <td style="height:15px;color:red;" colspan="7" v-if="!submit.RETURN_TRANSINFO&&submit.STATE=='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="7" v-if="!submit.RETURN_TRANSINFO&&submit.STATE!='RECEIVE'">{{submit.RETURN_TRANSINFO|transInfoTip}}</td>
+            <td style="height:15px;" colspan="7" v-if="submit.RETURN_TRANSINFO!==''">{{submit.RETURN_TRANSINFO}}</td>
           </tr>
-
-
-
+           <!-- 初审意见附件下载 -->
+          <tr v-if="submit.STATE!='SUBMITTED'">
+            <td class="grayTD" style="height:15px"  colspan="1">附件</td>
+            <td style="height:15px" colspan="7">
+                <ul  class="el-upload-list el-upload-list--text" >
+                <li 
+                  v-for="(file, index) in fileListForAudition"
+                  :key="index"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
+                >
+                  <a class="el-upload-list__item-name" >
+                      <el-link
+                         type="primary"
+                         size="mini"
+                         @click="showImage(file.url )"
+                         @mouseenter.native="showMiniImage($event,file.url)"
+                         @mouseout.native="MiniPic=false"
+                      >{{ file.name }}
+                      </el-link>
+                  </a>
+                  <label style="display:block;position:absolute;top:1px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
+                  </label>
+              </li>
+              </ul>
+            </td>
+          </tr>   
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'"> 
-            <td class="grayTD" style="font-size:20px;height:30px" colspan="7">
+            <td class="grayTD" style="font-size:20px;height:30px" colspan="8">
               玉兰处理结果
             </td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'">
-            <td class="grayTD"  style="width:17%;height:15px">产品/项目</td>
-            <td class="grayTD"  style="width:18%;height:15px">型号</td>
-            <td class="grayTD"  style="width:12%;height:15px">单位</td>
-            <td class="grayTD"  style="width:10%;height:15px">数量</td>
-            <td class="grayTD"  style="width:10%;height:15px">金额</td>
-            <td class="grayTD"  style="width:15%;height:15px">质量问题</td>
-            <td class="grayTD"  style="width:18%;height:15px">处理意见</td>
+            <td class="grayTD"  style="width:12%;height:15px">产品/项目</td>
+            <td class="grayTD"  style="width:14%;height:15px">型号</td>
+            <td class="grayTD"  style="width:10%;height:15px">单位</td>
+            <td class="grayTD"  style="width:8%;height:15px">数量</td>
+            <td class="grayTD"  style="width:8%;height:15px">金额</td>
+            <td class="grayTD"  style="width:13%;height:15px">质量问题</td>
+            <td class="grayTD"  style="width:15%;height:15px">处理意见</td>
+            <td class="grayTD"  style="width:20%;height:15px">附件</td>
           </tr>
           <tr v-if="submit.STATE=='CUSTOMERAFFIRM'" v-for="(item,index) of processDetail" :key="index" >
             <td colspan="1" rowspan="1" style="height:15px">{{submit.PRODUCTION_VERSION}}</td>
@@ -623,11 +717,35 @@
             <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_MONEY}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_NOTES}}</td>
             <td colspan="1" rowspan="1" style="height:15px">{{processDetail[index].P_RESULT}}</td>
+            <td colspan="1" rowspan="1" style="height:15px">
+                <ul  class="el-upload-list el-upload-list--text" >
+                <li 
+                  v-for="(file, index) in processDetail[index].fileListForProcess"
+                  :key="index"
+                  class="el-upload-list__item is-success"
+                  tabindex="0"
+                >
+                  <a class="el-upload-list__item-name" >
+                      <el-link
+                         type="primary"
+                         size="mini"
+                         @click="showImage(file.url )"
+                         @mouseenter.native="showMiniImage($event,file.url)"
+                         @mouseout.native="MiniPic=false"
+                      >{{ file.name }}
+                      </el-link>
+                  </a>
+                  <label style="display:block;position:absolute;top:1px;right:10px;">
+                    <a style="cursor:pointer;" @click="downLoad(file.url)">下载</a>
+                  </label>
+              </li>
+              </ul>
+            </td>
           </tr>
 
            <tr style="height:90px">
             <td
-              colspan="7"
+              colspan="8"
               border="0px"
               style="font-size:13px;color:gray;text-align:left;"
             >
@@ -654,7 +772,7 @@
             </div>
             </td>
             <td 
-              colspan="3"
+              colspan="4"
               border="0px"
               style="font-size:13px;color:gray;text-align:center;">
               <div>
@@ -684,6 +802,7 @@
       </div>
       </div>
 
+      <!-- 旧系统提货单新增 -->
       <div v-show="isRefundAdd">
       <div>
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -697,11 +816,11 @@
           <tr>
             <td class="grayTD" style="height:15px" colspan="1">客户代码</td>
             <td style="height:15px" colspan="1">
-              {{this.CID}}
+              {{this.companyId}}
             </td>
             <td class="grayTD" style="height:15px" colspan="1">客户名称</td>
             <td style="height:15px" colspan="4">
-              {{this.CNAME}}    
+              {{this.companyName}}    
             </td>
           </tr>
           <tr>
@@ -778,7 +897,7 @@
             <td  colspan="2" style="height:21px" >{{submit.ITEM_NO}}</td>
             <td  colspan="1" style="height:21px">{{submit.UNIT}}</td>
             <td  colspan="1" style="height:21px">
-              <el-input
+              <input
                 v-model="submit.QTY"
                 placeholder="请填写"
                 clearable
@@ -789,22 +908,21 @@
                            .replace('$#$', '.')
                            .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
               >
-              </el-input>
             </td>
             <td  colspan="2" style="height:21px" >
                 <div>
                 <el-upload
                 class="upload-de"
-                :action="Global.baseUrl + '/RTCB_ITEM/UploadFiles'"
+                :action="Global.baseUrl + '/RETURNCOMPENSATIONBILL/UploadFilesForCustomer'"
                 drag
                 multiple
                 :on-change="function(file,fileList){return  handleChange(file,fileList)}"
                 :on-remove="function(file,fileList){return  handleRemove(file,fileList)}"
                 :on-success="function(res,file,fileList){return  handleSuccess(res,file,fileList)}"
-                ref="upload"
+                ref="upload"   
                 :auto-upload="false"
                 :file-list="fileList"
-                :data="{ CID: CID, dateStamp: dateStamp }"
+                :data="{ CID: companyId, dateStamp: dateStamp,dateString:this.dateString,fileNameList:this.fileNameList }"
               >
                 <i
                   class="el-icon-upload2"
@@ -868,6 +986,88 @@
       </div>
       </div>
     </el-dialog>
+    
+
+
+
+    <!-- 旧系统提货单新增，提货单号输入界面 -->
+    <el-dialog
+      title= "请确保输入的信息准确无误"
+      :visible.sync="getItemFromSaleNo"
+      :close-on-click-modal="false"
+      width="20%"
+      top="20%"
+      append-to-body
+    >
+     <div v-if="inputItemNo">
+      <div>
+         <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr >
+            <td style="font-size:15px;height:16px;text-align:left;" colspan="1">请选择产品型号</td> 
+          </tr>
+         </table>
+      </div>
+      <div class="table-c" >
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="1" rowspan="1" style="height:15px">
+              <el-select
+                style="width:99%;"
+                v-model="ITEM_NO"
+                filterable
+                placeholder=""
+              >
+                <el-option
+                  v-for="item in ItemNoArray"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </td>
+          </tr>
+        </table>
+        <div style="text-align:center;margin-top:5px">           
+          <el-button type="success" size="mini" @click="_AddRefundForSaleNoAndItemNo()">确定</el-button>  
+          <el-button type="info"   size="mini" @click="getItemFromSaleNo=false;ITEM_NO='';SALE_NO='';">取消</el-button>  
+        </div> 
+      </div>
+      </div>  
+            <!-- 旧系统提货单新增，产品型号选择界面，再来个div-->
+      <div v-if="inputSaleNo">
+      <div>
+         <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr >
+            <td style="font-size:15px;height:16px;text-align:left;" colspan="1">请输入提货单号（注意空格）</td> 
+          </tr>
+         </table>
+      </div>
+      <div class="table-c" >
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="1" rowspan="1" style="height:15px">
+              <el-input
+                v-model="SALE_NO"
+                placeholder=""
+                clearable
+                class="inputStyle"
+              >
+              </el-input>
+            </td>
+          </tr>
+        </table>
+        <div style="text-align:center;margin-top:5px">           
+          <el-button type="success" size="mini" @click="_GetItemArray()">确定</el-button>  
+          <el-button type="info"   size="mini" @click="getItemFromSaleNo=false;SALE_NO=''">取消</el-button>  
+        </div> 
+      </div>
+      </div>  
+    </el-dialog>
+
+ 
+
+    
 
     <div v-if="MiniPic" style="z-index:99999;position:fixed;" :style="{left:picX,top:picY}">
         <img class="BIGimg2" :src="imgUrl" />
@@ -892,7 +1092,7 @@ import {
   updataRefundStatus,
   updatePrinted
 } from "@/api/refund";
-import {getReturnInfo,getReturnInfo2 } from "@/api/orderListASP";
+import {getReturnInfo,GetQtyDelivery } from "@/api/orderListASP";
 import {
   GetUserCompensation,
   GetCompensationById,
@@ -904,7 +1104,8 @@ import {
   InsertCompensation,
   UpdateState,
   SendBackUpdate,
-  UpdateFirstAudition
+  UpdateFirstAudition,
+  GetItemArray
 } from "@/api/paymentASP";
 import { downLoadFile } from "@/common/js/downLoadFile";
 import { mapMutations } from "vuex";
@@ -925,7 +1126,9 @@ export default {
       submit: [],
       returnInfo:[],
       processDetail:[],//玉兰处理结果表明细
-      fileList:[],//存储附件
+      fileList:[],//存储客户意见的附件
+      fileListForAudition:[],//存储初审意见附件
+      // fileListForProcess:[],//存储处理结果附件
       submitHead:[],//存储表头数据
       deleteFile:[],//删除的上传文件
       complaintDetail: false,
@@ -934,10 +1137,11 @@ export default {
       isEdit:false,
       RefundDetail:false,
       isRefundAdd:false,
+      getItemFromSaleNo:false,//旧系统提单-获取产品型号的界面
       SELECT_STATUS: "NEEDPROCESSING", //存储下拉框的值
       beginTime: "", //查询的开始时间
       finishTime: "", //查询的结束时间
-      companyId: Cookies.get("companyId"),
+      companyId: Cookies.get("customerMainId"), //公司Id
       CID: Cookies.get("cid"),
       CNAME :Cookies.get("realName"),
       companyName:"",//公司名称
@@ -953,9 +1157,16 @@ export default {
       ITEM_NO:"",//产品型号
       CONTRACT_NO:"",//ERP订单号
       UNIT:"",
+      QtyLimit:"",//出货数量上限
       FormRight:false,
       dateStamp:"",
+      uploadSuccess:false,//是否上传成功
       fileChange:false,
+      inputSaleNo:false,//是否处于输入提货单号状态
+      inputItemNo:false,//是否处于输入产品型号状态
+      dateString:"",
+      fileNumber:0,  //存储客户上传文件数量
+      fileNameList:[],//存储用户上传附件的名称  
       //单据状态
       statusArray: [
         { value: null, label: "全部状态" },
@@ -980,7 +1191,7 @@ export default {
           value: "无需退货"
         },
       ],
-      processArray: [   //退货方式
+      processArray: [   //处理意见
         {
           label: "赔偿",
           value: "赔偿"
@@ -994,6 +1205,9 @@ export default {
           value: "无质量问题"
         },
       ],
+      //旧系统提货-输入提货单号，弹出相应的产品型号
+      ItemNoArray:[],
+
     };
   },
   filters: {
@@ -1110,9 +1324,15 @@ export default {
     //查看详情
     _CheckDetail(val,type) {
       this.FormRight=false;
+      this.uploadSuccess=false;
       this.submit = [];
       this.fileList=[];
+      this.fileListForAudition=[];
+      this.fileListForProcess=[];
       this.processDetail=[];
+      this.fileNumber=0;
+      this.fileNameList=[];
+      // this.GetNowDate();
       let data = {
         ID: val.ID,
         STATE:val.STATE
@@ -1128,7 +1348,16 @@ export default {
               }
               this.submit.TOTALMONEY=totalMoney;
           };
+          if(this.submit.STATE=='SENDBACK')
+          {
+              GetQtyDelivery({companyId:this.companyId,SALE_NO:this.submit.SALE_NO,ITEM_NO:this.submit.ITEM_NO}).then(res => {
+                   if (res.code == 0) {
+                       this.QtyLimit=res.data[0].QTY_DELIVER;
+                   } 
+          });
         }
+        }
+        //查询时，将对应客户意见的附件的字段拆解开来，并作为对象传入文件集合中
         var list = this.submit.ATTACHMENT_FILE.split(";");
         for (var i = 0; i < list.length - 1; i++) {
             var index = list[i].lastIndexOf("/");
@@ -1138,6 +1367,32 @@ export default {
               url: list[i]
             });
         }
+        var  findIndex=list[list.length - 2].lastIndexOf("-");
+        this.fileNumber = parseInt(list[list.length - 2].substr(findIndex+1,1));
+        //查询时，将对应初审意见的附件的字段拆解开来，并作为对象传入文件集合中
+        var list2 = this.submit.FIRST_AUDITION_FILE.split(";");
+        for (var i = 0; i < list2.length - 1; i++) {
+            var index = list2[i].lastIndexOf("/");
+            var fileName = list2[i].substr(index + 1);
+            this.fileListForAudition.push({
+              name: fileName,
+              url: list2[i]
+            });
+        }
+        //查询时，将对应处理结果的附件的字段拆解开来，并作为对象传入文件集合中
+        for (let j = 0; j < this.processDetail.length; j++) {
+          //初始化
+          this.processDetail[j].fileListForProcess = [];
+          var list3 = this.processDetail[j].PROCESS_FILE.split(";");
+          for (var i = 0; i < list3.length - 1; i++) {
+            var index = list3[i].lastIndexOf("/");
+            var fileName = list3[i].substr(index + 1);
+            this.processDetail[j].fileListForProcess.push({
+              name: fileName,
+              url: list3[i]
+            });
+          }
+        }        
         this.dateStamp = new Date().getTime();
         if(type==1)
         {
@@ -1197,6 +1452,13 @@ export default {
             });
             return;
           }
+          if (this.submit.QTY>this.QtyLimit ) {
+                this.$alert("填写数量不能超过实际发货数量", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+            });
+            return;
+          }
           //判断是否上传附件
           if (this.fileList.length == 0) {
               this.$alert("请上传相关附件", "提示", {
@@ -1222,7 +1484,7 @@ export default {
             for (let j = 0; j < this.fileList.length; j++) {
                this.submit.ATTACHMENT_FILE +=
                 "/Files/RTCB_ITEM/" +
-               this.CID +
+               this.companyId +
                "/" +
                this.dateStamp +
                 "/" +
@@ -1230,7 +1492,7 @@ export default {
                 ";"; 
               }
             this.submit.ATTACHMENT_FILE_FOLDER =
-           "/Files/RTCB_ITEM/" + this.CID + "/" + this.dateStamp;
+           "/Files/RTCB_ITEM/" + this.companyId + "/" + this.dateStamp;
           } else {
           if (this.deleteFile.length > 0) {
             for (let i = 0; i < this.deleteFile.length; i++) {
@@ -1255,13 +1517,12 @@ export default {
             });
             return;
             }
-            UpdateFirstAudition({ head: this.submit,type:val }).then(res => {
+            UpdateFirstAudition({ head: this.submit,type:val,attchmentChange: false,deleteFile: null,firstAddFile:true }).then(res => {
             if (res.code == 0) {
               this.$alert("退货邮寄信息保存成功", "提示", {
               confirmButtonText: "确定",
               type: "success"
             });
-            this.releaseBadge("");//刷新角标
             this.refresh();
             this.RefundDetail = false;
             return;
@@ -1273,7 +1534,6 @@ export default {
             return;
             }
           });
-
           }
     },
     //删除
@@ -1392,7 +1652,11 @@ export default {
                 this.FormRight=false;
                 this.fileList=[];
                 this.dateStamp = new Date().getTime();
+                this.fileNumber=0;
+                this.GetNowDate();
                 this.FormRight=true;
+                this.uploadSuccess=false;
+                this.fileNameList=[];
                 this.submitHead = {
                     ID:"",
                     ERP_CREATOR: this.CID, //创建人编号
@@ -1437,6 +1701,11 @@ export default {
                 this.isEdit=false;
                 this.isCheck=false;
                 this.RefundDetail = true;
+                GetQtyDelivery({companyId:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.ITEM_NO}).then(res => {
+                   if (res.code == 0) {
+                       this.QtyLimit=res.data[0].QTY_DELIVER;
+                   } 
+                 })
     },
     //旧系统提单售后新增
     addRefundRecord() {
@@ -1477,6 +1746,13 @@ export default {
         });
         return;
       }
+      if (this.submit.QTY >this.QtyLimit ) {
+        this.$alert("填写数量不能超过实际发货数量", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
       //判断是否上传附件
       if (this.fileList.length == 0) {
         this.$alert("请上传相关附件", "提示", {
@@ -1511,6 +1787,18 @@ export default {
       var list10=suffix.split('mpg');
       if(list1.length>1||list2.length>1||list3.length>1||list4.length>1||list5.length>1||list6.length>1||list7.length>1||list8.length>1||list9.length>1||list10.length>1)
       {
+            if(this.uploadSuccess)
+            {   
+
+            }
+            else{
+                var number=this.fileNumber+1;
+                this.fileNumber=this.fileNumber+1;
+                var prefix=this.dateString+'-'+ number;
+                var fileName = prefix + suffix;
+                file.name=fileName;
+                this.fileNameList.push(fileName);
+            }
             this.FormRight=true;
             this.fileList = fileList;
             this.fileChange = true;
@@ -1523,15 +1811,18 @@ export default {
             type: "warning"
             });
             return ;
-      }
+    }
     },
     handleRemove(file, fileList) {
       this.fileList = fileList;
       if ((file.status = "success")) {
         this.deleteFile.push(file.url);
+        this.fileNameList.splice(this.fileNameList.length-1,1);
       }
     },
     handleSuccess(res, file, fileList) {
+      this.fileList = fileList;
+      this.uploadSuccess=true;
       var successCount = this.fileList.filter(item => item.status == "success").length;
       if (successCount == fileList.length) {
         if (this.isRefundAdd) {
@@ -1547,15 +1838,16 @@ export default {
       for (let j = 0; j < this.fileList.length; j++) {
                this.submit.ATTACHMENT_FILE +=
                 "/Files/RTCB_ITEM/" +
-               this.CID +
+               this.companyId +
                "/" +
                this.dateStamp +
                 "/" +
                this.fileList[j].name +
                 ";"; 
               }
+      
       this.submit.ATTACHMENT_FILE_FOLDER =
-        "/Files/RTCB_ITEM/" + this.CID + "/" + this.dateStamp;
+        "/Files/RTCB_ITEM/" + this.companyId + "/" + this.dateStamp;
       this.submit.ITEM_INDEX = 1;
       this.submitHead.ERP_CREATOR=this.CID;
       this.submitHead.ERP_CREATORNAME = this.CNAME;
@@ -1595,6 +1887,7 @@ export default {
     },
     //待修改
     submitEDITANSYC(){
+      //附件拼接
       //相当于同步，等提交成功后再执行
       SendBackUpdate({updateState:'SUBMITTED',detail:this.submit, attchmentChange: this.fileChange,deleteFile: this.deleteFile}).then(res => {
         if (res.code == 0) {
@@ -1616,34 +1909,80 @@ export default {
         }
       });
     },
-    //获取提货单号和产品型号
+    //获取提货单号
     GetSaleNoAndItemNo() {
-      this.$prompt("请输入提货单号", "请确保输入的信息无误(注意空格)", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      })
-        .then(({ value }) => {
-          this.SALE_NO=value.toUpperCase();
-          this.$prompt("请输入产品型号", "请确保输入的信息无误(注意空格)", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消"
-          }).then(({ value } )=>{
-              this.ITEM_NO=value.toUpperCase();
-              getReturnInfo({companyId:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.ITEM_NO}).then(res => {
+      //初始化参数
+      this.getItemFromSaleNo=true;
+      this.SALE_NO='';
+      this.ITEM_NO='';
+      this.inputSaleNo=true;
+      this.inputItemNo=false;
+      this.ItemNoArray=[];
+    },
+    //获得输入提货单号对应的产品型号
+    _GetItemArray(){
+        if(this.SALE_NO=='')
+        {
+             this.$alert("提货单号不能为空", "提示", {
+                confirmButtonText: "确定",
+                type: "warning"
+             });
+             return;
+        }
+        this.SALE_NO=this.SALE_NO.toUpperCase();
+        GetItemArray({SALE_NO:this.SALE_NO}).then(res => {
+          if (res.code == 0) {
+              for (var i = 0; i < res.data.length; i++) {  //这一部分应该在编辑里使用（可以进行初审的时候使用）
+                 this.ItemNoArray[i] = new Object();
+                 this.ItemNoArray[i].label = res.data[i].ITEM_NO;
+                 this.ItemNoArray[i].value = res.data[i].ITEM_NO;
+              }  
+          } 
+        }).then(()=>{
+               if(this.ItemNoArray.length==0)
+               {
+                 this.$alert("输入的提货单号有误", "提示", {
+                    confirmButtonText: "确定",
+                    type: "warning"
+                 })
+                 return;
+               }
+               else{
+                 this.inputSaleNo=false;
+                 this.inputItemNo=true;
+               }
+        });
+    },
+    //输入提货单号和产品型号后，弹出退货赔偿界面
+    _AddRefundForSaleNoAndItemNo(){
+        getReturnInfo({companyId:this.companyId,SALE_NO:this.SALE_NO,ITEM_NO:this.ITEM_NO}).then(res => {
                 if (res.code == 0) {
                         this.companyName=res.data[0].CUSTOMER_NAME;
                         this.CONTRACT_NO=res.data[0].CONTRACT_NO;
                         this.PRODUCTION_VERSION = res.data[0].PRODUCTVERSION_NAME;
                         this.UNIT=res.data[0].NOTE;
                 };
-              });
-          }).then(()=>{
+              }).then(()=>{
+             this.getItemFromSaleNo=false;
+             this.inputItemNo=false;
              this.addRefundRecord();
-          });
-        })
+          })
         .catch(() => {});
     },
-
+    GetNowDate(){
+       var date =new Date();
+       var year = date.getFullYear(); 
+       var month =(date.getMonth() + 1).toString(); 
+       var day = (date.getDate()).toString();  
+       if (month.length == 1) { 
+               month = "0" + month; 
+       } 
+       if (day.length == 1) { 
+              day = "0" + day; 
+       }
+       var dateTime = year + "-" + month + "-" + day;
+       this.dateString=dateTime;
+    },
 
     ...mapMutations("badge", ["addBadge", "releaseBadge"]),
   },
@@ -1654,6 +1993,7 @@ export default {
     }
   },
   created() {
+    this.GetNowDate();
     this.refresh();
   },
   activated: function() {
