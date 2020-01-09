@@ -594,16 +594,16 @@
                 <div>
                 <el-upload
                 class="upload-de"
-                :action="Global.baseUrl + '/RETURNCOMPENSATIONBILL/UploadFiles'"
+                :action="Global.baseUrl + '/RETURNCOMPENSATIONBILL/UploadFilesForCustomer'"
                 drag
                 multiple
                 :on-change="function(file,fileList){return  handleChange(file,fileList)}"
                 :on-remove="function(file,fileList){return  handleRemove(file,fileList)}"
                 :on-success="function(res,file,fileList){return  handleSuccess(res,file,fileList)}"
-                ref="upload"
+                ref="upload2"
                 :auto-upload="false"
                 :file-list="fileList"
-                :data="{ CID: companyId, dateStamp: dateStamp,dateString:this.dateString,fileNameList:this.fileNameList }"
+                :data="{ CID: companyId, dateStamp: dateStamp,dateString:dateString,fileNameList:fileNameList }"
               >
                 <i
                   class="el-icon-upload2"
@@ -922,7 +922,7 @@
                 ref="upload"   
                 :auto-upload="false"
                 :file-list="fileList"
-                :data="{ CID: companyId, dateStamp: dateStamp,dateString:this.dateString,fileNameList:this.fileNameList }"
+                :data="{ CID: companyId, dateStamp: dateStamp,dateString:dateString,fileNameList:fileNameList }"
               >
                 <i
                   class="el-icon-upload2"
@@ -1478,7 +1478,7 @@ export default {
           }
           if (this.fileChange) {
           //文件发生改变，重新上传一次(仅选中修改后的文件，而不是所有文件效率会更高)
-            this.$refs.upload.submit();
+            this.$refs.upload2.submit();
             //附件拼接
             this.submit.ATTACHMENT_FILE = "";
             for (let j = 0; j < this.fileList.length; j++) {

@@ -641,7 +641,7 @@
                 ref="upload"
                 :auto-upload="false"
                 :file-list="fileListForAudition"
-                :data="{ CID: CID, dateStamp: dateStamp,dateString:this.dateString,fileNameList:this.fileNameList}"
+                :data="{ CID: CID, dateStamp: dateStamp,dateString:dateString,fileNameList:fileNameList}"
               >
                 <i
                   class="el-icon-upload2"
@@ -781,7 +781,7 @@
                 ref="upload2"
                 :auto-upload="false"
                 :file-list="processDetail[index].fileListForProcess"
-                :data="{ CID: CID, dateStamp: dateStamp,dateString:this.dateString,fileNameList:this.processDetail[index].fileNameList}"
+                :data="{ CID: CID, dateStamp: dateStamp,dateString:dateString,fileNameList:processDetail[index].fileNameList}"
               >
                 <i
                   class="el-icon-upload2"
@@ -1173,7 +1173,7 @@ export default {
           this.processDetail[j].fileChangeForProcess = false;
           this.processDetail[j].firstAddProcess = false;
           this.deleteFileForProcess.push("");
-          this.fileChangeForProcess.push(false);
+          this.fileChangeForProcess.push("0");
           var list3 = this.processDetail[j].PROCESS_FILE.split(";");
           for (var i = 0; i < list3.length - 1; i++) {
             var index = list3[i].lastIndexOf("/");
@@ -1215,7 +1215,7 @@ export default {
                   uploadSuccess:false,
                 });
                 this.deleteFileForProcess.push("");
-                this.fileChangeForProcess.push(false);
+                this.fileChangeForProcess.push("0");
             }
             this.isEdit = true;
             this.isCheck = false;
@@ -1471,8 +1471,8 @@ export default {
                   fileNameList:[],
                   uploadSuccess:false,
         });
-        this.deleteFileForProcess.push("");
-        this.fileChangeForProcess.push(false);
+        // this.deleteFileForProcess.push("");
+        // this.fileChangeForProcess.push("0");
         }
     },
     //减少兰居处理结果中的明细数目
@@ -1487,8 +1487,8 @@ export default {
         }
         else{
               this.processDetail.splice(index,1);
-              this.deleteFileForProcess.splice(index,1);
-              this.fileChangeForProcess.splice(index,1);
+              // this.deleteFileForProcess.splice(index,1);
+              // this.fileChangeForProcess.splice(index,1);
         }
     },
     //获得退货或寄样信息
@@ -1726,12 +1726,12 @@ export default {
             this.FormRight=true;
             this.processDetail[index].fileListForProcess = fileList;
             this.processDetail[index].fileChangeForProcess = true;
-            this.fileChangeForProcess[index]=true;
+            this.fileChangeForProcess.push("1");
       }
       else{
             this.FormRight=false;
             this.processDetail[index].fileListForProcess=[];
-            this.fileChangeForProcess[index]=false;
+            this.fileChangeForProcess.push("0");
             this.$alert("请上传图片或视频，否则无法成功提交", "提示", {
             confirmButtonText: "确定",
             type: "warning"
@@ -1743,7 +1743,7 @@ export default {
       this.processDetail[index].fileListForProcess = fileList;
       if ((file.status = "success")) {
         this.processDetail[index].deleteFileForProcess.push(file.url);
-        this.deleteFileForProcess[index]=file.url;
+        this.deleteFileForProcess.push(file.url);
         this.deleteIndex.push(index);
       }
     },
