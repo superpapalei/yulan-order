@@ -339,7 +339,7 @@
                 <div>
                 <el-upload
                 class="upload-de"
-                :action="Global.baseUrl + '/RTCB_ITEM/UploadFiles'"
+                :action="Global.baseUrl + '/RETURNCOMPENSATIONBILL/UploadFilesForCustomer'"
                 drag
                 multiple
                 :on-change="function(file,fileList){return  handleChange(file,fileList)}"
@@ -348,7 +348,7 @@
                 ref="upload"
                 :auto-upload="false"
                 :file-list="submit.fileList"
-                :data="{ CID: CID, dateStamp: dateStamp }"
+                :data="{ CID: companyId, dateStamp: dateStamp,dateString:dateString,fileNameList:fileNameList }"
               >
                 <i
                   class="el-icon-upload2"
@@ -456,6 +456,10 @@ export default {
       daifashuliang: "",
       kuaidi100: "",
       kuaididanhao: "",
+      dateString:"",
+      uploadSuccess:false,//是否上传成功
+      fileNumber:0,  //存储客户上传文件数量
+      fileNameList:[],//存储用户上传附件的名称  
       typeArray: [
         {
           label: "晚点",
@@ -671,6 +675,9 @@ export default {
     addRefund(data){
                 this.dateStamp = new Date().getTime();
                 this.FormRight=true;
+                this.uploadSuccess=false;
+                this.fileNumber=0;
+                this.fileNameList=[];
                 this.submitHead = {
                     ID:"",
                     ERP_CREATOR: "", //创建人编号
@@ -843,6 +850,18 @@ export default {
       var list10=suffix.split('mpg');
       if(list1.length>1||list2.length>1||list3.length>1||list4.length>1||list5.length>1||list6.length>1||list7.length>1||list8.length>1||list9.length>1||list10.length>1)
       {
+            if(this.uploadSuccess)
+            {   
+
+            }
+            else{
+                var number=this.fileNumber+1;
+                this.fileNumber=this.fileNumber+1;
+                var prefix=this.dateString+'-'+ number;
+                var fileName = prefix + suffix;
+                file.name=fileName;
+                this.fileNameList.push(fileName);
+            }
             this.FormRight=true;
             this.submit.fileList = fileList;
             this.fileChange = true;
@@ -860,10 +879,13 @@ export default {
     handleRemove(file, fileList) {
       this.submit.fileList = fileList;
       if ((file.status = "success")) {
-        this.deleteFile.push(file.url);
+        this.deleteFile.push(file.url);                
+        this.fileNameList.splice(this.fileNameList.length-1,1);
       }
     },
     handleSuccess(res, file, fileList) {
+      this.submit.fileList=fileList;
+      this.uploadSuccess=true;
       var successCount = this.submit.fileList.filter(item => item.status == "success").length;
       if (successCount == fileList.length) {
         if (this.isRefundAdd) {
@@ -923,12 +945,29 @@ export default {
               }).catch(() => {});
             });
     },
+    GetNowDate(){
+       var date =new Date();
+       var year = date.getFullYear(); 
+       var month =(date.getMonth() + 1).toString(); 
+       var day = (date.getDate()).toString();  
+       if (month.length == 1) { 
+               month = "0" + month; 
+       } 
+       if (day.length == 1) { 
+              day = "0" + day; 
+       }
+       var dateTime = year + "-" + month + "-" + day;
+       this.dateString=dateTime;
+    },
     ...mapMutations("navTabs", ["addTab"]),
     ...mapActions("navTabs", ["closeTab", "closeToTab"])
   },
   activated: function() {
     this.init_shipment();
-  }
+  },
+  created() {
+    this.GetNowDate();
+  },
 };
 </script>
 

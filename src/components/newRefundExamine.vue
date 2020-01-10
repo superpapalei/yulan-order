@@ -1158,14 +1158,13 @@ export default {
         {
             var findIndex=list2[list2.length - 2].lastIndexOf("-");
             this.fileNumber = parseInt(list2[list2.length - 2].substr(findIndex+1,1));
+            this.firstAddAudition=false;
         }
         //添加附件前是否已经存在附件
         if(list2.length==1)
         {
+          this.fileNumber =0;
           this.firstAddAudition=true;
-        }
-        else{
-          this.firstAddAudition=false;
         }
         //查询时，将对应处理结果的附件的字段拆解开来，并作为对象传入文件集合中
         for (let j = 0; j < this.processDetail.length; j++) {
@@ -1193,6 +1192,9 @@ export default {
             var findIndex=list3[list3.length - 2].lastIndexOf("-");
             this.processDetail[j].fileNumber= parseInt(list3[list3.length - 2].substr(findIndex+1,1));
           }
+          else{
+             this.processDetail[j].fileNumber=0;
+          }
         }
         if(type==1)
         {
@@ -1210,6 +1212,7 @@ export default {
                   P_NOTES: "", 
                   P_RESULT: "", 
                   P_MONEY: "", 
+                  fileListForProcess:[],
                   deleteFileForProcess:[],
                   fileChangeForProcess:[],
                   PROCESS_FILE:"",
@@ -1269,7 +1272,7 @@ export default {
         this.submit.TOTALMONEY=totalMoney;
         //查看哪行记录文件发生改变，重新上传一次
         for (let i = 0; i < this.processDetail.length; i++) {
-              if(this.processDetail[i].fileChangeForProcess){
+              if(this.processDetail[i].fileChangeForProcess.length!=0){
                   this.$refs.upload2[i].submit();
                   this.processDetail[i].PROCESS_FILE = "";
                   for (let j = 0; j < this.processDetail[i].fileListForProcess.length; j++) {
@@ -1467,6 +1470,7 @@ export default {
                   P_NOTES: "", 
                   P_RESULT: "", 
                   P_MONEY: "", 
+                  fileListForProcess:[],
                   deleteFileForProcess:[],
                   fileChangeForProcess:[],
                   PROCESS_FILE:"",
