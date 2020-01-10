@@ -165,11 +165,11 @@ export default {
                   ? expressData[0].time + " " + expressData[0].context
                   : "";
             } else {
-              data.ExpressState = '-1';
+              data.ExpressState = "-1";
               data.ExpressContent = data.express.message;
             }
           } else {
-            data.ExpressState = '-1';
+            data.ExpressState = "-1";
             data.ExpressContent = "请检查参数是否正确";
           }
         }
@@ -177,13 +177,11 @@ export default {
     },
     formatDate(date) {
       if (date != null) {
-        return (
-          date.getFullYear() +
-          "-" +
-          (date.getMonth() + 1) +
-          "-" +
-          date.getDate()
-        );
+        var month = date.getMonth() + 1;
+        if (month < 10) month = "0" + month;
+        var day = date.getDate();
+        if (day < 10) day = "0" + day;
+        return date.getFullYear() + "-" + month + "-" + day;
       }
     },
     tableRowClassName({ row, rowIndex }) {
