@@ -781,7 +781,7 @@
                 ref="upload2"
                 :auto-upload="false"
                 :file-list="processDetail[index].fileListForProcess"
-                :data="{ CID: CID, dateStamp: dateStamp,dateString:dateString,fileNameList:processDetail[index].fileNameList}"
+                :data="{ CID: CID, dateStamp: dateStamp,dateString:dateString,fileNameList:fileNameListForProcess}"
               >
                 <i
                   class="el-icon-upload2"
@@ -939,6 +939,7 @@ export default {
       uploadSuccess:false,
       fileNumber:0,
       fileNameList:[],
+      fileNameListForProcess:[],
       deleteFileForAudition:[],//删除的初审意见附件
       deleteFileForProcess:[],//删除的处理结果附件
       firstAddAudition:false,//是否是第一次添加初审意见的附件
@@ -1113,6 +1114,7 @@ export default {
       this.uploadSuccess=false;
       this.fileNumber=0;
       this.fileNameList=[];
+      this.fileNameListForProcess=[];
       this.deleteFileForAudition=[];
       this.deleteFileForProcess=[];
       this.processDetail=[];
@@ -1170,6 +1172,8 @@ export default {
           //初始化
           this.processDetail[j].fileListForProcess = [];
           this.processDetail[j].deleteFileForProcess = [];
+          this.processDetail[j].fileNameList = [];
+          this.processDetail[j].uploadSuccess =false;
           this.processDetail[j].fileChangeForProcess = false;
           this.processDetail[j].firstAddProcess = false;
           this.deleteFileForProcess.push("");
@@ -1471,8 +1475,9 @@ export default {
                   fileNameList:[],
                   uploadSuccess:false,
         });
-        // this.deleteFileForProcess.push("");
-        // this.fileChangeForProcess.push("0");
+        this.deleteFileForProcess.push("");
+        this.fileChangeForProcess.push("0");
+        this.fileNameListForProcess.push();
         }
     },
     //减少兰居处理结果中的明细数目
@@ -1487,8 +1492,9 @@ export default {
         }
         else{
               this.processDetail.splice(index,1);
-              // this.deleteFileForProcess.splice(index,1);
-              // this.fileChangeForProcess.splice(index,1);
+              this.deleteFileForProcess.splice(index,1);
+              this.fileChangeForProcess.splice(index,1);
+              this.fileNameListForProcess.splice(index,1);
         }
     },
     //获得退货或寄样信息
@@ -1716,22 +1722,36 @@ export default {
             {   
             }
             else{
+                var line_no=index+1;
                 var number=this.processDetail[index].fileNumber+1;
                 this.processDetail[index].fileNumber=this.processDetail[index].fileNumber+1;
-                var prefix=this.dateString+'-'+ number;
+                var prefix='line'+line_no+'-'+this.dateString+'-'+ number;
                 var fileName = prefix + suffix;
                 file.name=fileName;
                 this.processDetail[index].fileNameList.push(fileName);
+                this.fileNameListForProcess.push(fileName);
+                if(this.fileChangeForProcess[index]!=""||this.fileChangeForProcess[index]!=null)
+                {
+                     this.fileChangeForProcess[index]=this.fileChangeForProcess[index]+",1";
+                }
+                else{
+                     this.fileChangeForProcess[index]="1";
+                }
             }
             this.FormRight=true;
             this.processDetail[index].fileListForProcess = fileList;
             this.processDetail[index].fileChangeForProcess = true;
-            this.fileChangeForProcess.push("1");
       }
       else{
             this.FormRight=false;
             this.processDetail[index].fileListForProcess=[];
-            this.fileChangeForProcess.push("0");
+            if(this.fileChangeForProcess[index]!=""||this.fileChangeForProcess[index]!=null)
+            {
+                 this.fileChangeForProcess[index]=this.fileChangeForProcess[index]+",0";
+            }
+            else{
+                 this.fileChangeForProcess[index]="0";
+            }
             this.$alert("请上传图片或视频，否则无法成功提交", "提示", {
             confirmButtonText: "确定",
             type: "warning"
@@ -1740,10 +1760,19 @@ export default {
       }
     },
     handleRemoveForProcess(file, fileList,index) {
+      this.processDetail[index].fileNameList.splice(index,1);
+      this.fileNameListForProcess.splice(index,1);
       this.processDetail[index].fileListForProcess = fileList;
       if ((file.status = "success")) {
         this.processDetail[index].deleteFileForProcess.push(file.url);
-        this.deleteFileForProcess.push(file.url);
+        // this.deleteFileForProcess.push(file.url);
+            if(this.deleteFileForProcess[index]!=""||this.deleteFileForProcess[index]!=null)
+            {
+                 this.deleteFileForProcess[index]=this.deleteFileForProcess[index]+","+file.url;
+            }
+            else{
+                 this.deleteFileForProcess[index]=file.url;
+            }
         this.deleteIndex.push(index);
       }
     },
