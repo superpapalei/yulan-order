@@ -1332,7 +1332,6 @@ export default {
       this.processDetail=[];
       this.fileNumber=0;
       this.fileNameList=[];
-      // this.GetNowDate();
       let data = {
         ID: val.ID,
         STATE:val.STATE
@@ -1653,7 +1652,6 @@ export default {
                 this.fileList=[];
                 this.dateStamp = new Date().getTime();
                 this.fileNumber=0;
-                this.GetNowDate();
                 this.FormRight=true;
                 this.uploadSuccess=false;
                 this.fileNameList=[];
