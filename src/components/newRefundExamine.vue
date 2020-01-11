@@ -1246,6 +1246,7 @@ export default {
               return;
         }
         var totalMoney=0;
+        //遍历处理结果明细
         for (var i = 0; i < this.processDetail.length; i++) {
             var needUpload=false;
             //判断是否填完所有信息  
@@ -1276,7 +1277,7 @@ export default {
                      return ;
                   }
             }
-            if(needUpload){
+            if(needUpload){   //是否需要上传附件
                   this.$refs.upload2[i].submit();
                   this.processDetail[i].PROCESS_FILE = "";
                   for (let j = 0; j < this.processDetail[i].fileListForProcess.length; j++) {
@@ -1292,7 +1293,7 @@ export default {
                   this.processDetail[i].PROCESS_FILE_FOLDER =
                         "/Files/RTCB_PROCESS/" + this.CID + "/" + this.dateStamp;
               }
-              else{
+              else{  //不需要的话是否需要删除文件
                    if (this.processDetail[i].deleteFileForProcess.length > 0) {
                       for (let j = 0; j < this.processDetail[i].deleteFileForProcess.length; j++) {  
                           this.processDetail[this.deleteIndex[j]].PROCESS_FILE="";
@@ -1310,36 +1311,6 @@ export default {
         {
                      this.submitEDITANSYCCForProcess();
         }
-        //查看哪行记录文件发生改变，重新上传一次
-        // for (let i = 0; i < this.processDetail.length; i++) {
-        //       if(needUpload){
-        //           this.$refs.upload2[i].submit();
-        //           this.processDetail[i].PROCESS_FILE = "";
-        //           for (let j = 0; j < this.processDetail[i].fileListForProcess.length; j++) {
-        //                 this.processDetail[i].PROCESS_FILE +=
-        //                 "/Files/RTCB_PROCESS/" +
-        //                 this.CID +
-        //                 "/" +
-        //                 this.dateStamp +
-        //                 "/" +
-        //                 this.processDetail[i].fileListForProcess[j].name +
-        //                 ";"; 
-        //           }
-        //           this.processDetail[i].PROCESS_FILE_FOLDER =
-        //                 "/Files/RTCB_PROCESS/" + this.CID + "/" + this.dateStamp;
-        //       }
-        //       else{
-        //            if (this.processDetail[i].deleteFileForProcess.length > 0) {
-        //               for (let j = 0; j < this.processDetail[i].deleteFileForProcess.length; j++) {  
-        //                   this.processDetail[this.deleteIndex[j]].PROCESS_FILE="";
-        //                   for (var k = 0; k < this.processDetail[this.deleteIndex[j]].fileListForProcess.length; k++) {
-        //                        this.processDetail[this.deleteIndex[j]].PROCESS_FILE += this.processDetail[this.deleteIndex[j]].fileListForProcess[k].url + ";";
-        //                   }
-        //               }
-        //            }
-        //            this.submitEDITANSYCCForProcess();
-        //       }
-        // }
       }
       else{  //编辑初审意见
         //先判断填写的信息是否完整
@@ -1759,13 +1730,13 @@ export default {
       var list7=suffix.split('mp4');
       var list8=suffix.split('flv');
       var list9=suffix.split('rm');
-      var list10=suffix.split('mpg');
+      var list10=suffix.split('mpg');          //判断文件格式
       if(list1.length>1||list2.length>1||list3.length>1||list4.length>1||list5.length>1||list6.length>1||list7.length>1||list8.length>1||list9.length>1||list10.length>1)
       {
             if(this.processDetail[index].uploadSuccess)
             {   
             }
-            else{
+            else{      //给文件名进行编码
                 var line_no=index+1;
                 var number=this.processDetail[index].fileNumber+1;
                 this.processDetail[index].fileNumber=this.processDetail[index].fileNumber+1;
@@ -1774,7 +1745,7 @@ export default {
                 file.name=fileName;
                 this.processDetail[index].fileNameList.push(fileName);
                 this.fileNameListForProcess.push(fileName);
-                if(this.fileChangeForProcess[index]!=""||this.fileChangeForProcess[index]!=null)
+                if(this.fileChangeForProcess[index]!=""||this.fileChangeForProcess[index]!=null)    //判断某条处理结果明细是否有文件新增
                 {
                      this.fileChangeForProcess[index]=this.fileChangeForProcess[index]+",1";
                 }
@@ -1809,7 +1780,6 @@ export default {
       this.processDetail[index].fileListForProcess = fileList;
       if ((file.status = "success")) {
         this.processDetail[index].deleteFileForProcess.push(file.url);
-        // this.deleteFileForProcess.push(file.url);
             if(this.deleteFileForProcess[index]!=""||this.deleteFileForProcess[index]!=null)
             {
                  this.deleteFileForProcess[index]=this.deleteFileForProcess[index]+","+file.url;
@@ -1824,7 +1794,7 @@ export default {
       this.processDetail[index].fileListForProcess = fileList;
       this.processDetail[index].uploadSuccess = true;
       var flag=true;
-      for (let i = 0; i < this.processDetail.length; i++) {    
+      for (let i = 0; i < this.processDetail.length; i++) {      //判断是否所有上传附件的处理结果明细都已成功上传 ，若是，则赋值
          if(this.processDetail[i].fileListForProcess.length!=0&&this.processDetail[i].fileListForProcess.filter(item=>item.status == "success").length == this.processDetail[i].fileListForProcess.length)
          {
          }   
@@ -1834,8 +1804,8 @@ export default {
          }
       }
       if (flag) {
-          // this.submitEDITANSYCCForProcess();
           this.processFinalAction=true;
+          this.submitEDITANSYCCForProcess();
       }
     },
     submitEDITANSYCCForProcess(){             
