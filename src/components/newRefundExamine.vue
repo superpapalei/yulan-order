@@ -943,6 +943,7 @@ export default {
       deleteFileForAudition:[],//删除的初审意见附件
       deleteFileForProcess:[],//删除的处理结果附件
       firstAddAudition:false,//是否是第一次添加初审意见的附件
+      processFinalAction:false,
       //单据状态
       statusArray: [
         { value: null, label: "全部状态" },
@@ -1121,6 +1122,7 @@ export default {
       this.fileChangeForAudition=false;
       this.fileChangeForProcess=[];
       this.firstAddAudition=false;
+      this.processFinalAction=false;
       this.dateStamp = new Date().getTime();
       let data = {
         ID: val.ID,
@@ -1233,7 +1235,7 @@ export default {
     //保存修改
     _EditDetail(val,type){
       this.kind=type;
-      if(type==3)
+      if(type==3)  //编辑处理结果
       {
         if(this.deleteFileForAudition.length!=0||this.fileChangeForAudition)
         {
@@ -1245,6 +1247,7 @@ export default {
         }
         var totalMoney=0;
         for (var i = 0; i < this.processDetail.length; i++) {
+            var needUpload=false;
             //判断是否填完所有信息  
             if ( 
               !this.processDetail[i].P_QTY ||
@@ -1258,21 +1261,22 @@ export default {
               });
               return;
             }
-            //判断上传附件的形式为图片或视频
-            if(this.processDetail[i].fileListForProcess.length!=0&&this.FormRight==false)
-           {
-            this.$alert("提交失败，附件仅能上传图片或视频", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-            });
-            return ;
+            //判断是否需要上传附件
+            if(this.processDetail[i].fileListForProcess.length!=0){
+                  needUpload=true;
             }
-            totalMoney=totalMoney.add(this.processDetail[i].P_MONEY);
-        }
-        this.submit.TOTALMONEY=totalMoney;
-        //查看哪行记录文件发生改变，重新上传一次
-        for (let i = 0; i < this.processDetail.length; i++) {
-              if(this.processDetail[i].fileChangeForProcess.length!=0){
+            else{
+                  //判断上传附件的形式为图片或视频
+                  if(this.FormRight==false)
+                  {
+                     this.$alert("提交失败，附件仅能上传图片或视频", "提示", {
+                     confirmButtonText: "确定",
+                     type: "warning"
+                     });
+                     return ;
+                  }
+            }
+            if(needUpload){
                   this.$refs.upload2[i].submit();
                   this.processDetail[i].PROCESS_FILE = "";
                   for (let j = 0; j < this.processDetail[i].fileListForProcess.length; j++) {
@@ -1297,11 +1301,47 @@ export default {
                           }
                       }
                    }
-                   this.submitEDITANSYCCForProcess();
               }
+            totalMoney=totalMoney.add(this.processDetail[i].P_MONEY);
         }
+        this.submit.TOTALMONEY=totalMoney;
+        //之前没有经过handleChangeForProcess来执行下述代码
+        if(this.processFinalAction!=true)
+        {
+                     this.submitEDITANSYCCForProcess();
+        }
+        //查看哪行记录文件发生改变，重新上传一次
+        // for (let i = 0; i < this.processDetail.length; i++) {
+        //       if(needUpload){
+        //           this.$refs.upload2[i].submit();
+        //           this.processDetail[i].PROCESS_FILE = "";
+        //           for (let j = 0; j < this.processDetail[i].fileListForProcess.length; j++) {
+        //                 this.processDetail[i].PROCESS_FILE +=
+        //                 "/Files/RTCB_PROCESS/" +
+        //                 this.CID +
+        //                 "/" +
+        //                 this.dateStamp +
+        //                 "/" +
+        //                 this.processDetail[i].fileListForProcess[j].name +
+        //                 ";"; 
+        //           }
+        //           this.processDetail[i].PROCESS_FILE_FOLDER =
+        //                 "/Files/RTCB_PROCESS/" + this.CID + "/" + this.dateStamp;
+        //       }
+        //       else{
+        //            if (this.processDetail[i].deleteFileForProcess.length > 0) {
+        //               for (let j = 0; j < this.processDetail[i].deleteFileForProcess.length; j++) {  
+        //                   this.processDetail[this.deleteIndex[j]].PROCESS_FILE="";
+        //                   for (var k = 0; k < this.processDetail[this.deleteIndex[j]].fileListForProcess.length; k++) {
+        //                        this.processDetail[this.deleteIndex[j]].PROCESS_FILE += this.processDetail[this.deleteIndex[j]].fileListForProcess[k].url + ";";
+        //                   }
+        //               }
+        //            }
+        //            this.submitEDITANSYCCForProcess();
+        //       }
+        // }
       }
-      else{  //初审意见
+      else{  //编辑初审意见
         //先判断填写的信息是否完整
         if(type==2||type==5){
            if (!this.submit.FIRST_AUDITION ) {
@@ -1784,8 +1824,8 @@ export default {
       this.processDetail[index].fileListForProcess = fileList;
       this.processDetail[index].uploadSuccess = true;
       var flag=true;
-      for (let i = 0; i < this.processDetail.length; i++) {
-         if(this.processDetail[i].fileListForProcess.filter(item=>item.status == "success").length == this.processDetail[i].fileListForProcess.length)
+      for (let i = 0; i < this.processDetail.length; i++) {    
+         if(this.processDetail[i].fileListForProcess.length!=0&&this.processDetail[i].fileListForProcess.filter(item=>item.status == "success").length == this.processDetail[i].fileListForProcess.length)
          {
          }   
          else{
@@ -1794,7 +1834,8 @@ export default {
          }
       }
       if (flag) {
-          this.submitEDITANSYCCForProcess();
+          // this.submitEDITANSYCCForProcess();
+          this.processFinalAction=true;
       }
     },
     submitEDITANSYCCForProcess(){             
