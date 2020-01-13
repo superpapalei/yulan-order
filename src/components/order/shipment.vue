@@ -348,7 +348,7 @@
                 ref="upload"
                 :auto-upload="false"
                 :file-list="submit.fileList"
-                :data="{ CID: companyId, dateStamp: dateStamp,dateString:dateString,fileNameList:fileNameList }"
+                :data="{ CID: CID, dateStamp: dateStamp,dateString:dateString,fileNameList:fileNameList }"
               >
                 <i
                   class="el-icon-upload2"
@@ -857,7 +857,7 @@ export default {
             else{
                 var number=this.fileNumber+1;
                 this.fileNumber=this.fileNumber+1;
-                var prefix=this.dateString+'-'+ number;
+                var prefix=this.CID+'-'+this.dateString+'-'+ number;
                 var fileName = prefix + suffix;
                 file.name=fileName;
                 this.fileNameList.push(fileName);
