@@ -1706,10 +1706,10 @@ export default {
           var needUpload = false;
           //判断是否填完所有信息
           if (
-            !this.processDetail[i].P_QTY ||
+            !String(this.processDetail[i].P_QTY) ||
             !this.processDetail[i].P_NOTES ||
             !this.processDetail[i].P_RESULT ||
-            !this.processDetail[i].P_MONEY
+            !String(this.processDetail[i].P_MONEY)
           ) {
             this.$alert("请完善处理结果", "提示", {
               confirmButtonText: "确定",
