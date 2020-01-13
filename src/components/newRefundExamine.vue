@@ -943,6 +943,7 @@ export default {
       deleteFileForAudition:[],//删除的初审意见附件
       deleteFileForProcess:[],//删除的处理结果附件
       firstAddAudition:false,//是否是第一次添加初审意见的附件
+      processFinalAction:false,
       //单据状态
       statusArray: [
         { value: null, label: "全部状态" },
@@ -1121,6 +1122,7 @@ export default {
       this.fileChangeForAudition=false;
       this.fileChangeForProcess=[];
       this.firstAddAudition=false;
+      this.processFinalAction=false;
       this.dateStamp = new Date().getTime();
       let data = {
         ID: val.ID,
@@ -1233,7 +1235,7 @@ export default {
     //保存修改
     _EditDetail(val,type){
       this.kind=type;
-      if(type==3)
+      if(type==3)  //编辑处理结果
       {
         if(this.deleteFileForAudition.length!=0||this.fileChangeForAudition)
         {
@@ -1244,7 +1246,9 @@ export default {
               return;
         }
         var totalMoney=0;
+        //遍历处理结果明细
         for (var i = 0; i < this.processDetail.length; i++) {
+            var needUpload=false;
             //判断是否填完所有信息  
             if ( 
               !this.processDetail[i].P_QTY ||
@@ -1258,21 +1262,22 @@ export default {
               });
               return;
             }
-            //判断上传附件的形式为图片或视频
-            if(this.processDetail[i].fileListForProcess.length!=0&&this.FormRight==false)
-           {
-            this.$alert("提交失败，附件仅能上传图片或视频", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
-            });
-            return ;
+            //判断是否需要上传附件
+            if(this.processDetail[i].fileListForProcess.length!=0){
+                  needUpload=true;
             }
-            totalMoney=totalMoney.add(this.processDetail[i].P_MONEY);
-        }
-        this.submit.TOTALMONEY=totalMoney;
-        //查看哪行记录文件发生改变，重新上传一次
-        for (let i = 0; i < this.processDetail.length; i++) {
-              if(this.processDetail[i].fileChangeForProcess.length!=0){
+            else{
+                  //判断上传附件的形式为图片或视频
+                  if(this.FormRight==false)
+                  {
+                     this.$alert("提交失败，附件仅能上传图片或视频", "提示", {
+                     confirmButtonText: "确定",
+                     type: "warning"
+                     });
+                     return ;
+                  }
+            }
+            if(needUpload){   //是否需要上传附件
                   this.$refs.upload2[i].submit();
                   this.processDetail[i].PROCESS_FILE = "";
                   for (let j = 0; j < this.processDetail[i].fileListForProcess.length; j++) {
@@ -1288,7 +1293,7 @@ export default {
                   this.processDetail[i].PROCESS_FILE_FOLDER =
                         "/Files/RTCB_PROCESS/" + this.CID + "/" + this.dateStamp;
               }
-              else{
+              else{  //不需要的话是否需要删除文件
                    if (this.processDetail[i].deleteFileForProcess.length > 0) {
                       for (let j = 0; j < this.processDetail[i].deleteFileForProcess.length; j++) {  
                           this.processDetail[this.deleteIndex[j]].PROCESS_FILE="";
@@ -1297,11 +1302,17 @@ export default {
                           }
                       }
                    }
-                   this.submitEDITANSYCCForProcess();
               }
+            totalMoney=totalMoney.add(this.processDetail[i].P_MONEY);
+        }
+        this.submit.TOTALMONEY=totalMoney;
+        //之前没有经过handleChangeForProcess来执行下述代码
+        if(this.processFinalAction!=true)
+        {
+                     this.submitEDITANSYCCForProcess();
         }
       }
-      else{  //初审意见
+      else{  //编辑初审意见
         //先判断填写的信息是否完整
         if(type==2||type==5){
            if (!this.submit.FIRST_AUDITION ) {
@@ -1719,13 +1730,13 @@ export default {
       var list7=suffix.split('mp4');
       var list8=suffix.split('flv');
       var list9=suffix.split('rm');
-      var list10=suffix.split('mpg');
+      var list10=suffix.split('mpg');          //判断文件格式
       if(list1.length>1||list2.length>1||list3.length>1||list4.length>1||list5.length>1||list6.length>1||list7.length>1||list8.length>1||list9.length>1||list10.length>1)
       {
             if(this.processDetail[index].uploadSuccess)
             {   
             }
-            else{
+            else{      //给文件名进行编码
                 var line_no=index+1;
                 var number=this.processDetail[index].fileNumber+1;
                 this.processDetail[index].fileNumber=this.processDetail[index].fileNumber+1;
@@ -1734,7 +1745,7 @@ export default {
                 file.name=fileName;
                 this.processDetail[index].fileNameList.push(fileName);
                 this.fileNameListForProcess.push(fileName);
-                if(this.fileChangeForProcess[index]!=""||this.fileChangeForProcess[index]!=null)
+                if(this.fileChangeForProcess[index]!=""||this.fileChangeForProcess[index]!=null)    //判断某条处理结果明细是否有文件新增
                 {
                      this.fileChangeForProcess[index]=this.fileChangeForProcess[index]+",1";
                 }
@@ -1769,7 +1780,6 @@ export default {
       this.processDetail[index].fileListForProcess = fileList;
       if ((file.status = "success")) {
         this.processDetail[index].deleteFileForProcess.push(file.url);
-        // this.deleteFileForProcess.push(file.url);
             if(this.deleteFileForProcess[index]!=""||this.deleteFileForProcess[index]!=null)
             {
                  this.deleteFileForProcess[index]=this.deleteFileForProcess[index]+","+file.url;
@@ -1784,8 +1794,8 @@ export default {
       this.processDetail[index].fileListForProcess = fileList;
       this.processDetail[index].uploadSuccess = true;
       var flag=true;
-      for (let i = 0; i < this.processDetail.length; i++) {
-         if(this.processDetail[i].fileListForProcess.filter(item=>item.status == "success").length == this.processDetail[i].fileListForProcess.length)
+      for (let i = 0; i < this.processDetail.length; i++) {      //判断是否所有上传附件的处理结果明细都已成功上传 ，若是，则赋值
+         if(this.processDetail[i].fileListForProcess.length!=0&&this.processDetail[i].fileListForProcess.filter(item=>item.status == "success").length == this.processDetail[i].fileListForProcess.length)
          {
          }   
          else{
@@ -1794,6 +1804,7 @@ export default {
          }
       }
       if (flag) {
+          this.processFinalAction=true;
           this.submitEDITANSYCCForProcess();
       }
     },
