@@ -6,7 +6,8 @@
           <div>
             客户名称：{{ get_CUSTOMER_NAME }}
             <span style="color:blue;margin-left:10px"
-              >汇总金额:{{ getMoney }}元</span>
+              >汇总金额:{{ getMoney }}元</span
+            >
           </div>
         </div>
         <div>
@@ -312,7 +313,8 @@
                   size="mini"
                   @click="customer_info(scope3.row)"
                   type="text"
-                  >{{ scope3.row.CUSTOMER_NAME }}</el-button>
+                  >{{ scope3.row.CUSTOMER_NAME }}</el-button
+                >
               </template>
             </el-table-column>
             <el-table-column prop="TASK" label="目标任务" align="center">
@@ -772,8 +774,7 @@ export default {
         (this.tableHead2 = ""),
         (this.tableHead3 = ""),
         (this.moneySum = 0),
-        (this.flag = 0),
-        console.log(this.date1, this.date2);
+        (this.flag = 0);
       let year = this.date1.slice(0, 4);
       let endYear = this.date2.slice(0, 4);
       let month = this.date1.slice(5, 7);
@@ -811,7 +812,7 @@ export default {
               zoom[i].ALL_SPEND + zoom[i].ALLBACK_Y + zoom[i].ALLBACK_M;
             reduce += zoom[i].ALL_SPEND;
           }
-          //this.tableData = zoom;
+          if (reduce == 0) continue;
           if (res.data[0].assignments) {
             this.assignments = res.data[0].assignments.ASSIGNMENTS;
             this.assignmentsTarget = res.data[0].assignments.ASSIGNMENTS_TARGET;
@@ -869,7 +870,7 @@ export default {
           }
           var sum = this.moneySum + reduce;
           this.moneySum = sum;
-          this.CUSTOMERED_1[i] = await {
+          this.CUSTOMERED_1.push({
             CUSTOMER_CODE: this.value_4[i],
             CUSTOMER_NAME: this.get_CUSTOMER_NAME.CUSTOMER_NAME,
             TASK: this.tableHead2,
@@ -880,7 +881,7 @@ export default {
             TELEPHONE: this.getSomeData.TELEPHONE,
             POST_ADDRESS: this.getSomeData.POST_ADDRESS
             //MONEYSUM:this.moneySum.MONEYSUM
-          };
+          });
         }
 
         this.CUSTOMERED = this.CUSTOMERED_1;
