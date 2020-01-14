@@ -1393,7 +1393,7 @@ export default {
       deleteFileForAudition: [], //删除的初审意见附件
       deleteFileForProcess: [], //删除的处理结果附件
       firstAddAudition: false, //是否是第一次添加初审意见的附件
-      processFinalAction: false,
+      doActionByupload:false,
       //单据状态
       statusArray: [
         { value: null, label: "全部状态" },
@@ -1572,7 +1572,7 @@ export default {
       this.fileChangeForAudition = false;
       this.fileChangeForProcess = [];
       this.firstAddAudition = false;
-      this.processFinalAction = false;
+      this.doActionByupload=false;
       this.dateStamp = new Date().getTime();
       let data = {
         ID: val.ID,
@@ -1703,7 +1703,6 @@ export default {
         var totalMoney = 0;
         //遍历处理结果明细
         for (var i = 0; i < this.processDetail.length; i++) {
-          var needUpload = false;
           //判断是否填完所有信息
           if (
             !String(this.processDetail[i].P_QTY) ||
@@ -1719,8 +1718,6 @@ export default {
           }
           //判断是否需要上传附件
           if (this.processDetail[i].fileListForProcess.length != 0) {
-            needUpload = true;
-          } else {
             //判断上传附件的形式为图片或视频
             if (this.FormRight == false) {
               this.$alert("提交失败，附件仅能上传图片或视频", "提示", {
@@ -1729,8 +1726,9 @@ export default {
               });
               return;
             }
+          } else {
           }
-          if (needUpload) {
+          if (this.processDetail[i].fileChangeForProcess) {
             //是否需要上传附件
             this.$refs.upload2[i].submit();
             this.processDetail[i].PROCESS_FILE = "";
@@ -1778,7 +1776,7 @@ export default {
         }
         this.submit.TOTALMONEY = totalMoney;
         //之前没有经过handleChangeForProcess来执行下述代码
-        if (this.processFinalAction != true) {
+        if (this.doActionByupload!=true) {
           this.submitEDITANSYCCForProcess();
         }
       } else {
@@ -2227,6 +2225,7 @@ export default {
         list9.length > 1 ||
         list10.length > 1
       ) {
+        this.doActionByupload=true;
         if (this.processDetail[index].uploadSuccess) {
         } else {
           //给文件名进行编码
@@ -2308,7 +2307,6 @@ export default {
         }
       }
       if (flag) {
-        this.processFinalAction = true;
         this.submitEDITANSYCCForProcess();
       }
     },

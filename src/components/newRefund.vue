@@ -2234,7 +2234,7 @@ export default {
         !this.submit.CONTACT_MAN ||
         !this.submit.CONTACT_PHONE ||
         !this.submit.NOTES ||
-        !String(this.processDetail[i].P_QTY)
+        !String(this.submit.QTY)
       ) {
         this.$alert("请完善信息，除选填外都必填", "提示", {
           confirmButtonText: "确定",
