@@ -1177,6 +1177,7 @@ export default {
         userid: JSON.parse(Cookies.get("userInfo")).userId
       }).then(res => {
         if (res.data.children.length > 0) {
+          console.log(res.data.children)
           this.setMenuTreeList(res.data.children);
           if (res.data.children.length == 1) {
             if (

@@ -291,12 +291,12 @@
               </td>
             </tr>
             <tr>
-              <td class="grayTD" style="height:15px">提货单号</td>
-              <td style="height:15px">{{ submit.SALE_NO }}</td>
-              <td class="grayTD" style="height:15px">B2B订单号</td>
-              <td style="height:15px" colspan="2">{{ submit.ORDER_NO }}</td>
+              <td class="grayTD" style="height:15px" width="12%">提货单号</td>
+              <td style="height:15px" width="14%">{{ submit.SALE_NO }}</td>
+              <td class="grayTD" style="height:15px" width="10%">B2B订单号</td>
+              <td style="height:15px" colspan="2" width="16%">{{ submit.ORDER_NO }}</td>
               <!-- 连表查询 -->
-              <td class="grayTD" style="height:15px">ERP订单号</td>
+              <td class="grayTD" style="height:15px" width="13%">ERP订单号</td>
               <td style="height:15px" colspan="2">{{ submit.CONTRACT_NO }}</td>
               <!-- 连表查询 -->
             </tr>
