@@ -65,7 +65,7 @@ export default {
     return {
       condition: "",
       limit: 20,
-      count: 1,
+      count: 0,
       currentPage: 1,
       detailVisible: false,
       detailTitle:"",

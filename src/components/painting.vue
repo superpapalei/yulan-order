@@ -234,7 +234,7 @@ export default {
       agreeJudge: true,
       PaintingDia: false,
       limit: 8,
-      count: 8,
+      count: 0,
       currentPage: 1,
       cid: "",
       startDate: "",

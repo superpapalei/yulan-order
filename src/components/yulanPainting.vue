@@ -490,7 +490,7 @@ export default {
       },
       dialogVisible: false,
       limit: 8,
-      count: 88,
+      count: 0,
       currentPage: 1,
       cid: "",
       startDate: "",
