@@ -112,36 +112,39 @@
         style="height:70%"
       >
         <div style="margin:0,auto">
-          <el-card>
-            <TABLE class="table_2">
-              <tr>
-                <td>客户名称:</td>
-                <td>{{ customerInfo.CUSTOMER_NAME }}</td>
-              </tr>
-              <tr>
-                <td>联系人：</td>
-                <td>{{ customerInfo.LINKPERSON }}</td>
-              </tr>
-              <tr>
-                <td>电话：</td>
-                <td>{{ customerInfo.TELEPHONE }}</td>
-              </tr>
-              <tr>
-                <td>地址：</td>
-                <td>{{ customerInfo.POST_ADDRESS }}</td>
-              </tr>
-              <tr>
-                <td style="width:150px">优惠券余额：</td>
-                <td v-for="item of couponData" :key="item.index">
-                  当前余额 {{ item.rebateMoneyOver }}元
-                </td>
-              </tr>
-              <tr>
-                <td>客户余额：</td>
-                <td>{{ moneySituation }}</td>
-              </tr>
-            </TABLE>
-          </el-card>
+          <table class="table_2">
+            <tr>
+              <td>客户名称:</td>
+              <td>{{ customerInfo.CUSTOMER_NAME }}</td>
+            </tr>
+            <tr>
+              <td>联系人：</td>
+              <td>{{ customerInfo.LINKPERSON }}</td>
+            </tr>
+            <tr>
+              <td>电话：</td>
+              <td>{{ customerInfo.TELEPHONE }}</td>
+            </tr>
+            <tr>
+              <td>地址：</td>
+              <td>{{ customerInfo.POST_ADDRESS }}</td>
+            </tr>
+            <tr>
+              <td style="width:150px">优惠券余额：</td>
+              <td v-if="couponData.length">
+                <span v-for="item of couponData" :key="item.index">
+                  {{ item.rebateMoneyOver }}元
+                </span>
+              </td>
+              <td v-else>
+                <span style="color:red;">当前年度无优惠券</span>
+              </td>
+            </tr>
+            <tr>
+              <td>客户余额：</td>
+              <td>{{ moneySituation }}</td>
+            </tr>
+          </table>
         </div>
       </el-dialog>
 
@@ -611,7 +614,7 @@ export default {
         cid: this.cid,
         companyId: this.customerInfo.CUSTOMER_CODE
       });
-      this.moneySituation = "当前余额 " + res.data + "元";
+      this.moneySituation = res.data + "元";
       var url = "/order/findRebate.do";
       var data = {
         cid: Cookies.get("cid"),
@@ -619,6 +622,10 @@ export default {
       };
       var res2 = await manageCoupon(url, data);
       this.couponData = res2.data;
+      var nowYear = new Date().getFullYear();
+      this.couponData = this.couponData.filter(
+        item => item.id.indexOf(nowYear) > -1
+      );
       this.dialogVisible = true;
     },
 
@@ -1114,15 +1121,16 @@ export default {
 .table_2 {
   font-size: 20px;
 }
+.table_2 td {
+  padding: 3px;
+}
 .gx {
   background: #8bc34a;
   color: rgb(255, 255, 255);
 }
-
 .CONDITION_DIV_TABLE2 {
   height: 100px;
 }
-
 .cz {
   text-align: center;
 }
@@ -1155,7 +1163,6 @@ export default {
 .OPTION0 {
   background: rgb(209, 243, 200);
 }
-
 .cx_2 {
   margin-left: 10px;
   background: #8bc34a;
